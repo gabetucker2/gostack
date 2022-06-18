@@ -1,5 +1,6 @@
 # goplus
-<h1>WELCOME</h1>
+<h1>Welcome</h1>
+ This project introduces useful base functions to Go to expand programmer ease-of-use, concision, and flexibility.
 
 <h2>To Add</h2>
 
