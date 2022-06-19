@@ -36,3 +36,4 @@ No requirements
 Ensures:
 * Error if invalid parameters
 * Return -1 if element does not exist
+* Return first element's index in haystack if element does exist
