@@ -10,7 +10,6 @@
 
 <h3>Functions to Add</h3>
 
-* Add **IndexOf** function
 * Add **Exists** function
 * Add **Heap** functions
 * Add **Error** function
@@ -29,6 +28,7 @@
 `haystack.IndexOf(needle)`
 
 `haystack` - *ambigously-typed array*
+
 `needle` - *ambigously-typed element*
 
 Requires:
