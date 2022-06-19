@@ -18,6 +18,6 @@
 
 * Test whether instance return methods work in Go
 
-<h2>Implemented Changes<h2>
+<h2>Implemented Changes</h2>
 
 * haystack.**IndexOf**(`needle`)
