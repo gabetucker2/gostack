@@ -6,13 +6,15 @@
  * **functions.go** is where novel functions are stored
  * **test.go** is a script used to run test cases to ensure functionality of other scripts
 
-<h2>ToDo</h2>
+<h2>TODO</h2>
 
 <h3>Functions to Add</h3>
 
-1. Add IndexOf function
-2. Add bool-coalescing and null-coalescing operators
-3. Add lambda array sort-return function
+* Add **IndexOf** function
+* Add **Exists** function
+* Add **Heap** function
+* Add bool-coalescing and null-coalescing operators
+* Add lambda array sort-return function
 
 <h3>Things to Look Into</h3>
 
@@ -20,4 +22,11 @@
 
 <h2>Implemented Changes</h2>
 
-* haystack.**IndexOf**(`needle`)
+<h3>IndexOf</h3>
+`haystack.**IndexOf**(needle)`
+*- ambigously-typed array `haystack`*
+*- ambiguously-typed element `needle`*
+Requires: /
+Ensures:
+* Error if invalid parameters
+* Return -1 if element does not exist
