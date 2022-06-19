@@ -7,11 +7,11 @@
 
 <h3>IndexOf</h3>
 
-`haystack.IndexOf(needle)`
+> `haystack.IndexOf(needle)`
 
-> **haystack** is an ambigously-typed array
-> 
-> **needle** is an ambigously-typed element
+> Parameters:
+> * **haystack** is an ambigously-typed array
+> * **needle** is an ambigously-typed element
 
 > Ensures:
 > * Error if invalid parameters
