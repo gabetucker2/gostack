@@ -27,11 +27,11 @@
 
 `haystack.IndexOf(needle)`
 
-`haystack` - *ambigously-typed array*
+**haystack** := ambigously-typed array
 
-`needle` - *ambigously-typed element*
+**needle** := ambigously-typed element
 
-Requires:
+No requirements
 
 Ensures:
 * Error if invalid parameters
