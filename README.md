@@ -1,6 +1,27 @@
 # goplus
  This project introduces useful base functions to Go to ensure programmer ease-of-use, concision, and flexibility.
 
+<h1>Implemented Changes</h1>
+
+<h2>Functions</h2>
+
+<h3>IndexOf</h3>
+
+`haystack.IndexOf(needle)`
+
+**haystack** := ambigously-typed array
+
+**needle** := ambigously-typed element
+
+No requirements
+
+Ensures:
+* Error if invalid parameters
+* Return -1 if element does not exist
+* Return first element's index in haystack if element does exist
+ 
+<h1>Overview</h1>
+
  <h2>Scripts</h2>
 
  * **functions.go** is where novel functions are stored
@@ -20,20 +41,3 @@
 <h3>Things to Look Into</h3>
 
 * Test whether instance return methods work in Go
-
-<h2>Implemented Changes</h2>
-
-<h3>IndexOf</h3> function
-
-`haystack.IndexOf(needle)`
-
-**haystack** := ambigously-typed array
-
-**needle** := ambigously-typed element
-
-No requirements
-
-Ensures:
-* Error if invalid parameters
-* Return -1 if element does not exist
-* Return first element's index in haystack if element does exist
