@@ -23,7 +23,7 @@
 
 <h2>Implemented Changes</h2>
 
-<h3>IndexOf</h3>
+<h3>IndexOf</h3> function
 
 `haystack.IndexOf(needle)`
 
