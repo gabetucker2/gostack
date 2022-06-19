@@ -26,15 +26,13 @@
 
 <h3>IndexOf</h3>
 
-`haystack.**IndexOf**(needle)`
+`haystack.IndexOf(needle)`
 
-*- ambigously-typed array `haystack`*
+`haystack` - *ambigously-typed array*
+`needle` - *ambigously-typed element*
 
-*- ambiguously-typed element `needle`*
-
-Requires: /
+Requires:
 
 Ensures:
-
 * Error if invalid parameters
 * Return -1 if element does not exist
