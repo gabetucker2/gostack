@@ -9,17 +9,19 @@
 
 `haystack.IndexOf(needle)`
 
-**haystack** := ambigously-typed array
+> **haystack** is an ambigously-typed array
+> 
+> **needle** is an ambigously-typed element
 
-**needle** := ambigously-typed element
+> Ensures:
+> * Error if invalid parameters
+> * Return -1 if element does not exist
+> * Return first element's index in haystack if element does exist
 
-No requirements
+<h2>Operators</h2>
 
-Ensures:
-* Error if invalid parameters
-* Return -1 if element does not exist
-* Return first element's index in haystack if element does exist
- 
+*No implemented operators yet*
+
 <h1>Overview</h1>
 
  <h2>Scripts</h2>
@@ -40,4 +42,4 @@ Ensures:
 
 <h3>Things to Look Into</h3>
 
-* Test whether instance return methods work in Go
+*No things to look into yet*

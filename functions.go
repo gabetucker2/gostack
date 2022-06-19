@@ -1,12 +1,5 @@
 package main
 
-/*
-	PARAMETERS
-		INSTANCE
-			needle
-		STATIC
-			haystack
-*/
 func IndexOf(arr []string, target string) (ret int) {
 
 	ret = -1
