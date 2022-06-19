@@ -12,8 +12,10 @@
 
 * Add **IndexOf** function
 * Add **Exists** function
-* Add **Heap** function
-* Add bool-coalescing and null-coalescing operators
+* Add **Heap** functions
+* Add **Error** function
+* Add **bool-coalescing** operator
+* Add **null-coalescing** operator
 * Add lambda array sort-return function
 
 <h3>Things to Look Into</h3>
@@ -23,10 +25,16 @@
 <h2>Implemented Changes</h2>
 
 <h3>IndexOf</h3>
+
 `haystack.**IndexOf**(needle)`
+
 *- ambigously-typed array `haystack`*
+
 *- ambiguously-typed element `needle`*
+
 Requires: /
+
 Ensures:
+
 * Error if invalid parameters
 * Return -1 if element does not exist
