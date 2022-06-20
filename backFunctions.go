@@ -63,16 +63,20 @@ func _gostack_back_LenAndSize(stack *Stack, size int) bool {
 
 func _gostack_back_NewCard() Card {
 
-	// return whether len(cards) == cards.size
+	// return newly-created card
 	return Card{}
 
 }
 
-func (stack *Stack) _gostack_back_AddCard(card interface{}) {
+func (stack *Stack) _gostack_back_AddCard(card interface{}) *Stack {
 
-	// size++
+	stack.size++
+	stack.
+
 	// indices.insert
 	// etc
+
+	return stack
 
 }
 
