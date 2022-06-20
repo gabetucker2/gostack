@@ -141,7 +141,7 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 > ***Pseudocode***
 >> **IF STACK IS NOT EMPTY**
 >>> remove the last card from the stack
->
+>>>
 >>> return the removed card
 >
 >> **ELSE**
