@@ -1,25 +1,39 @@
 package main
 
-func gs_MakeStack() Stack {
+func MakeStack() *Stack {
 
-	var stack Stack
+	// creates new stack
+	var stack *Stack
 
+	// initialized new stack's variables
 	stack.len = 0
 
+	// return
 	return stack
 
 }
 
-func gs_Push(stack Stack, element interface{}) {
+func (stack *Stack) Push(element interface{}) *Stack {
+
+	// pushes all previous values to i + 1
+	for i := stack.len; i > 0; i-- {
+		stack.vals[i+1] = stack.vals[i]
+	}
+
+	// pushes new element into stack
+	stack.vals[0] = element
+
+	// return
+	return stack
 
 }
 
 /*
-func IndexOf(stack Stack, needle interface{}) (ret int) {
+func IndexOf(stack Stack, element interface{}) (ret int) {
 
 	ret = -1
-	for i := 0; i < len(haystack); i++ {
-		if needle == haystack[i] {
+	for i := 0; i < len(stack); i++ {
+		if element == stack[i] {
 			ret = i
 			break
 		}

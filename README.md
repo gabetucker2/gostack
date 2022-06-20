@@ -17,31 +17,66 @@
 <h3>len</h3>
 
 > `stack.len`
->> Returns the cardinality (amount of elements) of the given Stack
+>> Returns the cardinality of the given Stack
 
 <h2>Functions</h2>
 
-<h3>MakeStack</h3>
+ Constructor means the function receiver is the struct (`Stack`) itself
+ Non-constructor means the function doesn't have a receiver or, if it does, it is an existing `Stack` object
 
-> `gs_MakeStack()`
+<h3>Make</h3>
+
+> `MakeStack()`
+>> CONSTRUCTOR: ***TRUE***
+>
 >> GETS: ***TRUE***
 >
->> SETS: ***TRUE***
+>> MAKES: ***TRUE***
+>
+>> UPDATES: ***FALSE***
 
 > ***Pseudocode***
 >> return new Stack
 
-<h3>IndexOf</h3>
+<h3>Push</h3>
 
-> `gostack_IndexOf(needle, haystack)`
+> `stack.Push(element)`
+>> CONSTRUCTOR: ***FALSE***
+>
 >> GETS: ***TRUE***
 >
->> SETS: ***FALSE***
+>> MAKES: ***FALSE***
+>
+>> UPDATES: ***TRUE***
 
 > ***Parameters***
->> **needle** is an ambigously-typed element
+>> **stack** is the Stack on which to push an element
 >
->> **haystack** is a Stack
+>> **element** is the ambiguously-typed element to add to the beginning of the stack
+
+> ***Pseudocode***
+>> add an element to i = 0 of the stack
+>
+>> **FOR EACH ELEMENT THAT ALREADY EXISTED IN THE STACK**
+>>> that element's previous index i is updated to i + 1
+>
+>> return updated Stack
+
+<h3>IndexOf</h3>
+
+> `stack.IndexOf(element)`
+>> CONSTRUCTOR: ***FALSE***
+>
+>> GETS: ***TRUE***
+>
+>> MAKES: ***FALSE***
+>
+>> UPDATES: ***FALSE***
+
+> ***Parameters***
+>> **stack** is the Stack through which to search
+>
+>> **element** is the ambigously-typed element of which to find the index
 
 > ***Pseudocode***
 >> **IF NEEDLE IS IN HAYSTACK**
@@ -59,7 +94,8 @@
  * **README.md** is this file
  * **stacks.go** is where the Stack struct is defined
  * **functions.go** is where novel functions are stored
- * **test.go** is a script used to run test cases to ensure functionality of this project's functions; for examples on how to use `gostack` functions, see this file
+ * **test.go** is a script used to run test cases to ensure functionality of this project's functions; for examples on how to use `gostack` functions, see this file; it is recommended to delete this file if it is not commented out at the time of your installation since it uses the main() function
+ * **go.mod** is used to initialize the project to its respective git repository
 
  <h2>Links</h2>
 
@@ -83,7 +119,6 @@
 * Add **GetFlip** function
 * Add **Remove** function
 * Add **Pop** function
-* Add **Push** function
 * Add **Append** function
 * Add **Behead** function
 * Add **InterfaceType** function
