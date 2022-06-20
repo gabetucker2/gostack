@@ -21,7 +21,7 @@ func _gostack_case_MakeStack(funcName string) {
 	stack := MakeStack()
 
 	conditions := []bool{
-		_gostack_test_LenAndSize(stack, 0),
+		_gostack_back_LenAndSize(stack, 0),
 	}
 
 	_gostack_test_End(funcName, conditions)
@@ -32,11 +32,11 @@ func _gostack_case_Clear(funcName string) {
 
 	_gostack_test_Start(funcName, enabled)
 
-	stack := _gostack_test_SampleStack()
+	stack := _gostack_back_SampleStack()
 	stack2 := stack.Clear()
 
 	conditions := []bool{
-		_gostack_test_LenAndSize(stack, 0),
+		_gostack_back_LenAndSize(stack, 0),
 		stack == stack2,
 	}
 
@@ -52,7 +52,7 @@ func _gostack_case_Push(funcName string) {
 	stack.Push(testCard3).Push(testCard2).Push(testCard1)
 
 	conditions := []bool{
-		_gostack_test_LenAndSize(stack, 3),
+		_gostack_back_LenAndSize(stack, 3),
 		stack.cards[0] == testCard1,
 		stack.cards[1] == testCard2,
 		stack.cards[2] == testCard3,
@@ -70,7 +70,7 @@ func _gostack_case_Append(funcName string) {
 	stack.Append(testCard1).Append(testCard2).Append(testCard3)
 
 	conditions := []bool{
-		_gostack_test_LenAndSize(stack, 3),
+		_gostack_back_LenAndSize(stack, 3),
 		stack.cards[0] == testCard1,
 		stack.cards[1] == testCard2,
 		stack.cards[2] == testCard3,
@@ -84,11 +84,11 @@ func _gostack_case_1_Pop(funcName string) {
 
 	_gostack_test_Start(funcName, enabled)
 
-	stack := _gostack_test_SampleStack()
+	stack := _gostack_back_SampleStack()
 	pop := stack.Pop()
 
 	conditions := []bool{
-		_gostack_test_LenAndSize(stack, 2),
+		_gostack_back_LenAndSize(stack, 2),
 		stack.cards[0] == testCard1,
 		stack.cards[1] == testCard2,
 		pop == testCard3,
@@ -106,7 +106,7 @@ func _gostack_case_2_Pop(funcName string) {
 	pop := stack.Pop()
 
 	conditions := []bool{
-		_gostack_test_LenAndSize(stack, 0),
+		_gostack_back_LenAndSize(stack, 0),
 		pop == nil,
 	}
 
@@ -118,11 +118,11 @@ func _gostack_case_1_Behead(funcName string) {
 
 	_gostack_test_Start(funcName, enabled)
 
-	stack := _gostack_test_SampleStack()
+	stack := _gostack_back_SampleStack()
 	behead := stack.Behead()
 
 	conditions := []bool{
-		_gostack_test_LenAndSize(stack, 2),
+		_gostack_back_LenAndSize(stack, 2),
 		behead == testCard1,
 		stack.cards[0] == testCard2,
 		stack.cards[1] == testCard3,
@@ -140,7 +140,7 @@ func _gostack_case_2_Behead(funcName string) {
 	pop := stack.Pop()
 
 	conditions := []bool{
-		_gostack_test_LenAndSize(stack, 0),
+		_gostack_back_LenAndSize(stack, 0),
 		pop == nil,
 	}
 
@@ -152,7 +152,7 @@ func _gostack_case_Has(funcName string) {
 
 	_gostack_test_Start(funcName, enabled)
 
-	stack := _gostack_test_SampleStack()
+	stack := _gostack_back_SampleStack()
 
 	conditions := []bool{
 		stack.Has(testCard1),
@@ -169,7 +169,7 @@ func _gostack_case_IndexOf(funcName string) {
 
 	_gostack_test_Start(funcName, enabled)
 
-	stack := _gostack_test_SampleStack()
+	stack := _gostack_back_SampleStack()
 
 	conditions := []bool{
 		stack.IndexOf(testCard1) == 0,

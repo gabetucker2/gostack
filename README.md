@@ -21,7 +21,7 @@
 
 <h2>Links</h2>
 
- Where post, blog, and API links relevant to this project are stored
+ Where API links which inspired this project are stored
 
  * https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1?view=net-6.0
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array

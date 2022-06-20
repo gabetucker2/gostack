@@ -42,7 +42,9 @@ func _gostack_test_End(funcName string, conditions []bool) {
 
 }
 
-func _gostack_test_SampleStack() (stack *Stack) {
+// BACKEND FUNCTIONS
+
+func _gostack_back_SampleStack() (stack *Stack) {
 
 	// make a sample stack of form <"Card A", "Card B", "Card C">
 	stack = MakeStack()
@@ -52,9 +54,25 @@ func _gostack_test_SampleStack() (stack *Stack) {
 
 }
 
-// only use this function for cases which make/update a Stack, not that solely get a value
-func _gostack_test_LenAndSize(stack *Stack, size int) bool {
+func _gostack_back_LenAndSize(stack *Stack, size int) bool {
 
+	// return whether len(cards) == cards.size
 	return len(stack.cards) == size && stack.size == size
+
+}
+
+func (stack *Stack) _gostack_back_AddCard(card interface{}) {
+
+	// size++
+	// indices.insert
+	// etc
+
+}
+
+func (stack *Stack) _gostack_back_RemoveCard(card interface{}) {
+
+	// size++
+	// indices.insert
+	// etc
 
 }
