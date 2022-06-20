@@ -50,20 +50,18 @@ func _gostack_test_End(funcName string, conditions []bool) {
 
 }
 
-func _gostack_test_SampleStack() (stack Stack) {
+func _gostack_test_SampleStack() (stack *Stack) {
 
 	// make a sample stack of form <"Card A", "Card B", "Card C">
 	stack = MakeStack()
-	stack.Push(testCard3)
-	stack.Push(testCard2)
-	stack.Push(testCard1)
+	stack.Append(testCard1).Append(testCard2).Append(testCard3)
 
 	return
 
 }
 
 // only use this function for cases which make/update a Stack, not that solely get a value
-func _gostack_test_LenAndSize(stack Stack, size int) bool {
+func _gostack_test_LenAndSize(stack *Stack, size int) bool {
 
 	return len(stack.cards) == size && stack.size == size
 
@@ -85,14 +83,28 @@ func _gostack_case_MakeStack(funcName string) {
 
 }
 
+func _gostack_case_Clear(funcName string) {
+
+	_gostack_test_Start(funcName, enabled)
+
+	stack := _gostack_test_SampleStack()
+	stack2 := stack.Clear()
+
+	conditions := []bool{
+		_gostack_test_LenAndSize(stack, 0),
+		stack == stack2,
+	}
+
+	_gostack_test_End(funcName, conditions)
+
+}
+
 func _gostack_case_Push(funcName string) {
 
 	_gostack_test_Start(funcName, enabled)
 
 	stack := MakeStack()
-	stack.Push(testCard3)
-	stack.Push(testCard2)
-	stack.Push(testCard1)
+	stack.Push(testCard3).Push(testCard2).Push(testCard1)
 
 	conditions := []bool{
 		_gostack_test_LenAndSize(stack, 3),
@@ -105,17 +117,18 @@ func _gostack_case_Push(funcName string) {
 
 }
 
-func _gostack_case_IndexOf(funcName string) {
+func _gostack_case_Append(funcName string) {
 
 	_gostack_test_Start(funcName, enabled)
 
-	stack := _gostack_test_SampleStack()
+	stack := MakeStack()
+	stack.Append(testCard1).Append(testCard2).Append(testCard3)
 
 	conditions := []bool{
-		stack.IndexOf(testCard1) == 0,
-		stack.IndexOf(testCard2) == 1,
-		stack.IndexOf(testCard3) == 2,
-		stack.IndexOf(testCard4) == -1,
+		_gostack_test_LenAndSize(stack, 3),
+		stack.cards[0] == testCard1,
+		stack.cards[1] == testCard2,
+		stack.cards[2] == testCard3,
 	}
 
 	_gostack_test_End(funcName, conditions)
@@ -156,20 +169,77 @@ func _gostack_case_2_Pop(funcName string) {
 
 }
 
+func _gostack_case_1_Behead(funcName string) {
+
+	_gostack_test_Start(funcName, enabled)
+
+	stack := _gostack_test_SampleStack()
+	behead := stack.Behead()
+
+	conditions := []bool{
+		_gostack_test_LenAndSize(stack, 2),
+		behead == testCard1,
+		stack.cards[0] == testCard2,
+		stack.cards[1] == testCard3,
+	}
+
+	_gostack_test_End(funcName, conditions)
+
+}
+
+func _gostack_case_2_Behead(funcName string) {
+
+	_gostack_test_Start(funcName, enabled)
+
+	stack := MakeStack()
+	pop := stack.Pop()
+
+	conditions := []bool{
+		_gostack_test_LenAndSize(stack, 0),
+		pop == nil,
+	}
+
+	_gostack_test_End(funcName, conditions)
+
+}
+
+func _gostack_case_IndexOf(funcName string) {
+
+	_gostack_test_Start(funcName, enabled)
+
+	stack := _gostack_test_SampleStack()
+
+	conditions := []bool{
+		stack.IndexOf(testCard1) == 0,
+		stack.IndexOf(testCard2) == 1,
+		stack.IndexOf(testCard3) == 2,
+		stack.IndexOf(testCard4) == -1,
+	}
+
+	_gostack_test_End(funcName, conditions)
+
+}
+
 // MAIN FUNCTION
 
 func main() {
 
-	// layer two is dependent on layer one, layer three dependent on layer two, etc
+	// layer two is dependent on layer one in case tests, layer three dependent on layer two, etc
 	fmt.Println("- BEGINNING TESTS")
 
 	// layer one
 	_gostack_case_MakeStack("MakeStack") // regular case
 
 	// layer two
-	_gostack_case_Push("stack.Push")       // regular case
-	_gostack_case_1_Pop("T1:stack.Pop")    // regular case
-	_gostack_case_2_Pop("T2:stack.Pop")    // edge case
-	_gostack_case_IndexOf("stack.IndexOf") // regular and edge cases
+	_gostack_case_Append("stack.Append") // regular case
+
+	// layer three
+	_gostack_case_Clear("stack.Clear")        // regular case
+	_gostack_case_Push("stack.Push")          // regular case
+	_gostack_case_1_Pop("T1:stack.Pop")       // regular case
+	_gostack_case_2_Pop("T2:stack.Pop")       // edge case
+	_gostack_case_1_Behead("T1:stack.Behead") // regular case
+	_gostack_case_2_Behead("T2:stack.Behead") // edge case
+	_gostack_case_IndexOf("stack.IndexOf")    // regular and edge cases
 
 }

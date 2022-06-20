@@ -30,8 +30,13 @@
  <h2>Implemented Features</h2>
  
  * **MakeStack()**
+ * **stack.Clear()**
+
+ * **stack.Append**
  * **stack.Push()**
  * **stack.Pop()**
+ * **stack.Behead()**
+ 
  * **stack.IndexOf()**
  
  <h2>Unimplemented Features</h2>
@@ -46,9 +51,6 @@
  * Add **ReplaceEntries** function
  * Add **GetFlip** function
  * Add **Remove** function
- * Add **Clear** function
- * Add **Append** function
- * Add **Behead** function
  * Add **Type** function
  * Add **ToArray** function
  * Add **ToStack** function
@@ -104,6 +106,42 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 > ***Pseudocode***
 >> return new Stack
 
+<h3>Clear</h3>
+
+> `stack.Clear()`
+>> CONSTRUCTOR: ***FALSE***
+>
+>> GETS: ***TRUE***
+>
+>> UPDATES: ***TRUE***
+
+> ***Parameters***
+>> **stack** is the Stack to clear
+
+> ***Pseudocode***
+>> removes all cards in the Stack
+>
+>> return the empty stack
+
+<h3>Append</h3>
+
+> `stack.Append(card)`
+>> CONSTRUCTOR: ***FALSE***
+>
+>> GETS: ***TRUE***
+>
+>> UPDATES: ***TRUE***
+
+> ***Parameters***
+>> **stack** is the Stack to append
+>
+>> **card** is the ambiguously-typed element to add to the end of the Stack
+
+> ***Pseudocode***
+>> add card to i = stack.size of the Stack
+>
+>> return updated Stack
+
 <h3>Push</h3>
 
 > `stack.Push(card)`
@@ -136,12 +174,33 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 >> UPDATES: ***TRUE***
 
 > ***Parameters***
->> **stack** is the Stack from which to pop the last card
+>> **stack** is the Stack from which to remove the last card
 
 > ***Pseudocode***
 >> **IF STACK IS NOT EMPTY**
 >>> remove the last card from the stack
->>>
+>>
+>>> return the removed card
+>
+>> **ELSE**
+>>> return nil
+
+<h3>Behead</h3>
+
+> `stack.Behead()`
+>> CONSTRUCTOR: ***FALSE***
+>
+>> GETS: ***TRUE***
+>
+>> UPDATES: ***TRUE***
+
+> ***Parameters***
+>> **stack** is the Stack from which to remove the first card
+
+> ***Pseudocode***
+>> **IF STACK IS NOT EMPTY**
+>>> remove the first card from the stack
+>>
 >>> return the removed card
 >
 >> **ELSE**

@@ -1,11 +1,23 @@
 package main
 
-func MakeStack() Stack {
+func MakeStack() *Stack {
 
-	// creates new stack
-	var stack Stack
+	// initialize new stack
+	stack := new(Stack)
 
-	// initialized stack properties
+	// initialize stack properties
+	stack.size = 0
+
+	// return
+	return stack
+
+}
+
+// not just call MakeStack since that would replace the object
+func (stack *Stack) Clear() *Stack {
+
+	// clear stack
+	stack.cards = MakeStack().cards
 	stack.size = 0
 
 	// return
@@ -34,6 +46,30 @@ func (stack *Stack) Push(card interface{}) *Stack {
 
 }
 
+func (stack *Stack) Append(card interface{}) *Stack {
+
+	// create new interface slice
+	newInterface := []interface{}{}
+
+	// append each card in stack.cards to card
+	for _, c := range stack.cards {
+		newInterface = append(newInterface, c)
+	}
+
+	// insert card into interface last
+	newInterface = append(newInterface, card)
+
+	// set stack.cards to our new interface
+	stack.cards = newInterface
+
+	// update stack properties
+	stack.size++
+
+	// return
+	return stack
+
+}
+
 func (stack *Stack) Pop() (card interface{}) {
 
 	if stack.size == 0 { // if we can't pop it, return nil
@@ -47,6 +83,30 @@ func (stack *Stack) Pop() (card interface{}) {
 
 		// remove the last card from the stack
 		stack.cards = stack.cards[:stack.size-1]
+
+		// update stack properties
+		stack.size--
+
+	}
+
+	// return
+	return
+
+}
+
+func (stack *Stack) Behead() (card interface{}) {
+
+	if stack.size == 0 { // if we can't behead it, return nil
+
+		card = nil
+
+	} else { // if we can pop it, return popped card
+
+		// get card we're removing
+		card = stack.cards[0]
+
+		// remove the first card from the stack
+		stack.cards = stack.cards[1:]
 
 		// update stack properties
 		stack.size--
