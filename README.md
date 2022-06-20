@@ -9,7 +9,7 @@
 
 <h1>Overview</h1>
 
- <h2>Files</h2>
+<h2>Files</h2>
 
  An overview of the files in this repository
 
@@ -19,7 +19,7 @@
  * **go.mod** is used to manage directory access
  * **stacks.go** is where the Stack struct is defined
 
- <h2>Links</h2>
+<h2>Links</h2>
 
  Where post, blog, and API links relevant to this project are stored
 
@@ -27,7 +27,7 @@
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
  * http://web.cse.ohio-state.edu/software/common/doc/components/standard/Standard.html
 
- <h2>Implemented Features</h2>
+<h2>Implemented Features</h2>
  
  <h3>Constructors</h3>
  
@@ -45,7 +45,7 @@
 
  * **stack.IndexOf()**
  
- <h2>Unimplemented Features</h2>
+<h2>Unimplemented Features</h2>
 
  * Add **Fill** function
  * Add **Insert** function
@@ -68,163 +68,163 @@
  * Add **RemoveAll** function
  * *...and many more*
 
-<h1>Implemented Features</h1>
+<h1>Feature Documentation</h1>
 
 <h2>Stack Properties</h2>
 
 <h3>cards</h3>
-
-> `stack.cards`
->> Returns an interface array to represent the elements in the Stack
->
->> It is highly recommended against accessing this property, as the entire purpose of this project is for you not to have to manage arrays manually
-
+ 
+ > `stack.cards`
+ >> Returns an interface array to represent the elements in the Stack
+ >
+ >> It is highly recommended against accessing this property, as the entire purpose of this project is for you not to have to manage arrays manually
+ 
 <h3>size</h3>
-
-> `stack.size`
->> Returns the cardinality of the given Stack
+ 
+ > `stack.size`
+ >> Returns the cardinality of the given Stack
 
 <h2>Stack Functions</h2>
 
- Constructor means the function receiver is the struct (`Stack`) itself.
+Constructor means the function receiver is the struct (**Stack**) itself.
 
- Non-constructor means the function doesn't have a receiver or, if it does, it is an existing `Stack` object.
+Non-constructor means the function doesn't have a receiver or, if it does, it is an existing **Stack** object.
 
- Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
+Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
 
 <h3>MakeStack</h3>
 
-> `MakeStack()`
->> CONSTRUCTOR: ***TRUE***
->
->> GETS: ***TRUE***
->
->> UPDATES: ***FALSE***
-
-> ***Pseudocode***
->> return new Stack
-
+ > `MakeStack()`
+ >> CONSTRUCTOR: ***TRUE***
+ >
+ >> GETS: ***TRUE***
+ >
+ >> UPDATES: ***FALSE***
+ 
+ > ***Pseudocode***
+ >> return new Stack
+ 
 <h3>Clear</h3>
-
-> `stack.Clear()`
->> CONSTRUCTOR: ***FALSE***
->
->> GETS: ***TRUE***
->
->> UPDATES: ***TRUE***
-
-> ***Parameters***
->> **stack** is the Stack to clear
-
-> ***Pseudocode***
->> removes all cards in the Stack
->
->> return the empty stack
-
+ 
+ > `stack.Clear()`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> GETS: ***TRUE***
+ >
+ >> UPDATES: ***TRUE***
+ 
+ > ***Parameters***
+ >> **stack** is the Stack to clear
+ 
+ > ***Pseudocode***
+ >> removes all cards in the Stack
+ >
+ >> return the empty stack
+ 
 <h3>Append</h3>
-
-> `stack.Append(card)`
->> CONSTRUCTOR: ***FALSE***
->
->> GETS: ***TRUE***
->
->> UPDATES: ***TRUE***
-
-> ***Parameters***
->> **stack** is the Stack to append
->
->> **card** is the ambiguously-typed element to add to the end of the Stack
-
-> ***Pseudocode***
->> add card to i = stack.size of the Stack
->
->> return updated Stack
-
+ 
+ > `stack.Append(card)`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> GETS: ***TRUE***
+ >
+ >> UPDATES: ***TRUE***
+ 
+ > ***Parameters***
+ >> **stack** is the Stack to append
+ >
+ >> **card** is the ambiguously-typed element to add to the end of the Stack
+ 
+ > ***Pseudocode***
+ >> add card to i = stack.size of the Stack
+ >
+ >> return updated Stack
+ 
 <h3>Push</h3>
-
-> `stack.Push(card)`
->> CONSTRUCTOR: ***FALSE***
->
->> GETS: ***TRUE***
->
->> UPDATES: ***TRUE***
-
-> ***Parameters***
->> **stack** is the Stack to push
->
->> **card** is the ambiguously-typed element to add to the beginning of the Stack
-
-> ***Pseudocode***
->> add card to i = 0 of the Stack
->
->> **FOR EACH CARD THAT ALREADY EXISTED IN THE STACK**
->>> that card's previous index i is updated to i + 1
->
->> return updated Stack
-
+ 
+ > `stack.Push(card)`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> GETS: ***TRUE***
+ >
+ >> UPDATES: ***TRUE***
+ 
+ > ***Parameters***
+ >> **stack** is the Stack to push
+ >
+ >> **card** is the ambiguously-typed element to add to the beginning of the Stack
+ 
+ > ***Pseudocode***
+ >> add card to i = 0 of the Stack
+ >
+ >> **FOR EACH CARD THAT ALREADY EXISTED IN THE STACK**
+ >>> that card's previous index i is updated to i + 1
+ >
+ >> return updated Stack
+ 
 <h3>Pop</h3>
-
-> `stack.Pop()`
->> CONSTRUCTOR: ***FALSE***
->
->> GETS: ***TRUE***
->
->> UPDATES: ***TRUE***
-
-> ***Parameters***
->> **stack** is the Stack from which to remove the last card
-
-> ***Pseudocode***
->> **IF STACK IS NOT EMPTY**
->>> remove the last card from the stack
->>
->>> return the removed card
->
->> **ELSE**
->>> return nil
-
+ 
+ > `stack.Pop()`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> GETS: ***TRUE***
+ >
+ >> UPDATES: ***TRUE***
+ 
+ > ***Parameters***
+ >> **stack** is the Stack from which to remove the last card
+ 
+ > ***Pseudocode***
+ >> **IF STACK IS NOT EMPTY**
+ >>> remove the last card from the stack
+ >>
+ >>> return the removed card
+ >
+ >> **ELSE**
+ >>> return nil
+ 
 <h3>Behead</h3>
-
-> `stack.Behead()`
->> CONSTRUCTOR: ***FALSE***
->
->> GETS: ***TRUE***
->
->> UPDATES: ***TRUE***
-
-> ***Parameters***
->> **stack** is the Stack from which to remove the first card
-
-> ***Pseudocode***
->> **IF STACK IS NOT EMPTY**
->>> remove the first card from the stack
->>
->>> return the removed card
->
->> **ELSE**
->>> return nil
-
+ 
+ > `stack.Behead()`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> GETS: ***TRUE***
+ >
+ >> UPDATES: ***TRUE***
+ 
+ > ***Parameters***
+ >> **stack** is the Stack from which to remove the first card
+ 
+ > ***Pseudocode***
+ >> **IF STACK IS NOT EMPTY**
+ >>> remove the first card from the stack
+ >>
+ >>> return the removed card
+ >
+ >> **ELSE**
+ >>> return nil
+ 
 <h3>IndexOf</h3>
-
-> `stack.IndexOf(card)`
->> CONSTRUCTOR: ***FALSE***
->
->> GETS: ***TRUE***
->
->> UPDATES: ***FALSE***
-
-> ***Parameters***
->> **stack** is the Stack to search
->
->> **card** is the ambigously-typed element whose index to find
-
-> ***Pseudocode***
->> **IF CARD IS IN STACK**
->>> return card index [0, stack.len)
->
->> **ELSE**
->>> return -1
-
+ 
+ > `stack.IndexOf(card)`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> GETS: ***TRUE***
+ >
+ >> UPDATES: ***FALSE***
+ 
+ > ***Parameters***
+ >> **stack** is the Stack to search
+ >
+ >> **card** is the ambigously-typed element whose index to find
+ 
+ > ***Pseudocode***
+ >> **IF CARD IS IN STACK**
+ >>> return card index [0, stack.len)
+ >
+ >> **ELSE**
+ >>> return -1
+ 
 <h1>Footer</h1>
 
 This project was created by Gabe Tucker.
