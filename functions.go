@@ -13,15 +13,13 @@ func MakeStack() Stack {
 
 }
 
-func (stack *Stack) Push(element interface{}) *Stack {
+func (stack *Stack) Push(elem interface{}) *Stack {
 
-	// pushes all previous values to i + 1
-	for i := stack.len; i > 0; i-- {
-		stack.vals[i+1] = stack.vals[i]
-	}
+	// insert elem into new interface slice to satisfy append function
+	elemToInterface := []interface{}{elem}
 
-	// pushes new element into stack
-	stack.vals[0] = element
+	// append stack.elems to our elem
+	stack.elems = append(elemToInterface, stack.elems)
 
 	// return
 	return stack

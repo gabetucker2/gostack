@@ -12,8 +12,8 @@
  * **README.md** is this file
  * **stacks.go** is where the Stack struct is defined
  * **functions.go** is where novel functions are stored
- * **test.go** is a script used to run test cases to ensure functionality of this project's functions; for examples on how to use `gostack` functions, see this file; it is recommended to delete this file if it is not commented out at the time of your installation since it uses the main() function; in order to run test cases with ***test.go*** *not* commented out, run `go run .` in the top directory
- * **go.mod** is used to initialize the project to its respective git repository
+ * **caseTests.go** is a script used to run test cases to ensure functionality of this project's functions; for examples on how to use `gostack` functions, see this file; it is recommended to delete this file if it is not commented out at the time of your installation since it uses the main() function; in order to run test cases with ***test.go*** *not* commented out, run `go run .` in the top directory
+ * **go.mod** is used to manage directory access
 
  <h2>Links</h2>
 
@@ -27,9 +27,9 @@
 
  <h2>Implemented Features</h2>
  
- * **MakeStack** function
- * **stack.Push** function
- * **stack.IndexOf** function
+ * **MakeStack()**
+ * **stack.Push()**
+ * **stack.IndexOf()**
  
  <h2>Unimplemented Features</h2>
 
@@ -37,6 +37,7 @@
  * Add **Insert** function
  * Add **Flip** function
  * Add **Entry** function
+ * Add **Clone** function
  * Add **Extract** function
  * Add **ReplaceEntries** function
  * Add **GetFlip** function
@@ -46,7 +47,7 @@
  * Add **Behead** function
  * Add **InterfaceType** function
  * Add **GetKeys** function
- * Add **GetVals** function
+ * Add **Getelems** function
  * Add **Has** function
  * Add **Clear** function
  * Add lambda array sort-return function like for Lists in C#
@@ -64,9 +65,9 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 
 <h2>Stack Properties</h2>
 
-<h3>vals</h3>
+<h3>Elems</h3>
 
-> `stack.vals`
+> `stack.elems`
 >> Returns an interface array to represent the elements in the Stack
 >
 >> It is highly recommended against accessing this property, as the entire purpose of this project is for you not to have to manage arrays manually
