@@ -1,17 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 )
 
 // TEST FUNCTIONS (to facilitate cases)
 
-func _gostack_test_Start(funcName string, enabled bool) {
+func _gostack_test_Start(funcName string, showTestText bool) {
 
-	// print TESTING line only if enabled var set to true
-	if enabled {
-		fmt.Println("-   TESTING " + funcName + "()")
+	// print TESTING line only if showTestText var set to true
+	if showTestText {
+		println("-   TESTING " + funcName + "()")
 	}
 
 }
@@ -38,7 +37,7 @@ func _gostack_test_End(funcName string, conditions []bool) {
 	}
 
 	// print all the data together
-	fmt.Println(out + " " + funcName + "()")
+	println(out + " " + funcName + "()")
 
 }
 
@@ -48,6 +47,8 @@ func _gostack_back_SampleStack() (stack *Stack) {
 
 	// make a sample stack of form <"Card A", "Card B", "Card C">
 	stack = MakeStack()
+
+	// create stack
 	stack.Append(testCard1).Append(testCard2).Append(testCard3)
 
 	return
@@ -61,29 +62,81 @@ func _gostack_back_LenAndSize(stack *Stack, size int) bool {
 
 }
 
-func _gostack_back_NewCard() Card {
+func _gostack_back_NewCard(val interface{}) (card *Card) {
 
-	// return newly-created card
-	return Card{}
+	// make newly-created card
+	card = &Card{}
+	card.key = nil
+	card.value = val
+
+	// return
+	return
 
 }
 
-func (stack *Stack) _gostack_back_AddCard(card interface{}) *Stack {
+func _gostack_back_AddCardAfter(stack *Stack, card Card, idx int) *Stack {
 
+	// insert card into new array slice to satisfy append function
+	newCards := []Card{}
+
+	if stack.size == 0 { // add card to empty list
+
+		newCards = append(newCards, card)
+
+	} else { // append each card in stack.cards to card
+
+		for i, c := range stack.cards {
+			if i != idx {
+				newCards = append(newCards, c)
+			} else if i == idx {
+				newCards = append(newCards, c)
+				newCards = append(newCards, card)
+			}
+		}
+
+	}
+
+	// set stack.cards to our new array
+	stack.cards = newCards
+
+	// update stack properties
 	stack.size++
-	stack.
 
-	// indices.insert
-	// etc
-
+	// return
 	return stack
 
 }
 
-func (stack *Stack) _gostack_back_RemoveCard(card interface{}) {
+func _gostack_back_RemoveCard(stack *Stack, idx int) *Card {
 
-	// size++
-	// indices.insert
-	// etc
+	card := new(Card) // have to do this if we want to set as nil
+
+	if stack.size == 0 { // if we can't pop it, return nil
+
+		card = nil
+
+	} else { // if we can pop it, return popped card
+
+		// insert card into new array slice to satisfy append function
+		newCards := []Card{}
+
+		// append each card in stack.cards to card
+		for i, c := range stack.cards {
+			if i != idx {
+				newCards = append(newCards, c)
+			} else if i == idx {
+				card = &c
+			}
+		}
+
+		// set stack.cards to our new array
+		stack.cards = newCards
+
+		// update stack properties
+		stack.size--
+
+	}
+
+	return card
 
 }

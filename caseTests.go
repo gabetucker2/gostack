@@ -1,22 +1,14 @@
 package main
 
-import (
-	"fmt"
-)
-
 // VARIABLES
 
-var enabled = false      // false for cleaner console, true for debugging
-var testCard1 = "Card A" // in sample stack
-var testCard2 = "Card B" // in sample stack
-var testCard3 = "Card C" // in sample stack
-var testCard4 = "Card D" // out of sample stack
+var showTestText = true // false for cleaner console, true for debugging
 
 // CASE FUNCTIONS
 
 func _gostack_case_MakeStack(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
 
@@ -28,12 +20,12 @@ func _gostack_case_MakeStack(funcName string) {
 
 }
 
-func _gostack_case_Clear(funcName string) {
+func _gostack_case_Empty(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := _gostack_back_SampleStack()
-	stack2 := stack.Clear()
+	stack2 := stack.Empty()
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 0),
@@ -46,16 +38,16 @@ func _gostack_case_Clear(funcName string) {
 
 func _gostack_case_Push(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
 	stack.Push(testCard3).Push(testCard2).Push(testCard1)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 3),
-		stack.cards[0] == testCard1,
-		stack.cards[1] == testCard2,
-		stack.cards[2] == testCard3,
+		&stack.cards[0] == testCard1,
+		&stack.cards[1] == testCard2,
+		&stack.cards[2] == testCard3,
 	}
 
 	_gostack_test_End(funcName, conditions)
@@ -64,7 +56,7 @@ func _gostack_case_Push(funcName string) {
 
 func _gostack_case_Append(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
 	stack.Append(testCard1).Append(testCard2).Append(testCard3)
@@ -82,15 +74,15 @@ func _gostack_case_Append(funcName string) {
 
 func _gostack_case_1_Pop(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := _gostack_back_SampleStack()
 	pop := stack.Pop()
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 2),
-		stack.cards[0] == testCard1,
-		stack.cards[1] == testCard2,
+		&stack.cards[0] == testCard1,
+		&stack.cards[1] == testCard2,
 		pop == testCard3,
 	}
 
@@ -100,7 +92,7 @@ func _gostack_case_1_Pop(funcName string) {
 
 func _gostack_case_2_Pop(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
 	pop := stack.Pop()
@@ -116,7 +108,7 @@ func _gostack_case_2_Pop(funcName string) {
 
 func _gostack_case_1_Behead(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := _gostack_back_SampleStack()
 	behead := stack.Behead()
@@ -124,8 +116,8 @@ func _gostack_case_1_Behead(funcName string) {
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 2),
 		behead == testCard1,
-		stack.cards[0] == testCard2,
-		stack.cards[1] == testCard3,
+		&stack.cards[0] == testCard2,
+		&stack.cards[1] == testCard3,
 	}
 
 	_gostack_test_End(funcName, conditions)
@@ -134,14 +126,14 @@ func _gostack_case_1_Behead(funcName string) {
 
 func _gostack_case_2_Behead(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
-	pop := stack.Pop()
+	behead := stack.Pop()
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 0),
-		pop == nil,
+		behead.value == nil,
 	}
 
 	_gostack_test_End(funcName, conditions)
@@ -150,7 +142,7 @@ func _gostack_case_2_Behead(funcName string) {
 
 func _gostack_case_Has(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := _gostack_back_SampleStack()
 
@@ -167,7 +159,7 @@ func _gostack_case_Has(funcName string) {
 
 func _gostack_case_IndexOf(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := _gostack_back_SampleStack()
 
@@ -187,7 +179,7 @@ func _gostack_case_IndexOf(funcName string) {
 func main() {
 
 	// layer two is dependent on layer one in case tests, layer three dependent on layer two, etc
-	fmt.Println("- BEGINNING TESTS")
+	println("- BEGINNING TESTS")
 
 	// layer one
 	_gostack_case_MakeStack("MakeStack") // regular case
@@ -196,7 +188,7 @@ func main() {
 	_gostack_case_Append("stack.Append") // regular case
 
 	// layer three
-	_gostack_case_Clear("stack.Clear")        // regular case
+	_gostack_case_Empty("stack.Empty")        // regular case
 	_gostack_case_Push("stack.Push")          // regular case
 	_gostack_case_1_Pop("T1:stack.Pop")       // regular case
 	_gostack_case_2_Pop("T2:stack.Pop")       // edge case

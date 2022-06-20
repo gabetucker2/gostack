@@ -39,7 +39,7 @@
  * **stack.Push()**
  * **stack.Pop()**
  * **stack.Behead()**
- * **stack.Clear()**
+ * **stack.Empty()**
 
  <h3>Receivers</h3>
 
@@ -106,9 +106,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > ***Pseudocode***
  >> return new Stack
  
-<h3>Clear</h3>
+<h3>Empty</h3>
  
- > `stack.Clear()`
+ > `stack.Empty()`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> TRANSFORMER: ***TRUE***
@@ -116,7 +116,7 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  >> RECEIVER: ***TRUE***
  
  > ***Parameters***
- >> **stack** is the Stack to clear
+ >> **stack** is the Stack to Empty
  
  > ***Pseudocode***
  >> removes all cards in the Stack
