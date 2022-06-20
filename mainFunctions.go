@@ -25,18 +25,18 @@ func (stack *Stack) Clear() *Stack {
 
 }
 
-func (stack *Stack) Push(card interface{}) *Stack {
+func (stack *Stack) Push(card Card) *Stack {
 
 	// insert card into new interface slice to satisfy append function
-	newInterface := []interface{}{card}
+	newCards := []Card{card}
 
 	// append each card in stack.cards to card
 	for _, c := range stack.cards {
-		newInterface = append(newInterface, c)
+		newCards = append(newCards, c)
 	}
 
 	// set stack.cards to our new interface
-	stack.cards = newInterface
+	stack.cards = newCards
 
 	// update stack properties
 	stack.size++
@@ -46,21 +46,21 @@ func (stack *Stack) Push(card interface{}) *Stack {
 
 }
 
-func (stack *Stack) Append(card interface{}) *Stack {
+func (stack *Stack) Append(card Card) *Stack {
 
 	// create new interface slice
-	newInterface := []interface{}{}
+	newCards := []Card{}
 
 	// append each card in stack.cards to card
 	for _, c := range stack.cards {
-		newInterface = append(newInterface, c)
+		newCards = append(newCards, c)
 	}
 
 	// insert card into interface last
-	newInterface = append(newInterface, card)
+	newCards = append(newCards, card)
 
 	// set stack.cards to our new interface
-	stack.cards = newInterface
+	stack.cards = newCards
 
 	// update stack properties
 	stack.size++
@@ -70,11 +70,11 @@ func (stack *Stack) Append(card interface{}) *Stack {
 
 }
 
-func (stack *Stack) Pop() (card interface{}) {
+func (stack *Stack) Pop() (card Card) {
 
 	if stack.size == 0 { // if we can't pop it, return nil
 
-		card = nil
+		card = _gostack_back_NewCard()
 
 	} else { // if we can pop it, return popped card
 
