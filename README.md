@@ -12,20 +12,14 @@
 > `IndexOf(needle, haystack)`
 
 > Parameters:
->
->   **needle** is an ambigously-typed element
->
->   **haystack** is a Stack
+>> **needle** is an ambigously-typed element
+>> **haystack** is a Stack
 
 > Pseudocode:
->
->   IF NEEDLE IS IN HAYSTACK:
->
->       return needle index [0, |haystack|)
->
->   ELSE
->
->       return -1
+>> IF NEEDLE IS IN HAYSTACK:
+>>> return needle index [0, |haystack|)
+>> ELSE
+>>> return -1
 
 <h1>Overview</h1>
 
