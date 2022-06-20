@@ -5,48 +5,62 @@ import (
 	"strconv"
 )
 
-func gostack_PrintStart(thisFuncName string) {
+var enabled = false
+var testCard1 = "Card A" // in sample stack
+var testCard2 = "Card B" // in sample stack
+var testCard3 = "Card C" // in sample stack
+var testCard4 = "Card D" // out of sample stack
 
-	fmt.Println("-   TESTING " + thisFuncName + "()")
+func _gostack_test_Start(funcName string, enabled bool) {
+
+	// print TESTING line only if enabled var set to true (set to false for cleaner console)
+	if enabled {
+		fmt.Println("-   TESTING " + funcName + "()")
+	}
 
 }
 
-func gostack_PrintOut(test int, thisFuncName string) {
+func _gostack_test_End(conditions []bool, funcName string) {
 
-	var out = "-   "
+	// set test to -1 (true) by default
+	test := -1
+
+	// test each condition and update test flag to index of condition which failed
+	for i, c := range conditions {
+		if !c {
+			test = i
+			break
+		}
+	}
+
+	// set SUCCESS/FAILURE based on which condition, if any, failed
+	out := "-   "
 	if test == -1 {
 		out += "SUCCESS"
 	} else {
 		out += "FAILURE AT CONDITION IDX = " + strconv.Itoa(test) + " in"
 	}
 
-	fmt.Println(out + " " + thisFuncName + "()")
+	// print all the data together
+	fmt.Println(out + " " + funcName + "()")
 
 }
 
-func gostack_SetTest(test *int, conditions []bool) {
+func _gostack_test_SampleStack() (stack Stack) {
 
-	// set test to -1 (true) nu default
-	*test = -1
+	// make a sample stack of form <"Card A", "Card B", "Card C">
+	stack = MakeStack()
+	stack.Push(testCard1)
+	stack.Push(testCard2)
+	stack.Push(testCard3)
 
-	// test each condition and update test flag to index of condition which failed
-	for i, c := range conditions {
-		if !c {
-			*test = i
-			break
-		}
-	}
+	return
 
 }
 
-func main() {
+func _gostack_case_MakeStack(funcName string) {
 
-	fmt.Println("- BEGINNING TESTS")
-	test := -1
-
-	//////////////////////////////////////////////////////
-	thisFuncName := "MakeStack"
-	gostack_PrintStart(thisFuncName)
+	_gostack_test_Start(funcName, enabled)
 
 	stack := MakeStack()
 
@@ -55,55 +69,73 @@ func main() {
 		stack.len == 0,
 	}
 
-	gostack_SetTest(&test, conditions)
-	gostack_PrintOut(test, thisFuncName)
+	_gostack_test_End(conditions, funcName)
 
-	////////////////////////////////////////////////////// <>
-	thisFuncName = "stack.Push"
-	gostack_PrintStart(thisFuncName)
+}
 
-	testCard1 := "Card 1"
-	testCard2 := "Card 2"
-	testCard3 := "Card 3"
+func _gostack_case_Push(funcName string) {
+
+	_gostack_test_Start(funcName, enabled)
+
+	stack := MakeStack()
 	stack.Push(testCard3)
 	stack.Push(testCard2)
 	stack.Push(testCard1)
 
-	conditions = []bool{
-		len(stack.cards) == 2,
+	conditions := []bool{
+		len(stack.cards) == 3,
 		stack.cards[0] == testCard1,
 		stack.cards[1] == testCard2,
 		stack.cards[2] == testCard3,
 	}
 
-	gostack_SetTest(&test, conditions)
-	gostack_PrintOut(test, thisFuncName)
+	_gostack_test_End(conditions, funcName)
 
-	////////////////////////////////////////////////////// <"Card 1", "Card 2", "Card 3">
-	thisFuncName = "T1:stack.IndexOf"
-	gostack_PrintStart(thisFuncName)
+}
 
+func _gostack_case_1_IndexOf(funcName string) {
+
+	_gostack_test_Start(funcName, enabled)
+
+	stack := _gostack_test_SampleStack()
 	correctIdx := 1
 
-	conditions = []bool{
+	conditions := []bool{
 		stack.IndexOf(testCard2) == correctIdx,
 	}
 
-	gostack_SetTest(&test, conditions)
-	gostack_PrintOut(test, thisFuncName)
+	_gostack_test_End(conditions, funcName)
 
-	////////////////////////////////////////////////////// <"Card 1", "Card 2", "Card 3">
-	thisFuncName = "T2:stack.IndexOf"
-	gostack_PrintStart(thisFuncName)
+}
 
-	correctIdx = -1
-	testCard4 := "Card 4"
+func _gostack_case_2_IndexOf(funcName string) {
 
-	conditions = []bool{
+	_gostack_test_Start(funcName, enabled)
+
+	stack := _gostack_test_SampleStack()
+	correctIdx := -1
+
+	conditions := []bool{
 		stack.IndexOf(testCard4) == correctIdx,
 	}
 
-	gostack_SetTest(&test, conditions)
-	gostack_PrintOut(test, thisFuncName)
+	_gostack_test_End(conditions, funcName)
+
+}
+
+// layer two is dependent on layer one, layer three dependent on layer two, etc
+func main() {
+
+	fmt.Println("- BEGINNING TESTS")
+
+	// layer one
+	_gostack_case_MakeStack("MakeStack")
+
+	// layer two
+	_gostack_case_Push("stack.Push")
+
+	// layer three
+	_gostack_case_1_IndexOf("T1:stack.IndexOf")
+	_gostack_case_1_IndexOf("T2:stack.IndexOf")
 
 }
