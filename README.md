@@ -50,6 +50,7 @@
  * Add **Has** function
  * Add **Clear** function
  * Add lambda array sort-return function like for Lists in C#
+ * *...and many more :)*
 
 <h2>Footer</h2>
 
@@ -57,7 +58,7 @@ This project was created by Gabe Tucker.
 
 If there are any changes or comments you would like to have made in respect to this project, please email `tucker.854@osu.edu`; I will usually respond in 1-2 business days.
 
-Feel free to learn more about me at `https://gabetucker.com` or `https://www.linkedin.com/in/gabetucker2/`!
+Feel free to visit my personal pages at `https://gabetucker.com` or `https://www.linkedin.com/in/gabetucker2/`!
 
 <h1>Implemented Features</h1>
 
