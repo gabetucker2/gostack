@@ -243,7 +243,7 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  
  > ***Pseudocode***
  >> **IF CARD IS IN STACK**
- >>> return card index [0, stack.len)
+ >>> return card index [0, stack.size)
  >
  >> **ELSE**
  >>> return -1
