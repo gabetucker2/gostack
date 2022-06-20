@@ -1,11 +1,12 @@
 package main
 
 type Card struct {
+	indices []int
+	keys    []interface{}
+	values  []interface{}
 }
 
 type Stack struct {
-
-	// properties
-	cards []interface{}
+	cards []Card
 	size  int
 }
