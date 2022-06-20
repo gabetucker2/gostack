@@ -86,9 +86,11 @@
 
 <h2>Stack Functions</h2>
 
-Constructor means the function receiver is the struct (**Stack**) itself.
+CONSTRUCTOR means the function receiver is the struct (**Stack**) itself.  !CONSTRUCTOR means the function doesn't have a receiver or, if it does, it is an existing **Stack** object.
 
-Non-constructor means the function doesn't have a receiver or, if it does, it is an existing **Stack** object.
+TRANSFORMER means the function updates the inputted **Stack**.
+
+RECEIVER means the function returns a value.
 
 Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
 
@@ -97,7 +99,7 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `MakeStack()`
  >> CONSTRUCTOR: ***TRUE***
  >
- >> UPDATE: ***FALSE***
+ >> TRANSFORMER: ***FALSE***
  >
  >> RECEIVER: ***TRUE***
  
@@ -109,7 +111,7 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.Clear()`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> UPDATE: ***TRUE***
+ >> TRANSFORMER: ***TRUE***
  >
  >> RECEIVER: ***TRUE***
  
@@ -126,7 +128,7 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.Append(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> UPDATE: ***TRUE***
+ >> TRANSFORMER: ***TRUE***
  >
  >> RECEIVER: ***TRUE***
  
@@ -145,7 +147,7 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.Push(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> UPDATE: ***TRUE***
+ >> TRANSFORMER: ***TRUE***
  >
  >> RECEIVER: ***TRUE***
  
@@ -167,7 +169,7 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.Pop()`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> UPDATE: ***TRUE***
+ >> TRANSFORMER: ***TRUE***
  >
  >> RECEIVER: ***TRUE***
  
@@ -188,7 +190,7 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.Behead()`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> UPDATE: ***TRUE***
+ >> TRANSFORMER: ***TRUE***
  >
  >> RECEIVER: ***TRUE***
  
@@ -209,7 +211,7 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.Has(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> UPDATE: ***FALSE***
+ >> TRANSFORMER: ***FALSE***
  >
  >> RECEIVER: ***TRUE***
  
@@ -230,7 +232,7 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.IndexOf(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> UPDATE: ***FALSE***
+ >> TRANSFORMER: ***FALSE***
  >
  >> RECEIVER: ***TRUE***
  
