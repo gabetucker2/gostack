@@ -1,7 +1,7 @@
 # gostack
  `gostack` introduces **Stacks**, ambiguously-typed (mathematical) strings of index/key-element pairs intended to replace arrays and maps in *golang*.  **Stacks** are introduced alongside a variety of helpful functions to ensure programmer ease-of-use, concision, and flexibility.
 
- By default for generics, people tend to use *golang*'s list package, but this package is optimized only with the essentials for transforming and selecting list elements.  While `gostack` offers a much wider breadth of functions for transforming and selecting elements, it also allows you to turn **Stacks** into maps, quickly convert between arrays and **Stacks**, and—most excitingly—to use functions based on lambda expression including **sort**, **TrueForAll**, and **RemoveAll*.
+ By default for generics, people tend to use *golang*'s list package, but this package is optimized only with the essentials for transforming and selecting list elements.  While `gostack` offers a much wider breadth of functions for transforming and selecting elements, it also allows you to turn **Stacks** into maps, quickly convert between arrays and **Stacks**, and—most excitingly—to use functions based on lambda expression including **sort**, **TrueForAll**, and **RemoveAll**.
 
  Many of the functions in this project were inspired by functions from *JavaScript* Arrays or *C#* Lists.
 
@@ -14,10 +14,10 @@
  An overview of the files in this repository
 
  * **README.md** is this file
- * **stacks.go** is where the Stack struct is defined
- * **functions.go** is where novel functions are stored
  * **caseTests.go** is a script used to run test cases to ensure functionality of this project's functions; for examples on how to use `gostack` functions, see this file; it is recommended to delete this file if it is not commented out at the time of your installation since it uses the main() function; in order to run test cases with ***test.go*** *not* commented out, run `go run .` in the top directory
+ * **functions.go** is where novel functions are stored
  * **go.mod** is used to manage directory access
+ * **stacks.go** is where the Stack struct is defined
 
  <h2>Links</h2>
 
@@ -31,6 +31,7 @@
  
  * **MakeStack()**
  * **stack.Push()**
+ * **stack.Pop()**
  * **stack.IndexOf()**
  
  <h2>Unimplemented Features</h2>
@@ -45,7 +46,7 @@
  * Add **ReplaceEntries** function
  * Add **GetFlip** function
  * Add **Remove** function
- * Add **Pop** function
+ * Add **Clear** function
  * Add **Append** function
  * Add **Behead** function
  * Add **Type** function
@@ -54,7 +55,6 @@
  * Add **GetKeys** function
  * Add **GetCards** function
  * Add **Has** function
- * Add **Clear** function
  * Add **Sort** function
  * Add **TrueForAll** function
  * Add **RemoveAll** function
@@ -79,9 +79,9 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 >
 >> It is highly recommended against accessing this property, as the entire purpose of this project is for you not to have to manage arrays manually
 
-<h3>len</h3>
+<h3>size</h3>
 
-> `stack.len`
+> `stack.size`
 >> Returns the cardinality of the given Stack
 
 <h2>Stack Functions</h2>

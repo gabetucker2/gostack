@@ -5,8 +5,8 @@ func MakeStack() Stack {
 	// creates new stack
 	var stack Stack
 
-	// initialized new stack's variables
-	stack.len = 0
+	// initialized stack properties
+	stack.size = 0
 
 	// return
 	return stack
@@ -19,15 +19,42 @@ func (stack *Stack) Push(card interface{}) *Stack {
 	newInterface := []interface{}{card}
 
 	// append each card in stack.cards to card
-	for _, e := range stack.cards {
-		newInterface = append(newInterface, e)
+	for _, c := range stack.cards {
+		newInterface = append(newInterface, c)
 	}
 
 	// set stack.cards to our new interface
 	stack.cards = newInterface
 
+	// update stack properties
+	stack.size++
+
 	// return
 	return stack
+
+}
+
+func (stack *Stack) Pop() (card interface{}) {
+
+	if stack.size == 0 { // if we can't pop it, return nil
+
+		card = nil
+
+	} else { // if we can pop it, return popped card
+
+		// get card we're removing
+		card = stack.cards[stack.size-1]
+
+		// remove the last card from the stack
+		stack.cards = stack.cards[:stack.size-1]
+
+		// update stack properties
+		stack.size--
+
+	}
+
+	// return
+	return
 
 }
 
