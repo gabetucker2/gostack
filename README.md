@@ -3,9 +3,9 @@
 
  Many of the functions in this project were inspired by functions from *JavaScript* Arrays or *C#* Lists.
 
-<h1>Implemented Changes</h1>
+<h1>Implemented Features</h1>
 
-<h2>Properties</h2>
+<h2>Stack Properties</h2>
 
 <h3>vals</h3>
 
@@ -19,19 +19,17 @@
 > `stack.len`
 >> Returns the cardinality of the given Stack
 
-<h2>Functions</h2>
+<h2>Stack Functions</h2>
 
  Constructor means the function receiver is the struct (`Stack`) itself
  Non-constructor means the function doesn't have a receiver or, if it does, it is an existing `Stack` object
 
-<h3>Make</h3>
+<h3>MakeStack</h3>
 
 > `MakeStack()`
 >> CONSTRUCTOR: ***TRUE***
 >
 >> GETS: ***TRUE***
->
->> MAKES: ***TRUE***
 >
 >> UPDATES: ***FALSE***
 
@@ -44,8 +42,6 @@
 >> CONSTRUCTOR: ***FALSE***
 >
 >> GETS: ***TRUE***
->
->> MAKES: ***FALSE***
 >
 >> UPDATES: ***TRUE***
 
@@ -68,8 +64,6 @@
 >> CONSTRUCTOR: ***FALSE***
 >
 >> GETS: ***TRUE***
->
->> MAKES: ***FALSE***
 >
 >> UPDATES: ***FALSE***
 
@@ -107,7 +101,7 @@
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
  * http://web.cse.ohio-state.edu/software/common/doc/components/standard/Standard.html
 
-<h2>Functions to be Added</h2>
+<h2>Features to be Added</h2>
 
 * Add **MakeStack** function
 * Add **Fill** function
