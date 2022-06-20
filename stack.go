@@ -3,6 +3,6 @@ package main
 type Stack struct {
 
 	// properties
-	elems []interface{}
+	cards []interface{}
 	len   int
 }

@@ -13,18 +13,18 @@ func MakeStack() Stack {
 
 }
 
-func (stack *Stack) Push(elem interface{}) *Stack {
+func (stack *Stack) Push(card interface{}) *Stack {
 
-	// insert elem into new interface slice to satisfy append function
-	newInterface := []interface{}{elem}
+	// insert card into new interface slice to satisfy append function
+	newInterface := []interface{}{card}
 
-	// append each element in stack.elems to elem
-	for _, e := range stack.elems {
+	// append each card in stack.cards to card
+	for _, e := range stack.cards {
 		newInterface = append(newInterface, e)
 	}
 
-	// set stack.elems to our new interface
-	stack.elems = newInterface
+	// set stack.cards to our new interface
+	stack.cards = newInterface
 
 	// return
 	return stack
@@ -33,9 +33,10 @@ func (stack *Stack) Push(elem interface{}) *Stack {
 
 func (stack *Stack) IndexOf(target interface{}) (idx int) {
 
+	// sets
 	idx = -1
-	for i, elem := range stack.elems {
-		if elem == target {
+	for i, c := range stack.cards {
+		if c == target {
 			idx = i
 			break
 		}

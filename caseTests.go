@@ -49,7 +49,7 @@ func main() {
 	gostack_PrintStart(thisFuncName)
 
 	stack := MakeStack()
-	conditions := []bool{len(stack.elems) == 0, stack.len == 0}
+	conditions := []bool{len(stack.cards) == 0, stack.len == 0}
 
 	gostack_SetTest(&test, conditions)
 	gostack_PrintOut(test, thisFuncName)
@@ -58,11 +58,11 @@ func main() {
 	thisFuncName = "stack.Push"
 	gostack_PrintStart(thisFuncName)
 
-	testStr1 := "Element 1"
-	testStr2 := "Element 2"
+	testStr1 := "Card 1"
+	testStr2 := "Card 2"
 	stack.Push(testStr2)
 	stack.Push(testStr1)
-	conditions = []bool{len(stack.elems) == 2, stack.elems[0] == testStr1, stack.elems[1] == testStr2}
+	conditions = []bool{len(stack.cards) == 2, stack.cards[0] == testStr1, stack.cards[1] == testStr2}
 
 	gostack_SetTest(&test, conditions)
 	gostack_PrintOut(test, thisFuncName)

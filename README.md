@@ -5,7 +5,7 @@
 
  Many of the functions in this project were inspired by functions from *JavaScript* Arrays or *C#* Lists.
 
- For the purposes of this project, a ***Stack*** may be imagined as a set of cards.  Each element in that set is a ***card***.
+ For the purposes of this project, we will use the imagery of a stack of cards.  A ***Stack*** will refer to a stack of cards; each element in that Stack is a ***card***.
 
 <h1>Overview</h1>
 
@@ -52,7 +52,7 @@
  * Add **ToArray** function
  * Add **ToStack** function
  * Add **GetKeys** function
- * Add **GetElems** function
+ * Add **GetCards** function
  * Add **Has** function
  * Add **Clear** function
  * Add **Sort** function
@@ -72,9 +72,9 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 
 <h2>Stack Properties</h2>
 
-<h3>Elems</h3>
+<h3>cards</h3>
 
-> `stack.elems`
+> `stack.cards`
 >> Returns an interface array to represent the elements in the Stack
 >
 >> It is highly recommended against accessing this property, as the entire purpose of this project is for you not to have to manage arrays manually
