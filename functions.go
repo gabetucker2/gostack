@@ -1,9 +1,9 @@
 package main
 
-func MakeStack() *Stack {
+func MakeStack() Stack {
 
 	// creates new stack
-	var stack *Stack
+	var stack Stack
 
 	// initialized new stack's variables
 	stack.len = 0

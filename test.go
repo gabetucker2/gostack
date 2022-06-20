@@ -4,13 +4,13 @@ import "fmt"
 
 func gostack_PrintTesting(thisFuncName string) {
 
-	fmt.Println("TESTING " + thisFuncName)
+	fmt.Println("- TESTING " + thisFuncName)
 
 }
 
 func gostack_PrintOutcome(success bool, thisFuncName string) {
 
-	var out = thisFuncName
+	var out = "- " + thisFuncName
 	if success {
 		out += " SUCCESS"
 	} else {
@@ -28,7 +28,7 @@ func main() {
 	thisFuncName := "MakeStack"
 	gostack_PrintTesting(thisFuncName)
 	stack := MakeStack()
-	success := stack != nil && len(stack.vals) == 0 && stack.len == 0
+	success := len(stack.vals) == 0 && stack.len == 0
 	gostack_PrintOutcome(success, thisFuncName)
 
 	thisFuncName = "stack.Push"
