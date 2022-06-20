@@ -126,6 +126,25 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 >
 >> return updated Stack
 
+<h3>Pop</h3>
+
+> `stack.Pop()`
+>> CONSTRUCTOR: ***FALSE***
+>
+>> GETS: ***TRUE***
+>
+>> UPDATES: ***TRUE***
+
+> ***Parameters***
+>> **stack** is the Stack from which to pop the last card
+
+> ***Pseudocode***
+>> **IF STACK HAD CARD TO POP**
+>>> return popped card
+>
+>> **ELSE**
+>>> return nil
+
 <h3>IndexOf</h3>
 
 > `stack.IndexOf(card)`

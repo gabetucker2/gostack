@@ -167,9 +167,7 @@ func main() {
 	_gostack_case_MakeStack("MakeStack") // regular case
 
 	// layer two
-	_gostack_case_Push("stack.Push") // regular case
-
-	// layer three
+	_gostack_case_Push("stack.Push")       // regular case
 	_gostack_case_1_Pop("T1:stack.Pop")    // regular case
 	_gostack_case_2_Pop("T2:stack.Pop")    // edge case
 	_gostack_case_IndexOf("stack.IndexOf") // regular and edge cases
