@@ -86,7 +86,7 @@
 
 <h2>Stack Functions</h2>
 
-CONSTRUCTOR means the function receiver is the struct (**Stack**) itself.  !CONSTRUCTOR means the function doesn't have a receiver or, if it does, it is an existing **Stack** object.
+CONSTRUCTOR means the function requires no receiver.  !CONSTRUCTOR means the function doesn't have a receiver or, if it does, it is an existing **Stack** object.
 
 TRANSFORMER means the function updates the inputted **Stack**.
 
