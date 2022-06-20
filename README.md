@@ -97,9 +97,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `MakeStack()`
  >> CONSTRUCTOR: ***TRUE***
  >
- >> GETS: ***TRUE***
+ >> UPDATE: ***FALSE***
  >
- >> UPDATES: ***FALSE***
+ >> RECEIVER: ***TRUE***
  
  > ***Pseudocode***
  >> return new Stack
@@ -109,9 +109,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.Clear()`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> GETS: ***TRUE***
+ >> UPDATE: ***TRUE***
  >
- >> UPDATES: ***TRUE***
+ >> RECEIVER: ***TRUE***
  
  > ***Parameters***
  >> **stack** is the Stack to clear
@@ -126,9 +126,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.Append(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> GETS: ***TRUE***
+ >> UPDATE: ***TRUE***
  >
- >> UPDATES: ***TRUE***
+ >> RECEIVER: ***TRUE***
  
  > ***Parameters***
  >> **stack** is the Stack to append
@@ -145,9 +145,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.Push(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> GETS: ***TRUE***
+ >> UPDATE: ***TRUE***
  >
- >> UPDATES: ***TRUE***
+ >> RECEIVER: ***TRUE***
  
  > ***Parameters***
  >> **stack** is the Stack to push
@@ -167,9 +167,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.Pop()`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> GETS: ***TRUE***
+ >> UPDATE: ***TRUE***
  >
- >> UPDATES: ***TRUE***
+ >> RECEIVER: ***TRUE***
  
  > ***Parameters***
  >> **stack** is the Stack from which to remove the last card
@@ -188,9 +188,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.Behead()`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> GETS: ***TRUE***
+ >> UPDATE: ***TRUE***
  >
- >> UPDATES: ***TRUE***
+ >> RECEIVER: ***TRUE***
  
  > ***Parameters***
  >> **stack** is the Stack from which to remove the first card
@@ -209,9 +209,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.Has(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> GETS: ***TRUE***
+ >> UPDATE: ***FALSE***
  >
- >> UPDATES: ***FALSE***
+ >> RECEIVER: ***TRUE***
  
  > ***Parameters***
  >> **stack** is the Stack to search
@@ -230,9 +230,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.IndexOf(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> GETS: ***TRUE***
+ >> UPDATE: ***FALSE***
  >
- >> UPDATES: ***FALSE***
+ >> RECEIVER: ***TRUE***
  
  > ***Parameters***
  >> **stack** is the Stack to search
