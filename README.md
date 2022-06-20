@@ -29,15 +29,19 @@
 
  <h2>Implemented Features</h2>
  
+ <h3>Constructors</h3>
+ 
  * **MakeStack()**
- * **stack.Clear()**
-
-
- * **stack.Append**
+ 
+ <h3>Transformers</h3>
+ 
+ * **stack.Append()**
  * **stack.Push()**
  * **stack.Pop()**
  * **stack.Behead()**
+ * **stack.Clear()**
 
+ <h3>Receivers</h3>
 
  * **stack.IndexOf()**
  
