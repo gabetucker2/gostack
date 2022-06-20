@@ -1,11 +1,11 @@
 # gostack
- `gostack` introduces **Stacks**, ambiguously-typed strings of index/key-element pairs intended to replace arrays and maps in *golang*.  **Stacks** are introduced alongside a variety of helpful base functions to ensure programmer ease-of-use, concision, and flexibility.
+ `gostack` introduces **Stacks**, ambiguously-typed (mathematical) strings of index/key-element pairs intended to replace arrays and maps in *golang*.  **Stacks** are introduced alongside a variety of helpful functions to ensure programmer ease-of-use, concision, and flexibility.
 
- By default for generics, people tend to use *golang*'s list package, but this package is optimized only with the essentials for transforming and selecting list elements.  While `gostack` offers a much wider breadth of functions for transforming and selecting elements, it also allows you to turn Stacks into maps, quickly convert between arrays and Stacks, and—most excitingly—to use functions based on lambda expression including **sort**, **TrueForAll**, and **RemoveAll*.
+ By default for generics, people tend to use *golang*'s list package, but this package is optimized only with the essentials for transforming and selecting list elements.  While `gostack` offers a much wider breadth of functions for transforming and selecting elements, it also allows you to turn **Stacks** into maps, quickly convert between arrays and **Stacks**, and—most excitingly—to use functions based on lambda expression including **sort**, **TrueForAll**, and **RemoveAll*.
 
  Many of the functions in this project were inspired by functions from *JavaScript* Arrays or *C#* Lists.
 
- For the purposes of this project, we will use the imagery of a stack of cards.  A ***Stack*** will refer to a stack of cards; each element in that Stack is a ***card***.
+ For the purposes of this project, we will use the imagery of a stack of cards.  A ***Stack*** will refer to a stack of cards; each element in that **Stack** will be a ***card***.
 
 <h1>Overview</h1>
 
@@ -21,7 +21,7 @@
 
  <h2>Links</h2>
 
- Where post, blog, and API links which are relevant to this project are stored
+ Where post, blog, and API links relevant to this project are stored
 
  * https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1?view=net-6.0
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array

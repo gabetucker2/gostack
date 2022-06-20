@@ -31,17 +31,20 @@ func (stack *Stack) Push(card interface{}) *Stack {
 
 }
 
-func (stack *Stack) IndexOf(target interface{}) (idx int) {
+func (stack *Stack) IndexOf(card interface{}) (idx int) {
 
-	// sets
+	// sets the default index to -1, the return value for a failed search
 	idx = -1
+
+	// searches through each card and, if match, sets index to that target's index
 	for i, c := range stack.cards {
-		if c == target {
+		if c == card {
 			idx = i
 			break
 		}
 	}
 
+	// return
 	return
 
 }

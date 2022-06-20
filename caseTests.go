@@ -49,24 +49,61 @@ func main() {
 	gostack_PrintStart(thisFuncName)
 
 	stack := MakeStack()
-	conditions := []bool{len(stack.cards) == 0, stack.len == 0}
+
+	conditions := []bool{
+		len(stack.cards) == 0,
+		stack.len == 0,
+	}
 
 	gostack_SetTest(&test, conditions)
 	gostack_PrintOut(test, thisFuncName)
 
-	//////////////////////////////////////////////////////
+	////////////////////////////////////////////////////// <>
 	thisFuncName = "stack.Push"
 	gostack_PrintStart(thisFuncName)
 
-	testStr1 := "Card 1"
-	testStr2 := "Card 2"
-	stack.Push(testStr2)
-	stack.Push(testStr1)
-	conditions = []bool{len(stack.cards) == 2, stack.cards[0] == testStr1, stack.cards[1] == testStr2}
+	testCard1 := "Card 1"
+	testCard2 := "Card 2"
+	testCard3 := "Card 3"
+	stack.Push(testCard3)
+	stack.Push(testCard2)
+	stack.Push(testCard1)
+
+	conditions = []bool{
+		len(stack.cards) == 2,
+		stack.cards[0] == testCard1,
+		stack.cards[1] == testCard2,
+		stack.cards[2] == testCard3,
+	}
 
 	gostack_SetTest(&test, conditions)
 	gostack_PrintOut(test, thisFuncName)
 
-	//////////////////////////////////////////////////////
+	////////////////////////////////////////////////////// <"Card 1", "Card 2", "Card 3">
+	thisFuncName = "T1:stack.IndexOf"
+	gostack_PrintStart(thisFuncName)
+
+	correctIdx := 1
+
+	conditions = []bool{
+		stack.IndexOf(testCard2) == correctIdx,
+	}
+
+	gostack_SetTest(&test, conditions)
+	gostack_PrintOut(test, thisFuncName)
+
+	////////////////////////////////////////////////////// <"Card 1", "Card 2", "Card 3">
+	thisFuncName = "T2:stack.IndexOf"
+	gostack_PrintStart(thisFuncName)
+
+	correctIdx = -1
+	testCard4 := "Card 4"
+
+	conditions = []bool{
+		stack.IndexOf(testCard4) == correctIdx,
+	}
+
+	gostack_SetTest(&test, conditions)
+	gostack_PrintOut(test, thisFuncName)
 
 }
