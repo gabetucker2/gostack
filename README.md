@@ -5,6 +5,8 @@
 
  Many of the functions in this project were inspired by functions from *JavaScript* Arrays or *C#* Lists.
 
+ For the purposes of this project, a ***Stack*** may be imagined as a set of cards.  Each element in that set is a ***card***.
+
 <h1>Overview</h1>
 
  <h2>Files</h2>
@@ -104,7 +106,7 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 
 <h3>Push</h3>
 
-> `stack.Push(elem)`
+> `stack.Push(card)`
 >> CONSTRUCTOR: ***FALSE***
 >
 >> GETS: ***TRUE***
@@ -114,19 +116,19 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 > ***Parameters***
 >> **stack** is the Stack to push
 >
->> **elem** is the ambiguously-typed element to add to the beginning of the Stack
+>> **card** is the ambiguously-typed element to add to the beginning of the Stack
 
 > ***Pseudocode***
->> add an element to i = 0 of the Stack
+>> add card to i = 0 of the Stack
 >
->> **FOR EACH ELEMENT THAT ALREADY EXISTED IN THE STACK**
->>> that element's previous index i is updated to i + 1
+>> **FOR EACH CARD THAT ALREADY EXISTED IN THE STACK**
+>>> that card's previous index i is updated to i + 1
 >
 >> return updated Stack
 
 <h3>IndexOf</h3>
 
-> `stack.IndexOf(elem)`
+> `stack.IndexOf(card)`
 >> CONSTRUCTOR: ***FALSE***
 >
 >> GETS: ***TRUE***
@@ -136,11 +138,11 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 > ***Parameters***
 >> **stack** is the Stack to search
 >
->> **elem** is the ambigously-typed element whose index to find
+>> **card** is the ambigously-typed element whose index to find
 
 > ***Pseudocode***
->> **IF ELEM IS IN STACK**
->>> return elem index [0, stack.len)
+>> **IF CARD IS IN STACK**
+>>> return card index [0, stack.len)
 >
 >> **ELSE**
 >>> return -1
