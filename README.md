@@ -68,14 +68,6 @@
  * Add **RemoveAll** function
  * *...and many more*
 
-<h2>Footer</h2>
-
-This project was created by Gabe Tucker.
-
-If there are any changes or comments you would like to have made in respect to this project, please email `tucker.854@osu.edu`; I will usually respond in 1-2 business days.
-
-Feel free to visit my personal pages at `https://gabetucker.com` or `https://www.linkedin.com/in/gabetucker2/`!
-
 <h1>Implemented Features</h1>
 
 <h2>Stack Properties</h2>
@@ -232,3 +224,11 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 >
 >> **ELSE**
 >>> return -1
+
+<h1>Footer</h1>
+
+This project was created by Gabe Tucker.
+
+If there are any changes or comments you would like to have made in respect to this project, please email `tucker.854@osu.edu`.  I will usually respond in 1-2 business days.
+
+Feel free to visit my personal pages at `https://gabetucker.com` or `https://www.linkedin.com/in/gabetucker2/`.
