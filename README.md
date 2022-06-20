@@ -10,7 +10,9 @@
 <h3>IndexOf</h3>
 
 > `gostack.IndexOf(needle, haystack)`
+>
 > GETS: ***TRUE***
+>
 > SETS: ***FALSE***
 
 > ***Parameters***
