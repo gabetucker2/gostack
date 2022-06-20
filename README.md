@@ -17,7 +17,7 @@
  * **caseTests.go** is a script used to run test cases to ensure functionality of this project's functions; for examples on how to use `gostack` functions, see this file; it is recommended to delete this file if it is not commented out at the time of your installation since it uses the main() function; in order to run test cases with ***test.go*** *not* commented out, run `go run .` in the top directory
  * **functions.go** is where novel functions are stored
  * **go.mod** is used to manage directory access
- * **stacks.go** is where the Stack struct is defined
+ * **structs.go** is where structs are defined
 
 <h2>Links</h2>
 

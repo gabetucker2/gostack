@@ -1,5 +1,8 @@
 package main
 
+type Card struct {
+}
+
 type Stack struct {
 
 	// properties
