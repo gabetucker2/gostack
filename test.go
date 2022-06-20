@@ -1,25 +1,30 @@
 package main
 
-/*
-func (haystack interface{}) Test_IndexOfString(needle interface{}, expectedOutput interface{}) (ret bool) {
-
-}
+import "fmt"
 
 func main() {
 
 	fmt.Println("BEGINNING TESTS")
 
-	// IndexOf test 1
-	haystack := []int{4, 1, 6}
-	needle := 6
-	expected := 2
-	haystack.Test_IndexOf(needle, expected)
+	// gs_MakeStack test
+	stack := gs_MakeStack()
 
-	// IndexOf test 2
-	haystack = []int{4, 1, 6}
-	needle = 5
-	expected = -1
-	haystack.Test_IndexOf(needle, expected)
+	fmt.Println("gs_MakeStack success")
+
+	/*
+
+		// IndexOf test 1
+		haystack := []int{4, 1, 6}
+		needle := 6
+		expected := 2
+		haystack.Test_IndexOf(needle, expected)
+
+		// IndexOf test 2
+		haystack = []int{4, 1, 6}
+		needle = 5
+		expected = -1
+		haystack.Test_IndexOf(needle, expected)
+
+	*/
 
 }
-*/

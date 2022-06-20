@@ -1,15 +1,21 @@
 package main
 
-func MakeStack() (ret Stack) {
+func gs_MakeStack() Stack {
 
-	ret = 
+	var stack Stack
 
-	return
+	stack.len = 0
+
+	return stack
+
+}
+
+func gs_Push(stack Stack, element interface{}) {
 
 }
 
 /*
-func IndexOf(haystack interface{}, needle interface{}) (ret int) {
+func IndexOf(stack Stack, needle interface{}) (ret int) {
 
 	ret = -1
 	for i := 0; i < len(haystack); i++ {
