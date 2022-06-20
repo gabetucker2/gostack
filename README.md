@@ -12,7 +12,7 @@
 > `stack.vals`
 >> Returns an interface array to represent the elements in the Stack
 >
->> It is highly recommended against accessing this property, as the entire purpose of this project is for you to avoid having to manage this property manually as opposed to by using our functions
+>> It is highly recommended against accessing this property, as the entire purpose of this project is for you not to have to manage arrays manually
 
 <h3>len</h3>
 
@@ -121,3 +121,11 @@
 * Add **Has** function
 * Add **Clear** function
 * Add lambda array sort-return function like for Lists in C#
+
+<h2>Footer</h2>
+
+This project was created by Gabe Tucker.
+
+If there are any changes or comments you would like to have made in respect to this project, please email `tucker.854@osu.edu`; I will usually respond in 1-2 business days.
+
+Feel free to learn more about me at `https://gabetucker.com` or `https://www.linkedin.com/in/gabetucker2/`!
