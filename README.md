@@ -1,5 +1,7 @@
 # gostack
- `gostack` introduces **Stacks**, ambiguously-typed strings of index/key-element pairs intended to replace arrays and maps in golang.  **Stacks** are introduced alongside a variety of helpful base functions to ensure programmer ease-of-use, concision, and flexibility.
+ `gostack` introduces **Stacks**, ambiguously-typed strings of index/key-element pairs intended to replace arrays and maps in *golang*.  **Stacks** are introduced alongside a variety of helpful base functions to ensure programmer ease-of-use, concision, and flexibility.
+
+ By default for generics, people tend to use *golang*'s list package, but this package is optimized only with the essentials for transforming and selecting list elements.  While `gostack` offers a much wider breadth of functions for transforming and selecting elements, it also allows you to turn Stacks into maps, quickly convert between arrays and Stacks, and—most excitingly—to use functions based on lambda expression including **sort**, **TrueForAll**, and **RemoveAll*.
 
  Many of the functions in this project were inspired by functions from *JavaScript* Arrays or *C#* Lists.
 
@@ -19,8 +21,6 @@
 
  Where post, blog, and API links which are relevant to this project are stored
 
- * https://stackoverflow.com/questions/40145569/how-do-you-make-a-function-accept-multiple-types
- * https://medium.com/geekculture/generics-in-go-5a36b1f978bc
  * https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1?view=net-6.0
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
  * http://web.cse.ohio-state.edu/software/common/doc/components/standard/Standard.html
@@ -35,6 +35,7 @@
 
  * Add **Fill** function
  * Add **Insert** function
+ * Add **CombineWith** function
  * Add **Flip** function
  * Add **Entry** function
  * Add **Clone** function
@@ -45,13 +46,17 @@
  * Add **Pop** function
  * Add **Append** function
  * Add **Behead** function
- * Add **InterfaceType** function
+ * Add **Type** function
+ * Add **ToArray** function
+ * Add **ToStack** function
  * Add **GetKeys** function
- * Add **Getelems** function
+ * Add **GetElems** function
  * Add **Has** function
  * Add **Clear** function
- * Add lambda array sort-return function like for Lists in C#
- * *...and many more :)*
+ * Add **Sort** function
+ * Add **TrueForAll** function
+ * Add **RemoveAll** function
+ * *...and many more*
 
 <h2>Footer</h2>
 
@@ -79,8 +84,11 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 
 <h2>Stack Functions</h2>
 
- Constructor means the function receiver is the struct (`Stack`) itself
- Non-constructor means the function doesn't have a receiver or, if it does, it is an existing `Stack` object
+ Constructor means the function receiver is the struct (`Stack`) itself.
+
+ Non-constructor means the function doesn't have a receiver or, if it does, it is an existing `Stack` object.
+
+ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
 
 <h3>MakeStack</h3>
 
@@ -96,7 +104,7 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 
 <h3>Push</h3>
 
-> `stack.Push(element)`
+> `stack.Push(elem)`
 >> CONSTRUCTOR: ***FALSE***
 >
 >> GETS: ***TRUE***
@@ -104,12 +112,12 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 >> UPDATES: ***TRUE***
 
 > ***Parameters***
->> **stack** is the Stack on which to push an element
+>> **stack** is the Stack to push
 >
->> **element** is the ambiguously-typed element to add to the beginning of the stack
+>> **elem** is the ambiguously-typed element to add to the beginning of the Stack
 
 > ***Pseudocode***
->> add an element to i = 0 of the stack
+>> add an element to i = 0 of the Stack
 >
 >> **FOR EACH ELEMENT THAT ALREADY EXISTED IN THE STACK**
 >>> that element's previous index i is updated to i + 1
@@ -118,7 +126,7 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 
 <h3>IndexOf</h3>
 
-> `stack.IndexOf(element)`
+> `stack.IndexOf(elem)`
 >> CONSTRUCTOR: ***FALSE***
 >
 >> GETS: ***TRUE***
@@ -126,13 +134,13 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 >> UPDATES: ***FALSE***
 
 > ***Parameters***
->> **stack** is the Stack through which to search
+>> **stack** is the Stack to search
 >
->> **element** is the ambigously-typed element of which to find the index
+>> **elem** is the ambigously-typed element whose index to find
 
 > ***Pseudocode***
->> **IF NEEDLE IS IN HAYSTACK**
->>> return needle index [0, |haystack|)
+>> **IF ELEM IS IN STACK**
+>>> return elem index [0, stack.len)
 >
 >> **ELSE**
 >>> return -1

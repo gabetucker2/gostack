@@ -68,20 +68,5 @@ func main() {
 	gostack_PrintOut(test, thisFuncName)
 
 	//////////////////////////////////////////////////////
-	/*
-
-		// IndexOf test 1
-		haystack := []int{4, 1, 6}
-		needle := 6
-		expected := 2
-		haystack.Test_IndexOf(needle, expected)
-
-		// IndexOf test 2
-		haystack = []int{4, 1, 6}
-		needle = 5
-		expected = -1
-		haystack.Test_IndexOf(needle, expected)
-
-	*/
 
 }
