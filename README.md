@@ -25,26 +25,31 @@
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
  * http://web.cse.ohio-state.edu/software/common/doc/components/standard/Standard.html
 
-<h2>Features to be Added</h2>
+ <h2>Implemented Features</h2>
+ 
+ * **MakeStack** function
+ * **stack.Push** function
+ * **stack.IndexOf** function
+ 
+ <h2>Unimplemented Features</h2>
 
-* Add **MakeStack** function
-* Add **Fill** function
-* Add **Insert** function
-* Add **Flip** function
-* Add **Entry** function
-* Add **Extract** function
-* Add **ReplaceEntries** function
-* Add **GetFlip** function
-* Add **Remove** function
-* Add **Pop** function
-* Add **Append** function
-* Add **Behead** function
-* Add **InterfaceType** function
-* Add **GetKeys** function
-* Add **GetVals** function
-* Add **Has** function
-* Add **Clear** function
-* Add lambda array sort-return function like for Lists in C#
+ * Add **Fill** function
+ * Add **Insert** function
+ * Add **Flip** function
+ * Add **Entry** function
+ * Add **Extract** function
+ * Add **ReplaceEntries** function
+ * Add **GetFlip** function
+ * Add **Remove** function
+ * Add **Pop** function
+ * Add **Append** function
+ * Add **Behead** function
+ * Add **InterfaceType** function
+ * Add **GetKeys** function
+ * Add **GetVals** function
+ * Add **Has** function
+ * Add **Clear** function
+ * Add lambda array sort-return function like for Lists in C#
 
 <h2>Footer</h2>
 
