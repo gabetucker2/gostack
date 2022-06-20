@@ -139,8 +139,10 @@ Feel free to visit my personal pages at `https://gabetucker.com` or `https://www
 >> **stack** is the Stack from which to pop the last card
 
 > ***Pseudocode***
->> **IF STACK HAD CARD TO POP**
->>> return popped card
+>> **IF STACK IS NOT EMPTY**
+>>> remove the last card from the stack
+>
+>>> return the removed card
 >
 >> **ELSE**
 >>> return nil
