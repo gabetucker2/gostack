@@ -43,6 +43,7 @@
 
  <h3>Receivers</h3>
 
+ * **stack.Has()**
  * **stack.IndexOf()**
  
 <h2>Unimplemented Features</h2>
@@ -62,7 +63,6 @@
  * Add **ToStack** function
  * Add **GetKeys** function
  * Add **GetCards** function
- * Add **Has** function
  * Add **Sort** function
  * Add **TrueForAll** function
  * Add **RemoveAll** function
@@ -204,6 +204,27 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  >> **ELSE**
  >>> return nil
  
+<h3>Has</h3>
+ 
+ > `stack.Has(card)`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> GETS: ***TRUE***
+ >
+ >> UPDATES: ***FALSE***
+ 
+ > ***Parameters***
+ >> **stack** is the Stack to search
+ >
+ >> **card** is the ambigously-typed element whom to check if exists
+ 
+ > ***Pseudocode***
+ >> **IF CARD IS IN STACK**
+ >>> return true
+ >
+ >> **ELSE**
+ >>> return false
+
 <h3>IndexOf</h3>
  
  > `stack.IndexOf(card)`

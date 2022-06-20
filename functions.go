@@ -118,12 +118,30 @@ func (stack *Stack) Behead() (card interface{}) {
 
 }
 
+func (stack *Stack) Has(card interface{}) (has bool) {
+
+	// sets the default has to false, the return value for a failed search
+	has = false
+
+	// searches through each card and, if match, sets has flag to true
+	for _, c := range stack.cards {
+		if c == card {
+			has = true
+			break
+		}
+	}
+
+	// return
+	return
+
+}
+
 func (stack *Stack) IndexOf(card interface{}) (idx int) {
 
 	// sets the default index to -1, the return value for a failed search
 	idx = -1
 
-	// searches through each card and, if match, sets index to that target's index
+	// searches through each card and, if match, sets idx to that target's index
 	for i, c := range stack.cards {
 		if c == card {
 			idx = i

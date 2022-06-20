@@ -203,6 +203,23 @@ func _gostack_case_2_Behead(funcName string) {
 
 }
 
+func _gostack_case_Has(funcName string) {
+
+	_gostack_test_Start(funcName, enabled)
+
+	stack := _gostack_test_SampleStack()
+
+	conditions := []bool{
+		stack.Has(testCard1),
+		stack.Has(testCard2),
+		stack.Has(testCard3),
+		!stack.Has(testCard4),
+	}
+
+	_gostack_test_End(funcName, conditions)
+
+}
+
 func _gostack_case_IndexOf(funcName string) {
 
 	_gostack_test_Start(funcName, enabled)
@@ -240,6 +257,7 @@ func main() {
 	_gostack_case_2_Pop("T2:stack.Pop")       // edge case
 	_gostack_case_1_Behead("T1:stack.Behead") // regular case
 	_gostack_case_2_Behead("T2:stack.Behead") // edge case
+	_gostack_case_Has("stack.Has")            // regular and edge cases
 	_gostack_case_IndexOf("stack.IndexOf")    // regular and edge cases
 
 }
