@@ -1,7 +1,6 @@
 package main
 
-import "fmt"
-
+/*
 func (haystack interface{}) Test_IndexOfString(needle interface{}, expectedOutput interface{}) (ret bool) {
 
 }
@@ -23,3 +22,4 @@ func main() {
 	haystack.Test_IndexOf(needle, expected)
 
 }
+*/

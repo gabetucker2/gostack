@@ -1,5 +1,14 @@
 package main
 
+func MakeStack() (ret Stack) {
+
+	ret = 
+
+	return
+
+}
+
+/*
 func IndexOf(haystack interface{}, needle interface{}) (ret int) {
 
 	ret = -1
@@ -13,3 +22,4 @@ func IndexOf(haystack interface{}, needle interface{}) (ret int) {
 	return
 
 }
+*/
