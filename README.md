@@ -32,11 +32,13 @@
  * **MakeStack()**
  * **stack.Clear()**
 
+
  * **stack.Append**
  * **stack.Push()**
  * **stack.Pop()**
  * **stack.Behead()**
- 
+
+
  * **stack.IndexOf()**
  
  <h2>Unimplemented Features</h2>
