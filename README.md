@@ -10,10 +10,9 @@
 <h3>IndexOf</h3>
 
 > `gostack.IndexOf(needle, haystack)`
+>> GETS: ***TRUE***
 >
-> GETS: ***TRUE***
->
-> SETS: ***FALSE***
+>> SETS: ***FALSE***
 
 > ***Parameters***
 >> **needle** is an ambigously-typed element
