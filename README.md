@@ -1,6 +1,8 @@
 # gostack
  `gostack` is a project introducing **Stacks**, ambiguously-typed strings of index/key-element pairs intended to replace arrays and maps in golang.  **Stacks** are introduced alongside a variety of helpful base functions to ensure programmer ease-of-use, concision, and flexibility.
 
+ Many of the functions in this project were inspired by JavaScript or C# List functions.
+
 <h1>Implemented Changes</h1>
 
 <h2>Functions</h2>

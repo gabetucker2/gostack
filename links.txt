@@ -1,0 +1,1 @@
+https://stackoverflow.com/questions/40145569/how-do-you-make-a-function-accept-multiple-types
