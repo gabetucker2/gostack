@@ -1,7 +1,7 @@
 # gostack
  `gostack` introduces **Stacks**, ambiguously-typed strings of index/key-element pairs intended to replace arrays and maps in golang.  **Stacks** are introduced alongside a variety of helpful base functions to ensure programmer ease-of-use, concision, and flexibility.
 
- Many of the functions in this project were inspired by functions from *JavaScript Arrays* or *C# Lists*.
+ Many of the functions in this project were inspired by functions from *JavaScript* Arrays or *C#* Lists.
 
 <h1>Implemented Changes</h1>
 
@@ -9,15 +9,15 @@
 
 <h3>IndexOf</h3>
 
-> `IndexOf(needle, haystack)`
+> `gostack.IndexOf(needle, haystack)`
 
-> Parameters:
+> ***Parameters***
 >> **needle** is an ambigously-typed element
 >
 >> **haystack** is a Stack
 
-> Pseudocode:
->> IF NEEDLE IS IN HAYSTACK:
+> ***Pseudocode***
+>> IF NEEDLE IS IN HAYSTACK
 >>> return needle index [0, |haystack|)
 >
 >> ELSE
