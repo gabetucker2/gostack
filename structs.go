@@ -15,17 +15,17 @@ type Slice struct {
 	endIdx   int
 }
 
-type Position int
+type POSITION int
 
 const (
-	Position_First Position = iota
-	Position_Last
-	Position_Card
-	Position_Idx
-	Position_Val
-	Position_Key
-	Position_Slice
-	Position_All
+	POSITION_First POSITION = iota
+	POSITION_Last
+	POSITION_Card
+	POSITION_Idx
+	POSITION_Val
+	POSITION_Key
+	POSITION_Slice
+	POSITION_All
 )
 
 var testCardA = _gostack_back_NewCard("Card A") // in sample stack

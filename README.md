@@ -54,31 +54,31 @@
  >
  >> **endIdx** *int*
 
- Position enum:
- > ***Position*** *[enum]*
+ POSITION enum:
+ > ***POSITION*** *[enum]*
  >>
- >> Position_First
+ >> POSITION_First
  >>> *NONE*
  >>
- >> Position_Last
+ >> POSITION_Last
  >>> *NONE*
  >>
- >> Position_Card
+ >> POSITION_Card
  >>> Card
  >>
- >> Position_Idx
+ >> POSITION_Idx
  >>> int
  >>
- >> Position_Val
+ >> POSITION_Val
  >>> any type
  >>
- >> Position_Key
+ >> POSITION_Key
  >>> any type
  >>
- >> Position_Slice
+ >> POSITION_Slice
  >>> Slice
  >>
- >> Position_All
+ >> POSITION_All
  >>> *NONE*
  
  <h3>Constructor Functions</h3>
@@ -87,12 +87,12 @@
  
  <h3>Other Functions</h3>
 
- * **stack.Add(card, Position_*, _idxData)**
- * **stack.Extract(Position_*, _idxData)**
- * **stack.Replace(Position_*, _idxData)**
+ * **stack.Add(card, POSITION_*, _idxData)**
+ * **stack.Extract(POSITION_*, _idxData)**
+ * **stack.Replace(POSITION_*, _idxData)**
+ * **stack.Has(POSITION_*, _idxData)**
+ * **stack.Index(POSITION_*, _idxData)**
  * **stack.Empty()**
- * **stack.Has(Position_*, _idxData)**
- * **stack.Index(Position_*, _idxData)**
 
 <h1>Exhaustive Documentation</h1>
 
@@ -142,58 +142,144 @@
  
  * *None*
 
-<h3>Position</h3>
+<h3>POSITION</h3>
 
  This is an enum intended to make it easy to inform functions of the intended target cards.
 
  Take care to note that some functions do not support certain enum types (supported enum types are documented in function API).  For instance, it wouldn't make sense for you to call `stack.Index()` on a set of cards interspersed throughout a stack, but it would make sense for you to call `stack.Extract()` on set of cards interspersed throughout a stack.
 
- > ***Position*** *[enum]*
+ > ***POSITION*** *[enum]*
  >> *SampleConstant*
  >>> *The type of the variable (called posData) that needs to be passed into the function utilizing this constant*
  >>> *For instance, if you input POSITION_SLICE, you would need to pass a Slice struct to your posData parameter*
  >>
- >> Position_First
+ >> POSITION_First
  >>> *NONE*
  >>
- >> Position_Last
+ >> POSITION_Last
  >>> *NONE*
  >>
- >> Position_Card
+ >> POSITION_Card
  >>> Card
  >>
- >> Position_Idx
+ >> POSITION_Idx
  >>> int
  >>
- >> Position_Val
+ >> POSITION_Val
  >>> any type
  >>
- >> Position_Key
+ >> POSITION_Key
  >>> any type
  >>
- >> Position_Slice
+ >> POSITION_Slice
  >>> Slice
  >>
- >> Position_All
+ >> POSITION_All
  >>> *NONE*
 
  <h4>Recommended Uses</h4>
  
- * `stack.Add(card, Position_First)`
- * `stack.Replace(newCard, Position_Key, "This string represents the key of one or multiple cards to target in the replace function")`
- * `stack.Has(Position_Card, card)`
- * `stack.Extract(Position_All)`
+ * `stack.AddBefore(card, POSITION_First)`
+ * `stack.AddAfter(card, POSITION_First)`
+ * `stack.Replace(newCard, POSITION_Key, "This string represents the key of one or multiple cards to target in the replace function")`
+ * `stack.Has(POSITION_Card, card)`
+ * `stack.Extract(POSITION_All)`
  * *...and so on*
 
 <h2>Stack Functions</h2>
 
- CONSTRUCTOR means the function requires no receiver (i.e., don't need the `thing.` in `thing.function()`); !CONSTRUCTOR means the function's receiver is an existing **Stack** object.
-
- GETTER means the function returns a value.
-
- SETTER means the function updates the inputted **Stack**.
-
  Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
+ 
+<h3>*Notation Sample*</h3>
+ 
+ > `variable1.function(variable2, THING_*, ...optional)`
+ >> CONSTRUCTOR: ***TRUE***
+ >>> means the function requires no receiver (i.e., our sample `variable1` should not exist in this function call)
+ >>
+ >> CONSTRUCTOR: ***FALSE***
+ >>> means the function's receiver is an existing stack (i.e., our sample `variable1` must exist in this function call)
+ >
+ >> GETTER: ***TRUE***
+ >>> means the function returns a value
+ >
+ >> SETTER: ***TRUE***
+ >>> means the function updates the inputted stack
+ 
+ > ***Parameters***
+ >> **variable1** *type* is the receiver for the function
+ >
+ >> **variable2** *type* is the first argument for the function
+ >
+ >> **THING_\*** *type* refers to how this input argument can be any variable starting with `THING_` that the function specifies is allowed
+ >
+ >> **...optional** *type* refers to how this input argument does not have to be inputted in the function (refer to documentation to decide whether to input)
+ >>> A sample instance where you would not input an argument in this spot is when you're using POSITION_First, which does not intake any posData.  That said, take care not to input more than 1 argument to optional parameters; everything will compile if you do, but this action is not supported.
+
+ > ***Supported POSITIONS***
+ >>> Each of the below positions are supported POSITION_* arguments
+ >> POSITION_First
+ >
+ >> POSITION_Last
+ >
+ >> POSITION_Card
+ >
+ >> POSITION_Idx
+ >
+ >> POSITION_Val
+ >
+ >> POSITION_Key
+ >
+ >> POSITION_Slice
+ >
+ >> POSITION_All
+ 
+ > ***Pseudocode***
+ >> This section outlines what the function does in simplistic terms
+ 
+<h3>Add</h3>
+ 
+ > `stack.Add(card, beforeNotAfter, POSITION_*, (posData))`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> GETTER: ***TRUE***
+ >
+ >> SETTER: ***TRUE***
+ 
+ > ***Parameters***
+ >> **stack** *Stack*
+ >
+ >> **card** *Card* is the Card to add to the stack before or after POSITION
+ >
+ >> **beforeNotAfter** *bool* is used to control whether card is added before or after POSITION
+
+ > ***Supported POSITIONS***
+ >> POSITION_First
+ >
+ >> POSITION_Last
+ >
+ >> POSITION_Card
+ >
+ >> POSITION_Idx
+ >
+ >> POSITION_Val
+ >
+ >> POSITION_Key
+ 
+ > ***Pseudocode***
+ >> **IF VALID POSITION**
+ >>> **IF beforeNotAfter**
+ >>>> add card before POSITION in the stack
+ >>
+ >>> **ELSE**
+ >>>> add card after POSITION in the stack
+ >>
+ >>> **FOR EACH CARD THAT ALREADY EXISTED IN THE STACK**
+ >>>> that card's previous index i is updated to i + 1
+ >>
+ >>> return updated stack
+ >>
+ >> *ELSE*
+ >>> return nil
 
 <h3>MakeStack</h3>
 
@@ -223,47 +309,6 @@
  >> removes all cards in the Stack
  >
  >> return the empty stack
- 
-<h3>AddFirst</h3>
- 
- > `stack.AddFirst(card)`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >
- >> SETTER: ***TRUE***
- 
- > ***Parameters***
- >> **stack**
- >
- >> **card** is the ambiguously-typed element to add to the beginning of the Stack
- 
- > ***Pseudocode***
- >> add card to i = 0 of the Stack
- >
- >> **FOR EACH CARD THAT ALREADY EXISTED IN THE STACK**
- >>> that card's previous index i is updated to i + 1
- >
- >> return updated Stack
- 
-<h3>AddLast</h3>
- 
- > `stack.AddLast(card)`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >
- >> SETTER: ***TRUE***
- 
- > ***Parameters***
- >> **stack**
- >
- >> **card** is the ambiguously-typed element to add to the end of the Stack
- 
- > ***Pseudocode***
- >> add card to i = stack.size of the Stack
- >
- >> return updated Stack
  
 <h3>ExtractFirst</h3>
  

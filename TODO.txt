@@ -2,8 +2,9 @@ This project:
 * further organize function format
 * update readme doc with position and position actions
 * todo: implement all types of tests for case tests
-* implement all position types for all Position_* functions
+* implement all position types for all POSITION_* functions
 * Update documentation
+* Implement adding before/after
 
 ** DEBUG ERRORS!
 

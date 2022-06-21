@@ -24,14 +24,14 @@ func (stack *Stack) Empty() *Stack {
 
 }
 
-func (stack *Stack) Add(card *Card, position Position, posData ...interface{}) *Stack {
+func (stack *Stack) Add(card *Card, beforeNotAfter bool, position POSITION, posData ...interface{}) *Stack {
 
 	// get idx
 	idx := _gostack_back_GetIdxFromData(stack, position, posData)
 
 	// add only if valid idx found
 	if idx != -1 {
-		if position == Position_Last {
+		if position == POSITION_Last {
 			idx++ // since we're doing AddBefore, increment final's idx to size
 		}
 
@@ -44,7 +44,7 @@ func (stack *Stack) Add(card *Card, position Position, posData ...interface{}) *
 
 }
 
-func (stack *Stack) Extract(position Position, posData ...interface{}) *Card {
+func (stack *Stack) Extract(position POSITION, posData ...interface{}) *Card {
 
 	// get idx
 	idx := _gostack_back_GetIdxFromData(stack, position, posData)
@@ -60,7 +60,7 @@ func (stack *Stack) Extract(position Position, posData ...interface{}) *Card {
 
 }
 
-func (stack *Stack) Replace(newCard *Card, position Position, posData ...interface{}) (oldCard *Card) {
+func (stack *Stack) Replace(newCard *Card, position POSITION, posData ...interface{}) (oldCard *Card) {
 
 	// get idx
 	idx := _gostack_back_GetIdxFromData(stack, position, posData)
@@ -80,7 +80,7 @@ func (stack *Stack) Replace(newCard *Card, position Position, posData ...interfa
 
 }
 
-func (stack *Stack) Has(position Position, posData ...interface{}) bool {
+func (stack *Stack) Has(position POSITION, posData ...interface{}) bool {
 
 	// get idx
 	idx := _gostack_back_GetIdxFromData(stack, position, posData)
@@ -90,7 +90,7 @@ func (stack *Stack) Has(position Position, posData ...interface{}) bool {
 
 }
 
-func (stack *Stack) Index(position Position, posData ...interface{}) int {
+func (stack *Stack) Index(position POSITION, posData ...interface{}) int {
 
 	// return index
 	return _gostack_back_GetIdxFromData(stack, position, posData)

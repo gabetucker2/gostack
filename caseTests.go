@@ -41,7 +41,7 @@ func _gostack_case_Add_First(funcName string) {
 	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
-	stack.Add(testCardC, Position_First).Add(testCardB, Position_First).Add(testCardA, Position_First)
+	stack.Add(testCardC, POSITION_First).Add(testCardB, POSITION_First).Add(testCardA, POSITION_First)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 3),
@@ -59,7 +59,7 @@ func _gostack_case_Add_Last(funcName string) {
 	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
-	stack.Add(testCardA, Position_Last).Add(testCardB, Position_Last).Add(testCardC, Position_Last)
+	stack.Add(testCardA, POSITION_Last).Add(testCardB, POSITION_Last).Add(testCardC, POSITION_Last)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 3),
@@ -77,7 +77,7 @@ func _gostack_case_Extract_Empty(funcName string) {
 	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
-	extract := stack.Extract(Position_First)
+	extract := stack.Extract(POSITION_First)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 0),
@@ -93,7 +93,7 @@ func _gostack_case_Extract_First(funcName string) {
 	_gostack_test_Start(funcName, showTestText)
 
 	stack := _gostack_test_SampleStack()
-	extract := stack.Extract(Position_First)
+	extract := stack.Extract(POSITION_First)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 2),
@@ -111,7 +111,7 @@ func _gostack_case_Extract_Last(funcName string) {
 	_gostack_test_Start(funcName, showTestText)
 
 	stack := _gostack_test_SampleStack()
-	extract := stack.Extract(Position_Last)
+	extract := stack.Extract(POSITION_Last)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 2),
@@ -129,7 +129,7 @@ func _gostack_case_Replace_Empty(funcName string) {
 	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
-	extract := stack.Replace(testCardA, Position_First)
+	extract := stack.Replace(testCardA, POSITION_First)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 0),
@@ -145,7 +145,7 @@ func _gostack_case_Replace_First(funcName string) {
 	_gostack_test_Start(funcName, showTestText)
 
 	stack := _gostack_test_SampleStack()
-	extract := stack.Replace(testCardC, Position_First)
+	extract := stack.Replace(testCardC, POSITION_First)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 3),
@@ -164,7 +164,7 @@ func _gostack_case_Replace_Last(funcName string) {
 	_gostack_test_Start(funcName, showTestText)
 
 	stack := _gostack_test_SampleStack()
-	extract := stack.Replace(testCardA, Position_Last)
+	extract := stack.Replace(testCardA, POSITION_Last)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 3),
@@ -185,14 +185,14 @@ func _gostack_case_Has(funcName string) {
 	stack := _gostack_test_SampleStack()
 
 	conditions := []bool{
-		stack.Has(Position_Card, testCardA),
-		stack.Has(Position_Card, testCardB),
-		stack.Has(Position_Card, testCardC),
-		stack.Has(Position_Val, testCardA.val),
-		stack.Has(Position_Val, testCardB.val),
-		stack.Has(Position_Val, testCardC.val),
-		!stack.Has(Position_Card, testCardD),
-		!stack.Has(Position_Val, testCardD.val),
+		stack.Has(POSITION_Card, testCardA),
+		stack.Has(POSITION_Card, testCardB),
+		stack.Has(POSITION_Card, testCardC),
+		stack.Has(POSITION_Val, testCardA.val),
+		stack.Has(POSITION_Val, testCardB.val),
+		stack.Has(POSITION_Val, testCardC.val),
+		!stack.Has(POSITION_Card, testCardD),
+		!stack.Has(POSITION_Val, testCardD.val),
 	}
 
 	_gostack_test_End(funcName, conditions)
@@ -206,14 +206,14 @@ func _gostack_case_Index(funcName string) {
 	stack := _gostack_test_SampleStack()
 
 	conditions := []bool{
-		stack.Index(Position_Card, testCardA) == 0,
-		stack.Index(Position_Card, testCardB) == 1,
-		stack.Index(Position_Card, testCardC) == 2,
-		stack.Index(Position_Val, testCardA.val) == 0,
-		stack.Index(Position_Val, testCardB.val) == 1,
-		stack.Index(Position_Val, testCardC.val) == 2,
-		stack.Index(Position_Card, testCardD) == -1,
-		stack.Index(Position_Val, testCardD.val) == -1,
+		stack.Index(POSITION_Card, testCardA) == 0,
+		stack.Index(POSITION_Card, testCardB) == 1,
+		stack.Index(POSITION_Card, testCardC) == 2,
+		stack.Index(POSITION_Val, testCardA.val) == 0,
+		stack.Index(POSITION_Val, testCardB.val) == 1,
+		stack.Index(POSITION_Val, testCardC.val) == 2,
+		stack.Index(POSITION_Card, testCardD) == -1,
+		stack.Index(POSITION_Val, testCardD.val) == -1,
 	}
 
 	_gostack_test_End(funcName, conditions)
