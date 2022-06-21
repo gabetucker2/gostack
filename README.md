@@ -36,19 +36,19 @@
  >
  > **name** means it is highly recommended against accessing this manually; you should instead use our functions
 
- Stack data structure:
+ Stack struct:
  > ***stack*** *Stack*
  >> **cards** *[]\*Card*
  >
  >> ***size*** *int*
 
- Card data structure:
+ Card struct:
  > **card** *Card*
  >> **key** *any type*
  >
  >> **val** *any type*
  
- Slice data structure:
+ Slice struct:
  > **Slice**
  >> **startIdx** *int*
  >
@@ -102,7 +102,7 @@
 
 <h3>Stack</h3>
 
- This is the main data structure in the project.
+ This is the main struct in the project.
 
  > `stack` *Stack{}*
  >> `cards` *[]\*Card{}*
@@ -116,7 +116,7 @@
 
 <h3>Card</h3>
 
- This is the data structure for our elements/maps within stacks.
+ This is a struct for our elements/maps within stacks.
 
  >> `card` *Card{}*
  >>> `card.key` *any type [interface{}]*
@@ -130,7 +130,7 @@
 
 <h3>Slice</h3>
 
- This is a data structure that makes it easier to pass two int values between functions on the backend.
+ This is a struct that makes it easier to pass two int values between functions on the backend.
 
  > `slice Slice{}`
  >> `slice.startIdx`
