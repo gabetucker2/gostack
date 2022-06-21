@@ -7,3 +7,4 @@
 * further organize function format, remove layers/ordinal contingencies
 * update readme doc with position and position actions
 * somehow make Extract, Add, etc implement position (make them structs?)
+* do same thing for index as you did for Add/Extr/Rep

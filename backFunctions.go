@@ -47,9 +47,9 @@ func _gostack_test_SampleStack() (stack *Stack) {
 	stack = MakeStack()
 
 	// create stack (don't use stack.Add because we can't assume it is working in case tests)
-	_gostack_back_AddCard(stack, testCard1, _gostack_back_GetIdxFromPosition(stack, Position_Last), false)
-	_gostack_back_AddCard(stack, testCard2, _gostack_back_GetIdxFromPosition(stack, Position_Last), false)
-	_gostack_back_AddCard(stack, testCard3, _gostack_back_GetIdxFromPosition(stack, Position_Last), false)
+	_gostack_back_AddCard(stack, testCardA, _gostack_back_GetIdxFromPosition(stack, Position_Last), false)
+	_gostack_back_AddCard(stack, testCardB, _gostack_back_GetIdxFromPosition(stack, Position_Last), false)
+	_gostack_back_AddCard(stack, testCardC, _gostack_back_GetIdxFromPosition(stack, Position_Last), false)
 
 	return
 

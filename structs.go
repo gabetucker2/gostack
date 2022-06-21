@@ -21,7 +21,7 @@ const (
 	Position_Slice
 )
 
-var testCard1 = _gostack_back_NewCard("Card A") // in sample stack
-var testCard2 = _gostack_back_NewCard("Card B") // in sample stack
-var testCard3 = _gostack_back_NewCard("Card C") // in sample stack
-var testCard4 = _gostack_back_NewCard("Card D") // out of sample stack
+var testCardA = _gostack_back_NewCard("Card A") // in sample stack
+var testCardB = _gostack_back_NewCard("Card B") // in sample stack
+var testCardC = _gostack_back_NewCard("Card C") // in sample stack
+var testCardD = _gostack_back_NewCard("Card D") // out of sample stack

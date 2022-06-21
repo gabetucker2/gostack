@@ -45,10 +45,29 @@ func (stack *Stack) Add(card *Card, position Position, _idxData ...interface{}) 
 func (stack *Stack) Extract(position Position, _idxData ...interface{}) *Card {
 
 	// get idxData
-	var idxData = _gostack_back_GetIdxData(_idxData)
+	idxData := _gostack_back_GetIdxData(_idxData)
 
 	// return
 	return _gostack_back_ExtractCard(stack, _gostack_back_GetIdxFromPosition(stack, position, idxData))
+
+}
+
+func (stack *Stack) Replace(newCard *Card, position Position, _idxData ...interface{}) (oldCard *Card) {
+
+	// get idxData
+	idxData := _gostack_back_GetIdxData(_idxData)
+	idx := _gostack_back_GetIdxFromPosition(stack, position, idxData).(int)
+
+	// extract card
+	oldCard = _gostack_back_ExtractCard(stack, idx)
+
+	// insert card at previous location if got out card
+	if oldCard != nil {
+		_gostack_back_AddCard(stack, newCard, idx, true)
+	}
+
+	// return
+	return
 
 }
 

@@ -36,29 +36,25 @@
  
  <h3>Transformers</h3>
  
- * **stack.AddFirst()**
- * **stack.AddLast()**
- * **stack.ExtractFirst()**
- * **stack.ExtractLast()**
+ * **stack.Add(card, Position_*, _idxData)**
+ * **stack.Extract(Position_*, _idxData)**
+ * **stack.Replace(Position_*, _idxData)**
  * **stack.Empty()**
 
  <h3>Receivers</h3>
 
- * **stack.Has()**
- * **stack.IndexCard()**
+ * **stack.Has(card)**
+ * **stack.IndexCard(card)**
  
 <h2>Unimplemented Features</h2>
 
- * **stack.ReplaceFirst()**
- * **stack.ReplaceLast()**
  * Add **Fill** function
  * Add **CombineWith** function
  * Add **Flip** function
+ * Add **Shuffle** function
  * Add **Entry** function
  * Add **Clone** function
- * Add **ReplaceEntries** function
  * Add **GetFlip** function
- * Add **Remove** function
  * Add **Type** function
  * Add **ToArray** function
  * Add **ToStack** function
