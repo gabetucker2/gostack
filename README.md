@@ -42,41 +42,45 @@
  >
  >> ***size*** *int*
 
+ Card data structure:
  > **card** *Card*
  >> **key** *any type*
  >
  >> **val** *any type*
  
- A 
+ Slice data structure:
  > **Slice**
  >> **startIdx** *int*
  >
  >> **endIdx** *int*
 
+ Position enum:
  > ***Position*** *[enum]*
+ >> *SampleConstant*
+ >>> *The Type of the variable that needs to be passed into the function utilizing this constant*
  >> Position_First
- >>> posData: *NONE*
+ >>> *NONE*
  >>
  >> Position_Last
- >>> posData: *NONE*
+ >>> *NONE*
  >>
  >> Position_Card
- >>> posData: Card
+ >>> Card
  >>
  >> Position_Idx
- >>> posData: int
+ >>> int
  >>
  >> Position_Val
- >>> posData: any type
+ >>> any type
  >>
  >> Position_Key
- >>> posData: any type
+ >>> any type
  >>
  >> Position_Slice
- >>> posData: Slice
+ >>> Slice
  >>
  >> Position_All
- >>> posData: *NONE*
+ >>> *NONE*
  
  <h3>Constructor Functions</h3>
 
@@ -147,23 +151,23 @@
 
  > Position *[enum]*
  >> *SampleConstant*
- >>> *posData: the Type of the variable that needs to be passed into the function utilizing this constant*
+ >>> *The Type of the variable that needs to be passed into the function utilizing this constant*
  >> Position_First
- >>> posData: *NONE*
+ >>> *NONE*
  >> Position_Last
- >>> posData: *NONE*
+ >>> *NONE*
  >> Position_Card
- >>> posData: Card
+ >>> Card
  >> Position_Idx
- >>> posData: int
+ >>> int
  >> Position_Val
- >>> posData: any type [interface{}]
+ >>> any type [interface{}]
  >> Position_Key
- >>> posData: any type [interface{}]
+ >>> any type [interface{}]
  >> Position_Slice
- >>> posData: Slice
+ >>> Slice
  >> Position_All
- >>> posData: *NONE*
+ >>> *NONE*
 
  <h4>Recommended Uses</h4>
  
