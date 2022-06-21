@@ -1,4 +1,4 @@
-* add/extract/replace U first/last/idx/val/key/range methods
+* add/extract/replace U Position{first/last/idx/val/key/slice} methods
 * Update documentation
 * Add tensor support
 * Group emergent methods by procedures

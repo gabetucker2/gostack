@@ -38,6 +38,8 @@
  
  * **stack.AddFirst()**
  * **stack.AddLast()**
+ * **stack.ReplaceFirst()**
+ * **stack.ReplaceLast()**
  * **stack.ExtractFirst()**
  * **stack.ExtractLast()**
  * **stack.Empty()**
@@ -49,11 +51,6 @@
  
 <h2>Unimplemented Features</h2>
 
- * Add **AddRange** function
- * Add **ExtractRange** function
- * Add **ReplaceRange** function
- * Add **ReplaceFirst** function
- * Add **ReplaceLast** function
  * Add **Fill** function
  * Add **Insert** function
  * Add **CombineWith** function
@@ -84,6 +81,10 @@
  >> Returns an interface array to represent the elements in the Stack
  >
  >> It is highly recommended against accessing this property, as the entire purpose of this project is for you not to have to manage arrays manually
+
+ <h4>card.key</h4>
+ 
+ <h4>card.value</h4>
  
 <h3>size</h3>
  

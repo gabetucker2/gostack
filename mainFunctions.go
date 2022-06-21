@@ -44,6 +44,26 @@ func (stack *Stack) AddLast(card *Card) *Stack {
 
 }
 
+func (stack *Stack) ReplaceFirst(card *Card) *Stack {
+
+	// push card to front
+	_gostack_back_AddCardAfter(stack, card, -1)
+
+	// return
+	return stack
+
+}
+
+func (stack *Stack) ReplaceLast(card *Card) *Stack {
+
+	// append card to back
+	_gostack_back_AddCardAfter(stack, card, stack.size-1)
+
+	// return
+	return stack
+
+}
+
 func (stack *Stack) ExtractFirst() *Card {
 
 	// return
