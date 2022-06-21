@@ -2,7 +2,7 @@ package main
 
 // VARIABLES
 
-var showTestText = false // false for cleaner console, true for debugging
+var showTestText = true // false for cleaner console, true for debugging
 
 // CASE FUNCTIONS
 
@@ -185,27 +185,35 @@ func _gostack_case_Has(funcName string) {
 	stack := _gostack_test_SampleStack()
 
 	conditions := []bool{
-		stack.Has(testCardA),
-		stack.Has(testCardB),
-		stack.Has(testCardC),
-		!stack.Has(testCardD),
+		stack.Has(Position_Card, testCardA),
+		stack.Has(Position_Card, testCardB),
+		stack.Has(Position_Card, testCardC),
+		stack.Has(Position_Val, testCardA.val),
+		stack.Has(Position_Val, testCardB.val),
+		stack.Has(Position_Val, testCardC.val),
+		!stack.Has(Position_Card, testCardD),
+		!stack.Has(Position_Val, testCardD.val),
 	}
 
 	_gostack_test_End(funcName, conditions)
 
 }
 
-func _gostack_case_IndexCard(funcName string) {
+func _gostack_case_Index(funcName string) {
 
 	_gostack_test_Start(funcName, showTestText)
 
 	stack := _gostack_test_SampleStack()
 
 	conditions := []bool{
-		stack.IndexCard(testCardA) == 0,
-		stack.IndexCard(testCardB) == 1,
-		stack.IndexCard(testCardC) == 2,
-		stack.IndexCard(testCardD) == -1,
+		stack.Index(Position_Card, testCardA) == 0,
+		stack.Index(Position_Card, testCardB) == 1,
+		stack.Index(Position_Card, testCardC) == 2,
+		stack.Index(Position_Val, testCardA.val) == 0,
+		stack.Index(Position_Val, testCardB.val) == 1,
+		stack.Index(Position_Val, testCardC.val) == 2,
+		stack.Index(Position_Card, testCardD) == -1,
+		stack.Index(Position_Val, testCardD.val) == -1,
 	}
 
 	_gostack_test_End(funcName, conditions)
@@ -222,7 +230,8 @@ func main() {
 	_gostack_case_MakeStack("MakeStack") // regular case
 
 	// other function tests
-	_gostack_case_Empty("stack.Empty")                 // regular case
+	_gostack_case_Empty("stack.Empty") // regular case
+
 	_gostack_case_Add_First("stack.Add_First")         // regular case
 	_gostack_case_Add_Last("stack.Add_Last")           // regular case
 	_gostack_case_Extract_Empty("stack.Extract_Empty") // edge case
@@ -231,7 +240,8 @@ func main() {
 	_gostack_case_Replace_Empty("stack.Replace_Empty") // edge case
 	_gostack_case_Replace_First("stack.Replace_First") // regular case
 	_gostack_case_Replace_Last("stack.Replace_Last")   // regular case
-	_gostack_case_Has("stack.Has")                     // regular and edge cases
-	_gostack_case_IndexCard("stack.IndexCard")         // regular and edge cases
+
+	_gostack_case_Has("stack.Has")     // regular and edge cases
+	_gostack_case_Index("stack.Index") // regular and edge cases
 
 }

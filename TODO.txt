@@ -1,10 +1,14 @@
-* add/extract/replace U Position{first/last/idx/val/key/slice} methods
-* Update documentation
+This project:
 * Add tensor support
+* further organize function format
+* update readme doc with position and position actions
+* todo: implement all types of tests for case tests
+* implement all position types for all Position_* functions
+* Update documentation
+
+** DEBUG ERRORS!
+
+Dynamics:
 * Group emergent methods by procedures
 * Distinguish names for dynamics layers
 * Add a cost function- inhibitory mechanism, countervalent force to wanting, different brain region for want/cost function?, could measure in terms of time
-* further organize function format, remove layers/ordinal contingencies
-* update readme doc with position and position actions
-* somehow make Extract, Add, etc implement position (make them structs?)
-* do same thing for index as you did for Add/Extr/Rep

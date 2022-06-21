@@ -69,7 +69,7 @@ func _gostack_back_NewCard(val interface{}) (card *Card) {
 	// make newly-created card
 	card = &Card{}
 	card.key = nil
-	card.value = val
+	card.val = val
 
 	// return
 	return
@@ -164,42 +164,6 @@ func _gostack_back_ExtractCard(stack *Stack, idx interface{}) (card *Card) {
 
 }
 
-func _gostack_back_IndexKey(stack *Stack, key interface{}) (idx int) {
-
-	// sets the default index to -1, the return value for a failed search
-	idx = -1
-
-	// searches through each card and, if match, sets idx to that target's index
-	for i, c := range stack.cards {
-		if c.key == key {
-			idx = i
-			break
-		}
-	}
-
-	// return
-	return
-
-}
-
-func _gostack_back_IndexCard(stack *Stack, card *Card) (idx int) {
-
-	// sets the default index to -1, the return value for a failed search
-	idx = -1
-
-	// searches through each card and, if match, sets idx to that target's index
-	for i, c := range stack.cards {
-		if c == card {
-			idx = i
-			break
-		}
-	}
-
-	// return
-	return
-
-}
-
 func _gostack_back_GetIdxData(_idxData ...interface{}) (idxData interface{}) {
 	if len(_idxData) == 1 {
 		idxData = _idxData[0] // just so there is only one optional param
@@ -209,6 +173,12 @@ func _gostack_back_GetIdxData(_idxData ...interface{}) (idxData interface{}) {
 	return
 }
 
+func _gostack_back_GetIdxFromData(stack *Stack, position Position, _idxData ...interface{}) (idx int) {
+	return _gostack_back_GetIdxFromPosition(stack, position, _gostack_back_GetIdxData(_idxData)).(int)
+}
+
+// returns index of searched item if valid
+// else, returns -1
 func _gostack_back_GetIdxFromPosition(stack *Stack, position Position, _idxData ...interface{}) (idx interface{}) {
 
 	var idxData = _gostack_back_GetIdxData(_idxData...)
@@ -219,12 +189,32 @@ func _gostack_back_GetIdxFromPosition(stack *Stack, position Position, _idxData 
 		idx = 0 // nil
 	case Position_Last:
 		idx = stack.size - 1 // nil
+	case Position_Card:
+		idx = -1
+		for i, c := range stack.cards {
+			if c == idxData { // key
+				idx = i
+				break
+			}
+		}
 	case Position_Idx:
 		idx = idxData // int
 	case Position_Key:
-		idx = _gostack_back_IndexKey(stack, idxData) // key (interface)
+		idx = -1
+		for i, c := range stack.cards {
+			if c.key == idxData { // key
+				idx = i
+				break
+			}
+		}
 	case Position_Val:
-		idx = _gostack_back_IndexCard(stack, idxData.(*Card)) // card
+		idx = -1
+		for i, c := range stack.cards {
+			if c.val == idxData { // card
+				idx = i
+				break
+			}
+		}
 	case Position_Slice:
 		idx = idxData // {int, int}
 

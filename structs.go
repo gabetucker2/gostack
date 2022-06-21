@@ -1,8 +1,8 @@
 package main
 
 type Card struct {
-	key   interface{}
-	value interface{}
+	key interface{}
+	val interface{}
 }
 
 type Stack struct {
@@ -15,6 +15,7 @@ type Position int
 const (
 	Position_First Position = iota
 	Position_Last
+	Position_Card
 	Position_Idx
 	Position_Val
 	Position_Key

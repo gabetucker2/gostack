@@ -17,7 +17,7 @@ func MakeStack() *Stack {
 func (stack *Stack) Empty() *Stack {
 
 	stack.size = 0
-	stack.cards = MakeStack().cards
+	stack.cards = []*Card{}
 
 	// return
 	return stack
@@ -26,16 +26,18 @@ func (stack *Stack) Empty() *Stack {
 
 func (stack *Stack) Add(card *Card, position Position, _idxData ...interface{}) *Stack {
 
-	// get idxData
-	idxData := _gostack_back_GetIdxData(_idxData)
-	idx := _gostack_back_GetIdxFromPosition(stack, position, idxData).(int)
+	// get idx
+	idx := _gostack_back_GetIdxFromData(stack, position, _idxData)
 
-	if position == Position_Last {
-		idx++ // since we're doing AddBefore, increment final's idx to size
+	// add only if valid idx found
+	if idx != -1 {
+		if position == Position_Last {
+			idx++ // since we're doing AddBefore, increment final's idx to size
+		}
+
+		// push card to front
+		_gostack_back_AddCard(stack, card, idx, true)
 	}
-
-	// push card to front
-	_gostack_back_AddCard(stack, card, idx, true)
 
 	// return
 	return stack
@@ -44,43 +46,32 @@ func (stack *Stack) Add(card *Card, position Position, _idxData ...interface{}) 
 
 func (stack *Stack) Extract(position Position, _idxData ...interface{}) *Card {
 
-	// get idxData
-	idxData := _gostack_back_GetIdxData(_idxData)
+	// get idx
+	idx := _gostack_back_GetIdxFromData(stack, position, _idxData)
+
+	// extract card if valid idx
+	var extract *Card = nil
+	if idx != -1 {
+		extract = _gostack_back_ExtractCard(stack, idx)
+	}
 
 	// return
-	return _gostack_back_ExtractCard(stack, _gostack_back_GetIdxFromPosition(stack, position, idxData))
+	return extract
 
 }
 
 func (stack *Stack) Replace(newCard *Card, position Position, _idxData ...interface{}) (oldCard *Card) {
 
-	// get idxData
-	idxData := _gostack_back_GetIdxData(_idxData)
-	idx := _gostack_back_GetIdxFromPosition(stack, position, idxData).(int)
+	// get idx
+	idx := _gostack_back_GetIdxFromData(stack, position, _idxData)
 
-	// extract card
-	oldCard = _gostack_back_ExtractCard(stack, idx)
+	if idx != -1 {
+		// extract card
+		oldCard = _gostack_back_ExtractCard(stack, idx)
 
-	// insert card at previous location if got out card
-	if oldCard != nil {
-		_gostack_back_AddCard(stack, newCard, idx, true)
-	}
-
-	// return
-	return
-
-}
-
-func (stack *Stack) Has(card interface{}) (has bool) {
-
-	// sets the default has to false, the return value for a failed search
-	has = false
-
-	// searches through each card and, if match, sets has flag to true
-	for _, c := range stack.cards {
-		if c == card {
-			has = true
-			break
+		// insert card at previous location if got out card
+		if oldCard != nil {
+			_gostack_back_AddCard(stack, newCard, idx, true)
 		}
 	}
 
@@ -89,8 +80,19 @@ func (stack *Stack) Has(card interface{}) (has bool) {
 
 }
 
-func (stack *Stack) IndexCard(card *Card) int {
+func (stack *Stack) Has(position Position, _idxData ...interface{}) bool {
 
-	return _gostack_back_IndexCard(stack, card)
+	// get idx
+	idx := _gostack_back_GetIdxFromData(stack, position, _idxData)
+
+	// return
+	return idx != -1
+
+}
+
+func (stack *Stack) Index(position Position, _idxData ...interface{}) int {
+
+	// return index
+	return _gostack_back_GetIdxFromData(stack, position, _idxData)
 
 }
