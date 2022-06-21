@@ -33,6 +33,7 @@
  <h3>Data Structures</h3>
 
  > ***It is conventionally acceptable to access this manually***
+ >
  > **It is highly recommended against accessing this manually; you should instead use our functions**
 
  Stack data structure:
