@@ -28,92 +28,161 @@
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
  * http://web.cse.ohio-state.edu/software/common/doc/components/standard/Standard.html
 
-<h2>Implemented Features</h2>
+<h2>Brief Documentation</h2>
+
+ <h3>Data Structures</h3>
+
+ ***It is conventionally acceptable to access this manually***
+
+ **It is highly recommended against accessing this manually; you should instead use our functions**
+
+ *[Comment]*
+
+ Stack data structure:
+ > ***Stack*** *[Stack struct]*
+ >> **cards** []*Card *[[]Card struct]*
+ >>> **key** any type
+ >>
+ >>> **val** any type
+ >> ***size*** int
  
- <h3>Constructors</h3>
+ A 
+ > **Slice**
+ >> **startIdx** int
+ >
+ >> **endIdx** int
+
+ > ***Position*** *[enum]*
+ >> Position_First
+ >>> posObj: /
+ >> Position_Last
+ >>> posObj: /
+ >> Position_Card
+ >>> posObj: Card
+ >> Position_Idx
+ >>> posObj: int
+ >> Position_Val
+ >>> posObj: any type
+ >> Position_Key
+ >>> posObj: any type
+ >> Position_Slice
+ >>> posObj: Slice
+ >> Position_All
+ >>> posObj: /
  
- <h4>Non-Position<h4>
+ <h3>Constructor Functions</h3>
 
  * **MakeStack()**
  
- <h3>Transformers</h3>
-
- <h4>Position<h4>
+ <h3>Other Functions</h3>
 
  * **stack.Add(card, Position_*, _idxData)**
  * **stack.Extract(Position_*, _idxData)**
  * **stack.Replace(Position_*, _idxData)**
- 
- <h4>Non-Position<h4>
-
  * **stack.Empty()**
-
- <h3>Receivers</h3>
-
- <h4>Position<h4>
- 
  * **stack.Has(Position_*, _idxData)**
  * **stack.Index(Position_*, _idxData)**
- 
-<h2>Unimplemented Features</h2>
 
- * Add **Fill** function
- * Add **CombineWith** function
- * Add **Flip** function
- * Add **Shuffle** function
- * Add **Entry** function
- * Add **Clone** function
- * Add **GetFlip** function
- * Add **Type** function
- * Add **ToArray** function
- * Add **ToStack** function
- * Add **GetKeys** function
- * Add **GetCards** function
- * Add **Sort** function
- * Add **TrueForAll** function
- * Add **RemoveAll** function
- * *...and many more*
+<h1>Exhaustive Documentation</h1>
 
-<h1>Feature Documentation</h1>
+<h2>Data Structures</h2>
 
-<h2>Stack Properties</h2>
+ It is highly advised against using these data structures for reasons other than those listed in *Recommended Uses* section.  The entire purpose of this project is for you not to have to manage arrays manually, but documentation for objects intended to be hidden still exists for those who would like to add their own Stack functions
 
-<h3>cards</h3>
+<h3>Stack</h3>
+
+ This is the main data structure in the project.
+
+ > `stack` *Stack{}*
+ >> `cards` *[]\*Card{}*
+ >>> Returns an interface array to represent the elements in the Stack
+ >> `size` *int*
+ >>> Returns the cardinality (i.e., `len(stack.cards)`) of this Stack
+
+ <h4>Recommended Uses</h4>
+
+ * `stack.size` *instead of `len(stack.cards)`*
+
+<h3>Card</h3>
+
+ This is the data structure for our elements/maps within stacks.
+
+ >> `card` *Card{}*
+ >>> `card.key` *any type [interface{}]*
+ >>>> Returns a key for this card-map (or nil if doesn't exist)
+ >>> `card.val` *any type [interface{}]*
+ >>>> Returns the val of this card (or nil if doesn't exist)
+
+ <h4>Recommended Uses</h4>
  
- > `stack.cards`
- >> Returns an interface array to represent the elements in the Stack
- >
- >> It is highly recommended against accessing this property, as the entire purpose of this project is for you not to have to manage arrays manually
- >
- >> `card.key`
- >>> Returns a key for this card-map (or nil if doesn't exist)
- >>
- >> `card.val`
- >>> Returns the value of this card
+ * *None*
+
+<h3>Slice</h3>
+
+ This is a data structure that makes it easier to pass two int values between functions on the backend.
+
+ > `slice Slice{}`
+ >> `slice.startIdx`
+ >>> Returns the first index in the desired slice
+ >> `slice.endIdx`
+ >>> Returns the last index of the desired slice
+
+ <h4>Recommended Uses</h4>
  
-<h3>size</h3>
+ * *None*
+
+<h3>Position</h3>
+
+ This is an enum intended so that the programmer can easily tell functions the intended target cards.
+
+ Take care to note that some functions do not support certain enum types (supported enum types are documented in function API).  For instance, it wouldn't make sense for you to get the Index of a set of cards interspersed throughout a stack, but it would make sense for you to Extract a set of cards interspersed throughout a stack.
+
+ > Position *[enum]*
+ >> *SampleConstant*
+ >>> *posObj: the Type of the variable that needs to be passed into the function utilizing this constant*
+ >> Position_First
+ >>> posObj: *NONE*
+ >> Position_Last
+ >>> posObj: *NONE*
+ >> Position_Card
+ >>> posObj: Card
+ >> Position_Idx
+ >>> posObj: int
+ >> Position_Val
+ >>> posObj: any type [interface{}]
+ >> Position_Key
+ >>> posObj: any type [interface{}]
+ >> Position_Slice
+ >>> posObj: Slice
+ >> Position_All
+ >>> posObj: *NONE*
+
+ <h4>Recommended Uses</h4>
  
- > `stack.size`
- >> Returns the cardinality of the given Stack
+ * `stack.Add(card, Position_First)`
+ * `stack.Replace(newCard, Position_Key, "string key of card(s) to replace")`
+ * `stack.Has(Position_Card, card)`
+ * `stack.Extract(Position_All)`
+ * *...and so on*
 
 <h2>Stack Functions</h2>
 
-CONSTRUCTOR means the function requires no receiver.  !CONSTRUCTOR means the function doesn't have a receiver or, if it does, it is an existing **Stack** object.
+ CONSTRUCTOR means the function requires no receiver (i.e., don't need the `thing.` in `thing.function()`).  !CONSTRUCTOR means the function's receiver is an existing **Stack** object.
 
-TRANSFORMER means the function updates the inputted **Stack**.
+ SETTER means the function updates the inputted **Stack**.
 
-RECEIVER means the function returns a value.
+ GETTER means the function returns a value.
 
-Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
+ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
 
 <h3>MakeStack</h3>
 
  > `MakeStack()`
  >> CONSTRUCTOR: ***TRUE***
  >
- >> TRANSFORMER: ***FALSE***
+ >> SETTER: ***FALSE***
  >
- >> RECEIVER: ***TRUE***
+ >> GETTER: ***TRUE***
  
  > ***Pseudocode***
  >> return new Stack
@@ -123,9 +192,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.Empty()`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> TRANSFORMER: ***TRUE***
+ >> SETTER: ***TRUE***
  >
- >> RECEIVER: ***TRUE***
+ >> GETTER: ***TRUE***
  
  > ***Parameters***
  >> **stack** is the Stack to Empty
@@ -140,9 +209,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.AddFirst(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> TRANSFORMER: ***TRUE***
+ >> SETTER: ***TRUE***
  >
- >> RECEIVER: ***TRUE***
+ >> GETTER: ***TRUE***
  
  > ***Parameters***
  >> **stack**
@@ -162,9 +231,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.AddLast(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> TRANSFORMER: ***TRUE***
+ >> SETTER: ***TRUE***
  >
- >> RECEIVER: ***TRUE***
+ >> GETTER: ***TRUE***
  
  > ***Parameters***
  >> **stack**
@@ -181,9 +250,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.ExtractFirst()`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> TRANSFORMER: ***TRUE***
+ >> SETTER: ***TRUE***
  >
- >> RECEIVER: ***TRUE***
+ >> GETTER: ***TRUE***
  
  > ***Parameters***
  >> **stack** is the Stack from which to remove the first card
@@ -202,9 +271,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.ExtractLast()`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> TRANSFORMER: ***TRUE***
+ >> SETTER: ***TRUE***
  >
- >> RECEIVER: ***TRUE***
+ >> GETTER: ***TRUE***
  
  > ***Parameters***
  >> **stack** is the Stack from which to remove the last card
@@ -223,9 +292,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.Has(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> TRANSFORMER: ***FALSE***
+ >> SETTER: ***FALSE***
  >
- >> RECEIVER: ***TRUE***
+ >> GETTER: ***TRUE***
  
  > ***Parameters***
  >> **stack** is the Stack to search
@@ -244,9 +313,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > `stack.IndexCard(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> TRANSFORMER: ***FALSE***
+ >> SETTER: ***FALSE***
  >
- >> RECEIVER: ***TRUE***
+ >> GETTER: ***TRUE***
  
  > ***Parameters***
  >> **stack** is the Stack to search
@@ -259,6 +328,25 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  >
  >> **ELSE**
  >>> return -1
+ 
+<h1>Unimplemented Features</h1>
+
+ * Add **Fill** function
+ * Add **CombineWith** function
+ * Add **Flip** function
+ * Add **Shuffle** function
+ * Add **Entry** function
+ * Add **Clone** function
+ * Add **GetFlip** function
+ * Add **Type** function
+ * Add **ToArray** function
+ * Add **ToStack** function
+ * Add **GetKeys** function
+ * Add **GetCards** function
+ * Add **Sort** function
+ * Add **TrueForAll** function
+ * Add tensor functions
+ * *...and many more*
  
 <h1>Footer</h1>
 

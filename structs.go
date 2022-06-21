@@ -10,6 +10,11 @@ type Stack struct {
 	size  int
 }
 
+type Slice struct {
+	startIdx int
+	endIdx   int
+}
+
 type Position int
 
 const (
@@ -20,6 +25,7 @@ const (
 	Position_Val
 	Position_Key
 	Position_Slice
+	Position_All
 )
 
 var testCardA = _gostack_back_NewCard("Card A") // in sample stack

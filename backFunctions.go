@@ -177,6 +177,10 @@ func _gostack_back_GetIdxFromData(stack *Stack, position Position, _idxData ...i
 	return _gostack_back_GetIdxFromPosition(stack, position, _gostack_back_GetIdxData(_idxData)).(int)
 }
 
+func _gostack_back_MakeSlice(x, y int) Slice {
+	return Slice{x, y}
+}
+
 // returns index of searched item if valid
 // else, returns -1
 func _gostack_back_GetIdxFromPosition(stack *Stack, position Position, _idxData ...interface{}) (idx interface{}) {
@@ -216,7 +220,9 @@ func _gostack_back_GetIdxFromPosition(stack *Stack, position Position, _idxData 
 			}
 		}
 	case Position_Slice:
-		idx = idxData // {int, int}
+		idx = idxData // Slice
+	case Position_All:
+		idx = _gostack_back_MakeSlice(0, stack.size-1) // nil
 
 	}
 
