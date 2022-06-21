@@ -49,7 +49,7 @@ func _gostack_back_SampleStack() (stack *Stack) {
 	stack = MakeStack()
 
 	// create stack
-	stack.Append(testCard1).Append(testCard2).Append(testCard3)
+	stack.AddLast(testCard1).AddLast(testCard2).AddLast(testCard3)
 
 	return
 
@@ -85,7 +85,11 @@ func _gostack_back_AddCardAfter(stack *Stack, card *Card, idx int) *Stack {
 
 	} else { // append each card in stack.cards to card
 
-		for i, _ := range stack.cards {
+		if idx == -1 {
+			newCards = append(newCards, card)
+		}
+
+		for i := range stack.cards {
 			c := stack.cards[i]
 			if i != idx {
 				newCards = append(newCards, c)
@@ -108,9 +112,7 @@ func _gostack_back_AddCardAfter(stack *Stack, card *Card, idx int) *Stack {
 
 }
 
-func _gostack_back_RemoveCard(stack *Stack, idx int) *Card {
-
-	card := new(Card) // have to do this if we want to set as nil
+func _gostack_back_RemoveCard(stack *Stack, idx int) (card *Card) {
 
 	if stack.size == 0 { // if we can't pop it, return nil
 
@@ -122,7 +124,7 @@ func _gostack_back_RemoveCard(stack *Stack, idx int) *Card {
 		newCards := []*Card{}
 
 		// append each card in stack.cards to card
-		for i, _ := range stack.cards {
+		for i := range stack.cards {
 			c := stack.cards[i]
 			if i != idx {
 				newCards = append(newCards, c)
@@ -139,6 +141,6 @@ func _gostack_back_RemoveCard(stack *Stack, idx int) *Card {
 
 	}
 
-	return card
+	return
 
 }

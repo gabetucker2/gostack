@@ -1,4 +1,4 @@
-* add/extract/insert U first/last/i/range methods
+* add/extract/replace U first/last/idx/val/key/range methods
 * Update documentation
 * Add tensor support
 * Group emergent methods by procedures

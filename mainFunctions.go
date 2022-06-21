@@ -24,17 +24,17 @@ func (stack *Stack) Empty() *Stack {
 
 }
 
-func (stack *Stack) Push(card *Card) *Stack {
+func (stack *Stack) AddFirst(card *Card) *Stack {
 
 	// push card to front
-	_gostack_back_AddCardAfter(stack, card, 0)
+	_gostack_back_AddCardAfter(stack, card, -1)
 
 	// return
 	return stack
 
 }
 
-func (stack *Stack) Append(card *Card) *Stack {
+func (stack *Stack) AddLast(card *Card) *Stack {
 
 	// append card to back
 	_gostack_back_AddCardAfter(stack, card, stack.size-1)
@@ -44,17 +44,27 @@ func (stack *Stack) Append(card *Card) *Stack {
 
 }
 
-func (stack *Stack) Pop() *Card {
+func (stack *Stack) AddRange(card []*Card, start, end int) *Stack {
+
+	// append card to back
+	_gostack_back_AddCardAfter(stack, card, stack.size-1)
 
 	// return
-	return _gostack_back_RemoveCard(stack, stack.size-1)
+	return stack
 
 }
 
-func (stack *Stack) Behead() *Card {
+func (stack *Stack) ExtractFirst() *Card {
 
 	// return
 	return _gostack_back_RemoveCard(stack, 0)
+
+}
+
+func (stack *Stack) ExtractLast() *Card {
+
+	// return
+	return _gostack_back_RemoveCard(stack, stack.size-1)
 
 }
 
