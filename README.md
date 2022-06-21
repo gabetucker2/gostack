@@ -32,19 +32,19 @@
 
  <h3>Data Structures</h3>
 
- ***It is conventionally acceptable to access this manually***
-
- **It is highly recommended against accessing this manually; you should instead use our functions**
-
- *[Comment]*
+ > ***It is conventionally acceptable to access this manually***
+ > **It is highly recommended against accessing this manually; you should instead use our functions**
 
  Stack data structure:
- > ***Stack*** *[Stack struct]*
- >> **cards** []*Card *[[]Card struct]*
- >>> **key** any type
- >>
- >>> **val** any type
+ > ***stack*** *Stack*
+ >> **cards** *[]\*Card*
+ >
  >> ***size*** int
+
+ > **card** *Card*
+ >> **key** *any type*
+ >
+ >> **val** *any type*
  
  A 
  > **Slice**
