@@ -32,9 +32,9 @@
 
  <h3>Data Structures</h3>
 
- > ***It is conventionally acceptable to access this manually***
+ > ***name*** means it is conventionally acceptable to access this manually
  >
- > **It is highly recommended against accessing this manually; you should instead use our functions**
+ > **name** means it is highly recommended against accessing this manually; you should instead use our functions
 
  Stack data structure:
  > ***stack*** *Stack*
