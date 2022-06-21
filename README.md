@@ -56,8 +56,7 @@
 
  Position enum:
  > ***Position*** *[enum]*
- >> *SampleConstant*
- >>> *The Type of the variable that needs to be passed into the function utilizing this constant*
+ >>
  >> Position_First
  >>> *NONE*
  >>
@@ -149,23 +148,31 @@
 
  Take care to note that some functions do not support certain enum types (supported enum types are documented in function API).  For instance, it wouldn't make sense for you to get the Index of a set of cards interspersed throughout a stack, but it would make sense for you to Extract a set of cards interspersed throughout a stack.
 
- > Position *[enum]*
+ > ***Position*** *[enum]*
  >> *SampleConstant*
  >>> *The Type of the variable that needs to be passed into the function utilizing this constant*
+ >>
  >> Position_First
  >>> *NONE*
+ >>
  >> Position_Last
  >>> *NONE*
+ >>
  >> Position_Card
  >>> Card
+ >>
  >> Position_Idx
  >>> int
+ >>
  >> Position_Val
- >>> any type [interface{}]
+ >>> any type
+ >>
  >> Position_Key
- >>> any type [interface{}]
+ >>> any type
+ >>
  >> Position_Slice
  >>> Slice
+ >>
  >> Position_All
  >>> *NONE*
 
