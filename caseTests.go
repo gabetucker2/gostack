@@ -1,22 +1,14 @@
 package main
 
-import (
-	"fmt"
-)
-
 // VARIABLES
 
-var enabled = false      // false for cleaner console, true for debugging
-var testCard1 = "Card A" // in sample stack
-var testCard2 = "Card B" // in sample stack
-var testCard3 = "Card C" // in sample stack
-var testCard4 = "Card D" // out of sample stack
+var showTestText = false // false for cleaner console, true for debugging
 
 // CASE FUNCTIONS
 
 func _gostack_case_MakeStack(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
 
@@ -28,12 +20,12 @@ func _gostack_case_MakeStack(funcName string) {
 
 }
 
-func _gostack_case_Clear(funcName string) {
+func _gostack_case_Empty(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := _gostack_back_SampleStack()
-	stack2 := stack.Clear()
+	stack2 := stack.Empty()
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 0),
@@ -44,12 +36,12 @@ func _gostack_case_Clear(funcName string) {
 
 }
 
-func _gostack_case_Push(funcName string) {
+func _gostack_case_AddFirst(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
-	stack.Push(testCard3).Push(testCard2).Push(testCard1)
+	stack.AddFirst(testCard3).AddFirst(testCard2).AddFirst(testCard1)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 3),
@@ -62,12 +54,12 @@ func _gostack_case_Push(funcName string) {
 
 }
 
-func _gostack_case_Append(funcName string) {
+func _gostack_case_AddLast(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
-	stack.Append(testCard1).Append(testCard2).Append(testCard3)
+	stack.AddLast(testCard1).AddLast(testCard2).AddLast(testCard3)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 3),
@@ -80,50 +72,16 @@ func _gostack_case_Append(funcName string) {
 
 }
 
-func _gostack_case_1_Pop(funcName string) {
+func _gostack_case_1_ExtractFirst(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := _gostack_back_SampleStack()
-	pop := stack.Pop()
+	extract := stack.ExtractFirst()
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 2),
-		stack.cards[0] == testCard1,
-		stack.cards[1] == testCard2,
-		pop == testCard3,
-	}
-
-	_gostack_test_End(funcName, conditions)
-
-}
-
-func _gostack_case_2_Pop(funcName string) {
-
-	_gostack_test_Start(funcName, enabled)
-
-	stack := MakeStack()
-	pop := stack.Pop()
-
-	conditions := []bool{
-		_gostack_back_LenAndSize(stack, 0),
-		pop == nil,
-	}
-
-	_gostack_test_End(funcName, conditions)
-
-}
-
-func _gostack_case_1_Behead(funcName string) {
-
-	_gostack_test_Start(funcName, enabled)
-
-	stack := _gostack_back_SampleStack()
-	behead := stack.Behead()
-
-	conditions := []bool{
-		_gostack_back_LenAndSize(stack, 2),
-		behead == testCard1,
+		extract == testCard1,
 		stack.cards[0] == testCard2,
 		stack.cards[1] == testCard3,
 	}
@@ -132,16 +90,50 @@ func _gostack_case_1_Behead(funcName string) {
 
 }
 
-func _gostack_case_2_Behead(funcName string) {
+func _gostack_case_2_ExtractFirst(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
-	pop := stack.Pop()
+	extract := stack.ExtractFirst()
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 0),
-		pop == nil,
+		extract == nil,
+	}
+
+	_gostack_test_End(funcName, conditions)
+
+}
+
+func _gostack_case_1_ExtractLast(funcName string) {
+
+	_gostack_test_Start(funcName, showTestText)
+
+	stack := _gostack_back_SampleStack()
+	extract := stack.ExtractLast()
+
+	conditions := []bool{
+		_gostack_back_LenAndSize(stack, 2),
+		stack.cards[0] == testCard1,
+		stack.cards[1] == testCard2,
+		extract == testCard3,
+	}
+
+	_gostack_test_End(funcName, conditions)
+
+}
+
+func _gostack_case_2_ExtractLast(funcName string) {
+
+	_gostack_test_Start(funcName, showTestText)
+
+	stack := MakeStack()
+	extract := stack.ExtractLast()
+
+	conditions := []bool{
+		_gostack_back_LenAndSize(stack, 0),
+		extract == nil,
 	}
 
 	_gostack_test_End(funcName, conditions)
@@ -150,7 +142,7 @@ func _gostack_case_2_Behead(funcName string) {
 
 func _gostack_case_Has(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := _gostack_back_SampleStack()
 
@@ -167,7 +159,7 @@ func _gostack_case_Has(funcName string) {
 
 func _gostack_case_IndexOf(funcName string) {
 
-	_gostack_test_Start(funcName, enabled)
+	_gostack_test_Start(funcName, showTestText)
 
 	stack := _gostack_back_SampleStack()
 
@@ -187,22 +179,22 @@ func _gostack_case_IndexOf(funcName string) {
 func main() {
 
 	// layer two is dependent on layer one in case tests, layer three dependent on layer two, etc
-	fmt.Println("- BEGINNING TESTS")
+	println("- BEGINNING TESTS")
 
 	// layer one
 	_gostack_case_MakeStack("MakeStack") // regular case
 
 	// layer two
-	_gostack_case_Append("stack.Append") // regular case
+	_gostack_case_AddLast("stack.AddLast") // regular case
 
 	// layer three
-	_gostack_case_Clear("stack.Clear")        // regular case
-	_gostack_case_Push("stack.Push")          // regular case
-	_gostack_case_1_Pop("T1:stack.Pop")       // regular case
-	_gostack_case_2_Pop("T2:stack.Pop")       // edge case
-	_gostack_case_1_Behead("T1:stack.Behead") // regular case
-	_gostack_case_2_Behead("T2:stack.Behead") // edge case
-	_gostack_case_Has("stack.Has")            // regular and edge cases
-	_gostack_case_IndexOf("stack.IndexOf")    // regular and edge cases
+	_gostack_case_Empty("stack.Empty")                    // regular case
+	_gostack_case_AddFirst("stack.AddFirst")              // regular case
+	_gostack_case_1_ExtractFirst("T1:stack.ExtractFirst") // regular case
+	_gostack_case_2_ExtractFirst("T2:stack.ExtractFirst") // edge case
+	_gostack_case_1_ExtractLast("T1:stack.ExtractLast")   // regular case
+	_gostack_case_2_ExtractLast("T2:stack.ExtractLast")   // edge case
+	_gostack_case_Has("stack.Has")                        // regular and edge cases
+	_gostack_case_IndexOf("stack.IndexOf")                // regular and edge cases
 
 }

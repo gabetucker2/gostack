@@ -5,7 +5,7 @@
 
  Many of the functions in this project were inspired by functions from *JavaScript* Arrays or *C#* Lists.
 
- For the purposes of this project, we will use the imagery of a stack of cards.  A ***Stack*** will refer to a stack of cards; each element in that **Stack** will be a ***card***.
+ For the purposes of this project, we will use the imagery of a stack of cards.  A ***Stack*** will refer to a stack of cards; each element in that **Stack** will be a ***card***.  This is not to be confused with traditional stack structures (which push and pop the first element in the stack).
 
 <h1>Overview</h1>
 
@@ -14,6 +14,7 @@
  An overview of the files in this repository
 
  * **README.md** is this file
+ * **README.md** is a file with features to be added which are insignificant to the user
  * **caseTests.go** is a script used to run test cases to ensure functionality of this project's functions; for examples on how to use `gostack` functions, see this file; it is recommended to delete this file if it is not commented out at the time of your installation since it uses the main() function; in order to run test cases with ***test.go*** *not* commented out, run `go run .` in the top directory
  * **functions.go** is where novel functions are stored
  * **go.mod** is used to manage directory access
@@ -35,11 +36,11 @@
  
  <h3>Transformers</h3>
  
- * **stack.Append()**
- * **stack.Push()**
- * **stack.Pop()**
- * **stack.Behead()**
- * **stack.Clear()**
+ * **stack.AddFirst()**
+ * **stack.AddLast()**
+ * **stack.ExtractFirst()**
+ * **stack.ExtractLast()**
+ * **stack.Empty()**
 
  <h3>Receivers</h3>
 
@@ -48,6 +49,11 @@
  
 <h2>Unimplemented Features</h2>
 
+ * Add **AddRange** function
+ * Add **ExtractRange** function
+ * Add **ReplaceRange** function
+ * Add **ReplaceFirst** function
+ * Add **ReplaceLast** function
  * Add **Fill** function
  * Add **Insert** function
  * Add **CombineWith** function
@@ -106,9 +112,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > ***Pseudocode***
  >> return new Stack
  
-<h3>Clear</h3>
+<h3>Empty</h3>
  
- > `stack.Clear()`
+ > `stack.Empty()`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> TRANSFORMER: ***TRUE***
@@ -116,16 +122,16 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  >> RECEIVER: ***TRUE***
  
  > ***Parameters***
- >> **stack** is the Stack to clear
+ >> **stack** is the Stack to Empty
  
  > ***Pseudocode***
  >> removes all cards in the Stack
  >
  >> return the empty stack
  
-<h3>Append</h3>
+<h3>AddFirst</h3>
  
- > `stack.Append(card)`
+ > `stack.AddFirst(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> TRANSFORMER: ***TRUE***
@@ -133,26 +139,7 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  >> RECEIVER: ***TRUE***
  
  > ***Parameters***
- >> **stack** is the Stack to append
- >
- >> **card** is the ambiguously-typed element to add to the end of the Stack
- 
- > ***Pseudocode***
- >> add card to i = stack.size of the Stack
- >
- >> return updated Stack
- 
-<h3>Push</h3>
- 
- > `stack.Push(card)`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> TRANSFORMER: ***TRUE***
- >
- >> RECEIVER: ***TRUE***
- 
- > ***Parameters***
- >> **stack** is the Stack to push
+ >> **stack**
  >
  >> **card** is the ambiguously-typed element to add to the beginning of the Stack
  
@@ -164,9 +151,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  >
  >> return updated Stack
  
-<h3>Pop</h3>
+<h3>AddLast</h3>
  
- > `stack.Pop()`
+ > `stack.AddLast(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> TRANSFORMER: ***TRUE***
@@ -174,20 +161,18 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  >> RECEIVER: ***TRUE***
  
  > ***Parameters***
- >> **stack** is the Stack from which to remove the last card
+ >> **stack**
+ >
+ >> **card** is the ambiguously-typed element to add to the end of the Stack
  
  > ***Pseudocode***
- >> **IF STACK IS NOT EMPTY**
- >>> remove the last card from the stack
- >>
- >>> return the removed card
+ >> add card to i = stack.size of the Stack
  >
- >> **ELSE**
- >>> return nil
+ >> return updated Stack
  
-<h3>Behead</h3>
+<h3>ExtractFirst</h3>
  
- > `stack.Behead()`
+ > `stack.ExtractFirst()`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> TRANSFORMER: ***TRUE***
@@ -200,6 +185,27 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  > ***Pseudocode***
  >> **IF STACK IS NOT EMPTY**
  >>> remove the first card from the stack
+ >>
+ >>> return the removed card
+ >
+ >> **ELSE**
+ >>> return nil
+ 
+<h3>ExtractLast</h3>
+ 
+ > `stack.ExtractLast()`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> TRANSFORMER: ***TRUE***
+ >
+ >> RECEIVER: ***TRUE***
+ 
+ > ***Parameters***
+ >> **stack** is the Stack from which to remove the last card
+ 
+ > ***Pseudocode***
+ >> **IF STACK IS NOT EMPTY**
+ >>> remove the last card from the stack
  >>
  >>> return the removed card
  >
@@ -243,7 +249,7 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  
  > ***Pseudocode***
  >> **IF CARD IS IN STACK**
- >>> return card index [0, stack.len)
+ >>> return card index [0, stack.size)
  >
  >> **ELSE**
  >>> return -1
