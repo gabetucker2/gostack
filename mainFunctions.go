@@ -14,107 +14,47 @@ func MakeStack() *Stack {
 }
 
 // not just call MakeStack since that would replace the object
-func (stack *Stack) Clear() *Stack {
+func (stack *Stack) Empty() *Stack {
 
-	// clear stack
-	stack.cards = MakeStack().cards
 	stack.size = 0
+	stack.cards = MakeStack().cards
 
 	// return
 	return stack
 
 }
 
-func (stack *Stack) Push(card interface{}) *Stack {
+func (stack *Stack) AddFirst(card *Card) *Stack {
 
-	// insert card into new interface slice to satisfy append function
-	newInterface := []interface{}{card}
-
-	// append each card in stack.cards to card
-	for _, c := range stack.cards {
-		newInterface = append(newInterface, c)
-	}
-
-	// set stack.cards to our new interface
-	stack.cards = newInterface
-
-	// update stack properties
-	stack.size++
+	// push card to front
+	_gostack_back_AddCardAfter(stack, card, -1)
 
 	// return
 	return stack
 
 }
 
-func (stack *Stack) Append(card interface{}) *Stack {
+func (stack *Stack) AddLast(card *Card) *Stack {
 
-	// create new interface slice
-	newInterface := []interface{}{}
-
-	// append each card in stack.cards to card
-	for _, c := range stack.cards {
-		newInterface = append(newInterface, c)
-	}
-
-	// insert card into interface last
-	newInterface = append(newInterface, card)
-
-	// set stack.cards to our new interface
-	stack.cards = newInterface
-
-	// update stack properties
-	stack.size++
+	// append card to back
+	_gostack_back_AddCardAfter(stack, card, stack.size-1)
 
 	// return
 	return stack
 
 }
 
-func (stack *Stack) Pop() (card interface{}) {
-
-	if stack.size == 0 { // if we can't pop it, return nil
-
-		card = nil
-
-	} else { // if we can pop it, return popped card
-
-		// get card we're removing
-		card = stack.cards[stack.size-1]
-
-		// remove the last card from the stack
-		stack.cards = stack.cards[:stack.size-1]
-
-		// update stack properties
-		stack.size--
-
-	}
+func (stack *Stack) ExtractFirst() *Card {
 
 	// return
-	return
+	return _gostack_back_RemoveCard(stack, 0)
 
 }
 
-func (stack *Stack) Behead() (card interface{}) {
-
-	if stack.size == 0 { // if we can't behead it, return nil
-
-		card = nil
-
-	} else { // if we can pop it, return popped card
-
-		// get card we're removing
-		card = stack.cards[0]
-
-		// remove the first card from the stack
-		stack.cards = stack.cards[1:]
-
-		// update stack properties
-		stack.size--
-
-	}
+func (stack *Stack) ExtractLast() *Card {
 
 	// return
-	return
+	return _gostack_back_RemoveCard(stack, stack.size-1)
 
 }
 
