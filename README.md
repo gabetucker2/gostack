@@ -40,7 +40,7 @@
  > ***stack*** *Stack*
  >> **cards** *[]\*Card*
  >
- >> ***size*** int
+ >> ***size*** *int*
 
  > **card** *Card*
  >> **key** *any type*
@@ -49,25 +49,32 @@
  
  A 
  > **Slice**
- >> **startIdx** int
+ >> **startIdx** *int*
  >
- >> **endIdx** int
+ >> **endIdx** *int*
 
  > ***Position*** *[enum]*
  >> Position_First
  >>> posData: *NONE*
+ >>
  >> Position_Last
  >>> posData: *NONE*
+ >>
  >> Position_Card
  >>> posData: Card
+ >>
  >> Position_Idx
  >>> posData: int
+ >>
  >> Position_Val
  >>> posData: any type
+ >>
  >> Position_Key
  >>> posData: any type
+ >>
  >> Position_Slice
  >>> posData: Slice
+ >>
  >> Position_All
  >>> posData: *NONE*
  
