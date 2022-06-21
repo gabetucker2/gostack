@@ -24,57 +24,31 @@ func (stack *Stack) Empty() *Stack {
 
 }
 
-func (stack *Stack) AddFirst(card *Card) *Stack {
+func (stack *Stack) Add(card *Card, position Position, _idxData ...interface{}) *Stack {
+
+	// get idxData
+	idxData := _gostack_back_GetIdxData(_idxData)
+	idx := _gostack_back_GetIdxFromPosition(stack, position, idxData).(int)
+
+	if position == Position_Last {
+		idx++ // since we're doing AddBefore, increment final's idx to size
+	}
 
 	// push card to front
-	_gostack_back_AddCardAfter(stack, card, -1)
+	_gostack_back_AddCard(stack, card, idx, true)
 
 	// return
 	return stack
 
 }
 
-func (stack *Stack) AddLast(card *Card) *Stack {
+func (stack *Stack) Extract(position Position, _idxData ...interface{}) *Card {
 
-	// append card to back
-	_gostack_back_AddCardAfter(stack, card, stack.size-1)
-
-	// return
-	return stack
-
-}
-
-func (stack *Stack) ReplaceFirst(card *Card) *Stack {
-
-	// push card to front
-	_gostack_back_AddCardAfter(stack, card, -1)
+	// get idxData
+	var idxData = _gostack_back_GetIdxData(_idxData)
 
 	// return
-	return stack
-
-}
-
-func (stack *Stack) ReplaceLast(card *Card) *Stack {
-
-	// append card to back
-	_gostack_back_AddCardAfter(stack, card, stack.size-1)
-
-	// return
-	return stack
-
-}
-
-func (stack *Stack) ExtractFirst() *Card {
-
-	// return
-	return _gostack_back_RemoveCard(stack, 0)
-
-}
-
-func (stack *Stack) ExtractLast() *Card {
-
-	// return
-	return _gostack_back_RemoveCard(stack, stack.size-1)
+	return _gostack_back_ExtractCard(stack, _gostack_back_GetIdxFromPosition(stack, position, idxData))
 
 }
 
@@ -96,20 +70,8 @@ func (stack *Stack) Has(card interface{}) (has bool) {
 
 }
 
-func (stack *Stack) IndexOf(card interface{}) (idx int) {
+func (stack *Stack) IndexCard(card *Card) int {
 
-	// sets the default index to -1, the return value for a failed search
-	idx = -1
-
-	// searches through each card and, if match, sets idx to that target's index
-	for i, c := range stack.cards {
-		if c == card {
-			idx = i
-			break
-		}
-	}
-
-	// return
-	return
+	return _gostack_back_IndexCard(stack, card)
 
 }

@@ -10,15 +10,15 @@ type Stack struct {
 	size  int
 }
 
-type Position int64
+type Position int
 
 const (
-	first Position = iota
-	last
-	idx
-	val
-	key
-	slice
+	Position_First Position = iota
+	Position_Last
+	Position_Idx
+	Position_Val
+	Position_Key
+	Position_Slice
 )
 
 var testCard1 = _gostack_back_NewCard("Card A") // in sample stack

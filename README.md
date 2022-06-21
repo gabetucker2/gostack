@@ -38,8 +38,6 @@
  
  * **stack.AddFirst()**
  * **stack.AddLast()**
- * **stack.ReplaceFirst()**
- * **stack.ReplaceLast()**
  * **stack.ExtractFirst()**
  * **stack.ExtractLast()**
  * **stack.Empty()**
@@ -47,17 +45,17 @@
  <h3>Receivers</h3>
 
  * **stack.Has()**
- * **stack.IndexOf()**
+ * **stack.IndexCard()**
  
 <h2>Unimplemented Features</h2>
 
+ * **stack.ReplaceFirst()**
+ * **stack.ReplaceLast()**
  * Add **Fill** function
- * Add **Insert** function
  * Add **CombineWith** function
  * Add **Flip** function
  * Add **Entry** function
  * Add **Clone** function
- * Add **Extract** function
  * Add **ReplaceEntries** function
  * Add **GetFlip** function
  * Add **Remove** function
@@ -236,9 +234,9 @@ Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  >> **ELSE**
  >>> return false
 
-<h3>IndexOf</h3>
+<h3>IndexCard</h3>
  
- > `stack.IndexOf(card)`
+ > `stack.IndexCard(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> TRANSFORMER: ***FALSE***

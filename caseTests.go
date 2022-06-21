@@ -24,7 +24,7 @@ func _gostack_case_Empty(funcName string) {
 
 	_gostack_test_Start(funcName, showTestText)
 
-	stack := _gostack_back_SampleStack()
+	stack := _gostack_test_SampleStack()
 	stack2 := stack.Empty()
 
 	conditions := []bool{
@@ -36,12 +36,12 @@ func _gostack_case_Empty(funcName string) {
 
 }
 
-func _gostack_case_AddFirst(funcName string) {
+func _gostack_case_Add_First(funcName string) {
 
 	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
-	stack.AddFirst(testCard3).AddFirst(testCard2).AddFirst(testCard1)
+	stack.Add(testCard3, Position_First).Add(testCard2, Position_First).Add(testCard1, Position_First)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 3),
@@ -54,12 +54,12 @@ func _gostack_case_AddFirst(funcName string) {
 
 }
 
-func _gostack_case_AddLast(funcName string) {
+func _gostack_case_Add_Last(funcName string) {
 
 	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
-	stack.AddLast(testCard1).AddLast(testCard2).AddLast(testCard3)
+	stack.Add(testCard1, Position_Last).Add(testCard2, Position_Last).Add(testCard3, Position_Last)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 3),
@@ -72,12 +72,12 @@ func _gostack_case_AddLast(funcName string) {
 
 }
 
-func _gostack_case_1_ExtractFirst(funcName string) {
+func _gostack_case_1_Extract_First(funcName string) {
 
 	_gostack_test_Start(funcName, showTestText)
 
-	stack := _gostack_back_SampleStack()
-	extract := stack.ExtractFirst()
+	stack := _gostack_test_SampleStack()
+	extract := stack.Extract(Position_First)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 2),
@@ -90,12 +90,12 @@ func _gostack_case_1_ExtractFirst(funcName string) {
 
 }
 
-func _gostack_case_2_ExtractFirst(funcName string) {
+func _gostack_case_2_Extract_First(funcName string) {
 
 	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
-	extract := stack.ExtractFirst()
+	extract := stack.Extract(Position_First)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 0),
@@ -106,12 +106,12 @@ func _gostack_case_2_ExtractFirst(funcName string) {
 
 }
 
-func _gostack_case_1_ExtractLast(funcName string) {
+func _gostack_case_1_Extract_Last(funcName string) {
 
 	_gostack_test_Start(funcName, showTestText)
 
-	stack := _gostack_back_SampleStack()
-	extract := stack.ExtractLast()
+	stack := _gostack_test_SampleStack()
+	extract := stack.Extract(Position_Last)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 2),
@@ -124,12 +124,12 @@ func _gostack_case_1_ExtractLast(funcName string) {
 
 }
 
-func _gostack_case_2_ExtractLast(funcName string) {
+func _gostack_case_2_Extract_Last(funcName string) {
 
 	_gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
-	extract := stack.ExtractLast()
+	extract := stack.Extract(Position_Last)
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 0),
@@ -144,7 +144,7 @@ func _gostack_case_Has(funcName string) {
 
 	_gostack_test_Start(funcName, showTestText)
 
-	stack := _gostack_back_SampleStack()
+	stack := _gostack_test_SampleStack()
 
 	conditions := []bool{
 		stack.Has(testCard1),
@@ -157,17 +157,17 @@ func _gostack_case_Has(funcName string) {
 
 }
 
-func _gostack_case_IndexOf(funcName string) {
+func _gostack_case_IndexCard(funcName string) {
 
 	_gostack_test_Start(funcName, showTestText)
 
-	stack := _gostack_back_SampleStack()
+	stack := _gostack_test_SampleStack()
 
 	conditions := []bool{
-		stack.IndexOf(testCard1) == 0,
-		stack.IndexOf(testCard2) == 1,
-		stack.IndexOf(testCard3) == 2,
-		stack.IndexOf(testCard4) == -1,
+		stack.IndexCard(testCard1) == 0,
+		stack.IndexCard(testCard2) == 1,
+		stack.IndexCard(testCard3) == 2,
+		stack.IndexCard(testCard4) == -1,
 	}
 
 	_gostack_test_End(funcName, conditions)
@@ -178,23 +178,20 @@ func _gostack_case_IndexOf(funcName string) {
 
 func main() {
 
-	// layer two is dependent on layer one in case tests, layer three dependent on layer two, etc
 	println("- BEGINNING TESTS")
 
-	// layer one
+	// constructor tests
 	_gostack_case_MakeStack("MakeStack") // regular case
 
-	// layer two
-	_gostack_case_AddLast("stack.AddLast") // regular case
-
-	// layer three
-	_gostack_case_Empty("stack.Empty")                    // regular case
-	_gostack_case_AddFirst("stack.AddFirst")              // regular case
-	_gostack_case_1_ExtractFirst("T1:stack.ExtractFirst") // regular case
-	_gostack_case_2_ExtractFirst("T2:stack.ExtractFirst") // edge case
-	_gostack_case_1_ExtractLast("T1:stack.ExtractLast")   // regular case
-	_gostack_case_2_ExtractLast("T2:stack.ExtractLast")   // edge case
-	_gostack_case_Has("stack.Has")                        // regular and edge cases
-	_gostack_case_IndexOf("stack.IndexOf")                // regular and edge cases
+	// other function tests
+	_gostack_case_Add_Last("stack.Add_Last")                // regular case
+	_gostack_case_Empty("stack.Empty")                      // regular case
+	_gostack_case_Add_First("stack.Add_First")              // regular case
+	_gostack_case_1_Extract_First("C1:stack.Extract_First") // regular case
+	_gostack_case_2_Extract_First("C2:stack.Extract_First") // edge case
+	_gostack_case_1_Extract_Last("C1:stack.Extract_Last")   // regular case
+	_gostack_case_2_Extract_Last("C2:stack.Extract_Last")   // edge case
+	_gostack_case_Has("stack.Has")                          // regular and edge cases
+	_gostack_case_IndexCard("stack.IndexCard")              // regular and edge cases
 
 }

@@ -4,3 +4,6 @@
 * Group emergent methods by procedures
 * Distinguish names for dynamics layers
 * Add a cost function- inhibitory mechanism, countervalent force to wanting, different brain region for want/cost function?, could measure in terms of time
+* further organize function format, remove layers/ordinal contingencies
+* update readme doc with position and position actions
+* somehow make Extract, Add, etc implement position (make them structs?)
