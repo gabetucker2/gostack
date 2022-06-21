@@ -45,9 +45,9 @@ func _gostack_case_Push(funcName string) {
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 3),
-		&stack.cards[0] == testCard1,
-		&stack.cards[1] == testCard2,
-		&stack.cards[2] == testCard3,
+		stack.cards[0] == testCard1,
+		stack.cards[1] == testCard2,
+		stack.cards[2] == testCard3,
 	}
 
 	_gostack_test_End(funcName, conditions)
@@ -81,8 +81,8 @@ func _gostack_case_1_Pop(funcName string) {
 
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 2),
-		&stack.cards[0] == testCard1,
-		&stack.cards[1] == testCard2,
+		stack.cards[0] == testCard1,
+		stack.cards[1] == testCard2,
 		pop == testCard3,
 	}
 
@@ -116,8 +116,8 @@ func _gostack_case_1_Behead(funcName string) {
 	conditions := []bool{
 		_gostack_back_LenAndSize(stack, 2),
 		behead == testCard1,
-		&stack.cards[0] == testCard2,
-		&stack.cards[1] == testCard3,
+		stack.cards[0] == testCard2,
+		stack.cards[1] == testCard3,
 	}
 
 	_gostack_test_End(funcName, conditions)

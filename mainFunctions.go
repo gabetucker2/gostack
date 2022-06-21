@@ -24,7 +24,7 @@ func (stack *Stack) Empty() *Stack {
 
 }
 
-func (stack *Stack) Push(card Card) *Stack {
+func (stack *Stack) Push(card *Card) *Stack {
 
 	// push card to front
 	_gostack_back_AddCardAfter(stack, card, 0)
@@ -34,7 +34,7 @@ func (stack *Stack) Push(card Card) *Stack {
 
 }
 
-func (stack *Stack) Append(card Card) *Stack {
+func (stack *Stack) Append(card *Card) *Stack {
 
 	// append card to back
 	_gostack_back_AddCardAfter(stack, card, stack.size-1)

@@ -6,7 +6,7 @@ type Card struct {
 }
 
 type Stack struct {
-	cards []Card
+	cards []*Card
 	size  int
 }
 

@@ -5,7 +5,7 @@
 
  Many of the functions in this project were inspired by functions from *JavaScript* Arrays or *C#* Lists.
 
- For the purposes of this project, we will use the imagery of a stack of cards.  A ***Stack*** will refer to a stack of cards; each element in that **Stack** will be a ***card***.
+ For the purposes of this project, we will use the imagery of a stack of cards.  A ***Stack*** will refer to a stack of cards; each element in that **Stack** will be a ***card***.  This is not to be confused with traditional stack structures (which push and pop the first element in the stack).
 
 <h1>Overview</h1>
 

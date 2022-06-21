@@ -74,10 +74,10 @@ func _gostack_back_NewCard(val interface{}) (card *Card) {
 
 }
 
-func _gostack_back_AddCardAfter(stack *Stack, card Card, idx int) *Stack {
+func _gostack_back_AddCardAfter(stack *Stack, card *Card, idx int) *Stack {
 
 	// insert card into new array slice to satisfy append function
-	newCards := []Card{}
+	newCards := []*Card{}
 
 	if stack.size == 0 { // add card to empty list
 
@@ -85,7 +85,8 @@ func _gostack_back_AddCardAfter(stack *Stack, card Card, idx int) *Stack {
 
 	} else { // append each card in stack.cards to card
 
-		for i, c := range stack.cards {
+		for i, _ := range stack.cards {
+			c := stack.cards[i]
 			if i != idx {
 				newCards = append(newCards, c)
 			} else if i == idx {
@@ -118,14 +119,15 @@ func _gostack_back_RemoveCard(stack *Stack, idx int) *Card {
 	} else { // if we can pop it, return popped card
 
 		// insert card into new array slice to satisfy append function
-		newCards := []Card{}
+		newCards := []*Card{}
 
 		// append each card in stack.cards to card
-		for i, c := range stack.cards {
+		for i, _ := range stack.cards {
+			c := stack.cards[i]
 			if i != idx {
 				newCards = append(newCards, c)
 			} else if i == idx {
-				card = &c
+				card = c
 			}
 		}
 
