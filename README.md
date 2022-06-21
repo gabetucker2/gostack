@@ -36,10 +36,11 @@
  
  <h3>Transformers</h3>
  
+ * **stack.Empty()**
+ 
  * **stack.Add(card, Position_*, _idxData)**
  * **stack.Extract(Position_*, _idxData)**
  * **stack.Replace(Position_*, _idxData)**
- * **stack.Empty()**
 
  <h3>Receivers</h3>
 
