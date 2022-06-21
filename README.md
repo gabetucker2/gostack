@@ -14,7 +14,7 @@
  An overview of the files in this repository
 
  * **README.md** is this file
- * **TODO.txt** is a file with features to be added (significant only to gostack developers)
+ * **TODO.txt** is a file with features to be added (significant only to `gostack` developers)
  * **caseTests.go** is a script used to run test cases to ensure functionality of this project's functions; for examples on how to use `gostack` functions, see this file; it is recommended to delete this file if it is not commented out at the time of your installation since it uses the main() function; in order to run test cases with ***test.go*** *not* commented out, run `go run .` in the top directory
  * **functions.go** is where novel functions are stored
  * **go.mod** is used to manage directory access
@@ -149,9 +149,9 @@
  Take care to note that some functions do not support certain enum types (supported enum types are documented in function API).  For instance, it wouldn't make sense for you to call `stack.Index()` on a set of cards interspersed throughout a stack, but it would make sense for you to call `stack.Extract()` on set of cards interspersed throughout a stack.
 
  > ***POSITION*** *[enum]*
- >> *SampleConstant*
- >>> *The type of the variable (called posData) that needs to be passed into the function utilizing this constant*
- >>> *For instance, if you input POSITION_SLICE, you would need to pass a Slice struct to your posData parameter*
+ >> *POSITION_\* Sample*
+ >>> *The type of the variable (called `posData`) that needs to be passed into the function utilizing this constant*
+ >>> *For instance, if you input `POSITION_Slice`, you would need to pass a **Slice** struct to your `posData` parameter*
  >>
  >> POSITION_First
  >>> *NONE*
@@ -181,7 +181,7 @@
  
  * `stack.AddBefore(card, POSITION_First)`
  * `stack.AddAfter(card, POSITION_First)`
- * `stack.Replace(newCard, POSITION_Key, "This string represents the key of one or multiple cards to target in the replace function")`
+ * `stack.Replace(newCard, POSITION_Key, "This string represents the key of one or multiple cards to target in this Replace function")`
  * `stack.Has(POSITION_Card, card)`
  * `stack.Extract(POSITION_All)`
  * *...and so on*
@@ -190,7 +190,7 @@
 
  Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
  
-<h3>*Notation Sample*</h3>
+<h3>_NotationSample</h3>
  
  > `variable1.function(variable2, THING_*, ...optional)`
  >> CONSTRUCTOR: ***TRUE***
@@ -213,10 +213,12 @@
  >> **THING_\*** *type* refers to how this input argument can be any variable starting with `THING_` that the function specifies is allowed
  >
  >> **...optional** *type* refers to how this input argument does not have to be inputted in the function (refer to documentation to decide whether to input)
- >>> A sample instance where you would not input an argument in this spot is when you're using POSITION_First, which does not intake any posData.  That said, take care not to input more than 1 argument to optional parameters; everything will compile if you do, but this action is not supported.
+ >>> A sample instance where you would not input an argument in this spot is when you're using POSITION_First, which does not intake any posData.  That said, take care not to input more than 1 argument to optional parameters; everything will compile if you do, but this action is not supported by `gostack`.
 
  > ***Supported POSITIONS***
- >>> Each of the below positions are supported POSITION_* arguments
+ >
+ > Each of the below positions are supported POSITION_* arguments
+ >
  >> POSITION_First
  >
  >> POSITION_Last
@@ -248,9 +250,9 @@
  > ***Parameters***
  >> **stack** *Stack*
  >
- >> **card** *Card* is the Card to add to the stack before or after POSITION
+ >> **card** *Card* is the Card object to add to the stack before or after the position
  >
- >> **beforeNotAfter** *bool* is used to control whether card is added before or after POSITION
+ >> **beforeNotAfter** *bool* is used to control whether **card** is added before or after the position
 
  > ***Supported POSITIONS***
  >> POSITION_First
@@ -269,13 +271,13 @@
  >> **IF VALID POSITION**
  >>> **IF beforeNotAfter**
  >>>> add card before POSITION in the stack
- >>
+ >>>
  >>> **ELSE**
  >>>> add card after POSITION in the stack
- >>
+ >>>
  >>> **FOR EACH CARD THAT ALREADY EXISTED IN THE STACK**
  >>>> that card's previous index i is updated to i + 1
- >>
+ >>>
  >>> return updated stack
  >>
  >> *ELSE*
