@@ -81,10 +81,12 @@
  >> Returns an interface array to represent the elements in the Stack
  >
  >> It is highly recommended against accessing this property, as the entire purpose of this project is for you not to have to manage arrays manually
-
- <h4>card.key</h4>
- 
- <h4>card.value</h4>
+ >
+ >> `card.key`
+ >>> Returns a key for this card-map (or nil if doesn't exist)
+ >>
+ >> `card.value`
+ >>> Returns the value of this card
  
 <h3>size</h3>
  
