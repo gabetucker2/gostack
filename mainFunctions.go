@@ -24,10 +24,10 @@ func (stack *Stack) Empty() *Stack {
 
 }
 
-func (stack *Stack) Add(card *Card, position Position, _idxData ...interface{}) *Stack {
+func (stack *Stack) Add(card *Card, position Position, _posData ...interface{}) *Stack {
 
 	// get idx
-	idx := _gostack_back_GetIdxFromData(stack, position, _idxData)
+	idx := _gostack_back_GetIdxFromData(stack, position, _posData)
 
 	// add only if valid idx found
 	if idx != -1 {
@@ -44,10 +44,10 @@ func (stack *Stack) Add(card *Card, position Position, _idxData ...interface{}) 
 
 }
 
-func (stack *Stack) Extract(position Position, _idxData ...interface{}) *Card {
+func (stack *Stack) Extract(position Position, _posData ...interface{}) *Card {
 
 	// get idx
-	idx := _gostack_back_GetIdxFromData(stack, position, _idxData)
+	idx := _gostack_back_GetIdxFromData(stack, position, _posData)
 
 	// extract card if valid idx
 	var extract *Card = nil
@@ -60,10 +60,10 @@ func (stack *Stack) Extract(position Position, _idxData ...interface{}) *Card {
 
 }
 
-func (stack *Stack) Replace(newCard *Card, position Position, _idxData ...interface{}) (oldCard *Card) {
+func (stack *Stack) Replace(newCard *Card, position Position, _posData ...interface{}) (oldCard *Card) {
 
 	// get idx
-	idx := _gostack_back_GetIdxFromData(stack, position, _idxData)
+	idx := _gostack_back_GetIdxFromData(stack, position, _posData)
 
 	if idx != -1 {
 		// extract card
@@ -80,19 +80,19 @@ func (stack *Stack) Replace(newCard *Card, position Position, _idxData ...interf
 
 }
 
-func (stack *Stack) Has(position Position, _idxData ...interface{}) bool {
+func (stack *Stack) Has(position Position, _posData ...interface{}) bool {
 
 	// get idx
-	idx := _gostack_back_GetIdxFromData(stack, position, _idxData)
+	idx := _gostack_back_GetIdxFromData(stack, position, _posData)
 
 	// return
 	return idx != -1
 
 }
 
-func (stack *Stack) Index(position Position, _idxData ...interface{}) int {
+func (stack *Stack) Index(position Position, _posData ...interface{}) int {
 
 	// return index
-	return _gostack_back_GetIdxFromData(stack, position, _idxData)
+	return _gostack_back_GetIdxFromData(stack, position, _posData)
 
 }

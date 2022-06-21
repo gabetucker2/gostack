@@ -1,11 +1,11 @@
 # gostack
- `gostack` introduces **Stacks**, ambiguously-typed (mathematical) strings of index/key-element pairs intended to replace arrays and maps in *golang*.  **Stacks** are introduced alongside a variety of helpful functions to ensure programmer ease-of-use, concision, and flexibility.
+ `gostack` introduces **Stacks**, ambiguously-typed sets of elements intended to replace arrays and maps in *golang*.  **Stacks** are introduced alongside a variety of helpful functions to ensure programmer ease-of-use, concision, and flexibility.
+
+ For the purposes of this project, we will use the imagery of a stack of cards.  A ***Stack*** will refer to a stack of cards; each element in that stack will be a ***Card***.  This is not to be confused with traditional stack structures (which only push and pop the first element in a stack).
 
  By default for generics, people tend to use *golang*'s list package, but this package is optimized only with the essentials for transforming and selecting list elements.  While `gostack` offers a much wider breadth of functions for transforming and selecting elements, it also allows you to turn **Stacks** into maps, quickly convert between arrays and **Stacks**, and—most excitingly—to use functions based on lambda expression including **sort**, **TrueForAll**, and **RemoveAll**.
 
  Many of the functions in this project were inspired by functions from *JavaScript* Arrays or *C#* Lists.
-
- For the purposes of this project, we will use the imagery of a stack of cards.  A ***Stack*** will refer to a stack of cards; each element in that **Stack** will be a ***card***.  This is not to be confused with traditional stack structures (which push and pop the first element in the stack).
 
 <h1>Overview</h1>
 
@@ -55,21 +55,21 @@
 
  > ***Position*** *[enum]*
  >> Position_First
- >>> posObj: /
+ >>> posData: *NONE*
  >> Position_Last
- >>> posObj: /
+ >>> posData: *NONE*
  >> Position_Card
- >>> posObj: Card
+ >>> posData: Card
  >> Position_Idx
- >>> posObj: int
+ >>> posData: int
  >> Position_Val
- >>> posObj: any type
+ >>> posData: any type
  >> Position_Key
- >>> posObj: any type
+ >>> posData: any type
  >> Position_Slice
- >>> posObj: Slice
+ >>> posData: Slice
  >> Position_All
- >>> posObj: /
+ >>> posData: *NONE*
  
  <h3>Constructor Functions</h3>
 
@@ -140,23 +140,23 @@
 
  > Position *[enum]*
  >> *SampleConstant*
- >>> *posObj: the Type of the variable that needs to be passed into the function utilizing this constant*
+ >>> *posData: the Type of the variable that needs to be passed into the function utilizing this constant*
  >> Position_First
- >>> posObj: *NONE*
+ >>> posData: *NONE*
  >> Position_Last
- >>> posObj: *NONE*
+ >>> posData: *NONE*
  >> Position_Card
- >>> posObj: Card
+ >>> posData: Card
  >> Position_Idx
- >>> posObj: int
+ >>> posData: int
  >> Position_Val
- >>> posObj: any type [interface{}]
+ >>> posData: any type [interface{}]
  >> Position_Key
- >>> posObj: any type [interface{}]
+ >>> posData: any type [interface{}]
  >> Position_Slice
- >>> posObj: Slice
+ >>> posData: Slice
  >> Position_All
- >>> posObj: *NONE*
+ >>> posData: *NONE*
 
  <h4>Recommended Uses</h4>
  

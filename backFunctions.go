@@ -164,17 +164,17 @@ func _gostack_back_ExtractCard(stack *Stack, idx interface{}) (card *Card) {
 
 }
 
-func _gostack_back_GetIdxData(_idxData ...interface{}) (idxData interface{}) {
-	if len(_idxData) == 1 {
-		idxData = _idxData[0] // just so there is only one optional param
+func _gostack_back_GetposData(_posData ...interface{}) (posData interface{}) {
+	if len(_posData) == 1 {
+		posData = _posData[0] // just so there is only one optional param
 	} else {
-		idxData = nil
+		posData = nil
 	}
 	return
 }
 
-func _gostack_back_GetIdxFromData(stack *Stack, position Position, _idxData ...interface{}) (idx int) {
-	return _gostack_back_GetIdxFromPosition(stack, position, _gostack_back_GetIdxData(_idxData)).(int)
+func _gostack_back_GetIdxFromData(stack *Stack, position Position, _posData ...interface{}) (idx int) {
+	return _gostack_back_GetIdxFromPosition(stack, position, _gostack_back_GetposData(_posData)).(int)
 }
 
 func _gostack_back_MakeSlice(x, y int) Slice {
@@ -183,9 +183,9 @@ func _gostack_back_MakeSlice(x, y int) Slice {
 
 // returns index of searched item if valid
 // else, returns -1
-func _gostack_back_GetIdxFromPosition(stack *Stack, position Position, _idxData ...interface{}) (idx interface{}) {
+func _gostack_back_GetIdxFromPosition(stack *Stack, position Position, _posData ...interface{}) (idx interface{}) {
 
-	var idxData = _gostack_back_GetIdxData(_idxData...)
+	var posData = _gostack_back_GetposData(_posData...)
 
 	switch position {
 
@@ -196,17 +196,17 @@ func _gostack_back_GetIdxFromPosition(stack *Stack, position Position, _idxData 
 	case Position_Card:
 		idx = -1
 		for i, c := range stack.cards {
-			if c == idxData { // key
+			if c == posData { // key
 				idx = i
 				break
 			}
 		}
 	case Position_Idx:
-		idx = idxData // int
+		idx = posData // int
 	case Position_Key:
 		idx = -1
 		for i, c := range stack.cards {
-			if c.key == idxData { // key
+			if c.key == posData { // key
 				idx = i
 				break
 			}
@@ -214,13 +214,13 @@ func _gostack_back_GetIdxFromPosition(stack *Stack, position Position, _idxData 
 	case Position_Val:
 		idx = -1
 		for i, c := range stack.cards {
-			if c.val == idxData { // card
+			if c.val == posData { // card
 				idx = i
 				break
 			}
 		}
 	case Position_Slice:
-		idx = idxData // Slice
+		idx = posData // Slice
 	case Position_All:
 		idx = _gostack_back_MakeSlice(0, stack.size-1) // nil
 
