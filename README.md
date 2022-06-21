@@ -144,13 +144,14 @@
 
 <h3>Position</h3>
 
- This is an enum intended so that the programmer can easily tell functions the intended target cards.
+ This is an enum intended to make it easy to inform functions of the intended target cards.
 
- Take care to note that some functions do not support certain enum types (supported enum types are documented in function API).  For instance, it wouldn't make sense for you to get the Index of a set of cards interspersed throughout a stack, but it would make sense for you to Extract a set of cards interspersed throughout a stack.
+ Take care to note that some functions do not support certain enum types (supported enum types are documented in function API).  For instance, it wouldn't make sense for you to call `stack.Index()` on a set of cards interspersed throughout a stack, but it would make sense for you to call `stack.Extract()` on set of cards interspersed throughout a stack.
 
  > ***Position*** *[enum]*
  >> *SampleConstant*
- >>> *The Type of the variable that needs to be passed into the function utilizing this constant*
+ >>> *The type of the variable (called posData) that needs to be passed into the function utilizing this constant*
+ >>> *For instance, if you input POSITION_SLICE, you would need to pass a Slice struct to your posData parameter*
  >>
  >> Position_First
  >>> *NONE*
@@ -179,18 +180,18 @@
  <h4>Recommended Uses</h4>
  
  * `stack.Add(card, Position_First)`
- * `stack.Replace(newCard, Position_Key, "string key of card(s) to replace")`
+ * `stack.Replace(newCard, Position_Key, "This string represents the key of one or multiple cards to target in the replace function")`
  * `stack.Has(Position_Card, card)`
  * `stack.Extract(Position_All)`
  * *...and so on*
 
 <h2>Stack Functions</h2>
 
- CONSTRUCTOR means the function requires no receiver (i.e., don't need the `thing.` in `thing.function()`).  !CONSTRUCTOR means the function's receiver is an existing **Stack** object.
-
- SETTER means the function updates the inputted **Stack**.
+ CONSTRUCTOR means the function requires no receiver (i.e., don't need the `thing.` in `thing.function()`); !CONSTRUCTOR means the function's receiver is an existing **Stack** object.
 
  GETTER means the function returns a value.
+
+ SETTER means the function updates the inputted **Stack**.
 
  Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
 
@@ -199,9 +200,9 @@
  > `MakeStack()`
  >> CONSTRUCTOR: ***TRUE***
  >
- >> SETTER: ***FALSE***
- >
  >> GETTER: ***TRUE***
+ >
+ >> SETTER: ***FALSE***
  
  > ***Pseudocode***
  >> return new Stack
@@ -211,9 +212,9 @@
  > `stack.Empty()`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> SETTER: ***TRUE***
- >
  >> GETTER: ***TRUE***
+ >
+ >> SETTER: ***TRUE***
  
  > ***Parameters***
  >> **stack** is the Stack to Empty
@@ -228,9 +229,9 @@
  > `stack.AddFirst(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> SETTER: ***TRUE***
- >
  >> GETTER: ***TRUE***
+ >
+ >> SETTER: ***TRUE***
  
  > ***Parameters***
  >> **stack**
@@ -250,9 +251,9 @@
  > `stack.AddLast(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> SETTER: ***TRUE***
- >
  >> GETTER: ***TRUE***
+ >
+ >> SETTER: ***TRUE***
  
  > ***Parameters***
  >> **stack**
@@ -269,9 +270,9 @@
  > `stack.ExtractFirst()`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> SETTER: ***TRUE***
- >
  >> GETTER: ***TRUE***
+ >
+ >> SETTER: ***TRUE***
  
  > ***Parameters***
  >> **stack** is the Stack from which to remove the first card
@@ -290,9 +291,9 @@
  > `stack.ExtractLast()`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> SETTER: ***TRUE***
- >
  >> GETTER: ***TRUE***
+ >
+ >> SETTER: ***TRUE***
  
  > ***Parameters***
  >> **stack** is the Stack from which to remove the last card
@@ -311,9 +312,9 @@
  > `stack.Has(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> SETTER: ***FALSE***
- >
  >> GETTER: ***TRUE***
+ >
+ >> SETTER: ***FALSE***
  
  > ***Parameters***
  >> **stack** is the Stack to search
@@ -332,9 +333,9 @@
  > `stack.IndexCard(card)`
  >> CONSTRUCTOR: ***FALSE***
  >
- >> SETTER: ***FALSE***
- >
  >> GETTER: ***TRUE***
+ >
+ >> SETTER: ***FALSE***
  
  > ***Parameters***
  >> **stack** is the Stack to search
@@ -350,6 +351,8 @@
  
 <h1>Unimplemented Features</h1>
 
+ <h2>General Features</h2>
+
  * Add **Fill** function
  * Add **CombineWith** function
  * Add **Flip** function
@@ -360,17 +363,20 @@
  * Add **Type** function
  * Add **ToArray** function
  * Add **ToStack** function
- * Add **GetKeys** function
+ * Add **Get** function
+
+ <h2>Lambda Function Support</h2>
+
  * Add **GetCards** function
  * Add **Sort** function
  * Add **TrueForAll** function
- * Add tensor functions
- * *...and many more*
- 
+
+ <h2>Tensor Function Support</h2>
+
 <h1>Footer</h1>
 
 This project was created by Gabe Tucker.
 
-If there are any changes or comments you would like to have made in respect to this project, please email `tucker.854@osu.edu`.  I will usually respond in 1-2 business days.
+If there are any changes or comments you would like to have made in respect to this project, please email `tucker.854@osu.edu`.  I appreciate any feedback and will usually respond within 1-2 business days.
 
 Feel free to visit my personal pages at `https://gabetucker.com` or `https://www.linkedin.com/in/gabetucker2/`.

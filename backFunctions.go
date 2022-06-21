@@ -164,7 +164,7 @@ func _gostack_back_ExtractCard(stack *Stack, idx interface{}) (card *Card) {
 
 }
 
-func _gostack_back_GetposData(_posData ...interface{}) (posData interface{}) {
+func _gostack_back_UpdatePosData(_posData ...interface{}) (posData interface{}) {
 	if len(_posData) == 1 {
 		posData = _posData[0] // just so there is only one optional param
 	} else {
@@ -174,7 +174,7 @@ func _gostack_back_GetposData(_posData ...interface{}) (posData interface{}) {
 }
 
 func _gostack_back_GetIdxFromData(stack *Stack, position Position, _posData ...interface{}) (idx int) {
-	return _gostack_back_GetIdxFromPosition(stack, position, _gostack_back_GetposData(_posData)).(int)
+	return _gostack_back_GetIdxFromPosition(stack, position, _gostack_back_UpdatePosData(_posData)).(int)
 }
 
 func _gostack_back_MakeSlice(x, y int) Slice {
@@ -185,7 +185,7 @@ func _gostack_back_MakeSlice(x, y int) Slice {
 // else, returns -1
 func _gostack_back_GetIdxFromPosition(stack *Stack, position Position, _posData ...interface{}) (idx interface{}) {
 
-	var posData = _gostack_back_GetposData(_posData...)
+	posData := _gostack_back_UpdatePosData(_posData...)
 
 	switch position {
 
