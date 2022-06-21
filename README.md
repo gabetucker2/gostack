@@ -32,18 +32,22 @@
  
  <h3>Constructors</h3>
  
+ <h4>Non-Position<h4>
  * **MakeStack()**
  
  <h3>Transformers</h3>
- 
- * **stack.Empty()**
- 
+
+ <h4>Position<h4>
  * **stack.Add(card, Position_*, _idxData)**
  * **stack.Extract(Position_*, _idxData)**
  * **stack.Replace(Position_*, _idxData)**
+ 
+ <h4>Non-Position<h4>
+ * **stack.Empty()**
 
  <h3>Receivers</h3>
 
+ <h4>Position<h4>
  * **stack.Has(Position_*, _idxData)**
  * **stack.Index(Position_*, _idxData)**
  
