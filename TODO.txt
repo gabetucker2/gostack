@@ -2,15 +2,16 @@ This project:
 * Update documentation
  - Glossary
 
+* update pseudocode
+* add idx attribute to cards
+* add more examples
+
 * Implement Lambda
  - ctrl + f to see "TODO"
 
-* Implement RETURN
-
 * Implement Add()'s before/after
 
-* Restructure functions to use RETURN_*
-* Restructure functions to use POSITION_*
+* Restructure functions to use new parameters
 * Restructure functions to intake Stacks and Cards
 
 * Implement more case tests

@@ -24,6 +24,8 @@
  >> [Links](#links)
 
  > [Overview](#overview)
+ >> [Examples](#examples)
+ >
  >> [Brief Documentation](#briefDocumentation)
  >>> [Data Structures](#dataStructuresBrief)
  >>>> [structs](#structsBrief)
@@ -55,6 +57,8 @@
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
  >>>> [MakeStack()](#MakeStack)
  >>>
+ >>>> [MakeCard()](#MakeCard)
+ >>>
  >>>> [stack.Empty()](#Empty)
  >>
  >>> [Generalized Functions](#generalizedFunctions)
@@ -68,8 +72,6 @@
  >>>
  >>>> [stack.Has(...)](#Has)
  >
- >> [Examples](#examples)
- >
  >> [To Add](#toAdd)
  >
  >> [Footer](#footer)
@@ -78,7 +80,7 @@
 
  * **README.md** is this file
  * **TODO.txt** is a file with features to be added (significant only to `gostack` developers)
- * **caseTests.go** is a script used to run test cases to ensure functionality of this project's functions; for examples on how to use `gostack` functions, see this file; it is recommended to delete this file if it is not commented out at the time of your installation since it uses the main() function; in order to run test cases with ***test.go*** *not* commented out, run `go run .` in the top directory
+ * **caseTests.go** is a script used to run test cases to ensure functionality of this project's functions; it is recommended to delete this file if it is not commented out at the time of your installation since it uses the main() function; in order to run test cases with ***test.go*** *not* commented out, run `go run .` in the top directory
  * **functions.go** is where novel functions are stored
  * **go.mod** is used to manage directory access
  * **structs.go** is where structs are defined
@@ -92,6 +94,52 @@
  * http://web.cse.ohio-state.edu/software/common/doc/components/standard/Standard.html
 
 <h1 name = "overview">OVERVIEW</h1>
+
+<h2 name = "examples">Examples</h2>
+ 
+ <h3>...to Demonstrate Flexibility</h3>
+
+ > `stack.Get(RETURN_Card, POSITION_First)`
+ >> *returns the first card in the Stack*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Val, "String Value", MATCH_Object)`
+ >> *goes through the stack, finds the first card with val "String Value", and returns that card*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Key, "String Key", MATCH_Object)`
+ >> *goes through the stack, finds the first card with key "String Key", and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Lambda, {TODO: add})`
+ >> *goes through the stack, finds each card for which the lambda expression is true, and return a stack of these cards*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Val, "String Value", MATCH_Object)`
+ >> *goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues, MATCH_Object)`
+ >> *goes through the stack, finds the first card with one of the values in stackOfValues, and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues, MATCH_Object)`
+ >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues, MATCH_Reference)`
+ >> *goes through the stack, finds the first card with the same memory address as one the values in stackOfValues, and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues, MATCH_Reference)`
+ >> *goes through the stack, finds each card with a memory address matching one in stackOfValues, and returns a Stack of each of those cards*
+
+ <h3>stack.Push() Function Equivalent</h3>
+
+ > `stack.Add(insert, ORDER_BEFORE, POSITION_First)`
+ >> *adds a card to the beginning of the stack*
+
+ <h3>stack.Pop() Function Equivalent</h3>
+
+ > `stack.Extract(RETURN_Card, POSITION_First)`
+ >> *removes and returns the first card in the stack*
+
+ <h3>stack.IndexOf(card) Function Equivalent</h3>
+ 
+ > `stack.Get(RETURN_Idx, POSITION_Card, cardToMatch, MATCH_Object)`
+ >> *returns the index of the first found matching card*
 
 <h1 name = "briefDocumentation">Brief Documentation</h1>
 
@@ -154,15 +202,16 @@
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
  * **MakeStack()**
+ * **MakeCard()**
  * **stack.Empty()**
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
- * **stack.Add(newCard, ORDER_*, POSITION_*, ...POSITIONDATA)**
- * **stack.Replace(newCard, RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)**
- * **stack.Extract(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)**
- * **stack.Get(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)**
- * **stack.Has(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)**
+ * **stack.Add(insert, ORDER_\*, POSITION_\*, ...POSITIONDATA)**
+ * **stack.Replace(insert, RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
+ * **stack.Extract(RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
+ * **stack.Get(RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
+ * **stack.Has(RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
 
 <h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
 
@@ -370,11 +419,26 @@
  >>> Stack
  >
  >> GETTER: ***TRUE***
+ >>> Stack
  >
  >> SETTER: ***FALSE***
  
  > ***Pseudocode***
- >> return a new Stack
+ >> returns a new Stack
+
+<h3 name = "MakeCard">MakeCard</h3>
+
+ > `MakeCard()`
+ >> CONSTRUCTOR: ***TRUE***
+ >>> Card
+ >
+ >> GETTER: ***TRUE***
+ >>> Card
+ >
+ >> SETTER: ***FALSE***
+ 
+ > ***Pseudocode***
+ >> returns a new Card
  
 <h3 name = "Empty">Empty</h3>
  
@@ -393,131 +457,106 @@
  > ***Pseudocode***
  >> remove all cards in the stack
  >
- >> return the empty stack
+ >> returns the empty stack
  
 <h2 name = "generalizedFunctions">Generalized Functions</h2>
  
 <h3 name = "Add">Add</h3>
  
- > `stack.Add(toAdd, beforeNotAfter, POSITION_*, ...data)`
+ > `stack.Add(insert, ORDER_*, POSITION_*, ...POSITIONDATA)`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> GETTER: ***TRUE***
- >>> **stack**
+ >>> **stack** *or* nil
  >
  >> SETTER: ***TRUE***
  >>> **stack**
  
- > ***Parameters***
- >> **stack** *Stack*
- >
- >> **toAdd** *Card* or *Stack* is either a Card or a Stack of cards to insert at POSITION
- >
- >> **beforeNotAfter** *bool* is used to control whether **card** is added before or after the position
- >
- >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct position
- >
- >> **...data** *any type (interface{})* is used to provide the function relevant additional data to find the correct position
+ > ***Special Parameters***
+ >> **insert** *Card* or *Stack* is either a Card or a Stack of cards to insert at POSITION
 
  > ***Pseudocode***
  >> **IF VALID POSITION**
  >>> **IF beforeNotAfter**
- >>>> add card before POSITION in the stack
+ >>>> add **insert** before (each) POSITION in **stack**
  >>>
  >>> **ELSE**
- >>>> add card after POSITION in the stack
+ >>>> add **insert** after (each) POSITION in **stack**
  >>>
- >>> **FOR EACH CARD THAT ALREADY EXISTED IN THE STACK**
- >>>> that card's previous index i is updated to i + 1
- >>>
- >>> return updated stack
+ >>> returns updated stack
  >>
  >> **ELSE**
  >>> return nil
  
 <h3 name = "Replace">Replace</h3>
  
- > `stack.Replace(toInsert, POSITION_*, ...data)`
+ > `stack.Replace(insert, RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> GETTER: ***TRUE***
- >>> card that was replaced *or* nil
+ >>> object that was removed *or* nil
  >
  >> SETTER: ***TRUE***
  >>> **stack**
  
- > ***Parameters***
- >> **stack** *Stack* is the Stack from which to remove the first card
- >
- >> **toInsert** *Card* or *Stack* is either a Card or a Stack of cards to insert at POSITION(S) as the replacement
- >
- >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct card to replace
- >
- >> **...data** *any type (interface{})* is used to provide the function relevant additional data to find the correct card to replace
+ > ***Special Parameters***
+ >> **insert** *Card* or *Stack* is either a Card or a Stack of cards to insert at POSITION(S) as the replacement
 
  > ***Pseudocode***
- >> **IF STACK IS NOT EMPTY**
- >>> replace cards from the stack with toInsert based on provided POSITION data
+ >> **IF VALID POSITION**
+ >>> replace cards at each POSITION in **stack** with **insert**
  >>
- >>> return the removed card(s) in a new stack
+ >>> returns the selected RETURNS
  >
  >> **ELSE**
  >>> return nil
  
 <h3 name = "Extract">Extract</h3>
  
- > `stack.Extract(POSITION_*, ...data)`
+ > `stack.Extract(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> GETTER: ***TRUE***
- >>> extracted card *or* nil
+ >>> card that was removed *or* nil
  >
  >> SETTER: ***TRUE***
  >>> **stack**
  
- > ***Parameters***
- >> **stack** *Stack* is the Stack from which to remove the first card
- >
- >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct card to extract
- >
- >> **...data** *any type (interface{})* is used to provide the function relevant additional data to find the correct card to extract
+ > ***Special Parameters***
+ >> *None*
 
  > ***Pseudocode***
- >> **IF STACK IS NOT EMPTY**
+ >> **IF VALID POSITION**
  >>> remove cards from the stack based on provided POSITION data
  >>
- >>> return the removed card(s)
+ >>> return the RETURNS of the old cards
  >
  >> **ELSE**
  >>> return nil
  
 <h3 name = "Get">Get</h3>
  
- > `stack.Get(POSITION_*, ...POSITIONDATA, ...RETURNDATA)`
+ > `stack.Get(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> GETTER: ***TRUE***
- >>> card that was replaced *or* nil
+ >>> desired card
  >
  >> SETTER: ***FALSE***
  
- > ***Parameters***
- >> **stack** *Stack* is the Stack from which to remove the first card
- >
- >> **POSITIONDATA\*** *POSITION* is used to provide the function relevant POSITION data to find the correct card to replace
- >
- >> **...data** *any type (interface{})* is used to provide the function relevant additional data to find the correct card to replace
+ > ***Special Parameters***
+ >> *None*
 
  > ***Pseudocode***
- >> **IF STACK IS NOT EMPTY AND HAS TARGETED DATA**
- >>> return data
+ >> **IF VALID POSITION**
+ >>> return the selected RETURNS
  >
  >> **ELSE**
  >>> return nil
  
 <h3 name = "Has">Has</h3>
  
- > `stack.Has(lookFor, POSITION_*, ...data)`
+ > `stack.Has(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> GETTER: ***TRUE***
@@ -525,78 +564,24 @@
  >
  >> SETTER: ***FALSE***
  
- > ***Parameters***
- >> **stack** *Stack* is the Stack to search for **lookFor**
- >
- >> **lookFor** *Card* or *Stack* is either a Card or a Stack of cards to find in **stack**
- >
- >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct cards to search
- >
- >> **...data** *any type (interface{})* is used to provide the function relevant additional data to find the correct cards to search
+ > ***Special Parameters***
+ >> *None*
  
  > ***Pseudocode***
- >> **IF STACK IS NOT EMPTY AND HAS TARGETED DATA**
+ >> **IF STACK HAS TARGETED DATA**
  >>> return true
  >
  >> **ELSE**
  >>> return false
-
-<h2 name = "examples">Examples</h2>
- 
- <h3>Examples to Demonstrate Flexibility</h3>
-
- > `stack.Get(RETURN_Card, POSITION_First)`
- >> *returns the first card in the Stack*
- >
- > `stack.Get(RETURN_Card, POSITION_Val, "String Value", MATCH_Object)`
- >> *goes through the stack, finds the first card with val "String Value", and returns that card*
- >
- > `stack.Get(RETURN_Card, POSITION_Key, "String Key", MATCH_Object)`
- >> *goes through the stack, finds the first card with key "String Key", and returns that card*
- >
- > `stack.Get(RETURN_Cards, POSITION_Lambda, {TODO: add})`
- >> *goes through the stack, finds each card for which the lambda expression is true, and return a stack of these cards*
- >
- > `stack.Get(RETURN_Cards, POSITION_Val, "String Value", MATCH_Object)`
- >> *goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
- >
- > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues, MATCH_Object)`
- >> *goes through the stack, finds the first card with one of the values in stackOfValues, and returns that card*
- >
- > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues, MATCH_Object)`
- >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
- >
- > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues, MATCH_Reference)`
- >> *goes through the stack, finds the first card with the same memory address as one the values in stackOfValues, and returns that card*
- >
- > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues, MATCH_Reference)`
- >> *goes through the stack, finds each card with a memory address matching one in stackOfValues, and returns a Stack of each of those cards*
-
- <h3>stack.Push() Function Equivalent</h3>
-
- > `stack.Add(newCard, ORDER_BEFORE, POSITION_First)`
- >> *adds a card to the beginning of the stack*
-
- <h3>stack.Pop() Function Equivalent</h3>
-
- > `stack.Extract(RETURN_Card, POSITION_First)`
- >> *removes and returns the first card in the stack*
-
- <h3>stack.IndexOf(card) Function Equivalent</h3>
- 
- > `stack.Get(RETURN_Idx, POSITION_Card, card)`
- >> *returns the index of the first found matching card*
  
 <h2 name = "toAdd">To Add</h2>
 
  <h3>Generalized Functions</h3>
 
- * Add **Sort** function
- * Add **TrueForAll** function
+ * *None left*
 
  <h3>Non-Generalized Functions</h3>
 
- * Add **MakeCard** function
  * Add **CombineWith** function
  * Add **Flip** function
  * Add **Shuffle** function
