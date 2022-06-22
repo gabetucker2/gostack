@@ -1,7 +1,7 @@
  <h1 name = "preface">Preface</h1>
 
  <p name = "banner"></p>
- 
+
 ![Banner](Images/gostack_Smaller.png)
 
  <h2 name = "introduction">Introduction</h2>
@@ -16,7 +16,7 @@
 
 <h2 name = "glossary">Glossary</h2>
 
- > [Top](#files)
+ > [Files](#files)
 
  > [Preface](#preface)
  >> [Banner](#banner)
@@ -56,7 +56,7 @@
  >>>>
  >>>>> [ORDER](#ORDER)
 
-<h2 name = "fileExplanations">Files</h2>
+<h2 name = "fileExplanations">File Explanations</h2>
 
  An overview of the files in this repository
 
