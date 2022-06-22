@@ -15,20 +15,9 @@ type Slice struct {
 	endIdx   int
 }
 
-type POSITION int
 type RETURN int
+type POSITION int
 type ORDER int
-
-const (
-	POSITION_First POSITION = iota
-	POSITION_Last
-	POSITION_Idx
-	POSITION_Key
-	POSITION_Val
-	POSITION_Card
-	POSITION_Slice
-	POSITION_All
-)
 
 const (
 	RETURN_None RETURN = iota
@@ -40,6 +29,17 @@ const (
 	RETURN_Vals
 	RETURN_Card
 	RETURN_Cards
+)
+
+const (
+	POSITION_First POSITION = iota
+	POSITION_Last
+	POSITION_Idx
+	POSITION_Key
+	POSITION_Val
+	POSITION_Card
+	POSITION_Slice
+	POSITION_All
 )
 
 const (

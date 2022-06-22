@@ -32,7 +32,7 @@
  >>> [Generalized Functions](#generalizedFunctions)
  >>>> [structs](#structsBrief)
  >>>
- >>>> [enum](#enumBrief)
+ >>>> [enums](#enumsBrief)
  >
  >> [Exhaustive Documentation](#exhaustiveDocumentation)
  >>> [Data Structures](#dataStructures)
@@ -89,72 +89,39 @@
  >
  >> **val** *any type*
  
- > ***Slice***
+ > ***Slice*** *Slice*
  >> ***startIdx*** *int*
  >
  >> ***endIdx*** *int*
 
 <h4 name = "enumsBrief">Enums</h4>
 
- > ***POSITION***
- >> POSITION_First
- >>> *NONE*
- >>
- >> POSITION_Last
- >>> *NONE*
- >>
- >> POSITION_Idx
- >>> int
- >>
- >> POSITION_Val
- >>> any type
- >>
- >> POSITION_Key
- >>> any type
- >>
- >> POSITION_Card
- >>> Card
- >>
- >> POSITION_Slice
- >>> Slice
- >>
- >> POSITION_All
- >>> *NONE*
+ ***RETURN***
+ * *RETURN_Sample* *type that's returned*
+ * RETURN_None *NONE*
+ * RETURN_Idx *int*
+ * RETURN_Idxs *Stack of ints*
+ * RETURN_Key *any type*
+ * RETURN_Keys *Stack of any type*
+ * RETURN_Val *any type*
+ * RETURN_Vals *Stack of any type*
+ * RETURN_Card *Card*
+ * RETURN_Cards *Stack of Cards*
 
- > ***RETURN***
- >> RETURN_None
- >>> *NONE*
- >>
- >> RETURN_Idx
- >>> int
- >>
- >> RETURN_Idxs
- >>> Stack of ints
- >>
- >> RETURN_Key
- >>> any type
- >>
- >> RETURN_Keys
- >>> Stack of any type
- >>
- >> RETURN_Val
- >>> any type
- >>
- >> RETURN_Vals
- >>> Stack of any type
- >>
- >> RETURN_Card
- >>> Card
- >>
- >> RETURN_Cards
- >>> Stack of Cards
+ ***POSITION***
+ * *POSITION_Sample* *POSITIONDATA type*
+ * POSITION_First *NONE*
+ * POSITION_Last *NONE*
+ * POSITION_Idx *int*
+ * POSITION_Val *any type*
+ * POSITION_Key *any type*
+ * POSITION_Card *Card*
+ * POSITION_Slice *Slice*
+ * POSITION_All *NONE*
 
- > ***ORDER***
- >> ORDER_Before
- >>> Insert before the given index
- >>
- >> ORDER_After
- >>> Insert after the given index
+ ***ORDER***
+ * ORDER_Before
+ * ORDER_After
 
 <h3 name = "nonGeneralizedFunctions">Non-Generalized Functions</h3>
 
