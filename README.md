@@ -51,6 +51,7 @@
  >>>>> [ORDER](#ORDER)
  >>>>
  >>>>> [MATCH](#MATCH)
+ >
  >> [Examples](#examples)
  >
  >> [To Add](#toAdd)
@@ -116,7 +117,7 @@
  > * RETURN_Cards *Stack of Cards*
 
  > ***POSITION***
- > * _POSITION_NotationSample *POSITIONDATA type*
+ > * _POSITION_NotationSample *POSITIONDATA argument type*
  > * POSITION_First *NONE*
  > * POSITION_Last *NONE*
  > * POSITION_Idx *int*
@@ -571,6 +572,7 @@
 
  <h3>Non-Generalized Functions</h3>
 
+ * Add **MakeCard** function
  * Add **CombineWith** function
  * Add **Flip** function
  * Add **Shuffle** function
