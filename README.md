@@ -63,9 +63,6 @@
  >> POSITION_Last
  >>> *NONE*
  >>
- >> POSITION_Card
- >>> Card
- >>
  >> POSITION_Idx
  >>> int
  >>
@@ -75,24 +72,57 @@
  >> POSITION_Key
  >>> any type
  >>
+ >> POSITION_Card
+ >>> Card
+ >>
  >> POSITION_Slice
  >>> Slice
  >>
  >> POSITION_All
  >>> *NONE*
  
- <h3>Constructor Functions</h3>
+ <h3>Non-Generalized Functions</h3>
 
  * **MakeStack()**
- 
- <h3>Other Functions</h3>
-
- * **stack.Add(card, POSITION_*, _idxData)**
- * **stack.Extract(POSITION_*, _idxData)**
- * **stack.Replace(POSITION_*, _idxData)**
- * **stack.Has(POSITION_*, _idxData)**
- * **stack.Index(POSITION_*, _idxData)**
  * **stack.Empty()**
+
+ <h3>Generalized Functions</h3>
+
+ * **stack.Add(newCard, ORDER_*, POSITION_*, ...POSITIONDATA)**
+ * **stack.Replace(newCard, RETURN_*, POSITION_*, ...POSITIONDATA)**
+ * **stack.Extract(RETURN_*, POSITION_*, ...POSITIONDATA)**
+ * **stack.Get(RETURN_*, POSITION_*, ...POSITIONDATA)**
+ * **stack.Has(RETURN_*, POSITION_*, ...POSITIONDATA)**
+
+ <h4>Examples</h4>
+ 
+ <h5>Examples of how to get Card(s)<h5>
+ > `stack.Get(RETURN_Card, POSITION_First)`
+ >> *returns the first card in the Stack*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Val, "String Value")`
+ >>*goes through the stack, finds the first card with val "String Value", and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Val, "String Value")`
+ >>*goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues)`
+ >> *goes through the stack, finds the first card with one of the values in stackOfValues, and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues)`
+ >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
+
+ <h5>stack.Push() Function Equivalent</h5>
+ > `stack.Add(newCard, ORDER_BEFORE, POSITION_First)`
+ >> *adds a card to the beginning of the stack*
+
+ <h5>stack.Pop() Function Equivalent</h5>
+ > `stack.Extract(RETURN_Card, POSITION_First)`
+ >> *removes and returns the first card in the stack*
+
+ <h5>stack.IndexOf(card) Function Equivalent</h5>
+ > `stack.Get(RETURN_Idx, POSITION_Card, card)`
+ >> *returns the index of the first found matching card*
 
 <h1>Exhaustive Documentation</h1>
 
@@ -153,9 +183,9 @@
 
  > ***POSITION*** *[enum]*
  >> *POSITION_\* Sample*
- >>> *The type of the variable (called `posData`) that needs to be passed into the function utilizing this constant*
+ >>> *The type of the variable (called `data`) that needs to be passed into the function utilizing this constant*
  >>
- >>> *For instance, if you input `POSITION_Slice`, you would need to pass a **Slice** struct to your `posData` parameter*
+ >>> *For instance, if you input `POSITION_Slice`, you would need to pass a **Slice** struct to your `data` parameter*
  >>
  >> POSITION_First
  >>> *NONE*
@@ -163,31 +193,27 @@
  >> POSITION_Last
  >>> *NONE*
  >>
- >> POSITION_Card
- >>> Card
- >>
  >> POSITION_Idx
- >>> int
+ >>> interface{} *int or Stack of ints*
  >>
  >> POSITION_Val
- >>> any type
+ >>> interface{} *val or Stack of vals*
  >>
  >> POSITION_Key
- >>> any type
+ >>> interface{} *key or Stack of keys*
+ >>
+ >> POSITION_Card
+ >>> Card *or* []Card
  >>
  >> POSITION_Slice
- >>> Slice
+ >>> interface{} slice or Stack of slices*
  >>
  >> POSITION_All
  >>> *NONE*
 
  <h4>Recommended Uses</h4>
  
- * `stack.Add(card, true, POSITION_First)`
- * `stack.Replace(newCard, POSITION_Key, "This string represents the key of one or multiple cards to target in this Replace function")`
- * `stack.Has(POSITION_Card, card)`
- * `stack.Extract(POSITION_All)`
- * *...and so on*
+ * *See Generalized Function documentation*
 
 <h2>Stack Functions</h2>
 
@@ -223,33 +249,7 @@
  >> **THING_\*** *type* refers to how this input argument can be any variable starting with `THING_` that the function specifies is allowed
  >
  >> **...optional** *type* refers to how this input argument does not have to be inputted in the function (refer to documentation to decide whether to input)
- >>> A sample instance where you would not input an argument in this spot is when you're using POSITION_First, which does not intake any posData.  That said, take care not to input more than 1 argument to optional parameters; everything will compile if you do, but this action is not supported by `gostack`.
-
- > ***POSITIONS***
- >
- >> POSITION_First
- >>> Explanation of what function does to POSITION_First
- >
- >> POSITION_Last
- >>> Explanation of what function does to POSITION_Last
- >
- >> POSITION_Card
- >>> Explanation of what function does to POSITION_Card
- >
- >> POSITION_Idx
- >>> Explanation of what function does to POSITION_Idx
- >
- >> POSITION_Val
- >>> Explanation of what function does to POSITION_Val
- >
- >> POSITION_Key
- >>> Explanation of what function does to POSITION_Key
- >
- >> POSITION_Slice
- >>> Explanation of what function does to POSITION_Slice
- >
- >> POSITION_All
- >>> Explanation of what function does to POSITION_All
+ >>> A sample instance where you would not input an argument in this spot is when you're using POSITION_First, which does not intake any data.  That said, take care not to input more than 1 argument to optional parameters; everything will compile if you do, but this action is not supported by `gostack`.
  
  > ***Pseudocode***
  >> This section outlines what the function does in simplistic terms
@@ -269,9 +269,28 @@
  > ***Pseudocode***
  >> return a new Stack
  
+<h3>Empty</h3>
+ 
+ > `stack.Empty()`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> GETTER: ***TRUE***
+ >>> **stack**
+ >
+ >> SETTER: ***TRUE***
+ >>> **stack**
+ 
+ > ***Parameters***
+ >> **stack** is the Stack to be emptied
+ 
+ > ***Pseudocode***
+ >> remove all cards in the stack
+ >
+ >> return the empty stack
+ 
 <h3>Add</h3>
  
- > `stack.Add(toAdd, beforeNotAfter, POSITION_*, ...posData)`
+ > `stack.Add(toAdd, beforeNotAfter, POSITION_*, ...data)`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> GETTER: ***TRUE***
@@ -289,34 +308,8 @@
  >
  >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct position
  >
- >> **...posData** *any type (interface{})* is used to provide the function relevant additional data to find the correct position
+ >> **...data** *any type (interface{})* is used to provide the function relevant additional data to find the correct position
 
- > ***POSITIONS***
- >
- >> POSITION_First
- >>> Explanation of what function does to POSITION_First
- >
- >> POSITION_Last
- >>> Explanation of what function does to POSITION_Last
- >
- >> POSITION_Card
- >>> Explanation of what function does to POSITION_Card
- >
- >> POSITION_Idx
- >>> Explanation of what function does to POSITION_Idx
- >
- >> POSITION_Val
- >>> Explanation of what function does to POSITION_Val
- >
- >> POSITION_Key
- >>> Explanation of what function does to POSITION_Key
- >
- >> POSITION_Slice
- >>> Explanation of what function does to POSITION_Slice
- >
- >> POSITION_All
- >>> Explanation of what function does to POSITION_All
- 
  > ***Pseudocode***
  >> **IF VALID POSITION**
  >>> **IF beforeNotAfter**
@@ -333,62 +326,9 @@
  >> **ELSE**
  >>> return nil
  
-<h3>Extract</h3>
- 
- > `stack.Extract(POSITION_*, ...posData)`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >>> extracted card *or* nil
- >
- >> SETTER: ***TRUE***
- >>> **stack**
- 
- > ***Parameters***
- >> **stack** *Stack* is the Stack from which to remove the first card
- >
- >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct card to extract
- >
- >> **...posData** *any type (interface{})* is used to provide the function relevant additional data to find the correct card to extract
-
- > ***POSITIONS***
- >
- >> POSITION_First
- >>> Explanation of what function does to POSITION_First
- >
- >> POSITION_Last
- >>> Explanation of what function does to POSITION_Last
- >
- >> POSITION_Card
- >>> Explanation of what function does to POSITION_Card
- >
- >> POSITION_Idx
- >>> Explanation of what function does to POSITION_Idx
- >
- >> POSITION_Val
- >>> Explanation of what function does to POSITION_Val
- >
- >> POSITION_Key
- >>> Explanation of what function does to POSITION_Key
- >
- >> POSITION_Slice
- >>> Explanation of what function does to POSITION_Slice
- >
- >> POSITION_All
- >>> Explanation of what function does to POSITION_All
- 
- > ***Pseudocode***
- >> **IF STACK IS NOT EMPTY**
- >>> remove cards from the stack based on provided POSITION data
- >>
- >>> return the removed card(s)
- >
- >> **ELSE**
- >>> return nil
- 
 <h3>Replace</h3>
  
- > `stack.Replace(toInsert, POSITION_*, ...posData)`
+ > `stack.Replace(toInsert, POSITION_*, ...data)`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> GETTER: ***TRUE***
@@ -404,34 +344,8 @@
  >
  >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct card to replace
  >
- >> **...posData** *any type (interface{})* is used to provide the function relevant additional data to find the correct card to replace
+ >> **...data** *any type (interface{})* is used to provide the function relevant additional data to find the correct card to replace
 
- > ***POSITIONS***
- >
- >> POSITION_First
- >>> Explanation of what function does to POSITION_First
- >
- >> POSITION_Last
- >>> Explanation of what function does to POSITION_Last
- >
- >> POSITION_Card
- >>> Explanation of what function does to POSITION_Card
- >
- >> POSITION_Idx
- >>> Explanation of what function does to POSITION_Idx
- >
- >> POSITION_Val
- >>> Explanation of what function does to POSITION_Val
- >
- >> POSITION_Key
- >>> Explanation of what function does to POSITION_Key
- >
- >> POSITION_Slice
- >>> Explanation of what function does to POSITION_Slice
- >
- >> POSITION_All
- >>> Explanation of what function does to POSITION_All
- 
  > ***Pseudocode***
  >> **IF STACK IS NOT EMPTY**
  >>> replace cards from the stack with toInsert based on provided POSITION data
@@ -441,9 +355,60 @@
  >> **ELSE**
  >>> return nil
  
+<h3>Extract</h3>
+ 
+ > `stack.Extract(POSITION_*, ...data)`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> GETTER: ***TRUE***
+ >>> extracted card *or* nil
+ >
+ >> SETTER: ***TRUE***
+ >>> **stack**
+ 
+ > ***Parameters***
+ >> **stack** *Stack* is the Stack from which to remove the first card
+ >
+ >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct card to extract
+ >
+ >> **...data** *any type (interface{})* is used to provide the function relevant additional data to find the correct card to extract
+
+ > ***Pseudocode***
+ >> **IF STACK IS NOT EMPTY**
+ >>> remove cards from the stack based on provided POSITION data
+ >>
+ >>> return the removed card(s)
+ >
+ >> **ELSE**
+ >>> return nil
+ 
+<h3>Get</h3>
+ 
+ > `stack.Get(POSITION_*, ...POSITIONDATA, ...RETURNDATA)`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> GETTER: ***TRUE***
+ >>> card that was replaced *or* nil
+ >
+ >> SETTER: ***FALSE***
+ 
+ > ***Parameters***
+ >> **stack** *Stack* is the Stack from which to remove the first card
+ >
+ >> **POSITIONDATA\*** *POSITION* is used to provide the function relevant POSITION data to find the correct card to replace
+ >
+ >> **...data** *any type (interface{})* is used to provide the function relevant additional data to find the correct card to replace
+
+ > ***Pseudocode***
+ >> **IF STACK IS NOT EMPTY AND HAS TARGETED DATA**
+ >>> return data
+ >
+ >> **ELSE**
+ >>> return nil
+ 
 <h3>Has</h3>
  
- > `stack.Has(lookFor, POSITION_*, ...posData)`
+ > `stack.Has(lookFor, POSITION_*, ...data)`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> GETTER: ***TRUE***
@@ -458,142 +423,30 @@
  >
  >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct cards to search
  >
- >> **...posData** *any type (interface{})* is used to provide the function relevant additional data to find the correct cards to search
-
- > ***POSITIONS***
- >
- >> POSITION_First
- >>> Explanation of what function does to POSITION_First
- >
- >> POSITION_Last
- >>> Explanation of what function does to POSITION_Last
- >
- >> POSITION_Card
- >>> Explanation of what function does to POSITION_Card
- >
- >> POSITION_Idx
- >>> Explanation of what function does to POSITION_Idx
- >
- >> POSITION_Val
- >>> Explanation of what function does to POSITION_Val
- >
- >> POSITION_Key
- >>> Explanation of what function does to POSITION_Key
- >
- >> POSITION_Slice
- >>> Explanation of what function does to POSITION_Slice
- >
- >> POSITION_All
- >>> Explanation of what function does to POSITION_All
+ >> **...data** *any type (interface{})* is used to provide the function relevant additional data to find the correct cards to search
  
  > ***Pseudocode***
- >> **IF lookFor IS IN STACK POSITION**
+ >> **IF STACK IS NOT EMPTY AND HAS TARGETED DATA**
  >>> return true
  >
  >> **ELSE**
  >>> return false
-
-<h3>Index</h3>
- 
- > `stack.Index(lookFor, POSITION_*, ...posData)`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >>> index or Slice (interface{}) of **lookFor** in **stack**
- >
- >> SETTER: ***FALSE***
- 
- > ***Parameters***
- >> **stack** *Stack* is the Stack to search for **lookFor**
- >
- >> **lookFor** *Card* or *Stack* is either a Card or a Stack of cards to find in **stack**
- >
- >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct cards to search
- >
- >> **...posData** *any type (interface{})* is used to provide the function relevant additional data to find the correct cards to search
-
- > ***POSITIONS***
- >
- >> POSITION_First
- >>> Explanation of what function does to POSITION_First
- >
- >> POSITION_Last
- >>> Explanation of what function does to POSITION_Last
- >
- >> POSITION_Card
- >>> Explanation of what function does to POSITION_Card
- >
- >> POSITION_Idx
- >>> Explanation of what function does to POSITION_Idx
- >
- >> POSITION_Val
- >>> Explanation of what function does to POSITION_Val
- >
- >> POSITION_Key
- >>> Explanation of what function does to POSITION_Key
- >
- >> POSITION_Slice
- >>> Explanation of what function does to POSITION_Slice
- >
- >> POSITION_All
- >>> Explanation of what function does to POSITION_All
- 
- > ***Pseudocode***
- >> **IF lookFor IS IN STACK POSITION**
- >>> **IF lookFor IS A CARD**
- >>>> return lookFor's index in **stack** POSITION
- >>>
- >>> **ELSE IF lookFor IS A STACK**
- >>>> return a Slice representing where lookFor starts and ends in **stack** POSITION
- >
- >> **ELSE**
- >>> **IF lookFor IS A CARD**
- >>>> return -1
- >>>
- >>> **ELSE IF lookFor IS A STACK**
- >>>> return Slice with values {-1, -1}
- 
-<h3>Empty</h3>
- 
- > `stack.Empty()`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >>> **stack**
- >
- >> SETTER: ***TRUE***
- >>> **stack**
- 
- > ***Parameters***
- >> **stack** is the Stack to by emptied
- 
- > ***Pseudocode***
- >> removes all cards in the stack
- >
- >> return the empty stack
  
 <h1>Unimplemented Features</h1>
 
- <h2>General Functions</h2>
+ <h2>Generalized Functions</h2>
 
- * Add **Get** function
- * Add **Fill** function
+ * Add **Sort** function
+ * Add **TrueForAll** function
+
+ <h2>Non-Generalized Functions</h2>
+
  * Add **CombineWith** function
  * Add **Flip** function
  * Add **Shuffle** function
  * Add **Clone** function
- * Add **GetFlip** function
- * Add **Type** function
  * Add **ToArray** function
  * Add **ToStack** function
-
- <h2>Lambda Functions</h2>
-
- * Add **GetCards** function
- * Add **Sort** function
- * Add **TrueForAll** function
-
- <h2>Tensor Support</h2>
 
 <h1>Footer</h1>
 

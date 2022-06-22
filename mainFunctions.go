@@ -24,10 +24,10 @@ func (stack *Stack) Empty() *Stack {
 
 }
 
-func (stack *Stack) Add(toAdd *interface{}, beforeNotAfter bool, position POSITION, posData ...interface{}) *Stack {
+func (stack *Stack) Add(toAdd *interface{}, beforeNotAfter bool, position POSITION, data ...interface{}) *Stack {
 
 	// get idx
-	idx := _gostack_back_GetIdxFromData(stack, position, posData)
+	idx := _gostack_back_GetIdxFromData(stack, position, data)
 
 	// add only if valid idx found
 	if idx != -1 {
@@ -44,10 +44,10 @@ func (stack *Stack) Add(toAdd *interface{}, beforeNotAfter bool, position POSITI
 
 }
 
-func (stack *Stack) Extract(position POSITION, posData ...interface{}) *Card {
+func (stack *Stack) Extract(position POSITION, data ...interface{}) *Card {
 
 	// get idx
-	idx := _gostack_back_GetIdxFromData(stack, position, posData)
+	idx := _gostack_back_GetIdxFromData(stack, position, data)
 
 	// extract card if valid idx
 	var extract *Card = nil
@@ -60,10 +60,10 @@ func (stack *Stack) Extract(position POSITION, posData ...interface{}) *Card {
 
 }
 
-func (stack *Stack) Replace(toInsert *[]interface{}, position POSITION, posData ...interface{}) (oldCards *Stack) {
+func (stack *Stack) Replace(toInsert *[]interface{}, position POSITION, data ...interface{}) (oldCards *Stack) {
 
 	// get idx
-	idx := _gostack_back_GetIdxFromData(stack, position, posData)
+	idx := _gostack_back_GetIdxFromData(stack, position, data)
 
 	if idx != -1 {
 		// extract card
@@ -80,19 +80,12 @@ func (stack *Stack) Replace(toInsert *[]interface{}, position POSITION, posData 
 
 }
 
-func (stack *Stack) Has(lookFor interface{}, position POSITION, posData ...interface{}) bool {
+func (stack *Stack) Has(lookFor interface{}, position POSITION, data ...interface{}) bool {
 
 	// get idx
-	idx := _gostack_back_GetIdxFromData(stack, position, posData)
+	idx := _gostack_back_GetIdxFromData(stack, position, data)
 
 	// return
 	return idx != -1
-
-}
-
-func (stack *Stack) Index(lookFor interface{}, position POSITION, posData ...interface{}) interface{} {
-
-	// return index
-	return _gostack_back_GetIdxFromData(stack, position, posData)
 
 }

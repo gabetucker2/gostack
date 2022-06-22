@@ -1,14 +1,19 @@
 This project:
 * Update documentation
 
-* Introduce key/val search support to Has and Index
-* Add idx as property to card elements to facilitate POSITION stuff
-* Implement Add()'s before/after
-* Update Has, Add, and Replace to instake Stacks AND Cards
+* Implement RETURN
 
-* implement all position types for all functions using POSITION_*
+* Implement Add()'s before/after
+
+* Restructure functions to use RETURN_*
+* Restructure functions to use POSITION_*
+* Restructure functions to intake Stacks and Cards
 
 * Implement more case tests
+
+* Add bootstrap functions script (e.g., stack.IndexOf(card), stack.Pop(), etc)
+
+* Add tensor support
 
 ** DEBUG ERRORS!
 

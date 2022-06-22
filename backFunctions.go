@@ -164,17 +164,17 @@ func _gostack_back_ExtractCard(stack *Stack, idx interface{}) (card *Card) {
 
 }
 
-func _gostack_back_UpdatePosData(_posData ...interface{}) (posData interface{}) {
-	if len(_posData) == 1 {
-		posData = _posData[0] // just so there is only one optional param
+func _gostack_back_UpdatePosData(_data ...interface{}) (data interface{}) {
+	if len(_data) == 1 {
+		data = _data[0] // just so there is only one optional param
 	} else {
-		posData = nil
+		data = nil
 	}
 	return
 }
 
-func _gostack_back_GetIdxFromData(stack *Stack, position POSITION, _posData ...interface{}) (idx int) {
-	return _gostack_back_GetIdxFromPosition(stack, position, _gostack_back_UpdatePosData(_posData)).(int)
+func _gostack_back_GetIdxFromData(stack *Stack, position POSITION, _data ...interface{}) (idx int) {
+	return _gostack_back_GetIdxFromPosition(stack, position, _gostack_back_UpdatePosData(_data)).(int)
 }
 
 func _gostack_back_MakeSlice(x, y int) Slice {
@@ -183,9 +183,9 @@ func _gostack_back_MakeSlice(x, y int) Slice {
 
 // returns index of searched item if valid
 // else, returns -1
-func _gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _posData ...interface{}) (idx interface{}) {
+func _gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _data ...interface{}) (idx interface{}) {
 
-	posData := _gostack_back_UpdatePosData(_posData...)
+	data := _gostack_back_UpdatePosData(_data...)
 
 	switch position {
 
@@ -196,17 +196,17 @@ func _gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _posData 
 	case POSITION_Card:
 		idx = -1
 		for i, c := range stack.cards {
-			if c == posData { // key
+			if c == data { // key
 				idx = i
 				break
 			}
 		}
 	case POSITION_Idx:
-		idx = posData // int
+		idx = data // int
 	case POSITION_Key:
 		idx = -1
 		for i, c := range stack.cards {
-			if c.key == posData { // key
+			if c.key == data { // key
 				idx = i
 				break
 			}
@@ -214,13 +214,13 @@ func _gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _posData 
 	case POSITION_Val:
 		idx = -1
 		for i, c := range stack.cards {
-			if c.val == posData { // card
+			if c.val == data { // card
 				idx = i
 				break
 			}
 		}
 	case POSITION_Slice:
-		idx = posData // Slice
+		idx = data // Slice
 	case POSITION_All:
 		idx = _gostack_back_MakeSlice(0, stack.size-1) // nil
 
