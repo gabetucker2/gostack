@@ -16,11 +16,11 @@
 
 <h2 name = "glossary">Glossary</h2>
 
- > [Files](#files)
-
- > [Banner](#banner)
+ > [Top](#files)
 
  > [Preface](#preface)
+ >> [Banner](#banner)
+ >
  >> [Introduction](#introduction)
  >
  >> [Glossary](#glossary)
