@@ -4,23 +4,22 @@
 
  <h1 name = "introduction">Introduction</h1>
 
- `gostack` introduces **Stack** structures—ambiguously-typed sets of elements intended as an all-in-one package for datastructure management in *golang*.  The elements in stacks are **Cards** (like a stack of cards).
+ `gostack` introduces **Stack** structures—ambiguously-typed sets of elements intended as an all-in-one package for datastructure management in *golang*.  The elements in stacks are **Card** structures (like a stack of cards).
 
- With `gostack`, there is no more need for maps or arrays; every possible function you could need to create, update, or access a set of data is encompassed by a few elegant functions.  Assuming `stack` is a predefined stack of cards:
+ With `gostack`, there is no more need for maps or arrays; every possible tool you could need to create, update, or access a set of data is encompassed by a few elegant functions.  Assuming `stack` is a predefined stack of cards:
 
- Want to remove the first card in a stack and get its key?
+ > Want to remove the first card in a stack and get its key?
+ >> `key := stack.Extract(RETURN_Key, POSITION_First)`
  
- `key := stack.Extract(RETURN_Key, POSITION_First)`
+ > Want to replace all cards whose values are even ints that are less than 3 but over -5 with two new cards and get a stack representing keys of the cards that were replaced?
+ >> `cardsToInsert := MakeStack().Add(newCard1, ORDER_After, POSITION_Last).Add(newCard2, ORDER_After, POSITION_Last)`
+ >
+ >> `oldCards := stack.Replace(cardsToInsert, RETURN_Keys, POSITION_Lambda, TODO: ADD LAMBDA)`
  
- Want to replace all cards whose values are even ints that are less than 3 but over -5 with two new cards and get a stack representing keys of the cards that were replaced?
- 
- `cardsToInsert := MakeStack().Add(newCard1, ORDER_After, POSITION_Last).Add(newCard2, ORDER_After, POSITION_Last)`
- `oldCards := stack.Replace(cardsToInsert, RETURN_Keys, POSITION_Lambda, TODO: ADD LAMBDA)`
- 
- Want to get a stack of indices corresponding to the elements in a stack which have the keys matching the object address of either unitType1 = UnitType{"Target", "A"} or unitType2 = UnitType{"Target", "B"} (where UnitType is your user-defined struct)?
-
- `permittedsKeys := MakeStack().Add(MakeCard(unitType1), ORDER_After, POSITION_Last).Add(MakeCard(unitType2), ORDER_After, POSITION_Last)`
- `permittedUnitIndices := stack.Get(RETURN_Idxs, POSITION_Keys, permittedsKeys, MATCH_Reference)`
+ > Want to get a stack of indices corresponding to the elements in a stack which have the keys matching the object address of either unitType1 = UnitType{"Target", "A"} or unitType2 = UnitType{"Target", "B"} (where UnitType is your user-defined struct)?
+ >> `permittedsKeys := MakeStack().Add(MakeCard(unitType1), ORDER_After, POSITION_Last).Add(MakeCard(unitType2), ORDER_After, POSITION_Last)`
+ >
+ >>`permittedUnitIndices := stack.Get(RETURN_Idxs, POSITION_Keys, permittedsKeys, MATCH_Reference)`
 
 <h1 name = "glossary">Glossary</h1>
 
