@@ -6,22 +6,24 @@
 
  `gostack` introduces **Stack** structures—generic sets of elements intended as an all-in-one package for datastructure management in *golang*.  The elements in stacks are **Card** structures (like a stack of cards).
 
- With `gostack`, there is no more need for maps or arrays; every possible tool you could need to create, update, or access a set of data is encompassed by a few elegant functions.
+ With `gostack`, there is no need for maps or arrays; every possible tool you could need to create, update, or access a set of data is encompassed by a few elegant functions.
  
  Assuming `stack` is a predefined stack of cards:
 
- > Want to remove the first card in a stack and get its key?
+ > Want to remove the first card in a `stack` and get its key?
  >> `key := stack.Extract(RETURN_Key, POSITION_First)`
  
  > Want to replace all cards in `stack` whose values are even ints between -5 and 3 with two new cards and get a stack representing keys of the cards that were replaced?
  >> `cardsToInsert := MakeStack().Add(newCard1, ORDER_After, POSITION_Last).Add(newCard2, ORDER_After, POSITION_Last)`
  >
- >> `oldCards := stack.Replace(cardsToInsert, RETURN_Keys, POSITION_Lambda, TODO: ADD LAMBDA)`
- 
- > Want to get a unique stack of values of the cards in `stack` whose keys match the object address of UnitTypes unitType1 or unitType2 (where UnitType is your user-defined struct)?
- >> `permittedsKeys := MakeStack().Add(MakeCard(unitType1), ORDER_After, POSITION_Last).Add(MakeCard(unitType2), ORDER_After, POSITION_Last)`
+ >> `gostack_lambda := func(int) (int) {  }`
  >
- >> `permittedUnitIndices := stack.Get(RETURN_Idxs, POSITION_Keys, permittedsKeys, MATCH_Reference).Unique(TYPE_Val)`
+ >> `oldCards := stack.Replace(cardsToInsert, RETURN_Keys, POSITION_Lambda, LAMBDAAAA)`
+ 
+ > Want to get a unique stack of values of the cards in `stack` whose keys match the object address of Cards defined as UnitTypes unitType1 or unitType2 (where UnitType is your user-defined struct)?
+ >> `keys := MakeStack().Add(MakeCard(unitType1), ORDER_After, POSITION_Last).Add(MakeCard(unitType2), ORDER_After, POSITION_Last)`
+ >
+ >> `unitIndices := stack.Get(RETURN_Idxs, POSITION_Keys, keys, MATCH_Reference).Unique(TYPE_Val)`
 
 <h1 name = "glossary">Glossary</h1>
 
@@ -623,7 +625,7 @@
 
  <h3>Generalized Functions</h3>
 
- * *None*
+ * Add **Move** function
 
  <h3>Non-Generalized Functions</h3>
 
