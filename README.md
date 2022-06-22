@@ -46,13 +46,13 @@
  >>>>> [Slice](#slice)
  >>>>
  >>>> [enums](#enums)
- >>>>> [RETURN](#RETURN)
- >>>>
- >>>>> [POSITION](#POSITION)
- >>>>
- >>>>> [ORDER](#ORDER)
- >>>>
- >>>>> [MATCH](#MATCH)
+ >>>>> * [RETURN](#RETURN)
+ >>>>>
+ >>>>> * [POSITION](#POSITION)
+ >>>>>
+ >>>>> * [ORDER](#ORDER)
+ >>>>>
+ >>>>> * [MATCH](#MATCH)
  >>>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
  >>>> [MakeStack()](#MakeStack)
