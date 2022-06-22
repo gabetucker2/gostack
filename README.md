@@ -98,7 +98,7 @@
 
 <h2>Data Structures</h2>
 
- It is highly advised against using these data structures for reasons other than those listed in *Recommended Uses* section.  The entire purpose of this project is for you not to have to manage arrays manually, but documentation for objects intended to be hidden still exists for those who would like to add their own Stack functions
+ It is highly advised against using these data structures for reasons other than those listed in the *Recommended Uses* sections.  The entire purpose of this project is for you not to have to manage arrays manually, but documentation for objects intended to be hidden still exists for those who would like to add their own Stack functions
 
 <h3>Stack</h3>
 
@@ -112,7 +112,7 @@
 
  <h4>Recommended Uses</h4>
 
- * `stack.size` *instead of `len(stack.cards)`*
+ * `stack.size`
 
 <h3>Card</h3>
 
@@ -121,6 +121,7 @@
  >> `card` *Card{}*
  >>> `card.key` *any type [interface{}]*
  >>>> Returns a key for this card-map (or nil if doesn't exist)
+ >>>
  >>> `card.val` *any type [interface{}]*
  >>>> Returns the val of this card (or nil if doesn't exist)
 
@@ -135,6 +136,7 @@
  > `slice` *Slice{}*
  >> `slice.startIdx`
  >>> Returns the first index in the desired slice
+ >>
  >> `slice.endIdx`
  >>> Returns the last index of the desired slice
 
@@ -152,6 +154,7 @@
  > ***POSITION*** *[enum]*
  >> *POSITION_\* Sample*
  >>> *The type of the variable (called `posData`) that needs to be passed into the function utilizing this constant*
+ >>
  >>> *For instance, if you input `POSITION_Slice`, you would need to pass a **Slice** struct to your `posData` parameter*
  >>
  >> POSITION_First
