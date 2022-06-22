@@ -30,57 +30,6 @@
  * http://web.cse.ohio-state.edu/software/common/doc/components/standard/Standard.html
 
 <h2>Brief Documentation</h2>
-
-<h3>Data Structures</h3>
-
- > ***name*** means it is conventionally acceptable to access this value manually
- >
- > **name** means it is highly recommended against accessing  value manually; you should instead use our functions
-
- Stack struct:
- > ***stack*** *Stack*
- >> **cards** *[]\*Card*
- >
- >> ***size*** *int*
-
- Card struct:
- > **card** *Card*
- >> **key** *any type*
- >
- >> **val** *any type*
- 
- Slice struct:
- > ***Slice***
- >> ***startIdx*** *int*
- >
- >> ***endIdx*** *int*
-
- POSITION enum:
- > ***POSITION*** *[enum]*
- >>
- >> POSITION_First
- >>> *NONE*
- >>
- >> POSITION_Last
- >>> *NONE*
- >>
- >> POSITION_Idx
- >>> int
- >>
- >> POSITION_Val
- >>> any type
- >>
- >> POSITION_Key
- >>> any type
- >>
- >> POSITION_Card
- >>> Card
- >>
- >> POSITION_Slice
- >>> Slice
- >>
- >> POSITION_All
- >>> *NONE*
  
 <h3>Non-Generalized Functions</h3>
 
@@ -128,6 +77,91 @@
  
  > `stack.Get(RETURN_Idx, POSITION_Card, card)`
  >> *returns the index of the first found matching card*
+
+<h3>Data Structures</h3>
+
+ > ***name*** means it is conventionally acceptable to access this value manually
+ >
+ > **name** means it is highly recommended against accessing  value manually; you should instead use our functions
+
+<h4>Structs</h4>
+
+ Stack:
+ > ***stack*** *Stack*
+ >> **cards** *[]\*Card*
+ >
+ >> ***size*** *int*
+
+ Card:
+ > **card** *Card*
+ >> **key** *any type*
+ >
+ >> **val** *any type*
+ 
+ Slice:
+ > ***Slice***
+ >> ***startIdx*** *int*
+ >
+ >> ***endIdx*** *int*
+
+<h4>Enums</h4>
+
+ POSITION:
+ > ***POSITION*** *[enum]*
+ >> POSITION_First
+ >>> *NONE*
+ >>
+ >> POSITION_Last
+ >>> *NONE*
+ >>
+ >> POSITION_Idx
+ >>> int
+ >>
+ >> POSITION_Val
+ >>> any type
+ >>
+ >> POSITION_Key
+ >>> any type
+ >>
+ >> POSITION_Card
+ >>> Card
+ >>
+ >> POSITION_Slice
+ >>> Slice
+ >>
+ >> POSITION_All
+ >>> *NONE*
+
+ RETURN:
+ > ***RETURN*** *[enum]*
+ >> RETURN_None
+ >>> *NONE*
+ >>
+ >> RETURN_Idx
+ >>> int
+ >>
+ >> RETURN_Idxs
+ >>> Stack of ints
+ >>
+ >> RETURN_Key
+ >>> any type
+ >>
+ >> RETURN_Keys
+ >>> Stack of any type
+ >>
+ >> RETURN_Val
+ >>> any type
+ >>
+ >> RETURN_Vals
+ >>> Stack of any type
+ >>
+ >> RETURN_Card
+ >>> Card
+ >>
+ >> RETURN_Cards
+ >>> Stack of Cards
+
+
 
 <h1>Exhaustive Documentation</h1>
 
