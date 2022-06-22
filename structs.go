@@ -17,6 +17,7 @@ type Slice struct {
 
 type RETURN int
 type POSITION int
+type TYPE int
 type ORDER int
 type MATCH int
 
@@ -45,6 +46,12 @@ const (
 	POSITION_Cards
 	POSITION_All
 	POSITION_Lambda
+)
+
+const (
+	TYPE_Key TYPE = iota
+	TYPE_Val
+	TYPE_Card
 )
 
 const (

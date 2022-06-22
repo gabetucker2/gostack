@@ -4,22 +4,24 @@
 
  <h1 name = "introduction">Introduction</h1>
 
- `gostack` introduces **Stack** structures—ambiguously-typed sets of elements intended as an all-in-one package for datastructure management in *golang*.  The elements in stacks are **Card** structures (like a stack of cards).
+ `gostack` introduces **Stack** structures—generic sets of elements intended as an all-in-one package for datastructure management in *golang*.  The elements in stacks are **Card** structures (like a stack of cards).
 
- With `gostack`, there is no more need for maps or arrays; every possible tool you could need to create, update, or access a set of data is encompassed by a few elegant functions.  Assuming `stack` is a predefined stack of cards:
+ With `gostack`, there is no more need for maps or arrays; every possible tool you could need to create, update, or access a set of data is encompassed by a few elegant functions.
+ 
+ Assuming `stack` is a predefined stack of cards:
 
  > Want to remove the first card in a stack and get its key?
  >> `key := stack.Extract(RETURN_Key, POSITION_First)`
  
- > Want to replace all cards whose values are even ints that are less than 3 but over -5 with two new cards and get a stack representing keys of the cards that were replaced?
+ > Want to replace all cards in `stack` whose values are even ints between -5 and 3 with two new cards and get a stack representing keys of the cards that were replaced?
  >> `cardsToInsert := MakeStack().Add(newCard1, ORDER_After, POSITION_Last).Add(newCard2, ORDER_After, POSITION_Last)`
  >
  >> `oldCards := stack.Replace(cardsToInsert, RETURN_Keys, POSITION_Lambda, TODO: ADD LAMBDA)`
  
- > Want to get a stack of indices corresponding to the elements in a stack which have the keys matching the object address of either unitType1 = UnitType{"Target", "A"} or unitType2 = UnitType{"Target", "B"} (where UnitType is your user-defined struct)?
+ > Want to get a unique stack of values of the cards in `stack` whose keys match the object address of UnitTypes unitType1 or unitType2 (where UnitType is your user-defined struct)?
  >> `permittedsKeys := MakeStack().Add(MakeCard(unitType1), ORDER_After, POSITION_Last).Add(MakeCard(unitType2), ORDER_After, POSITION_Last)`
  >
- >>`permittedUnitIndices := stack.Get(RETURN_Idxs, POSITION_Keys, permittedsKeys, MATCH_Reference)`
+ >> `permittedUnitIndices := stack.Get(RETURN_Idxs, POSITION_Keys, permittedsKeys, MATCH_Reference).Unique(TYPE_Val)`
 
 <h1 name = "glossary">Glossary</h1>
 
@@ -79,9 +81,11 @@
  >>>
  >>>> [stack.Extract(...)](#Extract)
  >>>
+ >>>> [stack.Unique(...)](#Unique)
+ >>>
  >>>> [stack.Get(...)](#Get)
  >>>
- >>>> [stack.Has(...)](#Has)
+ >>>> [stack.Has(...)](#Has)x
  >
  >> [To Add](#toAdd)
  >
@@ -225,6 +229,7 @@
  * **stack.Add(insert, ORDER_\*, POSITION_\*, ...POSITIONDATA)**
  * **stack.Replace(insert, RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
  * **stack.Extract(RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
+ * **stack.Unique(TYPE_\*)**
  * **stack.Get(RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
  * **stack.Has(RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
 
@@ -487,9 +492,6 @@
  >> SETTER: ***TRUE***
  >>> **stack**
  
- > ***Parameters***
- >> **stack** is the Stack to be emptied
- 
  > ***Pseudocode***
  >> remove all cards in the stack
  >
@@ -530,7 +532,7 @@
  >> CONSTRUCTOR: ***FALSE***
  >
  >> GETTER: ***TRUE***
- >>> object that was removed *or* nil
+ >>> RETURN objects that were removed *or* nil
  >
  >> SETTER: ***TRUE***
  >>> **stack**
@@ -553,13 +555,10 @@
  >> CONSTRUCTOR: ***FALSE***
  >
  >> GETTER: ***TRUE***
- >>> card that was removed *or* nil
+ >>> RETURN objects that were removed *or* nil
  >
  >> SETTER: ***TRUE***
  >>> **stack**
- 
- > ***Special Parameters***
- >> *None*
 
  > ***Pseudocode***
  >> **IF VALID POSITION**
@@ -570,6 +569,22 @@
  >> **ELSE**
  >>> return nil
  
+<h3 name = "Unique">Unique</h3>
+ 
+ > `stack.Unique(TYPE_*)`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> GETTER: ***TRUE***
+ >>> **stack**
+ >
+ >> SETTER: ***TRUE***
+ >>> **stack**
+
+ > ***Pseudocode***
+ >> removes cards from the stack whose TYPE are the same value as others in the stack's TYPE values
+ >
+ >> return **stack**
+ 
 <h3 name = "Get">Get</h3>
  
  > `stack.Get(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
@@ -579,9 +594,6 @@
  >>> desired card
  >
  >> SETTER: ***FALSE***
- 
- > ***Special Parameters***
- >> *None*
 
  > ***Pseudocode***
  >> **IF VALID POSITION**
@@ -600,9 +612,6 @@
  >
  >> SETTER: ***FALSE***
  
- > ***Special Parameters***
- >> *None*
- 
  > ***Pseudocode***
  >> **IF STACK HAS TARGETED DATA**
  >>> return true
@@ -614,7 +623,7 @@
 
  <h3>Generalized Functions</h3>
 
- * *None left*
+ * *None*
 
  <h3>Non-Generalized Functions</h3>
 
