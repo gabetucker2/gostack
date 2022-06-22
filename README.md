@@ -10,13 +10,13 @@
 
 <h2>Glossary</h2>
 
- > [Files](#files)
+ > [Files](#fileExplanations)
  >
  > [Links](#links)
 
 <h1>Overview</h1>
 
-<h2 name = "files">Files</h2>
+<h2 name = "fileExplanations">Files</h2>
 
  An overview of the files in this repository
 
