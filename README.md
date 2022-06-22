@@ -44,40 +44,6 @@
  * **stack.Get(RETURN_*, POSITION_*, ...POSITIONDATA)**
  * **stack.Has(RETURN_*, POSITION_*, ...POSITIONDATA)**
 
-<h3>Example Implementations</h3>
- 
- <h4>Examples of how to get Card(s)</h4>
-
- > `stack.Get(RETURN_Card, POSITION_First)`
- >> *returns the first card in the Stack*
- >
- > `stack.Get(RETURN_Card, POSITION_Val, "String Value")`
- >>*goes through the stack, finds the first card with val "String Value", and returns that card*
- >
- > `stack.Get(RETURN_Cards, POSITION_Val, "String Value")`
- >>*goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
- >
- > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues)`
- >> *goes through the stack, finds the first card with one of the values in stackOfValues, and returns that card*
- >
- > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues)`
- >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
-
- <h4>stack.Push() Function Equivalent</h4>
-
- > `stack.Add(newCard, ORDER_BEFORE, POSITION_First)`
- >> *adds a card to the beginning of the stack*
-
- <h4>stack.Pop() Function Equivalent</h4>
-
- > `stack.Extract(RETURN_Card, POSITION_First)`
- >> *removes and returns the first card in the stack*
-
- <h4>stack.IndexOf(card) Function Equivalent</h4>
- 
- > `stack.Get(RETURN_Idx, POSITION_Card, card)`
- >> *returns the index of the first found matching card*
-
 <h3>Data Structures</h3>
 
  > ***name*** means it is conventionally acceptable to access this value manually
@@ -470,6 +436,40 @@
  >
  >> **ELSE**
  >>> return false
+
+<h1>Example Implementations</h1>
+ 
+ <h2>Examples of how to get Card(s)</h2>
+
+ > `stack.Get(RETURN_Card, POSITION_First)`
+ >> *returns the first card in the Stack*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Val, "String Value")`
+ >>*goes through the stack, finds the first card with val "String Value", and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Val, "String Value")`
+ >>*goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues)`
+ >> *goes through the stack, finds the first card with one of the values in stackOfValues, and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues)`
+ >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
+
+ <h2>stack.Push() Function Equivalent</h2>
+
+ > `stack.Add(newCard, ORDER_BEFORE, POSITION_First)`
+ >> *adds a card to the beginning of the stack*
+
+ <h2>stack.Pop() Function Equivalent</h2>
+
+ > `stack.Extract(RETURN_Card, POSITION_First)`
+ >> *removes and returns the first card in the stack*
+
+ <h2>stack.IndexOf(card) Function Equivalent</h2>
+ 
+ > `stack.Get(RETURN_Idx, POSITION_Card, card)`
+ >> *returns the index of the first found matching card*
  
 <h1>Unimplemented Features</h1>
 
