@@ -1,8 +1,8 @@
- <h1 name = "preface">Preface</h1>
+ <h1 name = "preface">PREFACE</h1>
 
 ![Banner](Images/gostack_Smaller.png)
 
- <h2 name = "introduction">Introduction</h2>
+ <h1 name = "introduction">Introduction</h1>
 
  `gostack` introduces **Stacks**, ambiguously-typed sets of elements intended to replace arrays and maps in *golang*.  **Stacks** are introduced alongside a variety of helpful functions to ensure programmer ease-of-use, concision, and flexibility.
 
@@ -10,7 +10,7 @@
 
  By default for generics, people tend to use *golang*'s list package, but this package is optimized only with the essentials for transforming and selecting list elements.  While `gostack` offers a much wider breadth of functions for transforming and selecting elements, it also allows you to turn **Stacks** into maps, quickly convert between arrays and **Stacks**, and—most excitingly—to use functions based on lambda expression including **sort**, **TrueForAll**, and **RemoveAll**.
 
-<h2 name = "glossary">Glossary</h2>
+<h1 name = "glossary">Glossary</h1>
 
  > [Files](#files)
 
@@ -26,13 +26,13 @@
  > [Overview](#overview)
  >> [Brief Documentation](#briefDocumentation)
  >>> [Data Structures](#dataStructuresBrief)
- >>
- >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
- >>
- >>> [Generalized Functions](#generalizedFunctions)
  >>>> [structs](#structsBrief)
  >>>
  >>>> [enums](#enumsBrief)
+ >>
+ >>> [Non-Generalized Functions](#nonGeneralizedFunctionsBrief)
+ >>
+ >>> [Generalized Functions](#generalizedFunctionsBrief)
  >
  >> [Exhaustive Documentation](#exhaustiveDocumentation)
  >>> [Data Structures](#dataStructures)
@@ -51,6 +51,22 @@
  >>>>> [ORDER](#ORDER)
  >>>>
  >>>>> [MATCH](#MATCH)
+ >>
+ >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
+ >>>> [MakeStack](#MakeStack)
+ >>>
+ >>>> [Empty](#Empty)
+ >>
+ >>> [Generalized Functions](#generalizedFunctions)
+ >>>> [Add](#Add)
+ >>>
+ >>>> [Replace](#Replace)
+ >>>
+ >>>> [Extract](#Extract)
+ >>>
+ >>>> [Get](#Get)
+ >>>
+ >>>> [Has](#Has)
  >
  >> [Examples](#examples)
  >
@@ -58,7 +74,7 @@
  >
  >> [Footer](#footer)
 
-<h2 name = "fileExplanations">File Explanations</h2>
+<h1 name = "fileExplanations">File Explanations</h1>
 
  * **README.md** is this file
  * **TODO.txt** is a file with features to be added (significant only to `gostack` developers)
@@ -67,7 +83,7 @@
  * **go.mod** is used to manage directory access
  * **structs.go** is where structs are defined
 
-<h2 name = "links">Links</h2>
+<h1 name = "links">Links</h1>
 
  Many of the functions in this project were inspired by functions from the documentations below.
 
@@ -75,17 +91,17 @@
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
  * http://web.cse.ohio-state.edu/software/common/doc/components/standard/Standard.html
 
-<h1 name = "overview">Overview</h1>
+<h1 name = "overview">OVERVIEW</h1>
 
-<h2 name = "briefDocumentation">Brief Documentation</h2>
+<h1 name = "briefDocumentation">Brief Documentation</h1>
 
-<h3 name = "dataStructuresBrief">Data Structures</h3>
+<h2 name = "dataStructuresBrief">Data Structures</h2>
 
  > ***name*** means it is conventionally acceptable to access this value manually
  >
  > **name** means it is highly recommended against accessing  value manually; you should instead use our functions
 
-<h4 name = "structsBrief">Structs</h4>
+<h3 name = "structsBrief">Structs</h3>
 
  > ***stack*** *Stack*
  >> **cards** *[]\*Card*
@@ -102,7 +118,7 @@
  >
  >> ***endIdx*** *int*
 
-<h4 name = "enumsBrief">Enums</h4>
+<h3 name = "enumsBrief">Enums</h3>
 
  > ***RETURN***
  > * _RETURN_NotationSample *type that's returned*
@@ -135,12 +151,12 @@
  > * MATCH_Object
  > * MATCH_Reference
 
-<h3 name = "nonGeneralizedFunctions">Non-Generalized Functions</h3>
+<h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
  * **MakeStack()**
  * **stack.Empty()**
 
-<h3 name = "generalizedFunctions">Generalized Functions</h3>
+<h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
  * **stack.Add(newCard, ORDER_*, POSITION_*, ...POSITIONDATA)**
  * **stack.Replace(newCard, RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)**
@@ -306,48 +322,9 @@
  * `stack.Get(RETURN_Card, POSITION_Card, cardStructureToFind, MATCH_Object)` *Returns the first card that has the same structure (key and value) as cardStructureToFind*
  * stack.Get(RETURN_Card, POSITION_Card, exactCardToFind, MATCH_Reference)` *Returns the first card that IS exactCardToFind as stored in memory—not just that's the same structurally*
 
-<h2>Stack Functions</h2>
+<h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>
 
- Searching with browser utilities (e.g., `ctrl+f`) may be useful in this section.
- 
-<h3>_NotationSample</h3>
- 
- > `variable1.function(variable2, THING_*, ...optional)`
- >> CONSTRUCTOR: ***TRUE***
- >>>> means the function requires no receiver (i.e., our sample `variable1` should not exist in this function call)
- >>
- >>> **variable1** is the variable we're constructing
- >>
- >> CONSTRUCTOR: ***FALSE***
- >>>> means the function's receiver is an existing stack (i.e., our sample `variable1` must exist in this function call)
- >
- >> GETTER: ***TRUE***
- >>>> means the function returns a value
- >>
- >>> **variable1** is the variable we're getting
- >
- >> SETTER: ***TRUE***
- >>>> means the function updates the inputted stack
- >>
- >>> **variable1** is a variable we're setting
- >>> **variable2** is a variable we're setting
- 
- > ***Parameters***
- >> **variable1** *type* is the receiver for the function
- >
- >> **variable2** *type* is the first argument for the function
- >
- >> **THING_\*** *type* refers to how this input argument can be any variable starting with `THING_` that the function specifies is allowed
- >
- >> **...optional** *type* refers to how this input argument does not have to be inputted in the function (refer to documentation to decide whether to input)
- >>> A sample instance where you would not input an argument in this spot is when you're using POSITION_First, which does not intake any data.  That said, take care not to input more than 1 argument to optional parameters; everything will compile if you do, but this action is not supported by `gostack`.
- 
- > ***Pseudocode***
- >> This section outlines what the function does in simplistic terms
- >
- >> When pseudocode says a Stack's cards are updated, it is implied that stack.size is updated correspondingly
-
-<h3>MakeStack</h3>
+<h3 name = "MakeStack">MakeStack</h3>
 
  > `MakeStack()`
  >> CONSTRUCTOR: ***TRUE***
@@ -360,7 +337,7 @@
  > ***Pseudocode***
  >> return a new Stack
  
-<h3>Empty</h3>
+<h3 name = "Empty">Empty</h3>
  
  > `stack.Empty()`
  >> CONSTRUCTOR: ***FALSE***
@@ -379,7 +356,9 @@
  >
  >> return the empty stack
  
-<h3>Add</h3>
+<h2 name = "generalizedFunctions">Generalized Functions</h2>
+ 
+<h3 name = "Add">Add</h3>
  
  > `stack.Add(toAdd, beforeNotAfter, POSITION_*, ...data)`
  >> CONSTRUCTOR: ***FALSE***
@@ -417,7 +396,7 @@
  >> **ELSE**
  >>> return nil
  
-<h3>Replace</h3>
+<h3 name = "Replace">Replace</h3>
  
  > `stack.Replace(toInsert, POSITION_*, ...data)`
  >> CONSTRUCTOR: ***FALSE***
@@ -446,7 +425,7 @@
  >> **ELSE**
  >>> return nil
  
-<h3>Extract</h3>
+<h3 name = "Extract">Extract</h3>
  
  > `stack.Extract(POSITION_*, ...data)`
  >> CONSTRUCTOR: ***FALSE***
@@ -473,7 +452,7 @@
  >> **ELSE**
  >>> return nil
  
-<h3>Get</h3>
+<h3 name = "Get">Get</h3>
  
  > `stack.Get(POSITION_*, ...POSITIONDATA, ...RETURNDATA)`
  >> CONSTRUCTOR: ***FALSE***
@@ -497,7 +476,7 @@
  >> **ELSE**
  >>> return nil
  
-<h3>Has</h3>
+<h3 name = "Has">Has</h3>
  
  > `stack.Has(lookFor, POSITION_*, ...data)`
  >> CONSTRUCTOR: ***FALSE***
