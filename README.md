@@ -49,6 +49,13 @@
  >>>>> [POSITION](#POSITION)
  >>>>
  >>>>> [ORDER](#ORDER)
+ >>>>
+ >>>>> [MATCH](#MATCH)
+ >> [Examples](#examples)
+ >
+ >> [To Add](#toAdd)
+ >
+ >> [Footer](#footer)
 
 <h2 name = "fileExplanations">File Explanations</h2>
 
@@ -108,20 +115,24 @@
  > * RETURN_Card *Card*
  > * RETURN_Cards *Stack of Cards*
 
- ***POSITION***
- * _POSITION_NotationSample *POSITIONDATA type*
- * POSITION_First *NONE*
- * POSITION_Last *NONE*
- * POSITION_Idx *int*
- * POSITION_Val *any type*
- * POSITION_Key *any type*
- * POSITION_Card *Card*
- * POSITION_Slice *Slice*
- * POSITION_All *NONE*
+ > ***POSITION***
+ > * _POSITION_NotationSample *POSITIONDATA type*
+ > * POSITION_First *NONE*
+ > * POSITION_Last *NONE*
+ > * POSITION_Idx *int*
+ > * POSITION_Val *any type*
+ > * POSITION_Key *any type*
+ > * POSITION_Card *Card*
+ > * POSITION_Slice *Slice*
+ > * POSITION_All *NONE*
 
- ***ORDER***
- * ORDER_Before
- * ORDER_After
+ > ***ORDER***
+ > * ORDER_Before
+ > * ORDER_After
+
+ > ***MATCH***
+ > * MATCH_Object
+ > * MATCH_Reference
 
 <h3 name = "nonGeneralizedFunctions">Non-Generalized Functions</h3>
 
@@ -131,10 +142,10 @@
 <h3 name = "generalizedFunctions">Generalized Functions</h3>
 
  * **stack.Add(newCard, ORDER_*, POSITION_*, ...POSITIONDATA)**
- * **stack.Replace(newCard, RETURN_*, POSITION_*, ...POSITIONDATA)**
- * **stack.Extract(RETURN_*, POSITION_*, ...POSITIONDATA)**
- * **stack.Get(RETURN_*, POSITION_*, ...POSITIONDATA)**
- * **stack.Has(RETURN_*, POSITION_*, ...POSITIONDATA)**
+ * **stack.Replace(newCard, RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)**
+ * **stack.Extract(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)**
+ * **stack.Get(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)**
+ * **stack.Has(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)**
 
 <h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
 
@@ -186,21 +197,55 @@
 
  ***Recommended Uses***
  
- * `something = slice.startIdx` *int*
- * `something = slice.endIdx` *int*
+ * `something = slice.startIdx`
+ * `something = slice.endIdx`
 
 <h3 name = "enums">enums</h3>
 
 <h4 name = "RETURN">RETURN</h4>
 
+ This is an enum intended to make it easy for the user to control the output type from a getter function.
+
+ > ***RETURN***
+ >> *_RETURN_NotationSample*
+ >>> *The type of variable returned by the function you're calling*
+ >>
+ >>> *For instance, if you inputted RETURN_Key, you would get a single key interface{} (or nil if doesn't exist).  Alternatively, if you inputted RETURN_Keys, you would get a stack of keys.*
+ >>
+ >> POSITION_First
+ >>> *NONE*
+ >>
+ >> POSITION_Last
+ >>> *NONE*
+ >>
+ >> POSITION_Idx
+ >>> interface{} *int or Stack of ints*
+ >>
+ >> POSITION_Val
+ >>> interface{} *val or Stack of vals*
+ >>
+ >> POSITION_Key
+ >>> interface{} *key or Stack of keys*
+ >>
+ >> POSITION_Card
+ >>> Card *or* []Card
+ >>
+ >> POSITION_Slice
+ >>> interface{} slice or Stack of slices*
+ >>
+ >> POSITION_All
+ >>> *NONE*
+
+ ***Recommended Uses***
+ 
+ * [See Examples](#examples)
+
 <h4 name = "POSITION">POSITION</h4>
 
  This is an enum intended to make it easy to flexibly inform functions what the intended target is.
 
- All functions that implement POSITION_* support all position types.  Their specific functions relative to each position are notated in the function API.
-
- > ***POSITION*** *[enum]*
- >> *POSITION_\* Sample*
+ > ***POSITION***
+ >> *_POSITION_NotationSample*
  >>> *The type of the variable (called `data`) that needs to be passed into the function utilizing this constant*
  >>
  >>> *For instance, if you input `POSITION_Slice`, you would need to pass a **Slice** struct to your `data` parameter*
@@ -231,9 +276,34 @@
 
  ***Recommended Uses***
  
- * *See Generalized Function documentation*
+ * [See Examples](#examples)
 
 <h4 name = "ORDER">ORDER</h4>
+
+ This is an enum intended to make it easy 
+
+> ***Order***
+>> ORDER_Before
+>
+>> ORDER_After
+
+<h4 name = "MATCH">MATCH</h4>
+
+ This is an enum intended to make it easy to target whether a function searching for a match between input data and data in the stack element is matching by having the same values (MATCH_Object) or the same memory address (MATCH_Reference).
+
+ Matching by reference only works for Val, Key, and Card POSITION types; it would not make much practical sense to attempt this for primitive types.
+
+ Take care to note that all cases where objects are matching by reference will also be matching by object.
+
+ > ***Match***
+ >> MATCH_Object
+ >>
+ >> MATCH_Reference
+
+ ***Recommended Uses***
+ 
+ * `stack.Get(RETURN_Card, POSITION_Card, cardStructureToFind, MATCH_Object)` *Returns the first card that has the same structure (key and value) as cardStructureToFind*
+ * stack.Get(RETURN_Card, POSITION_Card, exactCardToFind, MATCH_Reference)` *Returns the first card that IS exactCardToFind as stored in memory—not just that's the same structurally*
 
 <h2>Stack Functions</h2>
 
@@ -452,48 +522,54 @@
  >> **ELSE**
  >>> return false
 
-<h1>Example Implementations</h1>
+<h2 name = "examples">Examples</h2>
  
- <h2>Examples of how to get Card(s)</h2>
+ <h3>Examples of how to get Card(s)</h3>
 
  > `stack.Get(RETURN_Card, POSITION_First)`
  >> *returns the first card in the Stack*
  >
- > `stack.Get(RETURN_Card, POSITION_Val, "String Value")`
- >>*goes through the stack, finds the first card with val "String Value", and returns that card*
+ > `stack.Get(RETURN_Card, POSITION_Val, "String Value", MATCH_Object)`
+ >> *goes through the stack, finds the first card with val "String Value", and returns that card*
  >
- > `stack.Get(RETURN_Cards, POSITION_Val, "String Value")`
+ > `stack.Get(RETURN_Cards, POSITION_Val, "String Value", MATCH_Object)`
  >>*goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
  >
- > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues)`
+ > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues, MATCH_Object)`
  >> *goes through the stack, finds the first card with one of the values in stackOfValues, and returns that card*
  >
- > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues)`
+ > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues, MATCH_Object)`
  >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues, MATCH_Reference)`
+ >> *goes through the stack, finds the first card with the same memory address as one the values in stackOfValues (assuming its elements are not primitive types, i.e. assuming its elements are structs or arrays), and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues, MATCH_Reference)`
+ >> *goes through the stack, finds each card with a memory address matching one in stackOfValues (assuming its elements are not primitive types, i.e. assuming its elements are structs or arrays), and returns a Stack of each of those cards*
 
- <h2>stack.Push() Function Equivalent</h2>
+ <h3>stack.Push() Function Equivalent</h3>
 
  > `stack.Add(newCard, ORDER_BEFORE, POSITION_First)`
  >> *adds a card to the beginning of the stack*
 
- <h2>stack.Pop() Function Equivalent</h2>
+ <h3>stack.Pop() Function Equivalent</h3>
 
  > `stack.Extract(RETURN_Card, POSITION_First)`
  >> *removes and returns the first card in the stack*
 
- <h2>stack.IndexOf(card) Function Equivalent</h2>
+ <h3>stack.IndexOf(card) Function Equivalent</h3>
  
  > `stack.Get(RETURN_Idx, POSITION_Card, card)`
  >> *returns the index of the first found matching card*
  
-<h1>Unimplemented Features</h1>
+<h2 name = "toAdd">To Add</h2>
 
- <h2>Generalized Functions</h2>
+ <h3>Generalized Functions</h3>
 
  * Add **Sort** function
  * Add **TrueForAll** function
 
- <h2>Non-Generalized Functions</h2>
+ <h3>Non-Generalized Functions</h3>
 
  * Add **CombineWith** function
  * Add **Flip** function
@@ -502,7 +578,7 @@
  * Add **ToArray** function
  * Add **ToStack** function
 
-<h1>Footer</h1>
+<h2 name = "footer">Footer</h1>
 
 This project was created by Gabe Tucker.
 

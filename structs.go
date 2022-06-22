@@ -18,6 +18,7 @@ type Slice struct {
 type RETURN int
 type POSITION int
 type ORDER int
+type MATCH int
 
 const (
 	RETURN_None RETURN = iota
@@ -45,6 +46,11 @@ const (
 const (
 	ORDER_Before ORDER = iota
 	ORDER_After
+)
+
+const (
+	MATCH_Object MATCH = iota
+	MATCH_Reference
 )
 
 var testCardA = _gostack_back_NewCard("Card A") // in sample stack
