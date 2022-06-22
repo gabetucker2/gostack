@@ -10,36 +10,6 @@
 
  Many of the functions in this project were inspired by functions from *JavaScript* Arrays or *C#* Lists.
 
-<h2 name = "glossary">Glossary</h2>
-
- > Above
- >> [Files](#files)
- >
- >> [Banner](#banner)
-
- > [Glossary](#banner)
-
- > [Overview](#overview)
- >> [Files](#fileExplanations)
- >
- >> [Links](#links)
- >
- >> [Brief Documentation](#briefDocumentation)
- >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
- >>
- >>> [Generalized Functions](#generalizedFunctions)
- >>
- >>> [Data Structures](#dataStructuresBrief)
- >>>> [structs](#structsBrief)
- >>>
- >>>> [enum](#enumBrief)
- >
- >> [Exhaustive Documentation](#exhaustiveDocumentation)
- >>> [Data Structures](#dataStructures)
- >>>> [structs](#structs)
- >>>
- >>>> [enums](#enums)
-
 <h1 name = "overview">Overview</h1>
 
 <h2 name = "fileExplanations">Files</h2>
@@ -60,6 +30,36 @@
  * https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1?view=net-6.0
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
  * http://web.cse.ohio-state.edu/software/common/doc/components/standard/Standard.html
+
+<h2 name = "glossary">Glossary</h2>
+
+ > [Preface](#files)
+ >> [Files](#files)
+ >
+ >> [Banner](#banner)
+ >
+ >> [Files](#fileExplanations)
+ >
+ >> [Links](#links)
+
+ > [Glossary](#banner)
+
+ > [Overview](#overview)
+ >> [Brief Documentation](#briefDocumentation)
+ >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
+ >>
+ >>> [Generalized Functions](#generalizedFunctions)
+ >>
+ >>> [Data Structures](#dataStructuresBrief)
+ >>>> [structs](#structsBrief)
+ >>>
+ >>>> [enum](#enumBrief)
+ >
+ >> [Exhaustive Documentation](#exhaustiveDocumentation)
+ >>> [Data Structures](#dataStructures)
+ >>>> [structs](#structs)
+ >>>
+ >>>> [enums](#enums)
 
 <h2 name = "briefDocumentation">Brief Documentation</h2>
  
