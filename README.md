@@ -1,4 +1,4 @@
-![Banner](Images/gostack_Medium.png)
+![Banner](Images/gostack_Smaller.png)
 
  `gostack` introduces **Stacks**, ambiguously-typed sets of elements intended to replace arrays and maps in *golang*.  **Stacks** are introduced alongside a variety of helpful functions to ensure programmer ease-of-use, concision, and flexibility.
 
