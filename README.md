@@ -23,7 +23,7 @@
  > [Preface](#preface)
  >> [Introduction](#introduction)
  >
- >> [Glossary](#banner)
+ >> [Glossary](#glossary)
  >
  >> [Files](#fileExplanations)
  >
@@ -31,11 +31,11 @@
 
  > [Overview](#overview)
  >> [Brief Documentation](#briefDocumentation)
+ >>> [Data Structures](#dataStructuresBrief)
+ >>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
  >>
  >>> [Generalized Functions](#generalizedFunctions)
- >>
- >>> [Data Structures](#dataStructuresBrief)
  >>>> [structs](#structsBrief)
  >>>
  >>>> [enum](#enumBrief)
@@ -43,8 +43,18 @@
  >> [Exhaustive Documentation](#exhaustiveDocumentation)
  >>> [Data Structures](#dataStructures)
  >>>> [structs](#structs)
- >>>
+ >>>>> [Stack](#stack)
+ >>>>
+ >>>>> [Card](#card)
+ >>>>
+ >>>>> [Slice](#slice)
+ >>>>
  >>>> [enums](#enums)
+ >>>>> [RETURN](#RETURN)
+ >>>>
+ >>>>> [POSITION](#POSITION)
+ >>>>
+ >>>>> [ORDER](#ORDER)
 
 <h2 name = "fileExplanations">Files</h2>
 
@@ -68,19 +78,6 @@
 <h1 name = "overview">Overview</h1>
 
 <h2 name = "briefDocumentation">Brief Documentation</h2>
- 
-<h3 name = "nonGeneralizedFunctions">Non-Generalized Functions</h3>
-
- * **MakeStack()**
- * **stack.Empty()**
-
-<h3 name = "generalizedFunctions">Generalized Functions</h3>
-
- * **stack.Add(newCard, ORDER_*, POSITION_*, ...POSITIONDATA)**
- * **stack.Replace(newCard, RETURN_*, POSITION_*, ...POSITIONDATA)**
- * **stack.Extract(RETURN_*, POSITION_*, ...POSITIONDATA)**
- * **stack.Get(RETURN_*, POSITION_*, ...POSITIONDATA)**
- * **stack.Has(RETURN_*, POSITION_*, ...POSITIONDATA)**
 
 <h3 name = "dataStructuresBrief">Data Structures</h3>
 
@@ -170,13 +167,28 @@
  > ORDER_After
  >> Insert after the given index
 
+<h3 name = "nonGeneralizedFunctions">Non-Generalized Functions</h3>
+
+ * **MakeStack()**
+ * **stack.Empty()**
+
+<h3 name = "generalizedFunctions">Generalized Functions</h3>
+
+ * **stack.Add(newCard, ORDER_*, POSITION_*, ...POSITIONDATA)**
+ * **stack.Replace(newCard, RETURN_*, POSITION_*, ...POSITIONDATA)**
+ * **stack.Extract(RETURN_*, POSITION_*, ...POSITIONDATA)**
+ * **stack.Get(RETURN_*, POSITION_*, ...POSITIONDATA)**
+ * **stack.Has(RETURN_*, POSITION_*, ...POSITIONDATA)**
+
 <h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
 
 <h2 name = "dataStructures">Data Structures</h2>
 
  It is highly advised against using these data structures for reasons other than those listed in the *Recommended Uses* sections.  The entire purpose of this project is for you not to have to manage arrays manually, but documentation for objects intended to be hidden still exists for those who would like to add their own Stack functions
 
-<h3 name = "stack">Stack</h3>
+<h3 name = "structs">structs</h3>
+
+<h4 name = "stack">Stack</h4>
 
  This is the main struct in the project.
 
@@ -186,11 +198,11 @@
  >> `size` *int*
  >>> Returns the cardinality (i.e., `len(stack.cards)`) of this Stack
 
- <h4>Recommended Uses</h4>
+ ***Recommended Uses***
 
  * `stack.size`
 
-<h3 name = "card">Card</h3>
+<h4 name = "card">Card</h4>
 
  This is a struct for our elements/maps within stacks.
 
@@ -201,11 +213,11 @@
  >>> `card.val` *any type (interface{})*
  >>>> The val of this card (or nil if doesn't exist)
 
- <h4>Recommended Uses</h4>
+ ***Recommended Uses***
  
  * *None*
 
-<h3 name = "slice">Slice</h3>
+<h4 name = "slice">Slice</h4>
 
  This is a struct that makes it easier to pass two int values between functions on the backend.
 
@@ -216,12 +228,16 @@
  >> `slice.endIdx`
  >>> The last index of the desired slice
 
- <h4>Recommended Uses</h4>
+ ***Recommended Uses***
  
  * `something = slice.startIdx` *int*
  * `something = slice.endIdx` *int*
 
-<h3 name = "POSITION">POSITION</h3>
+<h3 name = "enums">enums</h3>
+
+<h4 name = "RETURN">RETURN</h4>
+
+<h4 name = "POSITION">POSITION</h4>
 
  This is an enum intended to make it easy to flexibly inform functions what the intended target is.
 
@@ -257,9 +273,11 @@
  >> POSITION_All
  >>> *NONE*
 
- <h4>Recommended Uses</h4>
+ ***Recommended Uses***
  
  * *See Generalized Function documentation*
+
+<h4 name = "ORDER">ORDER</h4>
 
 <h2>Stack Functions</h2>
 
@@ -535,3 +553,5 @@ This project was created by Gabe Tucker.
 If there are any changes or comments you would like to have made in respect to this project, please email `tucker.854@osu.edu`.  I appreciate any feedback and will usually respond within 1-2 business days.
 
 Feel free to visit my personal pages at `https://gabetucker.com` or `https://www.linkedin.com/in/gabetucker2/`.
+
+[Return to Glossary](#glossary)
