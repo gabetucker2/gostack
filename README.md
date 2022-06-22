@@ -29,13 +29,13 @@
  >>
  >>> [Generalized Functions](#generalizedFunctions)
  >>
- >>> [Data Structures](#dataStructures)
- >>>> [Structs](#structs)
+ >>> [Data Structures](#dataStructuresBrief)
+ >>>> [structs](#structsBrief)
  >>>
- >>>> [Enum](#enum)
+ >>>> [enum](#enumBrief)
  >
  >> [Exhaustive Documentation](#exhaustiveDocumentation)
- >>> [DataStructures](#dataStructures)
+ >>> [Data Structures](#dataStructures)
  >>>> [structs](#structs)
  >>>
  >>>> [enums](#enums)
@@ -76,13 +76,13 @@
  * **stack.Get(RETURN_*, POSITION_*, ...POSITIONDATA)**
  * **stack.Has(RETURN_*, POSITION_*, ...POSITIONDATA)**
 
-<h3 name = "dataStructures">Data Structures</h3>
+<h3 name = "dataStructuresBrief">Data Structures</h3>
 
  > ***name*** means it is conventionally acceptable to access this value manually
  >
  > **name** means it is highly recommended against accessing  value manually; you should instead use our functions
 
-<h4 name = "structs">Structs</h4>
+<h4 name = "structsBrief">Structs</h4>
 
  Stack:
  > ***stack*** *Stack*
@@ -102,7 +102,7 @@
  >
  >> ***endIdx*** *int*
 
-<h4 name = "enums">Enums</h4>
+<h4 name = "enumsBrief">Enums</h4>
 
  ***POSITION*** *[enum]*
  > POSITION_First
