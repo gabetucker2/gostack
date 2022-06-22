@@ -10,8 +10,6 @@
 
  By default for generics, people tend to use *golang*'s list package, but this package is optimized only with the essentials for transforming and selecting list elements.  While `gostack` offers a much wider breadth of functions for transforming and selecting elements, it also allows you to turn **Stacks** into maps, quickly convert between arrays and **Stacks**, and—most excitingly—to use functions based on lambda expression including **sort**, **TrueForAll**, and **RemoveAll**.
 
- Many of the functions in this project were inspired by functions from *JavaScript* Arrays or *C#* Lists.
-
 <h2 name = "glossary">Glossary</h2>
 
  > [Files](#files)
@@ -54,8 +52,6 @@
 
 <h2 name = "fileExplanations">File Explanations</h2>
 
- An overview of the files in this repository
-
  * **README.md** is this file
  * **TODO.txt** is a file with features to be added (significant only to `gostack` developers)
  * **caseTests.go** is a script used to run test cases to ensure functionality of this project's functions; for examples on how to use `gostack` functions, see this file; it is recommended to delete this file if it is not commented out at the time of your installation since it uses the main() function; in order to run test cases with ***test.go*** *not* commented out, run `go run .` in the top directory
@@ -65,7 +61,7 @@
 
 <h2 name = "links">Links</h2>
 
- Where API links which inspired this project are stored
+ Many of the functions in this project were inspired by functions from the documentations below.
 
  * https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1?view=net-6.0
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
@@ -83,19 +79,16 @@
 
 <h4 name = "structsBrief">Structs</h4>
 
- Stack:
  > ***stack*** *Stack*
  >> **cards** *[]\*Card*
  >
  >> ***size*** *int*
 
- Card:
  > **card** *Card*
  >> **key** *any type*
  >
  >> **val** *any type*
  
- Slice:
  > ***Slice***
  >> ***startIdx*** *int*
  >
@@ -103,7 +96,7 @@
 
 <h4 name = "enumsBrief">Enums</h4>
 
- ***POSITION*** *[enum]*
+ ***POSITION***
  > POSITION_First
  >> *NONE*
  >
@@ -128,7 +121,7 @@
  > POSITION_All
  >> *NONE*
 
- ***RETURN*** *[enum]*
+ ***RETURN***
  > RETURN_None
  >> *NONE*
  >>
@@ -156,7 +149,7 @@
  > RETURN_Cards
  >> Stack of Cards
 
- ***ORDER*** *[enum]*
+ ***ORDER***
  > ORDER_Before
  >> Insert before the given index
  >
