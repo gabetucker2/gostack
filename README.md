@@ -4,7 +4,7 @@
 
  <h1 name = "preface">Preface</h1>
 
- <h2 name = "introduction">Introduction<h2>
+ <h2 name = "introduction">Introduction</h2>
 
  `gostack` introduces **Stacks**, ambiguously-typed sets of elements intended to replace arrays and maps in *golang*.  **Stacks** are introduced alongside a variety of helpful functions to ensure programmer ease-of-use, concision, and flexibility.
 
