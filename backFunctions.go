@@ -47,9 +47,9 @@ func _gostack_test_SampleStack() (stack *Stack) {
 	stack = MakeStack()
 
 	// create stack (don't use stack.Add because we can't assume it is working in case tests)
-	_gostack_back_AddCard(stack, testCardA, _gostack_back_GetIdxFromPOSITION(stack, POSITION_Last), false)
-	_gostack_back_AddCard(stack, testCardB, _gostack_back_GetIdxFromPOSITION(stack, POSITION_Last), false)
-	_gostack_back_AddCard(stack, testCardC, _gostack_back_GetIdxFromPOSITION(stack, POSITION_Last), false)
+	_gostack_back_AddCard(stack, testCardA, _gostack_back_GetIdxFromPosition(stack, POSITION_Last), false)
+	_gostack_back_AddCard(stack, testCardB, _gostack_back_GetIdxFromPosition(stack, POSITION_Last), false)
+	_gostack_back_AddCard(stack, testCardC, _gostack_back_GetIdxFromPosition(stack, POSITION_Last), false)
 
 	return
 
@@ -174,7 +174,7 @@ func _gostack_back_UpdatePosData(_posData ...interface{}) (posData interface{}) 
 }
 
 func _gostack_back_GetIdxFromData(stack *Stack, position POSITION, _posData ...interface{}) (idx int) {
-	return _gostack_back_GetIdxFromPOSITION(stack, position, _gostack_back_UpdatePosData(_posData)).(int)
+	return _gostack_back_GetIdxFromPosition(stack, position, _gostack_back_UpdatePosData(_posData)).(int)
 }
 
 func _gostack_back_MakeSlice(x, y int) Slice {
@@ -183,7 +183,7 @@ func _gostack_back_MakeSlice(x, y int) Slice {
 
 // returns index of searched item if valid
 // else, returns -1
-func _gostack_back_GetIdxFromPOSITION(stack *Stack, position POSITION, _posData ...interface{}) (idx interface{}) {
+func _gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _posData ...interface{}) (idx interface{}) {
 
 	posData := _gostack_back_UpdatePosData(_posData...)
 

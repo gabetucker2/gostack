@@ -32,9 +32,9 @@
 
  <h3>Data Structures</h3>
 
- > ***name*** means it is conventionally acceptable to access this manually
+ > ***name*** means it is conventionally acceptable to access this value manually
  >
- > **name** means it is highly recommended against accessing this manually; you should instead use our functions
+ > **name** means it is highly recommended against accessing  value manually; you should instead use our functions
 
  Stack struct:
  > ***stack*** *Stack*
@@ -49,10 +49,10 @@
  >> **val** *any type*
  
  Slice struct:
- > **Slice**
- >> **startIdx** *int*
+ > ***Slice***
+ >> ***startIdx*** *int*
  >
- >> **endIdx** *int*
+ >> ***endIdx*** *int*
 
  POSITION enum:
  > ***POSITION*** *[enum]*
@@ -132,7 +132,7 @@
 
  This is a struct that makes it easier to pass two int values between functions on the backend.
 
- > `slice Slice{}`
+ > `slice` *Slice{}*
  >> `slice.startIdx`
  >>> Returns the first index in the desired slice
  >> `slice.endIdx`
@@ -140,7 +140,8 @@
 
  <h4>Recommended Uses</h4>
  
- * *None*
+ * `something = slice.startIdx`
+ * `something = slice.endIdx`
 
 <h3>POSITION</h3>
 
@@ -179,8 +180,7 @@
 
  <h4>Recommended Uses</h4>
  
- * `stack.AddBefore(card, POSITION_First)`
- * `stack.AddAfter(card, POSITION_First)`
+ * `stack.Add(card, true, POSITION_First)`
  * `stack.Replace(newCard, POSITION_Key, "This string represents the key of one or multiple cards to target in this Replace function")`
  * `stack.Has(POSITION_Card, card)`
  * `stack.Extract(POSITION_All)`
@@ -194,16 +194,23 @@
  
  > `variable1.function(variable2, THING_*, ...optional)`
  >> CONSTRUCTOR: ***TRUE***
- >>> means the function requires no receiver (i.e., our sample `variable1` should not exist in this function call)
+ >>>> means the function requires no receiver (i.e., our sample `variable1` should not exist in this function call)
+ >>
+ >>> **variable1** is the variable we're constructing
  >>
  >> CONSTRUCTOR: ***FALSE***
- >>> means the function's receiver is an existing stack (i.e., our sample `variable1` must exist in this function call)
+ >>>> means the function's receiver is an existing stack (i.e., our sample `variable1` must exist in this function call)
  >
  >> GETTER: ***TRUE***
- >>> means the function returns a value
+ >>>> means the function returns a value
+ >>
+ >>> **variable1** is the variable we're getting
  >
  >> SETTER: ***TRUE***
- >>> means the function updates the inputted stack
+ >>>> means the function updates the inputted stack
+ >>
+ >>> **variable1** is a variable we're setting
+ >>> **variable2** is a variable we're setting
  
  > ***Parameters***
  >> **variable1** *type* is the receiver for the function
@@ -237,22 +244,43 @@
  
  > ***Pseudocode***
  >> This section outlines what the function does in simplistic terms
- 
-<h3>Add</h3>
- 
- > `stack.Add(card, beforeNotAfter, POSITION_*, (posData))`
- >> CONSTRUCTOR: ***FALSE***
+ >
+ >> When pseudocode says a Stack's cards are updated, it is implied that stack.size is updated correspondingly
+
+<h3>MakeStack</h3>
+
+ > `MakeStack()`
+ >> CONSTRUCTOR: ***TRUE***
+ >>> Stack
  >
  >> GETTER: ***TRUE***
  >
+ >> SETTER: ***FALSE***
+ 
+ > ***Pseudocode***
+ >> return a new Stack
+ 
+<h3>Add</h3>
+ 
+ > `stack.Add(toAdd, beforeNotAfter, POSITION_*, ...posData)`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> GETTER: ***TRUE***
+ >>> **stack**
+ >
  >> SETTER: ***TRUE***
+ >>> **stack**
  
  > ***Parameters***
  >> **stack** *Stack*
  >
- >> **card** *Card* is the Card object to add to the stack before or after the position
+ >> **toAdd** *Card* or *Stack* is either a Card or a Stack of cards to insert at POSITION
  >
  >> **beforeNotAfter** *bool* is used to control whether **card** is added before or after the position
+ >
+ >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct position
+ >
+ >> **...posData** *any type [interface{}]* is used to provide the function relevant additional data to find the correct position
 
  > ***Supported POSITIONS***
  >> POSITION_First
@@ -280,20 +308,152 @@
  >>>
  >>> return updated stack
  >>
- >> *ELSE*
+ >> **ELSE**
  >>> return nil
-
-<h3>MakeStack</h3>
-
- > `MakeStack()`
- >> CONSTRUCTOR: ***TRUE***
+ 
+<h3>Extract</h3>
+ 
+ > `stack.Extract(POSITION_*, ...posData)`
+ >> CONSTRUCTOR: ***FALSE***
  >
  >> GETTER: ***TRUE***
+ >>> extracted card *or* nil
+ >
+ >> SETTER: ***TRUE***
+ >>> **stack**
+ 
+ > ***Parameters***
+ >> **stack** *Stack* is the Stack from which to remove the first card
+ >
+ >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct card to extract
+ >
+ >> **...posData** *any type [interface{}]* is used to provide the function relevant additional data to find the correct card to extract
+
+ > ***Supported POSITIONS***
+ >
+ >> POSITION_First
+ >
+ >> POSITION_Last
+ >
+ >> POSITION_Card
+ >
+ >> POSITION_Idx
+ >
+ >> POSITION_Val
+ >
+ >> POSITION_Key
+ >
+ >> POSITION_Slice
+ >
+ >> POSITION_All
+ 
+ > ***Pseudocode***
+ >> **IF STACK IS NOT EMPTY**
+ >>> remove cards from the stack based on provided POSITION data
+ >>
+ >>> return the removed card(s)
+ >
+ >> **ELSE**
+ >>> return nil
+ 
+<h3>Replace</h3>
+ 
+ > `stack.Replace(toInsert, POSITION_*, ...posData)`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> GETTER: ***TRUE***
+ >>> card that was replaced *or* nil
+ >
+ >> SETTER: ***TRUE***
+ >>> **stack**
+ 
+ > ***Parameters***
+ >> **stack** *Stack* is the Stack from which to remove the first card
+ >
+ >> **toInsert** *Card* or *Stack* is either a Card or a Stack of cards to insert at POSITION(S) as the replacement
+ >
+ >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct card to replace
+ >
+ >> **...posData** *any type [interface{}]* is used to provide the function relevant additional data to find the correct card to replace
+
+ > ***Supported POSITIONS***
+ >
+ >> POSITION_First
+ >
+ >> POSITION_Last
+ >
+ >> POSITION_Card
+ >
+ >> POSITION_Idx
+ >
+ >> POSITION_Val
+ >
+ >> POSITION_Key
+ >
+ >> POSITION_Slice
+ >
+ >> POSITION_All
+ 
+ > ***Pseudocode***
+ >> **IF STACK IS NOT EMPTY**
+ >>> replace cards from the stack with toInsert based on provided POSITION data
+ >>
+ >>> return the removed card(s) in a new stack
+ >
+ >> **ELSE**
+ >>> return nil
+ 
+<h3>Has</h3>
+ 
+ > `stack.Has(lookFor)`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> GETTER: ***TRUE***
+ >>> bool
  >
  >> SETTER: ***FALSE***
  
+ > ***Parameters***
+ >> **stack** *Stack* is the Stack to search for **lookFor**
+ >
+ >> **lookFor** *Card* or *Stack* is either a Card or a Stack of cards to find in **stack**
+ 
  > ***Pseudocode***
- >> return new Stack
+ >> **IF lookFor IS IN STACK**
+ >>> return true
+ >
+ >> **ELSE**
+ >>> return false
+
+<h3>Index</h3>
+ 
+ > `stack.Index(lookFor)`
+ >> CONSTRUCTOR: ***FALSE***
+ >
+ >> GETTER: ***TRUE***
+ >>> index or Slice (interface{}) of **lookFor** in **stack**
+ >
+ >> SETTER: ***FALSE***
+ 
+ > ***Parameters***
+ >> **stack** *Stack* is the Stack to search for **lookFor**
+ >
+ >> **lookFor** *Card* or *Stack* is either a Card or a Stack of cards to find in **stack**
+ 
+ > ***Pseudocode***
+ >> **IF lookFor IS IN STACK**
+ >>> **IF lookFor IS A CARD**
+ >>>> return lookFor's index in **stack**
+ >>>
+ >>> **ELSE IF lookFor IS A STACK**
+ >>>> return a Slice representing where lookFor starts and ends in **stack**
+ >
+ >> **ELSE**
+ >>> **IF lookFor IS A CARD**
+ >>>> return -1
+ >>>
+ >>> **ELSE IF lookFor IS A STACK**
+ >>>> return Slice with values {-1, -1}
  
 <h3>Empty</h3>
  
@@ -301,124 +461,41 @@
  >> CONSTRUCTOR: ***FALSE***
  >
  >> GETTER: ***TRUE***
+ >>> **stack**
  >
  >> SETTER: ***TRUE***
+ >>> **stack**
  
  > ***Parameters***
- >> **stack** is the Stack to Empty
+ >> **stack** is the Stack to by emptied
  
  > ***Pseudocode***
- >> removes all cards in the Stack
+ >> removes all cards in the stack
  >
  >> return the empty stack
  
-<h3>ExtractFirst</h3>
- 
- > `stack.ExtractFirst()`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >
- >> SETTER: ***TRUE***
- 
- > ***Parameters***
- >> **stack** is the Stack from which to remove the first card
- 
- > ***Pseudocode***
- >> **IF STACK IS NOT EMPTY**
- >>> remove the first card from the stack
- >>
- >>> return the removed card
- >
- >> **ELSE**
- >>> return nil
- 
-<h3>ExtractLast</h3>
- 
- > `stack.ExtractLast()`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >
- >> SETTER: ***TRUE***
- 
- > ***Parameters***
- >> **stack** is the Stack from which to remove the last card
- 
- > ***Pseudocode***
- >> **IF STACK IS NOT EMPTY**
- >>> remove the last card from the stack
- >>
- >>> return the removed card
- >
- >> **ELSE**
- >>> return nil
- 
-<h3>Has</h3>
- 
- > `stack.Has(card)`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >
- >> SETTER: ***FALSE***
- 
- > ***Parameters***
- >> **stack** is the Stack to search
- >
- >> **card** is the ambigously-typed element whom to check if exists
- 
- > ***Pseudocode***
- >> **IF CARD IS IN STACK**
- >>> return true
- >
- >> **ELSE**
- >>> return false
-
-<h3>IndexCard</h3>
- 
- > `stack.IndexCard(card)`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >
- >> SETTER: ***FALSE***
- 
- > ***Parameters***
- >> **stack** is the Stack to search
- >
- >> **card** is the ambigously-typed element whose index to find
- 
- > ***Pseudocode***
- >> **IF CARD IS IN STACK**
- >>> return card index [0, stack.size)
- >
- >> **ELSE**
- >>> return -1
- 
 <h1>Unimplemented Features</h1>
 
- <h2>General Features</h2>
+ <h2>General Functions</h2>
 
+ * Add **Get** function
  * Add **Fill** function
  * Add **CombineWith** function
  * Add **Flip** function
  * Add **Shuffle** function
- * Add **Entry** function
  * Add **Clone** function
  * Add **GetFlip** function
  * Add **Type** function
  * Add **ToArray** function
  * Add **ToStack** function
- * Add **Get** function
 
- <h2>Lambda Function Support</h2>
+ <h2>Lambda Functions</h2>
 
  * Add **GetCards** function
  * Add **Sort** function
  * Add **TrueForAll** function
 
- <h2>Tensor Function Support</h2>
+ <h2>Tensor Support</h2>
 
 <h1>Footer</h1>
 
