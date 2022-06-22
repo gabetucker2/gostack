@@ -25,7 +25,7 @@
  >
  >> [Glossary](#glossary)
  >
- >> [Files](#fileExplanations)
+ >> [File Explanations](#fileExplanations)
  >
  >> [Links](#links)
 
