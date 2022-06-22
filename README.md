@@ -12,6 +12,8 @@
 
 <h2>Glossary</h2>
 
+ > [Files](#files)
+
  > [Banner](#banner)
 
  > [Files](#fileExplanations)
@@ -82,62 +84,65 @@
 
 <h4>Enums</h4>
 
- POSITION:
- > ***POSITION*** *[enum]*
- >> POSITION_First
- >>> *NONE*
- >>
- >> POSITION_Last
- >>> *NONE*
- >>
- >> POSITION_Idx
- >>> int
- >>
- >> POSITION_Val
- >>> any type
- >>
- >> POSITION_Key
- >>> any type
- >>
- >> POSITION_Card
- >>> Card
- >>
- >> POSITION_Slice
- >>> Slice
- >>
- >> POSITION_All
- >>> *NONE*
+ ***POSITION*** *[enum]*
+ > POSITION_First
+ >> *NONE*
+ >
+ > POSITION_Last
+ >> *NONE*
+ >
+ > POSITION_Idx
+ >> int
+ >
+ > POSITION_Val
+ >> any type
+ >
+ > POSITION_Key
+ >> any type
+ >
+ > POSITION_Card
+ >> Card
+ >
+ > POSITION_Slice
+ >> Slice
+ >
+ > POSITION_All
+ >> *NONE*
 
- RETURN:
- > ***RETURN*** *[enum]*
- >> RETURN_None
- >>> *NONE*
+ ***RETURN*** *[enum]*
+ > RETURN_None
+ >> *NONE*
  >>
- >> RETURN_Idx
- >>> int
- >>
- >> RETURN_Idxs
- >>> Stack of ints
- >>
- >> RETURN_Key
- >>> any type
- >>
- >> RETURN_Keys
- >>> Stack of any type
- >>
- >> RETURN_Val
- >>> any type
- >>
- >> RETURN_Vals
- >>> Stack of any type
- >>
- >> RETURN_Card
- >>> Card
- >>
- >> RETURN_Cards
- >>> Stack of Cards
+ > RETURN_Idx
+ >> int
+ >
+ > RETURN_Idxs
+ >> Stack of ints
+ >
+ > RETURN_Key
+ >> any type
+ >
+ > RETURN_Keys
+ >> Stack of any type
+ >
+ > RETURN_Val
+ >> any type
+ >
+ > RETURN_Vals
+ >> Stack of any type
+ >
+ > RETURN_Card
+ >> Card
+ >
+ > RETURN_Cards
+ >> Stack of Cards
 
-
+ ***ORDER*** *[enum]*
+ > ORDER_Before
+ >> Insert before the given index
+ >
+ > ORDER_After
+ >> Insert after the given index
 
 <h1>Exhaustive Documentation</h1>
 
