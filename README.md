@@ -8,9 +8,15 @@
 
  Many of the functions in this project were inspired by functions from *JavaScript* Arrays or *C#* Lists.
 
+<h2>Glossary</h2>
+
+ > [Files](#files)
+ >
+ > [Links](#links)
+
 <h1>Overview</h1>
 
-<h2>Files</h2>
+<h2 name = "files">Files</h2>
 
  An overview of the files in this repository
 
@@ -21,7 +27,7 @@
  * **go.mod** is used to manage directory access
  * **structs.go** is where structs are defined
 
-<h2>Links</h2>
+<h2 name = "links">Links</h2>
 
  Where API links which inspired this project are stored
 
