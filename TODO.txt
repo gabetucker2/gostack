@@ -1,5 +1,7 @@
 This project:
 * Update documentation
+ - Glossary
+ - fix Slice: > slice >> stuff weirdness
 
 * Implement RETURN
 

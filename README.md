@@ -1,3 +1,5 @@
+ <p name = "banner"></p>
+
 ![Banner](Images/gostack_Smaller.png)
 
  `gostack` introduces **Stacks**, ambiguously-typed sets of elements intended to replace arrays and maps in *golang*.  **Stacks** are introduced alongside a variety of helpful functions to ensure programmer ease-of-use, concision, and flexibility.
@@ -10,8 +12,10 @@
 
 <h2>Glossary</h2>
 
+ > [Banner](#banner)
+
  > [Files](#fileExplanations)
- >
+
  > [Links](#links)
 
 <h1>Overview</h1>
