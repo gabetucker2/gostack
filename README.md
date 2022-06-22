@@ -1,6 +1,7 @@
  <h1 name = "preface">Preface</h1>
 
  <p name = "banner"></p>
+ 
 ![Banner](Images/gostack_Smaller.png)
 
  <h2 name = "introduction">Introduction</h2>
