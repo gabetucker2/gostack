@@ -119,11 +119,11 @@
  This is a struct for our elements/maps within stacks.
 
  >> `card` *Card{}*
- >>> `card.key` *any type [interface{}]*
- >>>> Returns a key for this card-map (or nil if doesn't exist)
+ >>> `card.key` *any type (interface{})*
+ >>>> A key for this card-map (or nil if doesn't exist)
  >>>
- >>> `card.val` *any type [interface{}]*
- >>>> Returns the val of this card (or nil if doesn't exist)
+ >>> `card.val` *any type (interface{})*
+ >>>> The val of this card (or nil if doesn't exist)
 
  <h4>Recommended Uses</h4>
  
@@ -135,21 +135,21 @@
 
  > `slice` *Slice{}*
  >> `slice.startIdx`
- >>> Returns the first index in the desired slice
+ >>> The first index in the desired slice
  >>
  >> `slice.endIdx`
- >>> Returns the last index of the desired slice
+ >>> The last index of the desired slice
 
  <h4>Recommended Uses</h4>
  
- * `something = slice.startIdx`
- * `something = slice.endIdx`
+ * `something = slice.startIdx` *int*
+ * `something = slice.endIdx` *int*
 
 <h3>POSITION</h3>
 
- This is an enum intended to make it easy to inform functions of the intended target cards.
+ This is an enum intended to make it easy to flexibly inform functions what the intended target is.
 
- Take care to note that some functions do not support certain enum types (supported enum types are documented in function API).  For instance, it wouldn't make sense for you to call `stack.Index()` on a set of cards interspersed throughout a stack, but it would make sense for you to call `stack.Extract()` on set of cards interspersed throughout a stack.
+ All functions that implement POSITION_* support all position types.  Their specific functions relative to each position are notated in the function API.
 
  > ***POSITION*** *[enum]*
  >> *POSITION_\* Sample*
@@ -225,25 +225,31 @@
  >> **...optional** *type* refers to how this input argument does not have to be inputted in the function (refer to documentation to decide whether to input)
  >>> A sample instance where you would not input an argument in this spot is when you're using POSITION_First, which does not intake any posData.  That said, take care not to input more than 1 argument to optional parameters; everything will compile if you do, but this action is not supported by `gostack`.
 
- > ***Supported POSITIONS***
- >
- > Each of the below positions are supported POSITION_* arguments
+ > ***POSITIONS***
  >
  >> POSITION_First
+ >>> Explanation of what function does to POSITION_First
  >
  >> POSITION_Last
+ >>> Explanation of what function does to POSITION_Last
  >
  >> POSITION_Card
+ >>> Explanation of what function does to POSITION_Card
  >
  >> POSITION_Idx
+ >>> Explanation of what function does to POSITION_Idx
  >
  >> POSITION_Val
+ >>> Explanation of what function does to POSITION_Val
  >
  >> POSITION_Key
+ >>> Explanation of what function does to POSITION_Key
  >
  >> POSITION_Slice
+ >>> Explanation of what function does to POSITION_Slice
  >
  >> POSITION_All
+ >>> Explanation of what function does to POSITION_All
  
  > ***Pseudocode***
  >> This section outlines what the function does in simplistic terms
@@ -283,20 +289,33 @@
  >
  >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct position
  >
- >> **...posData** *any type [interface{}]* is used to provide the function relevant additional data to find the correct position
+ >> **...posData** *any type (interface{})* is used to provide the function relevant additional data to find the correct position
 
- > ***Supported POSITIONS***
+ > ***POSITIONS***
+ >
  >> POSITION_First
+ >>> Explanation of what function does to POSITION_First
  >
  >> POSITION_Last
+ >>> Explanation of what function does to POSITION_Last
  >
  >> POSITION_Card
+ >>> Explanation of what function does to POSITION_Card
  >
  >> POSITION_Idx
+ >>> Explanation of what function does to POSITION_Idx
  >
  >> POSITION_Val
+ >>> Explanation of what function does to POSITION_Val
  >
  >> POSITION_Key
+ >>> Explanation of what function does to POSITION_Key
+ >
+ >> POSITION_Slice
+ >>> Explanation of what function does to POSITION_Slice
+ >
+ >> POSITION_All
+ >>> Explanation of what function does to POSITION_All
  
  > ***Pseudocode***
  >> **IF VALID POSITION**
@@ -330,25 +349,33 @@
  >
  >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct card to extract
  >
- >> **...posData** *any type [interface{}]* is used to provide the function relevant additional data to find the correct card to extract
+ >> **...posData** *any type (interface{})* is used to provide the function relevant additional data to find the correct card to extract
 
- > ***Supported POSITIONS***
+ > ***POSITIONS***
  >
  >> POSITION_First
+ >>> Explanation of what function does to POSITION_First
  >
  >> POSITION_Last
+ >>> Explanation of what function does to POSITION_Last
  >
  >> POSITION_Card
+ >>> Explanation of what function does to POSITION_Card
  >
  >> POSITION_Idx
+ >>> Explanation of what function does to POSITION_Idx
  >
  >> POSITION_Val
+ >>> Explanation of what function does to POSITION_Val
  >
  >> POSITION_Key
+ >>> Explanation of what function does to POSITION_Key
  >
  >> POSITION_Slice
+ >>> Explanation of what function does to POSITION_Slice
  >
  >> POSITION_All
+ >>> Explanation of what function does to POSITION_All
  
  > ***Pseudocode***
  >> **IF STACK IS NOT EMPTY**
@@ -377,25 +404,33 @@
  >
  >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct card to replace
  >
- >> **...posData** *any type [interface{}]* is used to provide the function relevant additional data to find the correct card to replace
+ >> **...posData** *any type (interface{})* is used to provide the function relevant additional data to find the correct card to replace
 
- > ***Supported POSITIONS***
+ > ***POSITIONS***
  >
  >> POSITION_First
+ >>> Explanation of what function does to POSITION_First
  >
  >> POSITION_Last
+ >>> Explanation of what function does to POSITION_Last
  >
  >> POSITION_Card
+ >>> Explanation of what function does to POSITION_Card
  >
  >> POSITION_Idx
+ >>> Explanation of what function does to POSITION_Idx
  >
  >> POSITION_Val
+ >>> Explanation of what function does to POSITION_Val
  >
  >> POSITION_Key
+ >>> Explanation of what function does to POSITION_Key
  >
  >> POSITION_Slice
+ >>> Explanation of what function does to POSITION_Slice
  >
  >> POSITION_All
+ >>> Explanation of what function does to POSITION_All
  
  > ***Pseudocode***
  >> **IF STACK IS NOT EMPTY**
@@ -408,7 +443,7 @@
  
 <h3>Has</h3>
  
- > `stack.Has(lookFor)`
+ > `stack.Has(lookFor, POSITION_*, ...posData)`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> GETTER: ***TRUE***
@@ -420,9 +455,39 @@
  >> **stack** *Stack* is the Stack to search for **lookFor**
  >
  >> **lookFor** *Card* or *Stack* is either a Card or a Stack of cards to find in **stack**
+ >
+ >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct cards to search
+ >
+ >> **...posData** *any type (interface{})* is used to provide the function relevant additional data to find the correct cards to search
+
+ > ***POSITIONS***
+ >
+ >> POSITION_First
+ >>> Explanation of what function does to POSITION_First
+ >
+ >> POSITION_Last
+ >>> Explanation of what function does to POSITION_Last
+ >
+ >> POSITION_Card
+ >>> Explanation of what function does to POSITION_Card
+ >
+ >> POSITION_Idx
+ >>> Explanation of what function does to POSITION_Idx
+ >
+ >> POSITION_Val
+ >>> Explanation of what function does to POSITION_Val
+ >
+ >> POSITION_Key
+ >>> Explanation of what function does to POSITION_Key
+ >
+ >> POSITION_Slice
+ >>> Explanation of what function does to POSITION_Slice
+ >
+ >> POSITION_All
+ >>> Explanation of what function does to POSITION_All
  
  > ***Pseudocode***
- >> **IF lookFor IS IN STACK**
+ >> **IF lookFor IS IN STACK POSITION**
  >>> return true
  >
  >> **ELSE**
@@ -430,7 +495,7 @@
 
 <h3>Index</h3>
  
- > `stack.Index(lookFor)`
+ > `stack.Index(lookFor, POSITION_*, ...posData)`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> GETTER: ***TRUE***
@@ -442,14 +507,44 @@
  >> **stack** *Stack* is the Stack to search for **lookFor**
  >
  >> **lookFor** *Card* or *Stack* is either a Card or a Stack of cards to find in **stack**
+ >
+ >> **POSITION_\*** *POSITION* is used to provide the function relevant POSITION data to find the correct cards to search
+ >
+ >> **...posData** *any type (interface{})* is used to provide the function relevant additional data to find the correct cards to search
+
+ > ***POSITIONS***
+ >
+ >> POSITION_First
+ >>> Explanation of what function does to POSITION_First
+ >
+ >> POSITION_Last
+ >>> Explanation of what function does to POSITION_Last
+ >
+ >> POSITION_Card
+ >>> Explanation of what function does to POSITION_Card
+ >
+ >> POSITION_Idx
+ >>> Explanation of what function does to POSITION_Idx
+ >
+ >> POSITION_Val
+ >>> Explanation of what function does to POSITION_Val
+ >
+ >> POSITION_Key
+ >>> Explanation of what function does to POSITION_Key
+ >
+ >> POSITION_Slice
+ >>> Explanation of what function does to POSITION_Slice
+ >
+ >> POSITION_All
+ >>> Explanation of what function does to POSITION_All
  
  > ***Pseudocode***
- >> **IF lookFor IS IN STACK**
+ >> **IF lookFor IS IN STACK POSITION**
  >>> **IF lookFor IS A CARD**
- >>>> return lookFor's index in **stack**
+ >>>> return lookFor's index in **stack** POSITION
  >>>
  >>> **ELSE IF lookFor IS A STACK**
- >>>> return a Slice representing where lookFor starts and ends in **stack**
+ >>>> return a Slice representing where lookFor starts and ends in **stack** POSITION
  >
  >> **ELSE**
  >>> **IF lookFor IS A CARD**

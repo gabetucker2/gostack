@@ -80,7 +80,7 @@ func (stack *Stack) Replace(toInsert *[]interface{}, position POSITION, posData 
 
 }
 
-func (stack *Stack) Has(lookFor interface{}) bool {
+func (stack *Stack) Has(lookFor interface{}, position POSITION, posData ...interface{}) bool {
 
 	// get idx
 	idx := _gostack_back_GetIdxFromData(stack, position, posData)
@@ -90,7 +90,7 @@ func (stack *Stack) Has(lookFor interface{}) bool {
 
 }
 
-func (stack *Stack) Index(lookFor interface{}) interface{} {
+func (stack *Stack) Index(lookFor interface{}, position POSITION, posData ...interface{}) interface{} {
 
 	// return index
 	return _gostack_back_GetIdxFromData(stack, position, posData)

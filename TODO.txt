@@ -1,9 +1,10 @@
 This project:
 * Update documentation
 
+* Introduce key/val search support to Has and Index
+* Add idx as property to card elements to facilitate POSITION stuff
 * Implement Add()'s before/after
 * Update Has, Add, and Replace to instake Stacks AND Cards
-* Introduce key/val search support to Has and Index
 
 * implement all position types for all functions using POSITION_*
 
