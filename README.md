@@ -4,6 +4,8 @@
 
  <h1 name = "preface">Preface</h1>
 
+ <h2 name = "introduction">Introduction<h2>
+
  `gostack` introduces **Stacks**, ambiguously-typed sets of elements intended to replace arrays and maps in *golang*.  **Stacks** are introduced alongside a variety of helpful functions to ensure programmer ease-of-use, concision, and flexibility.
 
  For the purposes of this project, we will use the imagery of a stack of cards.  A ***Stack*** will refer to a stack of cards; each element in that stack will be a ***Card***.  This is not to be confused with traditional stack structures (which only push and pop the first element in a stack).
@@ -38,6 +40,7 @@
  > [Banner](#banner)
 
  > [Preface](#preface)
+ >> [Introduction](#introduction)
  >
  >> [Glossary](#banner)
  >
