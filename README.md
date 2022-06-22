@@ -96,7 +96,7 @@
 
 <h3>Example Implementations</h3>
  
- <h4>Examples of how to get Card(s)<h4>
+ <h4>Examples of how to get Card(s)</h4>
  > `stack.Get(RETURN_Card, POSITION_First)`
  >> *returns the first card in the Stack*
  >
