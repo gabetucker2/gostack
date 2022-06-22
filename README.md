@@ -2,6 +2,8 @@
 
 ![Banner](Images/gostack_Smaller.png)
 
+ <h1 name = "preface"></h1>
+
  `gostack` introduces **Stacks**, ambiguously-typed sets of elements intended to replace arrays and maps in *golang*.  **Stacks** are introduced alongside a variety of helpful functions to ensure programmer ease-of-use, concision, and flexibility.
 
  For the purposes of this project, we will use the imagery of a stack of cards.  A ***Stack*** will refer to a stack of cards; each element in that stack will be a ***Card***.  This is not to be confused with traditional stack structures (which only push and pop the first element in a stack).
@@ -9,8 +11,6 @@
  By default for generics, people tend to use *golang*'s list package, but this package is optimized only with the essentials for transforming and selecting list elements.  While `gostack` offers a much wider breadth of functions for transforming and selecting elements, it also allows you to turn **Stacks** into maps, quickly convert between arrays and **Stacks**, and—most excitingly—to use functions based on lambda expression including **sort**, **TrueForAll**, and **RemoveAll**.
 
  Many of the functions in this project were inspired by functions from *JavaScript* Arrays or *C#* Lists.
-
-<h1 name = "overview">Overview</h1>
 
 <h2 name = "fileExplanations">Files</h2>
 
@@ -33,16 +33,17 @@
 
 <h2 name = "glossary">Glossary</h2>
 
- > [Preface](#files)
- >> [Files](#files)
+ > [Files](#files)
+
+ > [Banner](#banner)
+
+ > [Preface](#preface)
  >
- >> [Banner](#banner)
+ >> [Glossary](#banner)
  >
  >> [Files](#fileExplanations)
  >
  >> [Links](#links)
-
- > [Glossary](#banner)
 
  > [Overview](#overview)
  >> [Brief Documentation](#briefDocumentation)
@@ -60,6 +61,8 @@
  >>>> [structs](#structs)
  >>>
  >>>> [enums](#enums)
+
+<h1 name = "overview">Overview</h1>
 
 <h2 name = "briefDocumentation">Brief Documentation</h2>
  
