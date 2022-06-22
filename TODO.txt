@@ -2,7 +2,6 @@ This project:
 * Update documentation
  - Glossary
 
-* update pseudocode
 * add idx attribute to cards
 * add more examples
 

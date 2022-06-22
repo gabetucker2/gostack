@@ -4,11 +4,23 @@
 
  <h1 name = "introduction">Introduction</h1>
 
- `gostack` introduces **Stacks**, ambiguously-typed sets of elements intended to replace arrays and maps in *golang*.  **Stacks** are introduced alongside a variety of helpful functions to ensure programmer ease-of-use, concision, and flexibility.
+ `gostack` introduces **Stack** structures—ambiguously-typed sets of elements intended as an all-in-one package for datastructure management in *golang*.  The elements in stacks are **Cards** (like a stack of cards).
 
- For the purposes of this project, we will use the imagery of a stack of cards.  A ***Stack*** will refer to a stack of cards; each element in that stack will be a ***Card***.  This is not to be confused with traditional stack structures (which only push and pop the first element in a stack).
+ With `gostack`, there is no more need for maps or arrays; every possible function you could need to create, update, or access a set of data is encompassed by a few elegant functions.  Assuming `stack` is a predefined stack of cards:
 
- By default for generics, people tend to use *golang*'s list package, but this package is optimized only with the essentials for transforming and selecting list elements.  While `gostack` offers a much wider breadth of functions for transforming and selecting elements, it also allows you to turn **Stacks** into maps, quickly convert between arrays and **Stacks**, and—most excitingly—to use functions based on lambda expression including **sort**, **TrueForAll**, and **RemoveAll**.
+ Want to remove the first card in a stack and get its key?
+ 
+ `key := stack.Extract(RETURN_Key, POSITION_First)`
+ 
+ Want to replace all cards whose values are even ints that are less than 3 but over -5 with two new cards and get a stack representing keys of the cards that were replaced?
+ 
+ `cardsToInsert := MakeStack().Add(newCard1, ORDER_After, POSITION_Last).Add(newCard2, ORDER_After, POSITION_Last)`
+ `oldCards := stack.Replace(cardsToInsert, RETURN_Keys, POSITION_Lambda, TODO: ADD LAMBDA)`
+ 
+ Want to get a stack of indices corresponding to the elements in a stack which have the keys matching the object address of either unitType1 = UnitType{"Target", "A"} or unitType2 = UnitType{"Target", "B"} (where UnitType is your user-defined struct)?
+
+ `permittedsKeys := MakeStack().Add(MakeCard(unitType1), ORDER_After, POSITION_Last).Add(MakeCard(unitType2), ORDER_After, POSITION_Last)`
+ `permittedUnitIndices := stack.Get(RETURN_Idxs, POSITION_Keys, permittedsKeys, MATCH_Reference)`
 
 <h1 name = "glossary">Glossary</h1>
 
@@ -46,18 +58,18 @@
  >>>>> [Slice](#slice)
  >>>>
  >>>> [enums](#enums)
- >>>>> * [RETURN](#RETURN)
- >>>>>
- >>>>> * [POSITION](#POSITION)
- >>>>>
- >>>>> * [ORDER](#ORDER)
- >>>>>
- >>>>> * [MATCH](#MATCH)
+ >>>>> [RETURN](#RETURN)
+ >>>>
+ >>>>> [POSITION](#POSITION)
+ >>>>
+ >>>>> [ORDER](#ORDER)
+ >>>>
+ >>>>> [MATCH](#MATCH)
  >>>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
  >>>> [MakeStack()](#MakeStack)
  >>>
- >>>> [MakeCard()](#MakeCard)
+ >>>> [MakeCard(...)](#MakeCard)
  >>>
  >>>> [stack.Empty()](#Empty)
  >>>
@@ -185,9 +197,13 @@
  > * POSITION_First *NONE*
  > * POSITION_Last *NONE*
  > * POSITION_Idx *int*
+ > * POSITION_Idxs *Stack of ints*
  > * POSITION_Val *any type*
+ > * POSITION_Vals *Stack of any type*
  > * POSITION_Key *any type*
+ > * POSITION_Keys *Stack of any type*
  > * POSITION_Card *Card*
+ > * POSITION_Cards *Stack of Cards*
  > * POSITION_All *NONE*
  > * POSITION_Lambda *TODO: figure out Lambda*
 
@@ -202,7 +218,7 @@
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
  * **MakeStack()**
- * **MakeCard()**
+ * **MakeCard(...val, ...key)**
  * **stack.Empty()**
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
@@ -332,7 +348,7 @@
  >> *_POSITION_NotationSample*
  >>> *The type of the variable (called `data`) that needs to be passed into the function utilizing this constant*
  >>
- >>> *For instance, if you input `POSITION_Key`, you would need to pass an interface{} resembling the key you want to find to your `data` parameter*
+ >>> *For instance, if you input `POSITION_Keys`, you would need to pass a Stack whose values are the keys you want to find to your `data` parameter*
  >>
  >> POSITION_First
  >>> *NONE*
@@ -341,16 +357,28 @@
  >>> *NONE*
  >>
  >> POSITION_Idx
- >>> interface{} *int or Stack of ints*
+ >>> int
+ >>
+ >> POSITION_Idxs
+ >>> Stack of ints
  >>
  >> POSITION_Val
- >>> interface{} *val or Stack of vals*
+ >>>  any type (interface{})
+ >>
+ >> POSITION_Vals
+ >>> Stack of any type (interface{})
  >>
  >> POSITION_Key
- >>> interface{} *key or Stack of keys*
+ >>>  any type (interface{})
+ >>
+ >> POSITION_Keys
+ >>> Stack of  any type (interface{})
  >>
  >> POSITION_Card
- >>> Card *or* []Card
+ >>> Card
+ >>
+ >> POSITION_Cards
+ >>> Stack of Cards
  >>
  >> POSITION_All
  >>> *NONE*
@@ -378,7 +406,7 @@
 
 > ***Order***
 >> ORDER_Before
->
+>>> default
 >> ORDER_After
 
  ***Example Uses***
@@ -399,7 +427,7 @@
 
  > ***Match***
  >> MATCH_Object
- >>
+ >>> default
  >> MATCH_Reference
 
  ***Example Uses***
@@ -428,7 +456,7 @@
 
 <h3 name = "MakeCard">MakeCard</h3>
 
- > `MakeCard()`
+ > `MakeCard(...val, ...key)`
  >> CONSTRUCTOR: ***TRUE***
  >>> Card
  >
@@ -437,8 +465,17 @@
  >
  >> SETTER: ***FALSE***
  
+ > ***Special Parameters***
+ >> **val** *any type* is the new Card's starting val
+ >
+ >> **key** *any type* is the new Card's starting key
+ 
  > ***Pseudocode***
- >> returns a new Card
+ >> Creates a new Card card
+ >
+ >> Set card.val = **val** (or nil if empty) and card.key == **key** (or nil if empty)
+ >
+ >> returns card
  
 <h3 name = "Empty">Empty</h3>
  
