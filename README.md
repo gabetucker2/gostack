@@ -30,7 +30,7 @@
 
 <h2>Brief Documentation</h2>
 
- <h3>Data Structures</h3>
+<h3>Data Structures</h3>
 
  > ***name*** means it is conventionally acceptable to access this value manually
  >
@@ -81,12 +81,12 @@
  >> POSITION_All
  >>> *NONE*
  
- <h3>Non-Generalized Functions</h3>
+<h3>Non-Generalized Functions</h3>
 
  * **MakeStack()**
  * **stack.Empty()**
 
- <h3>Generalized Functions</h3>
+<h3>Generalized Functions</h3>
 
  * **stack.Add(newCard, ORDER_*, POSITION_*, ...POSITIONDATA)**
  * **stack.Replace(newCard, RETURN_*, POSITION_*, ...POSITIONDATA)**
@@ -94,9 +94,9 @@
  * **stack.Get(RETURN_*, POSITION_*, ...POSITIONDATA)**
  * **stack.Has(RETURN_*, POSITION_*, ...POSITIONDATA)**
 
- <h4>Examples</h4>
+<h3>Example Implementations</h3>
  
- <h5>Examples of how to get Card(s)<h5>
+ <h4>Examples of how to get Card(s)<h4>
  > `stack.Get(RETURN_Card, POSITION_First)`
  >> *returns the first card in the Stack*
  >
@@ -112,15 +112,15 @@
  > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues)`
  >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
 
- <h5>stack.Push() Function Equivalent</h5>
+ <h4>stack.Push() Function Equivalent</h4>
  > `stack.Add(newCard, ORDER_BEFORE, POSITION_First)`
  >> *adds a card to the beginning of the stack*
 
- <h5>stack.Pop() Function Equivalent</h5>
+ <h4>stack.Pop() Function Equivalent</h4>
  > `stack.Extract(RETURN_Card, POSITION_First)`
  >> *removes and returns the first card in the stack*
 
- <h5>stack.IndexOf(card) Function Equivalent</h5>
+ <h4>stack.IndexOf(card) Function Equivalent</h4>
  > `stack.Get(RETURN_Idx, POSITION_Card, card)`
  >> *returns the index of the first found matching card*
 
