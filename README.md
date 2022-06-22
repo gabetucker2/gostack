@@ -140,8 +140,8 @@
  > * POSITION_Val *any type*
  > * POSITION_Key *any type*
  > * POSITION_Card *Card*
- > * POSITION_Slice *Slice*
  > * POSITION_All *NONE*
+ > * POSITION_Lambda *TODO: figure out Lambda*
 
  > ***ORDER***
  > * ORDER_Before
@@ -168,7 +168,7 @@
 
 <h2 name = "dataStructures">Data Structures</h2>
 
- It is highly advised against using these data structures for reasons other than those listed in the *Recommended Uses* sections.  The entire purpose of this project is for you not to have to manage arrays manually, but documentation for objects intended to be hidden still exists for those who would like to add their own Stack functions
+ It is highly advised against using these data structures for reasons other than those listed in the *Example Uses* sections.  The entire purpose of this project is for you not to have to manage arrays manually, but documentation for objects intended to be hidden still exists for those who would like to add their own Stack functions
 
 <h3 name = "structs">structs</h3>
 
@@ -182,9 +182,10 @@
  >> `size` *int*
  >>> Returns the cardinality (i.e., `len(stack.cards)`) of this Stack
 
- ***Recommended Uses***
+ ***Example Uses***
 
- * `stack.size`
+ > `stack.size`
+ >> *returns the cardinality of the stack's cards (i.e., amount of cards in the stack)*
 
 <h4 name = "card">Card</h4>
 
@@ -197,9 +198,9 @@
  >>> `card.val` *any type (interface{})*
  >>>> The val of this card (or nil if doesn't exist)
 
- ***Recommended Uses***
+ ***Example Uses***
  
- * *None*
+ > *None*
 
 <h4 name = "slice">Slice</h4>
 
@@ -212,10 +213,12 @@
  >> `slice.endIdx`
  >>> The last index of the desired slice
 
- ***Recommended Uses***
+ ***Example Uses***
  
- * `something = slice.startIdx`
- * `something = slice.endIdx`
+ > `something = slice.startIdx`
+ >
+ > `something = slice.endIdx`
+ >> *access the first or last indices of a slice*
 
 <h3 name = "enums">enums</h3>
 
@@ -227,35 +230,50 @@
  >> *_RETURN_NotationSample*
  >>> *The type of variable returned by the function you're calling*
  >>
+ >>> *Although the type may say int or Card, the true return type will always be interface{} or nil*
+ >>
  >>> *For instance, if you inputted RETURN_Key, you would get a single key interface{} (or nil if doesn't exist).  Alternatively, if you inputted RETURN_Keys, you would get a stack of keys.*
  >>
- >> POSITION_First
- >>> *NONE*
+ >> RETURN_None
+ >>> nil
  >>
- >> POSITION_Last
- >>> *NONE*
+ >> RETURN_Idx
+ >>> int
  >>
- >> POSITION_Idx
- >>> interface{} *int or Stack of ints*
+ >> RETURN_Idxs
+ >>> Stack of ints
  >>
- >> POSITION_Val
- >>> interface{} *val or Stack of vals*
+ >> RETURN_Key
+ >>> interface{}
  >>
- >> POSITION_Key
- >>> interface{} *key or Stack of keys*
+ >> RETURN_Keys
+ >>> Stack of interfaces{}
  >>
- >> POSITION_Card
- >>> Card *or* []Card
+ >> RETURN_Val
+ >>> interface{}
  >>
- >> POSITION_Slice
- >>> interface{} slice or Stack of slices*
+ >> RETURN_Vals
+ >>> Stack of interfaces{}
  >>
- >> POSITION_All
- >>> *NONE*
+ >> RETURN_Card
+ >>> Card
+ >>
+ >> RETURN_Cards
+ >>> Stack of Cards
 
- ***Recommended Uses***
+ ***Example Uses***
  
- * [See Examples](#examples)
+ > `stack.Get(RETURN_Card, POSITION_Val, "String Value", MATCH_Object)`
+ >> *goes through the stack, finds the first card with val "String Value", and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Val, "String Value", MATCH_Object)`
+ >> *goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues, MATCH_Object)`
+ >> *goes through the stack, finds the first card with one of the values in stackOfValues, and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues, MATCH_Object)`
+ >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
 
 <h4 name = "POSITION">POSITION</h4>
 
@@ -265,7 +283,7 @@
  >> *_POSITION_NotationSample*
  >>> *The type of the variable (called `data`) that needs to be passed into the function utilizing this constant*
  >>
- >>> *For instance, if you input `POSITION_Slice`, you would need to pass a **Slice** struct to your `data` parameter*
+ >>> *For instance, if you input `POSITION_Key`, you would need to pass an interface{} resembling the key you want to find to your `data` parameter*
  >>
  >> POSITION_First
  >>> *NONE*
@@ -285,30 +303,48 @@
  >> POSITION_Card
  >>> Card *or* []Card
  >>
- >> POSITION_Slice
- >>> interface{} slice or Stack of slices*
- >>
  >> POSITION_All
  >>> *NONE*
+ >>
+ >> POSITION_Lambda
+ >>> interface{} *TODO: figure out lambda*
 
- ***Recommended Uses***
+ ***Example Uses***
  
- * [See Examples](#examples)
-
+ > `stack.Get(RETURN_Card, POSITION_First)`
+ >> *returns the first card in the Stack*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Val, "String Value", MATCH_Object)`
+ >> *goes through the stack, finds the first card with val "String Value", and returns that card*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Key, "String Key", MATCH_Object)`
+ >> *goes through the stack, finds the first card with key "String Key", and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Lambda, {TODO: add})`
+ >> *goes through the stack, finds each card for which the lambda expression is true, and return a stack of these cards*
+ 
 <h4 name = "ORDER">ORDER</h4>
 
- This is an enum intended to make it easy 
+ This is an enum intended to make it easy to tell certain functions whether to insert a value before or after the input index.
 
 > ***Order***
 >> ORDER_Before
 >
 >> ORDER_After
 
+ ***Example Uses***
+ 
+ > `stack.Add(cardToAdd, ORDER_Before, POSITION_Last)`
+ >> *insert a card at the second-to-last index of the stack*
+ >
+ > `stack.Add(cardToAdd, ORDER_After, POSITION_Last)`
+ >> *insert a card at the last index of the stack*
+
 <h4 name = "MATCH">MATCH</h4>
 
  This is an enum intended to make it easy to target whether a function searching for a match between input data and data in the stack element is matching by having the same values (MATCH_Object) or the same memory address (MATCH_Reference).
 
- Matching by reference only works for Val, Key, and Card POSITION types; it would not make much practical sense to attempt this for primitive types.
+ Matching by reference only works for Val, Key, and Card POSITION types.  It would not make much sense to match an index that's managed on the backend by reference (POSITION_Idx), to match a lambda expression (POSITION_Lambda), or to match using a position that's not even comparing values (POSITION_First, POSITION_Last, POSITION_All).
 
  Take care to note that all cases where objects are matching by reference will also be matching by object.
 
@@ -317,10 +353,13 @@
  >>
  >> MATCH_Reference
 
- ***Recommended Uses***
+ ***Example Uses***
  
- * `stack.Get(RETURN_Card, POSITION_Card, cardStructureToFind, MATCH_Object)` *Returns the first card that has the same structure (key and value) as cardStructureToFind*
- * stack.Get(RETURN_Card, POSITION_Card, exactCardToFind, MATCH_Reference)` *Returns the first card that IS exactCardToFind as stored in memory—not just that's the same structurally*
+ > `stack.Get(RETURN_Card, POSITION_Card, cardStructureToFind, MATCH_Object)`
+ >> *returns the first card that has the same structure (key and value) as cardStructureToFind*
+ >
+ > stack.Get(RETURN_Card, POSITION_Card, exactCardToFind, MATCH_Reference)`
+ >> *returns the first card that IS exactCardToFind as stored in memory—not just that's the same structurally*
 
 <h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>
 
@@ -504,7 +543,7 @@
 
 <h2 name = "examples">Examples</h2>
  
- <h3>Examples of how to get Card(s)</h3>
+ <h3>Examples to Demonstrate Flexibility</h3>
 
  > `stack.Get(RETURN_Card, POSITION_First)`
  >> *returns the first card in the Stack*
@@ -512,8 +551,14 @@
  > `stack.Get(RETURN_Card, POSITION_Val, "String Value", MATCH_Object)`
  >> *goes through the stack, finds the first card with val "String Value", and returns that card*
  >
+ > `stack.Get(RETURN_Card, POSITION_Key, "String Key", MATCH_Object)`
+ >> *goes through the stack, finds the first card with key "String Key", and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Lambda, {TODO: add})`
+ >> *goes through the stack, finds each card for which the lambda expression is true, and return a stack of these cards*
+ >
  > `stack.Get(RETURN_Cards, POSITION_Val, "String Value", MATCH_Object)`
- >>*goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
+ >> *goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
  >
  > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues, MATCH_Object)`
  >> *goes through the stack, finds the first card with one of the values in stackOfValues, and returns that card*
@@ -522,10 +567,10 @@
  >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
  >
  > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues, MATCH_Reference)`
- >> *goes through the stack, finds the first card with the same memory address as one the values in stackOfValues (assuming its elements are not primitive types, i.e. assuming its elements are structs or arrays), and returns that card*
+ >> *goes through the stack, finds the first card with the same memory address as one the values in stackOfValues, and returns that card*
  >
  > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues, MATCH_Reference)`
- >> *goes through the stack, finds each card with a memory address matching one in stackOfValues (assuming its elements are not primitive types, i.e. assuming its elements are structs or arrays), and returns a Stack of each of those cards*
+ >> *goes through the stack, finds each card with a memory address matching one in stackOfValues, and returns a Stack of each of those cards*
 
  <h3>stack.Push() Function Equivalent</h3>
 

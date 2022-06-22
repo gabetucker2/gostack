@@ -39,8 +39,8 @@ const (
 	POSITION_Key
 	POSITION_Val
 	POSITION_Card
-	POSITION_Slice
 	POSITION_All
+	POSITION_Lambda
 )
 
 const (
