@@ -53,20 +53,20 @@
  >>>>> [MATCH](#MATCH)
  >>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
- >>>> [MakeStack](#MakeStack)
+ >>>> [MakeStack()](#MakeStack)
  >>>
- >>>> [Empty](#Empty)
+ >>>> [stack.Empty()](#Empty)
  >>
  >>> [Generalized Functions](#generalizedFunctions)
- >>>> [Add](#Add)
+ >>>> [stack.Add(...)](#Add)
  >>>
- >>>> [Replace](#Replace)
+ >>>> [stack.Replace(...)](#Replace)
  >>>
- >>>> [Extract](#Extract)
+ >>>> [stack.Extract(...)](#Extract)
  >>>
- >>>> [Get](#Get)
+ >>>> [stack.Get(...)](#Get)
  >>>
- >>>> [Has](#Has)
+ >>>> [stack.Has(...)](#Has)
  >
  >> [Examples](#examples)
  >
