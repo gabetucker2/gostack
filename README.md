@@ -10,17 +10,37 @@
 
  Many of the functions in this project were inspired by functions from *JavaScript* Arrays or *C#* Lists.
 
-<h2>Glossary</h2>
+<h2 name = "glossary">Glossary</h2>
 
- > [Files](#files)
+ > Above
+ >> [Files](#files)
+ >
+ >> [Banner](#banner)
 
- > [Banner](#banner)
+ > [Glossary](#banner)
 
- > [Files](#fileExplanations)
+ > [Overview](#overview)
+ >> [Files](#fileExplanations)
+ >
+ >> [Links](#links)
+ >
+ >> [Brief Documentation](#briefDocumentation)
+ >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
+ >>
+ >>> [Generalized Functions](#generalizedFunctions)
+ >>
+ >>> [Data Structures](#dataStructures)
+ >>>> [Structs](#structs)
+ >>>
+ >>>> [Enum](#enum)
+ >
+ >> [Exhaustive Documentation](#exhaustiveDocumentation)
+ >>> [DataStructures](#dataStructures)
+ >>>> [structs](#structs)
+ >>>
+ >>>> [enums](#enums)
 
- > [Links](#links)
-
-<h1>Overview</h1>
+<h1 name = "overview">Overview</h1>
 
 <h2 name = "fileExplanations">Files</h2>
 
@@ -41,14 +61,14 @@
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
  * http://web.cse.ohio-state.edu/software/common/doc/components/standard/Standard.html
 
-<h2>Brief Documentation</h2>
+<h2 name = "briefDocumentation">Brief Documentation</h2>
  
-<h3>Non-Generalized Functions</h3>
+<h3 name = "nonGeneralizedFunctions">Non-Generalized Functions</h3>
 
  * **MakeStack()**
  * **stack.Empty()**
 
-<h3>Generalized Functions</h3>
+<h3 name = "generalizedFunctions">Generalized Functions</h3>
 
  * **stack.Add(newCard, ORDER_*, POSITION_*, ...POSITIONDATA)**
  * **stack.Replace(newCard, RETURN_*, POSITION_*, ...POSITIONDATA)**
@@ -56,13 +76,13 @@
  * **stack.Get(RETURN_*, POSITION_*, ...POSITIONDATA)**
  * **stack.Has(RETURN_*, POSITION_*, ...POSITIONDATA)**
 
-<h3>Data Structures</h3>
+<h3 name = "dataStructures">Data Structures</h3>
 
  > ***name*** means it is conventionally acceptable to access this value manually
  >
  > **name** means it is highly recommended against accessing  value manually; you should instead use our functions
 
-<h4>Structs</h4>
+<h4 name = "structs">Structs</h4>
 
  Stack:
  > ***stack*** *Stack*
@@ -82,7 +102,7 @@
  >
  >> ***endIdx*** *int*
 
-<h4>Enums</h4>
+<h4 name = "enums">Enums</h4>
 
  ***POSITION*** *[enum]*
  > POSITION_First
@@ -144,13 +164,13 @@
  > ORDER_After
  >> Insert after the given index
 
-<h1>Exhaustive Documentation</h1>
+<h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
 
-<h2>Data Structures</h2>
+<h2 name = "dataStructures">Data Structures</h2>
 
  It is highly advised against using these data structures for reasons other than those listed in the *Recommended Uses* sections.  The entire purpose of this project is for you not to have to manage arrays manually, but documentation for objects intended to be hidden still exists for those who would like to add their own Stack functions
 
-<h3>Stack</h3>
+<h3 name = "stack">Stack</h3>
 
  This is the main struct in the project.
 
@@ -164,7 +184,7 @@
 
  * `stack.size`
 
-<h3>Card</h3>
+<h3 name = "card">Card</h3>
 
  This is a struct for our elements/maps within stacks.
 
@@ -179,7 +199,7 @@
  
  * *None*
 
-<h3>Slice</h3>
+<h3 name = "slice">Slice</h3>
 
  This is a struct that makes it easier to pass two int values between functions on the backend.
 
@@ -195,7 +215,7 @@
  * `something = slice.startIdx` *int*
  * `something = slice.endIdx` *int*
 
-<h3>POSITION</h3>
+<h3 name = "POSITION">POSITION</h3>
 
  This is an enum intended to make it easy to flexibly inform functions what the intended target is.
 
