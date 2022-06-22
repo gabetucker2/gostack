@@ -96,65 +96,65 @@
 
 <h4 name = "enumsBrief">Enums</h4>
 
- ***POSITION***
- > POSITION_First
- >> *NONE*
- >
- > POSITION_Last
- >> *NONE*
- >
- > POSITION_Idx
- >> int
- >
- > POSITION_Val
- >> any type
- >
- > POSITION_Key
- >> any type
- >
- > POSITION_Card
- >> Card
- >
- > POSITION_Slice
- >> Slice
- >
- > POSITION_All
- >> *NONE*
-
- ***RETURN***
- > RETURN_None
- >> *NONE*
+ > ***POSITION***
+ >> POSITION_First
+ >>> *NONE*
  >>
- > RETURN_Idx
- >> int
- >
- > RETURN_Idxs
- >> Stack of ints
- >
- > RETURN_Key
- >> any type
- >
- > RETURN_Keys
- >> Stack of any type
- >
- > RETURN_Val
- >> any type
- >
- > RETURN_Vals
- >> Stack of any type
- >
- > RETURN_Card
- >> Card
- >
- > RETURN_Cards
- >> Stack of Cards
+ >> POSITION_Last
+ >>> *NONE*
+ >>
+ >> POSITION_Idx
+ >>> int
+ >>
+ >> POSITION_Val
+ >>> any type
+ >>
+ >> POSITION_Key
+ >>> any type
+ >>
+ >> POSITION_Card
+ >>> Card
+ >>
+ >> POSITION_Slice
+ >>> Slice
+ >>
+ >> POSITION_All
+ >>> *NONE*
 
- ***ORDER***
- > ORDER_Before
- >> Insert before the given index
- >
- > ORDER_After
- >> Insert after the given index
+ > ***RETURN***
+ >> RETURN_None
+ >>> *NONE*
+ >>
+ >> RETURN_Idx
+ >>> int
+ >>
+ >> RETURN_Idxs
+ >>> Stack of ints
+ >>
+ >> RETURN_Key
+ >>> any type
+ >>
+ >> RETURN_Keys
+ >>> Stack of any type
+ >>
+ >> RETURN_Val
+ >>> any type
+ >>
+ >> RETURN_Vals
+ >>> Stack of any type
+ >>
+ >> RETURN_Card
+ >>> Card
+ >>
+ >> RETURN_Cards
+ >>> Stack of Cards
+
+ > ***ORDER***
+ >> ORDER_Before
+ >>> Insert before the given index
+ >>
+ >> ORDER_After
+ >>> Insert after the given index
 
 <h3 name = "nonGeneralizedFunctions">Non-Generalized Functions</h3>
 
