@@ -96,20 +96,20 @@
 
 <h4 name = "enumsBrief">Enums</h4>
 
- ***RETURN***
- * *RETURN_Sample* *type that's returned*
- * RETURN_None *NONE*
- * RETURN_Idx *int*
- * RETURN_Idxs *Stack of ints*
- * RETURN_Key *any type*
- * RETURN_Keys *Stack of any type*
- * RETURN_Val *any type*
- * RETURN_Vals *Stack of any type*
- * RETURN_Card *Card*
- * RETURN_Cards *Stack of Cards*
+ > ***RETURN***
+ > * _RETURN_NotationSample *type that's returned*
+ > * RETURN_None *NONE*
+ > * RETURN_Idx *int*
+ > * RETURN_Idxs *Stack of ints*
+ > * RETURN_Key *any type*
+ > * RETURN_Keys *Stack of any type*
+ > * RETURN_Val *any type*
+ > * RETURN_Vals *Stack of any type*
+ > * RETURN_Card *Card*
+ > * RETURN_Cards *Stack of Cards*
 
  ***POSITION***
- * *POSITION_Sample* *POSITIONDATA type*
+ * _POSITION_NotationSample *POSITIONDATA type*
  * POSITION_First *NONE*
  * POSITION_Last *NONE*
  * POSITION_Idx *int*
