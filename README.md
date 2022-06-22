@@ -31,9 +31,9 @@
  >>>> [structs](#structsBrief)
  >>>
  >>>> [enums](#enumsBrief)
- >>
+ >>>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctionsBrief)
- >>
+ >>>
  >>> [Generalized Functions](#generalizedFunctionsBrief)
  >
  >> [Exhaustive Documentation](#exhaustiveDocumentation)
@@ -53,14 +53,14 @@
  >>>>> [ORDER](#ORDER)
  >>>>
  >>>>> [MATCH](#MATCH)
- >>
+ >>>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
  >>>> [MakeStack()](#MakeStack)
  >>>
  >>>> [MakeCard()](#MakeCard)
  >>>
  >>>> [stack.Empty()](#Empty)
- >>
+ >>>
  >>> [Generalized Functions](#generalizedFunctions)
  >>>> [stack.Add(...)](#Add)
  >>>
