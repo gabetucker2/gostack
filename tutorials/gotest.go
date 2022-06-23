@@ -1,8 +1,7 @@
-package main
+package tutorials
 
 import (
 	"fmt"
-	"github.com/gabetucker2/gostack/aorta/*"
 )
 
 type Card struct {

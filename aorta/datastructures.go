@@ -1,4 +1,4 @@
-package main
+package aorta
 
 type Card struct {
 	idx int
