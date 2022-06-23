@@ -13,17 +13,20 @@
  > Want to remove the first card in a `stack` and get its key?
  >> `key := stack.Extract(RETURN_Key, POSITION_First)`
  
- > Want to replace all cards in `stack` whose values are even ints between -5 and 3 with two new cards and get a stack representing keys of the cards that were replaced?
- >> `cardsToInsert := MakeStack().Add(newCard1, ORDER_After, POSITION_Last).Add(newCard2, ORDER_After, POSITION_Last)`
- >
- >> `gostack_lambda := func(int) (int) {  }`
- >
- >> `oldCards := stack.Replace(cardsToInsert, RETURN_Keys, POSITION_Lambda, LAMBDAAAA)`
- 
  > Want to get a unique stack of values of the cards in `stack` whose keys match the object address of Cards defined as UnitTypes unitType1 or unitType2 (where UnitType is your user-defined struct)?
  >> `keys := MakeStack().Add(MakeCard(unitType1), ORDER_After, POSITION_Last).Add(MakeCard(unitType2), ORDER_After, POSITION_Last)`
  >
  >> `unitIndices := stack.Get(RETURN_Idxs, POSITION_Keys, keys, MATCH_Reference).Unique(TYPE_Val)`
+ 
+ > Want to replace all cards in `stack` whose values are even ints between -5 and 3 with two new cards and get a stack representing keys of the cards that were replaced?
+ >> `cardsToInsert := MakeStack().Add(newCard1, ORDER_After, POSITION_Last).Add(newCard2, ORDER_After, POSITION_Last)`
+ >
+ >> func gostack_ValInRange(stack *Stack, card *Card, workingMemory ...*Stack) (ret bool) {
+ >>> v := card.val.(int)
+ >>> return -3 < v && v 5 14 && v%2 == 0
+ >> }
+ >
+ >> `oldCards := stack.Replace(cardsToInsert, RETURN_Keys, POSITION_Lambda, gostack_ValInRange)`
 
 <h1 name = "glossary">Glossary</h1>
 
@@ -87,7 +90,7 @@
  >>>
  >>>> [stack.Get(...)](#Get)
  >>>
- >>>> [stack.Has(...)](#Has)x
+ >>>> [stack.Has(...)](#Has)
  >
  >> [To Add](#toAdd)
  >
@@ -626,6 +629,8 @@
  <h3>Generalized Functions</h3>
 
  * Add **Move** function
+ * Add **Fill** function
+ * Add **Set(newData, TYPE_*, POSITION_*, ...POSITIONDATA)** function for more efficient replacement as opposed to replace... implement all search functions for individual cards, so card.set, card.replace, card.extract, etc
 
  <h3>Non-Generalized Functions</h3>
 
@@ -638,7 +643,7 @@
 
 <h2 name = "footer">Footer</h1>
 
-This project was created by Gabe Tucker.
+This project was created by Gabe Tucker with the help of Andy Chen.
 
 If there are any changes or comments you would like to have made in respect to this project, please email `tucker.854@osu.edu`.  I appreciate any feedback and will usually respond within 1-2 business days.
 

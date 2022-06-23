@@ -2,8 +2,15 @@ This project:
 * Update documentation
  - Glossary
 
+* remove Slices
+* add type enum to documetnation
+* update constructor attributes in documentation
+* hash out problems solved in the readme - make list to send to Randy
+ - including passing ambiguous types to arrays
 * add idx attribute to cards
 * add more examples
+* throw together presentation - present about dynamics use specifically
+* update file explanations
 
 * Implement Lambda
  - ctrl + f to see "TODO"

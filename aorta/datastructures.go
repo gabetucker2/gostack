@@ -1,6 +1,7 @@
 package main
 
 type Card struct {
+	idx int
 	key interface{}
 	val interface{}
 }
@@ -63,8 +64,3 @@ const (
 	MATCH_Object MATCH = iota
 	MATCH_Reference
 )
-
-var testCardA = _gostack_back_NewCard("Card A") // in sample stack
-var testCardB = _gostack_back_NewCard("Card B") // in sample stack
-var testCardC = _gostack_back_NewCard("Card C") // in sample stack
-var testCardD = _gostack_back_NewCard("Card D") // out of sample stack
