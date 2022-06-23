@@ -13,7 +13,7 @@
  * ...allow the user to get and set based on reference or object with ease
  * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create complex sorting mechanisms of their own design
 
- Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish line, ***gostack*** took merely 10.  [See for yourself!](tutorials/race.md)
+ Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish line, ***gostack*** went 450% faster, taking merely 10.—[see for yourself!](tutorials/race.md)
 
  To get a better feel of the library, feel free to take a look at some [examples](/tutorials/bootstrap.go) of how ***gostack*** can substitute commonly-used functions.
 
@@ -101,7 +101,7 @@
  >
  >> [testend.go](/casetests/testend.go) contains functions to implement **caseend.go** functions
  >
- >> [unaddedcases.txt](/casetests/unaddedcases.txt) is where data to be added into future case tests is stored
+ >> [unaddedcases.txt](/casetests/unaddedcases.txt) is where data to be added into future case tests is stored, intended only for the developers
  >
  > [images](/images)
  >> **gostack_Smaller.png** is the banner image for this project
@@ -113,7 +113,7 @@
  >
  >> [lambda.go](/tutorials/lambda.go) is a tutorial on how to implement lambda functions
  >
- >> [unaddedtutorials.txt](/tutorials/unaddedtutorials.txt) is where data to be added into future tutorials is stored
+ >> [unaddedtutorials.txt](/tutorials/unaddedtutorials.txt) is where data to be added into future tutorials is stored, intended only for the developers
  >
  > [go.mod](/go.mod) is to initialize the directories
  >
@@ -121,7 +121,7 @@
  >
  > [README.md](/README.md) is this file
  >
- > [TODO.txt](/TODO.txt) is a task list relevant to developers
+ > [TODO.txt](/TODO.txt) is a task list, intended only for the developers
 
 <h1 name = "overview">OVERVIEW</h1>
 

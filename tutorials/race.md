@@ -12,9 +12,9 @@
 
    C) ...and, in a copy of B's map, replace pairs whose values are between 1 and 3 with a new array of key-value pairs.
 
- ...all the while ensuring no object is cloned in the process, you could use ***classical go*** or ***gostack***.
+ ...all the while ensuring no object is cloned in the process, you could use ***classical go*** or ***gostack***...
 
-<h3>Pseudocode Outline</h3>
+<h3>...pseudocode outline</h3>
 
 ```
 // INIT
@@ -32,7 +32,7 @@ pairsToInsert <"I" : "Am new", "To" : "This set">
 => taskC <40 : 0, "I" : "Am new", "To" : "This set", 520 : 4>
 ```
 
-<h2>Now, let's see how quickly we can do this using...</h2>
+<h2>Let's see how quickly we can do this using...</h2>
 
 <h3>...classical go</h3>
 
@@ -120,6 +120,6 @@ taskC := taskB.Clone().Replace(pairsToInsert, RETURN_Stack, POSITION_Lambda, gos
 
 <h2>Conclusion</h2>
 
-***gostack*** won the race!  It was 450% faster than ***classical go***, saving 35 lines.
+***gostack*** won the race!  It took 450% fewer lines than ***classical go***, meaning it only took 22% of the lines that ***classical go*** took, in turn saving 35 lines of space (excluding comments and empty lines).
 
 [Return to the main page](/../../)
