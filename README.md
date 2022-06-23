@@ -13,7 +13,7 @@
  * ...allow the user to get and set based on reference or object with ease
  * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create complex sorting mechanisms of their own design
 
- <h2 name "comparison">Comparison</h2>
+ <h2 name = "comparison">Comparison</h2>
 
  Assume you would A) like to make a list representing a non-duplicating set of values from a map where its keys are either "Key A", 2.5, or "Michael Keaton".  You would B) then like to create a new map such that the list's values are its keys and its values are the corresponding indices from the original list.  Finally, you would C) like, in a copy of B's map, to replace pairs whose values are between 1 and 3 with a new array of key-value pairs.  Ensure no object is cloned in the process.  In pseudocode...
 
@@ -96,18 +96,18 @@
 ...***gostack***
  ```
  // INIT
- start := MakeStack(MakeCards(STRUCTURE_Map, map[interface{}]interface{}
-    {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520}))
- searchKeys := MakeStack(MakeCards(STRUCTURE_Arr, []interface{} {"Key A", 2.5, "Michael Keaton"}))
- pairsToInsert := MakeStack(MakeCards(STRUCTURE_Map, map[interface{}]interface{}
-    {"I" : "Am new", "To" : "This set"}))
+ start := MakeStack(STRUCTURE_Map, map[interface{}]interface{}
+    {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520})
+ searchKeys := MakeStack(STRUCTURE_Arr, []interface{} {"Key A", 2.5, "Michael Keaton"})
+ pairsToInsert := MakeStack(STRUCTURE_Map, map[interface{}]interface{}
+    {"I" : "Am new", "To" : "This set"})
 
  // TASK A
  taskA := start.Get(RETURN_Vals, POSITION_Keys, searchKeys).Unique(TYPE_Val)
 
  // TASK B
- taskB := MakeStack(MakeCards(STRUCTURE_Map, taskA, start.Get(RETURN_Idxs,
-    POSITION_Vals, taskA).Unique(TYPE_Val)))
+ taskB := MakeStack(STRUCTURE_Map, taskA, start.Get(RETURN_Idxs,
+    POSITION_Vals, taskA).Unique(TYPE_Val))
 
  // TASK C
  func gostack_ValInRange(stack *Stack, card *Card) {
@@ -145,9 +145,11 @@
  >> [Exhaustive Documentation](#exhaustiveDocumentation)
  >>> [Data Structures](#dataStructures)
  >>>> [structs](#structs)
- >>>>> [Stack](#stack)
- >>>>
  >>>>> [Card](#card)
+ >>>>
+ >>>>> [Cards](#cards)
+ >>>>
+ >>>>> [Stack](#stack)
  >>>>
  >>>> [enums](#enums)
  >>>>> [RETURN](#RETURN)
@@ -159,11 +161,15 @@
  >>>>> [ORDER](#ORDER)
  >>>>
  >>>>> [MATCH](#MATCH)
+ >>>>
+ >>>>> [STRUCTURE](#STRUCTURE)
  >>>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
  >>>> [MakeStack()](#MakeStack)
  >>>
  >>>> [MakeCard(...)](#MakeCard)
+ >>>
+ >>>> [MakeCards(...)](#MakeCards)
  >>>
  >>>> [stack.Empty()](#Empty)
  >>>
@@ -273,8 +279,9 @@
 
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
- * **MakeStack()**
- * **MakeCard(...val, ...key)**
+ * **MakeCard(idx, ...key, ...val)**
+ * **MakeCards(STRUCTURE_*, ...input1, ...input1)**
+ * **MakeStack(...STRUCTURE_*, ...input1, ...input2)**
  * **stack.Empty()**
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
@@ -436,25 +443,20 @@
  >>> default
  >> MATCH_Reference
 
+<h4 name = "STRUCTURE">STRUCTURE</h4>
+
+ This is an enum intended to make it easy to target whether an array or a map is the intended data structure to create.
+
+ > ***MATCH***
+ >> STRUCTURE_Map
+ >>> default
+ >> STRUCTURE_Arr
+
 <h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>
-
-<h3 name = "MakeStack">MakeStack</h3>
-
- > `MakeStack()`
- >> CONSTRUCTOR: ***TRUE***
- >>> Stack
- >
- >> GETTER: ***TRUE***
- >>> Stack
- >
- >> SETTER: ***FALSE***
- 
- > ***Pseudocode***
- >> returns a new Stack
 
 <h3 name = "MakeCard">MakeCard</h3>
 
- > `MakeCard(...val, ...key)`
+ > `MakeCards(idx, ...val, ...key)`
  >> CONSTRUCTOR: ***TRUE***
  >>> Card
  >
@@ -464,16 +466,77 @@
  >> SETTER: ***FALSE***
  
  > ***Special Parameters***
- >> **val** *any type* is the new Card's starting val
+ >> **idx** *int* the index to which to set this card
  >
- >> **key** *any type* is the new Card's starting key
+ >> **...val** *any type* representing the card's value (or nil if not passed)
+ >
+ >> **...key** *any type* representing the card's key (or nil if not passed)
  
  > ***Pseudocode***
- >> Creates a new Card card
+ >> returns a new Card whose val is val and key is key
+
+<h3 name = "MakeCards">MakeCards</h3>
+
+ > `MakeCards(STRUCTURE_*, ...input1, ...input2)`
+ >> CONSTRUCTOR: ***TRUE***
+ >>> Stack, Cards
  >
- >> Set card.val = **val** (or nil if empty) and card.key == **key** (or nil if empty)
+ >> GETTER: ***TRUE***
+ >>> Stack
  >
- >> returns card
+ >> SETTER: ***FALSE***
+ 
+ > ***Special Parameters***
+ >> **input1** *[]interface{} OR map[interface{}]interface{}*
+ >>> *see pseudocode for explanation*
+ >
+ >> **input2** *[]interface{}*
+ >>> *see pseudocode for explanation*
+ >>
+ >> *len(input1) must equal len(input2)*
+ 
+ > ***Pseudocode***
+ >> creates a new stack of cards with size == len(either input)
+ >
+ >> **IF STRUCTURE_Map**
+ >>> **IF input1 IS AN INTERFACE ARRAY**
+ >>>> for each card at index i, its key is input1[i] and its value is input2[i]
+ >>
+ >>> **ELSE IF input1 IS A MAP**
+ >>>> for each card, its key and value are set to the input1's corresponding cards' keys and values (input 2 is ignored)
+ >>
+ >> **ELSE IF STRUCTURE_Arr**
+ >>> for each card, its value is set to the input1's corresponding cards' values (input 2 is ignored)
+ >
+ >> returns the stack of cards
+
+<h3 name = "MakeStack">MakeStack</h3>
+
+ > `MakeStack(...STRUCTURE_*, ...input1, ...input2)`
+ >> CONSTRUCTOR: ***TRUE***
+ >>> Stack
+ >
+ >> GETTER: ***TRUE***
+ >>> \*Stack
+ >
+ >> SETTER: ***FALSE***
+ 
+ > ***Special Parameters***
+ >> **input1** *[]interface{} OR map[interface{}]interface{}*
+ >>> *see pseudocode for explanation*
+ >
+ >> **input2** *[]interface{}*
+ >>> *see pseudocode for explanation*
+ 
+ > ***Pseudocode***
+ >> makes a new Stack 
+ >>
+ >> **IF STRUCTURE_* IS DEFINED**
+ >>> invokes MakeCards() passing this function's inputted parameters as arguments
+ >>
+ >>> fills the stack with the new cards
+ >>
+ >> returns the new Stack
  
 <h3 name = "Empty">Empty</h3>
  

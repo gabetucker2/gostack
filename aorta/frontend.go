@@ -1,23 +1,68 @@
 package aorta
 
-func MakeStack() *Stack {
+func MakeCard(idx int, val ...*interface{}, key ...*interface{}) (card *Card) {
 
-	// initialize new stack
-	stack := new(Stack)
+	// initialize and set new Card
+	card = new(Card)
+	card.idx = idx
+	card.key = key
+	card.val = val
 
-	// initialize stack properties
-	stack.size = 0
+	// return
+	return
+
+}
+
+func MakeCards(structureType STRUCTURE, input1 ...*interface{}, input2 ...*interface{}) (stack *Stack) {
+
+	stack = MakeStack()
+
+	if structureType == STRUCTURE_Map {
+
+		switch input1.(type) {
+		case []interface{}:
+
+		case map[interface{}]interface{}:
+
+		}
+
+	} else if STRUCTURETYPE == STRUCTURE_Arr {
+
+		for i := range len(input1) {
+			v := input1[i] // avoid for-loop cloning
+			MakeCard(i, v)
+		}
+		
+	}
+
+	return
+
+}
+
+func MakeStack(structureType ...STRUCTURE, input1 ...*interface{}, input2 ...*interface{}) (stack *Stack) {
+
+	if structureType != nil {
+		// if structureType passed in, get stack of cards from MakeCards
+		if input2 != nil {
+			stack = MakeCards(structureType, input1, input2)
+		} else {
+			stack = MakeCards(structureType, input1)
+		}
+	} else {
+		// if no structureType passed in, just execute normally
+		stack = new(Stack)
+		stack.size = 0
+	}
 
 	// return
 	return stack
 
 }
 
-// not just call MakeStack since that would replace the object
 func (stack *Stack) Empty() *Stack {
 
 	stack.size = 0
-	stack.cards = []*Card{}
+	stack.cards = []*Card{} // avoid replacing stack object
 
 	// return
 	return stack
@@ -80,14 +125,18 @@ func (stack *Stack) Replace(toInsert *[]interface{}, position POSITION, data ...
 
 }
 
-func (stack *Stack) Has(lookFor interface{}, position POSITION, data ...interface{}) bool {
+func (stack *Stack) Get(returnType RETURN, positionType POSITION, POSITIONDATA, matchType ...MATCH) interface{} {
 
-	// get idx
-	idx := _gostack_back_GetIdxFromData(stack, position, data)
 
-	// return
-	return idx != -1
 
 }
 
-//TODO : Implement get Function
+func (stack  *Stack) Has(lookFor interface{}, position POSITION, data ...interface{}) bool 
+
+	// get id
+	idx := _gostack_back_GetIdxFromData(stack, position, data)
+
+	// retur
+	return idx != -1
+
+}

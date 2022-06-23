@@ -1,14 +1,14 @@
 package aorta
 
 type Card struct {
-	idx int = -1
-	key interface{} = nil
-	val interface{} = nil
+	idx int
+	key interface{}
+	val interface{}
 }
 
 type Stack struct {
-	cards []*Card = []*Card
-	size  int = 0
+	cards []*Card
+	size  int
 }
 
 type RETURN int
@@ -16,6 +16,7 @@ type POSITION int
 type TYPE int
 type ORDER int
 type MATCH int
+type STRUCTURE int
 
 const (
 	RETURN_Stack RETURN = iota
@@ -58,4 +59,9 @@ const (
 const (
 	MATCH_Object MATCH = iota
 	MATCH_Reference
+)
+
+const (
+	STRUCTURE_Map STRUCTURE = iota
+	STRUCTURE_Arr
 )

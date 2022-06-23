@@ -1,4 +1,4 @@
-* Document MakeCards/MakeStacks functions... make MakeCards have one optional argument... if called, assume it's the map pair values and that the 2nd arg is the keys... MakeCard(s) should be only function with support for interface{} input type
+* Document MakeCards/MakeStack functions... make MakeCards have one optional argument... if called, assume it's the map pair values and that the 2nd arg is the keys... MakeCard(s) should be only function with support for interface{} input type
 * Make STRUCTURE_Map/STRUCTURE_Arr enum for MakeCards()
 * Make ORDER_*, POSITION_* optional for add/fill functions (only if first values being inserted)
 
