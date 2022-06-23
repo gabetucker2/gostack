@@ -1,6 +1,6 @@
  <h1 name = "preface">PREFACE</h1>
 
-![Banner](Images/gostack_Smaller.png)
+![Banner](images/gostack_Smaller.png)
 
  <h1 name = "introduction">Introduction</h1>
 
