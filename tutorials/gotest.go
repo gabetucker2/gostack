@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"https://github.com/gabetucker2/gostack/aorta/*"
+	"github.com/gabetucker2/gostack/aorta/*"
 )
 
 type Card struct {
