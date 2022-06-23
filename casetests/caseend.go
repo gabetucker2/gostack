@@ -222,7 +222,7 @@ func _gostack_case_Index(funcName string) {
 
 // MAIN FUNCTION
 
-func main() {
+func Run() {
 
 	println("- BEGINNING TESTS")
 

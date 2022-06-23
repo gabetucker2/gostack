@@ -100,7 +100,7 @@
 
  * **README.md** is this file
  * **TODO.txt** is a file with features to be added (significant only to `gostack` developers)
- * **caseTests.go** is a script used to run test cases to ensure functionality of this project's functions; it is recommended to delete this file if it is not commented out at the time of your installation since it uses the main() function; in order to run test cases with ***test.go*** *not* commented out, run `go run .` in the top directory
+ * **caseTests.go** is a script used to run test cases to ensure functionality of this project's functions
  * **functions.go** is where novel functions are stored
  * **go.mod** is used to manage directory access
  * **structs.go** is where structs are defined
