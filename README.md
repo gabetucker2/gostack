@@ -13,7 +13,7 @@
  * ...allow the user to get and set based on reference or object with ease
  * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create complex sorting mechanisms of their own design
 
- Please take a look at some [examples](bootstrap.go) using our functions if you'd like to see some coherent examples of ***gostack*** code implementing commonly-used functions.
+ Please take a look at some [examples](/tutorials/bootstrap.go) using our functions if you'd like to see some coherent examples of ***gostack*** code implementing commonly-used functions.
 
  <h2 name = "comparison">Comparison</h2>
 
