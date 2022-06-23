@@ -5,12 +5,17 @@
  Welcome to the race!
 
  Assume you would like to...
+
    A) ...make a list representing a non-duplicating set of values from a map where its keys are either "Key A", 2.5, or "Michael Keaton"
+
    B) ...create a new map such that the list's values are its keys and its values are the corresponding indices from the original list 
+
    C) ...and, in a copy of B's map, replace pairs whose values are between 1 and 3 with a new array of key-value pairs.
+
  ...all the while ensuring no object is cloned in the process, you could use ***classical go*** or ***gostack***.
 
 <h3>Pseudocode Outline</h3>
+
 ```
 // INIT
 start <"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520>
@@ -30,6 +35,7 @@ pairsToInsert <"I" : "Am new", "To" : "This set">
 <h2>Now, let's see how quickly we can do this using...</h2>
 
 <h3>...classical go</h3>
+
 ```
 // INIT
 start := map[interface{}]interface{} {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520}
@@ -84,9 +90,11 @@ for k, v := range taskB {
     }
 }
 ```
+
 `lines: 45`
 
 <h3>...gostack</h3>
+
 ```
 // INIT
 start := MakeStack(STRUCTURE_Map, map[interface{}]interface{} {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520})
@@ -107,6 +115,7 @@ func gostack_ValInRange(stack *Stack, card *Card) {
 
 taskC := taskB.Clone().Replace(pairsToInsert, RETURN_Stack, POSITION_Lambda, gostack_ValInRange)
 ```
+
 `lines: 10`
 
 [Return to the main page](/../../)
