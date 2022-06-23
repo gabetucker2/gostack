@@ -7,10 +7,11 @@
  Introducing **Stacks**—sets of **Card** elements (like a stack of cards)—***gostack*** serves as an all-in-one library for concise, parsimonious, and elegant data management in *golang*.
 
  ***gostack***'s stacks...
- * ...replace maps and arrays, removing the need for pesky index-key-value conversion between maps and arrays
- * ...as opposed to classic go, supports any data type for keys
- * ...offers the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity in a single line
- * ...
+ * ...replace maps and arrays, removing the need for pesky index-key-value fetching and conversion between maps and arrays
+ * ...supports built-in functions for smooth conversion between arrays, maps, and stacks
+ * ...offers the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity of 4 nested for-loops in a single line
+ * ...allow the user to get and set based on reference or object with ease
+ * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create complex sorting mechanisms of their own design
 
  Assume you would A) like to make a list representing a non-duplicating set of values from a map where its keys are either "Key A", 2.5, or "Michael Keaton".  You would B) then like to create a new map such that the list's values are its keys and its values are the corresponding indices from the original list.  Finally, you would C) like, in a copy of B's map, to replace pairs whose values are between 1 and 3 with a new array of key-value pairs.  Ensure no object is cloned in the process.  In pseudocode...
 
@@ -39,8 +40,6 @@
     {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520}
  searchKeys := []interface{} {"Key A", 2.5, "Michael Keaton"}
  pairsToInsert := map[interface{}]interface{} {"I" : "Am new", "To" : "This set"}
-
- // TODO: rewrite for loops as not to clone
  
  // TASK A
  var taskA []interface{}
@@ -90,6 +89,7 @@
     }
  }
  ```
+ `non-trivial lines: 45`
 
 ...***gostack***
  ```
@@ -115,6 +115,7 @@
 
  taskC := taskB.Clone().Replace(pairsToInsert, RETURN_Stack, POSITION_Lambda, gostack_ValInRange)
  ```
+ `non-trivial lines: 10`
 
 <h1 name = "glossary">Glossary</h1>
 
