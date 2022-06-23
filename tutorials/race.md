@@ -14,8 +14,8 @@
 
  ...all the while ensuring no object is cloned in the process, you could use ***classical go*** or ***gostack***...
 
- </h4>...jump to</h4>
- 
+ <h4>...jump to</h4>
+
  > [pseudocode outline](#pseudocode)
 
  > [classical go](#classical)
