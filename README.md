@@ -35,7 +35,8 @@
 ...***classical go***
  ```
  // INIT
- start := map[interface{}]interface{} {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520}
+ start := map[interface{}]interface{}
+    {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520}
  searchKeys := []interface{} {"Key A", 2.5, "Michael Keaton"}
  pairsToInsert := map[interface{}]interface{} {"I" : "Am new", "To" : "This set"}
 
@@ -93,15 +94,18 @@
 ...***gostack***
  ```
  // INIT
- start := MakeStack(MakeCards(STRUCTURE_Map, map[interface{}]interface{} {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520}))
+ start := MakeStack(MakeCards(STRUCTURE_Map, map[interface{}]interface{}
+    {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520}))
  searchKeys := MakeStack(MakeCards(STRUCTURE_Arr, []interface{} {"Key A", 2.5, "Michael Keaton"}))
- pairsToInsert := MakeStack(MakeCards(STRUCTURE_Map, map[interface{}]interface{} {"I" : "Am new", "To" : "This set"}))
+ pairsToInsert := MakeStack(MakeCards(STRUCTURE_Map, map[interface{}]interface{}
+    {"I" : "Am new", "To" : "This set"}))
 
  // TASK A
  taskA := start.Get(RETURN_Vals, POSITION_Keys, searchKeys).Unique(TYPE_Val)
 
  // TASK B
- taskB := MakeStack(MakeCards(STRUCTURE_Map, taskA, start.Get(RETURN_Idxs, POSITION_Vals, taskA).Unique(TYPE_Val)))
+ taskB := MakeStack(MakeCards(STRUCTURE_Map, taskA, start.Get(RETURN_Idxs,
+    POSITION_Vals, taskA).Unique(TYPE_Val)))
 
  // TASK C
  func gostack_ValInRange(stack *Stack, card *Card) {
