@@ -9,8 +9,8 @@ func _gostack_tutorials_pop() {
 
 func _gostack_tutorials_push() {
 
-	// > `stack.Add(insert, ORDER_BEFORE, POSITION_First)`
-	// >> *adds a card to the beginning of the stack*
+	// > `stack.Add(insert)`
+	// >> *adds a card to the beginning of the stack (see default enum types)*
 
 }
 

@@ -13,6 +13,8 @@
  * ...allow the user to get and set based on reference or object with ease
  * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create complex sorting mechanisms of their own design
 
+ Please take a look at some [tutorials](docs/tutorials) using our functions if you'd like to see some coherent examples of ***gostack*** code.
+
  <h2 name = "comparison">Comparison</h2>
 
  Assume you would A) like to make a list representing a non-duplicating set of values from a map where its keys are either "Key A", 2.5, or "Michael Keaton".  You would B) then like to create a new map such that the list's values are its keys and its values are the corresponding indices from the original list.  Finally, you would C) like, in a copy of B's map, to replace pairs whose values are between 1 and 3 with a new array of key-value pairs.  Ensure no object is cloned in the process.  In pseudocode...
@@ -378,6 +380,7 @@
  >>
  >> POSITION_First
  >>> *NONE*
+ >>>> default
  >>
  >> POSITION_Last
  >>> *NONE*
@@ -451,7 +454,6 @@
 
  > ***MATCH***
  >> STRUCTURE_Map
- >>> default
  >> STRUCTURE_Arr
 
 <h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>
@@ -560,7 +562,7 @@
  
 <h3 name = "Add">Add</h3>
  
- > `stack.Add(insert, ORDER_*, POSITION_*, ...POSITIONDATA)`
+ > `stack.Add(insert, ...ORDER_*, ...POSITION_*, ...POSITIONDATA)`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> GETTER: ***TRUE***
