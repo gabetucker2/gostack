@@ -8,8 +8,8 @@
 
  ***gostack***'s stacks...
  * ...replace maps and arrays, removing the need for pesky index-key-value fetching and conversion between maps and arrays
- * ...supports built-in functions for smooth conversion between arrays, maps, and stacks
- * ...offers the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity of 4 nested for-loops in a single line
+ * ...support built-in functions for smooth conversion between arrays, maps, and stacks
+ * ...offer the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity of 4 nested for-loops in a single line
  * ...allow the user to get and set based on reference or object with ease
  * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create complex sorting mechanisms of their own design
 
