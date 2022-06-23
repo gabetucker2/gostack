@@ -4,6 +4,14 @@
 
  Welcome to the race!
 
+ <h4>Jump To</h4>
+
+ > [pseudocode outline](#pseudocode)
+
+ > [classical go](#classical)
+
+ > [gostack](#gostack)
+
  Assuming you would like to...
 
  > A) ...make a list representing a non-duplicating set of values from a map where its keys are either "Key A", 2.5, or "Michael Keaton"
@@ -13,14 +21,6 @@
  > C) ...and, in a copy of B's map, replace pairs whose values are between 1 and 3 with a new array of key-value pairs.
 
  ...all the while ensuring no object is cloned in the process, you could use ***classical go*** or ***gostack***...
-
- <h4>...jump to</h4>
-
- > [pseudocode outline](#pseudocode)
-
- > [classical go](#classical)
-
- > [gostack](#gostack)
 
 <h3 name = "pseudocode">...pseudocode outline</h3>
 
