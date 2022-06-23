@@ -1,12 +1,5 @@
 package aorta
 
-func _gostack_back_LenAndSize(stack *Stack, size int) bool {
-
-	// return whether len(cards) == cards.size
-	return len(stack.cards) == size && stack.size == size
-
-}
-
 func _gostack_back_NewCard(val interface{}) (card *Card) {
 
 	// make newly-created card
@@ -120,10 +113,6 @@ func _gostack_back_GetIdxFromData(stack *Stack, position POSITION, _data ...inte
 	return _gostack_back_GetIdxFromPosition(stack, position, _gostack_back_UpdatePosData(_data)).(int)
 }
 
-func _gostack_back_MakeSlice(x, y int) Slice {
-	return Slice{x, y}
-}
-
 // returns index of searched item if valid
 // else, returns -1
 func _gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _data ...interface{}) (idx interface{}) {
@@ -162,10 +151,6 @@ func _gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _data ...
 				break
 			}
 		}
-	case POSITION_Slice:
-		idx = data // Slice
-	case POSITION_All:
-		idx = _gostack_back_MakeSlice(0, stack.size-1) // nil
 
 	}
 

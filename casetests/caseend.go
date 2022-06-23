@@ -13,7 +13,7 @@ func _gostack_case_MakeStack(funcName string) {
 	stack := MakeStack()
 
 	conditions := []bool{
-		_gostack_back_LenAndSize(stack, 0),
+		_gostack_test_LenAndSize(stack, 0),
 	}
 
 	_gostack_test_End(funcName, conditions)
@@ -28,7 +28,7 @@ func _gostack_case_Empty(funcName string) {
 	stack2 := stack.Empty()
 
 	conditions := []bool{
-		_gostack_back_LenAndSize(stack, 0),
+		_gostack_test_LenAndSize(stack, 0),
 		stack == stack2,
 	}
 
@@ -44,7 +44,7 @@ func _gostack_case_Add_First(funcName string) {
 	stack.Add(testCardC, POSITION_First).Add(testCardB, POSITION_First).Add(testCardA, POSITION_First)
 
 	conditions := []bool{
-		_gostack_back_LenAndSize(stack, 3),
+		_gostack_test_LenAndSize(stack, 3),
 		stack.cards[0] == testCardA,
 		stack.cards[1] == testCardB,
 		stack.cards[2] == testCardC,
@@ -62,7 +62,7 @@ func _gostack_case_Add_Last(funcName string) {
 	stack.Add(testCardA, POSITION_Last).Add(testCardB, POSITION_Last).Add(testCardC, POSITION_Last)
 
 	conditions := []bool{
-		_gostack_back_LenAndSize(stack, 3),
+		_gostack_test_LenAndSize(stack, 3),
 		stack.cards[0] == testCardA,
 		stack.cards[1] == testCardB,
 		stack.cards[2] == testCardC,
@@ -80,7 +80,7 @@ func _gostack_case_Extract_Empty(funcName string) {
 	extract := stack.Extract(POSITION_First)
 
 	conditions := []bool{
-		_gostack_back_LenAndSize(stack, 0),
+		_gostack_test_LenAndSize(stack, 0),
 		extract == nil,
 	}
 
@@ -96,7 +96,7 @@ func _gostack_case_Extract_First(funcName string) {
 	extract := stack.Extract(POSITION_First)
 
 	conditions := []bool{
-		_gostack_back_LenAndSize(stack, 2),
+		_gostack_test_LenAndSize(stack, 2),
 		extract == testCardA,
 		stack.cards[0] == testCardB,
 		stack.cards[1] == testCardC,
@@ -114,7 +114,7 @@ func _gostack_case_Extract_Last(funcName string) {
 	extract := stack.Extract(POSITION_Last)
 
 	conditions := []bool{
-		_gostack_back_LenAndSize(stack, 2),
+		_gostack_test_LenAndSize(stack, 2),
 		stack.cards[0] == testCardA,
 		stack.cards[1] == testCardB,
 		extract == testCardC,
@@ -132,7 +132,7 @@ func _gostack_case_Replace_Empty(funcName string) {
 	extract := stack.Replace(testCardA, POSITION_First)
 
 	conditions := []bool{
-		_gostack_back_LenAndSize(stack, 0),
+		_gostack_test_LenAndSize(stack, 0),
 		extract == nil,
 	}
 
@@ -148,7 +148,7 @@ func _gostack_case_Replace_First(funcName string) {
 	extract := stack.Replace(testCardC, POSITION_First)
 
 	conditions := []bool{
-		_gostack_back_LenAndSize(stack, 3),
+		_gostack_test_LenAndSize(stack, 3),
 		stack.cards[0] == testCardC,
 		stack.cards[1] == testCardB,
 		stack.cards[2] == testCardC,
@@ -167,7 +167,7 @@ func _gostack_case_Replace_Last(funcName string) {
 	extract := stack.Replace(testCardA, POSITION_Last)
 
 	conditions := []bool{
-		_gostack_back_LenAndSize(stack, 3),
+		_gostack_test_LenAndSize(stack, 3),
 		stack.cards[0] == testCardA,
 		stack.cards[1] == testCardB,
 		stack.cards[2] == testCardA,

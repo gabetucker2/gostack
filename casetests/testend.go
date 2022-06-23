@@ -11,6 +11,13 @@ var testCardD = _gostack_back_NewCard("Card D") // out of sample stack
 
 // test functions
 
+func _gostack_test_LenAndSize(stack *Stack, size int) bool {
+
+	// return whether len(cards) == cards.size
+	return len(stack.cards) == size && stack.size == size
+
+}
+
 func _gostack_test_Start(funcName string, showTestText bool) {
 
 	// print TESTING line only if showTestText var set to true

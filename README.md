@@ -61,8 +61,6 @@
  >>>>
  >>>>> [Card](#card)
  >>>>
- >>>>> [Slice](#slice)
- >>>>
  >>>> [enums](#enums)
  >>>>> [RETURN](#RETURN)
  >>>>
@@ -98,12 +96,17 @@
 
 <h1 name = "fileExplanations">File Explanations</h1>
 
- * **README.md** is this file
- * **TODO.txt** is a file with features to be added (significant only to `gostack` developers)
- * **caseTests.go** is a script used to run test cases to ensure functionality of this project's functions
- * **functions.go** is where novel functions are stored
- * **go.mod** is used to manage directory access
- * **structs.go** is where structs are defined
+ > **README.md** is this file
+ >
+ > **TODO.txt** is a tasklist relevant to developers
+ >
+ > **go.mod** is to initialize the directories
+ >
+ > **main.go** is to call functions in this project, either for the case of case testing or executing tutorials
+ >
+ > ***aorta***
+ >> **backend.go** contains the functions to implement frontend and caseend functions
+ >> **datastructures.go** contains structs and enums relevant to the project
 
 <h1 name = "links">Links</h1>
 
@@ -180,11 +183,6 @@
  >> **key** *any type*
  >
  >> **val** *any type*
- 
- > ***Slice*** *Slice*
- >> ***startIdx*** *int*
- >
- >> ***endIdx*** *int*
 
 <h3 name = "enumsBrief">Enums</h3>
 
@@ -275,24 +273,6 @@
  ***Example Uses***
  
  > *None*
-
-<h4 name = "slice">Slice</h4>
-
- This is a struct that makes it easier to pass two int values between functions on the backend.
-
- > `slice` *Slice{}*
- >> `slice.startIdx`
- >>> The first index in the desired slice
- >>
- >> `slice.endIdx`
- >>> The last index of the desired slice
-
- ***Example Uses***
- 
- > `something = slice.startIdx`
- >
- > `something = slice.endIdx`
- >> *access the first or last indices of a slice*
 
 <h3 name = "enums">enums</h3>
 

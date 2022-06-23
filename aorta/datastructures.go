@@ -11,11 +11,6 @@ type Stack struct {
 	size  int
 }
 
-type Slice struct {
-	startIdx int
-	endIdx   int
-}
-
 type RETURN int
 type POSITION int
 type TYPE int
