@@ -4,7 +4,7 @@
 
  Welcome to the race!
 
- Assume you would like to...
+ Assuming you would like to...
 
    A) ...make a list representing a non-duplicating set of values from a map where its keys are either "Key A", 2.5, or "Michael Keaton"
 
@@ -117,5 +117,9 @@ taskC := taskB.Clone().Replace(pairsToInsert, RETURN_Stack, POSITION_Lambda, gos
 ```
 
 `lines: 10`
+
+<h2>Conclusion</h2>
+
+***gostack*** won the race!  It was 450% faster than ***classical go***, saving 35 lines.
 
 [Return to the main page](/../../)
