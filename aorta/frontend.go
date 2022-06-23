@@ -89,3 +89,5 @@ func (stack *Stack) Has(lookFor interface{}, position POSITION, data ...interfac
 	return idx != -1
 
 }
+
+//TODO : Implement get Function

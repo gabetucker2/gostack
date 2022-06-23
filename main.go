@@ -1,5 +1,7 @@
 package main
 
+import "github.com/gabetucker2/gostack/tutorials"
+
 func main() {
 
 	// tests
@@ -9,6 +11,6 @@ func main() {
 	// tutorials
 
 	//tutorials.Bootstrap()
-	//tutorials.Lambda()
+	tutorials.Lambda()
 
 }

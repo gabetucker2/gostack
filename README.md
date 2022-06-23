@@ -91,7 +91,7 @@
     }
  }
  ```
- `non-trivial lines: 45`
+ `lines: 45`
 
 ...***gostack***
  ```
@@ -117,7 +117,7 @@
 
  taskC := taskB.Clone().Replace(pairsToInsert, RETURN_Stack, POSITION_Lambda, gostack_ValInRange)
  ```
- `non-trivial lines: 10`
+ `lines: 20`
 
 <h1 name = "glossary">Glossary</h1>
 
