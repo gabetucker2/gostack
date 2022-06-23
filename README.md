@@ -96,17 +96,31 @@
 
 <h1 name = "fileExplanations">File Explanations</h1>
 
- > **README.md** is this file
+ > ***aorta***
+ >> **backend.go** contains the functions to implement **frontend.go** and **caseend.go** functions
  >
- > **TODO.txt** is a tasklist relevant to developers
+ >> **datastructures.go** initializes structs and enums
+ >
+ >> **frontend.go** contains the functions that the programmer using `gostack` will be calling
+ >
+ > ***casetests***
+ >> **caseend.go** contains case tests for **frontend.go** functions
+ >
+ >> **testend.go** contains functions to implement **caseend.go** functions
+ >
+ > ***images***
+ >> **gostack_Smaller.png** is the banner image for this project
+ >
+ > ***tutorials***
+ >> **lambda.go** is a tutorial for how to implement lambda functions
  >
  > **go.mod** is to initialize the directories
  >
  > **main.go** is to call functions in this project, either for the case of case testing or executing tutorials
  >
- > ***aorta***
- >> **backend.go** contains the functions to implement frontend and caseend functions
- >> **datastructures.go** contains structs and enums relevant to the project
+ > **README.md** is this file
+ >
+ > **TODO.txt** is a tasklist relevant to developers
 
 <h1 name = "links">Links</h1>
 

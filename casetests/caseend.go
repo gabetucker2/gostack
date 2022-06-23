@@ -1,10 +1,10 @@
 package casetests
 
-// VARIABLES
+// variables
 
 var showTestText = true // false for cleaner console, true for debugging
 
-// CASE FUNCTIONS
+// functions
 
 func _gostack_case_MakeStack(funcName string) {
 
