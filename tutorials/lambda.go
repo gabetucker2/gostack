@@ -4,24 +4,6 @@ import (
 	"fmt"
 )
 
-type Card struct {
-	key interface{}
-	val interface{}
-}
-
-type Stack struct {
-	cards []*Card
-	size  int
-}
-
-type TYPE int
-
-const (
-	TYPE_Key TYPE = iota
-	TYPE_Val
-	TYPE_Card
-)
-
 // TEMPLATE:
 /*
 func gostack_NameHere(stack *Stack, card *Card, workingMemory *interface{}) (ret bool) { // TODO: look into workarounds for efficiency cost

@@ -38,8 +38,6 @@
  >> [Glossary](#glossary)
  >
  >> [File Explanations](#fileExplanations)
- >
- >> [Links](#links)
 
  > [Overview](#overview)
  >> [Examples](#examples)
@@ -112,7 +110,8 @@
  >> **gostack_Smaller.png** is the banner image for this project
  >
  > ***tutorials***
- >> **lambda.go** is a tutorial for how to implement lambda functions
+ >> **bootstrap.go** is a tutorial on how to implement some common functions using golang
+ >> **lambda.go** is a tutorial on how to implement lambda functions
  >
  > **go.mod** is to initialize the directories
  >
@@ -120,15 +119,7 @@
  >
  > **README.md** is this file
  >
- > **TODO.txt** is a tasklist relevant to developers
-
-<h1 name = "links">Links</h1>
-
- Many of the functions in this project were inspired by functions from the documentations below.
-
- * https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1?view=net-6.0
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
- * http://web.cse.ohio-state.edu/software/common/doc/components/standard/Standard.html
+ > **TODO.txt** is a task list relevant to developers
 
 <h1 name = "overview">OVERVIEW</h1>
 
