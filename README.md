@@ -8,10 +8,12 @@
 
  ***gostack***'s stacks...
  * ...replace maps and arrays, removing the need for pesky index-key-value fetching and conversion between maps and arrays
- * ...support built-in functions for smooth conversion between arrays, maps, and stacks
+ * ...support built-in functions for smooth conversion between stacks and your existing arrays and maps
  * ...offer the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity of 4 nested for-loops in a single line
  * ...allow the user to get and set based on reference or object with ease
  * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create complex sorting mechanisms of their own design
+
+ <h2 name "comparison">Comparison</h2>
 
  Assume you would A) like to make a list representing a non-duplicating set of values from a map where its keys are either "Key A", 2.5, or "Michael Keaton".  You would B) then like to create a new map such that the list's values are its keys and its values are the corresponding indices from the original list.  Finally, you would C) like, in a copy of B's map, to replace pairs whose values are between 1 and 3 with a new array of key-value pairs.  Ensure no object is cloned in the process.  In pseudocode...
 
@@ -123,6 +125,7 @@
 
  > [Preface](#preface)
  >> [Introduction](#introduction)
+ >>> [Comparison](#comparison)
  >
  >> [Glossary](#glossary)
  >
