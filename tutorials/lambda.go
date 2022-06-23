@@ -23,7 +23,7 @@ func gostack_NameHere(stack *Stack, card *Card, workingMemory *interface{}) (ret
 }
 */
 
-func gostack_Max(stack *Stack, card *Card, workingMemory ...*Stack) (ret bool) {
+func gostack_Max(stack *Stack, card *Card, workingMemory ...*Stack) bool {
 
 	if workingMemory == nil { // first run setup
 		workingMemory = MakeStack()
@@ -40,17 +40,17 @@ func gostack_Max(stack *Stack, card *Card, workingMemory ...*Stack) (ret bool) {
 
 }
 
-func gostack_ValInRange(stack *Stack, card *Card, workingMemory ...*Stack) (ret bool) {
+func gostack_ValInRange(stack *Stack, card *Card, workingMemory ...*Stack) bool {
 	v := card.val.(int)
 	return 5 < v && v < 14 && v%2 == 0
 }
 
-func gostack_KeyInRange(stack *Stack, card *Card, workingMemory ...*Stack) (ret bool) {
+func gostack_KeyInRange(stack *Stack, card *Card, workingMemory ...*Stack) bool {
 	k := card.key.(int)
 	return k%5 == 0
 }
 
-func gostack_BothInRange(stack *Stack, card *Card, workingMemory ...*Stack) (ret bool) {
+func gostack_BothInRange(stack *Stack, card *Card, workingMemory ...*Stack) bool {
 	return gostack_ValInRange(stack, card) && gostack_KeyInRange(stack, card)
 }
 

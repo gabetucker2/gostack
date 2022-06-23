@@ -18,7 +18,7 @@ type ORDER int
 type MATCH int
 
 const (
-	RETURN_None RETURN = iota
+	RETURN_Stack RETURN = iota
 	RETURN_Idx
 	RETURN_Idxs
 	RETURN_Key
