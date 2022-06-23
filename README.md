@@ -13,9 +13,9 @@
  * ...allow the user to get and set based on reference or object with ease
  * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create complex sorting mechanisms of their own design
 
- Is ***gostack*** really more efficient than regular coding?  In order to put this to the test, we created a race for the two languages; they each have to complete 3 data management tasks as efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish line, ***gostack*** took merely 10.  [See for yourself](tutorials/comparison.md).
+ Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two languages; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish line, ***gostack*** took merely 10.  [See for yourself](tutorials/comparison.md)!
 
- Please take a look at some [examples](/tutorials/bootstrap.go) using our functions if you'd like to see some coherent examples of ***gostack*** code implementing commonly-used functions.
+ To get a better feel of the library, feel free to take a look at some [examples](/tutorials/bootstrap.go) of how ***gostack*** can substitute commonly-used functions.
 
 <h1 name = "glossary">Glossary</h1>
 
