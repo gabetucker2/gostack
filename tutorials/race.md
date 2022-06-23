@@ -1,20 +1,27 @@
  <h1>Race</h1>
 
- <h2>Introduction</h2>
+<h2>Introduction</h2>
 
  Welcome to the race!
 
  Assuming you would like to...
 
-   A) ...make a list representing a non-duplicating set of values from a map where its keys are either "Key A", 2.5, or "Michael Keaton"
-
-   B) ...create a new map such that the list's values are its keys and its values are the corresponding indices from the original list 
-
-   C) ...and, in a copy of B's map, replace pairs whose values are between 1 and 3 with a new array of key-value pairs.
+ > A) ...make a list representing a non-duplicating set of values from a map where its keys are either "Key A", 2.5, or "Michael Keaton"
+ >
+ > B) ...create a new map such that the list's values are its keys and its values are the corresponding indices from the original list 
+ >
+ > C) ...and, in a copy of B's map, replace pairs whose values are between 1 and 3 with a new array of key-value pairs.
 
  ...all the while ensuring no object is cloned in the process, you could use ***classical go*** or ***gostack***...
 
-<h3>...pseudocode outline</h3>
+ </h4>...jump to</h4>
+ > [pseudocode outline](#pseudocode)
+
+ > [classical go](#classical)
+
+ > [gostack](#gostack)
+
+<h3 name = "pseudocode">...pseudocode outline</h3>
 
 ```
 // INIT
@@ -34,7 +41,7 @@ pairsToInsert <"I" : "Am new", "To" : "This set">
 
 <h2>Let's see how quickly we can do this using...</h2>
 
-<h3>...classical go</h3>
+<h3 name = "classical">...classical go</h3>
 
 ```
 // INIT
@@ -93,7 +100,7 @@ for k, v := range taskB {
 
 `lines: 45`
 
-<h3>...gostack</h3>
+<h3 name = "gostack">...gostack</h3>
 
 ```
 // INIT
