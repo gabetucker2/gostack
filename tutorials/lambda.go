@@ -109,7 +109,7 @@ func MakeSampleStack() *Stack { // very rough ugly outline
 	return stack
 }
 
-func Run_gotest() {
+func Lambda() {
 
 	fmt.Println(" - vals before:")
 	for _, card := range MakeSampleStack().cards {
