@@ -1,12 +1,16 @@
-* Document MakeCards/MakeStack functions... make MakeCards have one optional argument... if called, assume it's the map pair values and that the 2nd arg is the keys... MakeCard(s) should be only function with support for interface{} input type
-* Make STRUCTURE_Map/STRUCTURE_Arr enum for MakeCards()
+GABE:
 * Make ORDER_*, POSITION_* optional for add/fill functions (only if first values being inserted)
+* Function cleanup
+ - Ensure public functions are capital whereas private functions are lowercase
+ - Restructure functions to have receiver of type Stack AND Card
+ - Restructure all functions
+* Add rest of functions in ToAdd documentation
+* Update gostack banner to have code from a tutorial
 
-* Ensure public functions are capital whereas private functions are lowercase
-* Restructure functions to have receiver of type Stack AND Card
-* Restructure all functions
-
-* Implement tutorials
-* Implement case tests
-
-* Update gostack banner to have code using frontend
+ANDY:
+* Implement case tests for MakeCard(), MakeCards(), and MakeStack()
+ - See unaddedcases.txt for reference
+* Lambda tutorial updates
+ - Make some more lambda function examples which use workingMemory param
+ - Remove mainFunc, replace mainFunc calls in Lambda() with Get()
+* Add some more tutorials using functions in the documentation even if they haven't been implemented yet

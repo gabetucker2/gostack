@@ -1,16 +1,16 @@
 package main
 
-import "github.com/gabetucker2/gostack/tutorials"
+import (
+	"github.com/gabetucker2/gostack/casetests"
+)
 
 func main() {
 
 	// tests
-
-	//casetests.Run(false)
+	casetests.Run(false)
 
 	// tutorials
-
 	//tutorials.Bootstrap()
-	tutorials.Lambda()
+	//tutorials.Lambda()
 
 }

@@ -456,7 +456,7 @@
 
 <h3 name = "MakeCard">MakeCard</h3>
 
- > `MakeCards(idx, ...val, ...key)`
+ > `MakeCard(idx, ...val, ...key)`
  >> CONSTRUCTOR: ***TRUE***
  >>> Card
  >

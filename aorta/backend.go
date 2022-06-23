@@ -1,17 +1,5 @@
 package aorta
 
-func _gostack_back_NewCard(val interface{}) (card *Card) {
-
-	// make newly-created card
-	card = &Card{}
-	card.key = nil
-	card.val = val
-
-	// return
-	return
-
-}
-
 func _gostack_back_AddCard(stack *Stack, card *Card, idx interface{}, beforeNotAfter bool) *Stack {
 
 	// insert card into new array slice to satisfy append function

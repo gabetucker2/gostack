@@ -22,7 +22,18 @@ func MakeCards(structureType STRUCTURE, input1 ...*interface{}, input2 ...*inter
 		switch input1.(type) {
 		case []interface{}:
 
+			for i := range len(input1) {
+				k := input1[i] // avoid for-loop cloning
+				v := input2[i] // avoid for-loop cloning
+				MakeCard(i, v, k)
+			}
+
 		case map[interface{}]interface{}:
+
+			for i := range len(input1) {
+				k, v := input1[i] // avoid for-loop cloning
+				MakeCard(i, v, k)
+			}
 
 		}
 
