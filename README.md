@@ -7,28 +7,6 @@
  `gostack` introduces **Stack** structures—generic sets of elements intended as an all-in-one package for datastructure management in *golang*.  The elements in stacks are **Card** structures (like a stack of cards).
 
  With `gostack`, there is no need for maps or arrays; every possible tool you could need to create, update, or access a set of data is encompassed by a few elegant functions.
- 
- Assuming `stack` is a predefined stack of cards:
-
- Want to remove the first card in a `stack` and get its key?
- > `key := stack.Extract(RETURN_Key, POSITION_First)`
- 
- Want to get a unique stack of values of the cards in `stack` whose keys match the object address of Cards defined as UnitTypes unitType1 or unitType2 (where UnitType is your user-defined struct)?
- >> `keys := MakeStack().Add(MakeCard(unitType1), ORDER_After, POSITION_Last).Add(MakeCard(unitType2), ORDER_After, POSITION_Last)`
- >>
- >> `unitIndices := stack.Get(RETURN_Idxs, POSITION_Keys, keys, MATCH_Reference).Unique(TYPE_Val)`
- 
- Want to replace all cards in `stack` whose values are even ints between -5 and 3 with two new cards and get a stack representing keys of the cards that were replaced?
- > `cardsToInsert := MakeStack().Add(newCard1, ORDER_After, POSITION_Last).Add(newCard2, ORDER_After, POSITION_Last)`
- >
- > `func gostack_ValInRange(stack *Stack, card *Card, workingMemory ...*Stack) (ret bool) {`
- >> `v := card.val.(int)`
- >>
- >> `return -3 < v && v 5 14 && v%2 == 0`
- >
- > `}`
- >
- > `oldCards := stack.Replace(cardsToInsert, RETURN_Keys, POSITION_Lambda, gostack_ValInRange)`
 
 <h1 name = "glossary">Glossary</h1>
 

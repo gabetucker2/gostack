@@ -1,10 +1,10 @@
 This project:
 
-* update constructor attributes in documentation
-
 * Ensure public functions are capital whereas private functions are lowercase
 * Restructure functions to have receiver of type Stack AND Card
 * Restructure all functions
 
 * Implement tutorials
 * Implement more case tests
+
+* Update gostack banner to have code using frontend
