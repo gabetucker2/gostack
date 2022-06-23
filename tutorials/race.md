@@ -12,7 +12,7 @@
 
  > [gostack](#gostack)
 
- Assuming you would like to...
+ <h3>Assuming you would like to...</h3>
 
  > A) ...make a list representing a non-duplicating set of values from a map where its keys are either "Key A", 2.5, or "Michael Keaton"
  >
