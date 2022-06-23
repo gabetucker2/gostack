@@ -14,11 +14,11 @@
 
  <h3>Assuming you would like to...</h3>
 
- > A) ...make a list representing a non-duplicating set of values from a map where its keys are either "Key A", 2.5, or "Michael Keaton"
+ > A) ...make a list representing a non-duplicating set of values from a map where its keys are either "Key A", 2.5, or "Michael Keaton"...
  >
- > B) ...create a new map such that the list's values are its keys and its values are the corresponding indices from the original list 
+ > B) ...create a new map such that the list's values are its keys and its values are the corresponding indices from the original list...
  >
- > C) ...and, in a copy of B's map, replace pairs whose values are between 1 and 3 with a new array of key-value pairs.
+ > C) ...and, in a copy of B's map, replace pairs whose values are between 1 and 3 with a new array of key-value pairs...
 
  ...all the while ensuring no object is cloned in the process, you could use ***classical go*** or ***gostack***...
 
