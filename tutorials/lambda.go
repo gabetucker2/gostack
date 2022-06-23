@@ -54,9 +54,9 @@ func gostack_lambda_Max(stack *Stack, card *Card, workingMemory ...*Stack) bool 
 
 }
 
-func (stack *Stack) MainFunc(lambda func(*Stack, *Card) bool) {
+func (stack *Stack) MainFunc(lambda func(*Stack, *Card) bool) { // TODO: delete
 
-	stack._gostack_back_iterator(lambda)
+	stack.gostack_back_iterator(lambda)
 
 	fmt.Println(" - vals after:")
 	for _, card := range stack.cards {

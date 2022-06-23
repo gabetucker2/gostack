@@ -83,7 +83,7 @@ func (stack *Stack) Empty() *Stack {
 func (stack *Stack) Add(toAdd *interface{}, beforeNotAfter bool, position POSITION, data ...interface{}) *Stack {
 
 	// get idx
-	idx := _gostack_back_GetIdxFromData(stack, position, data)
+	idx := gostack_back_GetIdxFromData(stack, position, data)
 
 	// add only if valid idx found
 	if idx != -1 {
@@ -92,7 +92,7 @@ func (stack *Stack) Add(toAdd *interface{}, beforeNotAfter bool, position POSITI
 		}
 
 		// push card to front
-		_gostack_back_AddCard(stack, card, idx, true)
+		gostack_back_AddCard(stack, card, idx, true)
 	}
 
 	// return
@@ -103,12 +103,12 @@ func (stack *Stack) Add(toAdd *interface{}, beforeNotAfter bool, position POSITI
 func (stack *Stack) Extract(position POSITION, data ...interface{}) *Card {
 
 	// get idx
-	idx := _gostack_back_GetIdxFromData(stack, position, data)
+	idx := gostack_back_GetIdxFromData(stack, position, data)
 
 	// extract card if valid idx
 	var extract *Card = nil
 	if idx != -1 {
-		extract = _gostack_back_ExtractCard(stack, idx)
+		extract = gostack_back_ExtractCard(stack, idx)
 	}
 
 	// return
@@ -119,15 +119,15 @@ func (stack *Stack) Extract(position POSITION, data ...interface{}) *Card {
 func (stack *Stack) Replace(toInsert *[]interface{}, position POSITION, data ...interface{}) (oldCards *Stack) {
 
 	// get idx
-	idx := _gostack_back_GetIdxFromData(stack, position, data)
+	idx := gostack_back_GetIdxFromData(stack, position, data)
 
 	if idx != -1 {
 		// extract card
-		oldCard = _gostack_back_ExtractCard(stack, idx)
+		oldCard = gostack_back_ExtractCard(stack, idx)
 
 		// insert card at previous location if got out card
 		if oldCard != nil {
-			_gostack_back_AddCard(stack, toInsert, idx, true)
+			gostack_back_AddCard(stack, toInsert, idx, true)
 		}
 	}
 
@@ -145,7 +145,7 @@ func (stack *Stack) Get(returnType RETURN, positionType POSITION, POSITIONDATA, 
 func (stack  *Stack) Has(lookFor interface{}, position POSITION, data ...interface{}) bool 
 
 	// get id
-	idx := _gostack_back_GetIdxFromData(stack, position, data)
+	idx := gostack_back_GetIdxFromData(stack, position, data)
 
 	// retur
 	return idx != -1

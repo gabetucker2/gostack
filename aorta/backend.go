@@ -1,6 +1,6 @@
 package aorta
 
-func _gostack_back_AddCard(stack *Stack, card *Card, idx interface{}, beforeNotAfter bool) *Stack {
+func gostack_back_AddCard(stack *Stack, card *Card, idx interface{}, beforeNotAfter bool) *Stack {
 
 	// insert card into new array slice to satisfy append function
 	newCards := []*Card{}
@@ -54,7 +54,7 @@ func _gostack_back_AddCard(stack *Stack, card *Card, idx interface{}, beforeNotA
 
 }
 
-func _gostack_back_ExtractCard(stack *Stack, idx interface{}) (card *Card) {
+func gostack_back_ExtractCard(stack *Stack, idx interface{}) (card *Card) {
 
 	if stack.size == 0 { // if we can't pop it, return nil
 
@@ -87,7 +87,7 @@ func _gostack_back_ExtractCard(stack *Stack, idx interface{}) (card *Card) {
 
 }
 
-func _gostack_back_UpdatePosData(_data ...interface{}) (data interface{}) {
+func gostack_back_UpdatePosData(_data ...interface{}) (data interface{}) {
 	if len(_data) == 1 {
 		data = _data[0] // just so there is only one optional param
 	} else {
@@ -96,15 +96,15 @@ func _gostack_back_UpdatePosData(_data ...interface{}) (data interface{}) {
 	return
 }
 
-func _gostack_back_GetIdxFromData(stack *Stack, position POSITION, _data ...interface{}) (idx int) {
-	return _gostack_back_GetIdxFromPosition(stack, position, _gostack_back_UpdatePosData(_data)).(int)
+func gostack_back_GetIdxFromData(stack *Stack, position POSITION, _data ...interface{}) (idx int) {
+	return gostack_back_GetIdxFromPosition(stack, position, gostack_back_UpdatePosData(_data)).(int)
 }
 
 // returns index of searched item if valid
 // else, returns -1
-func _gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _data ...interface{}) (idx interface{}) {
+func gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _data ...interface{}) (idx interface{}) {
 
-	data := _gostack_back_UpdatePosData(_data...)
+	data := gostack_back_UpdatePosData(_data...)
 
 	switch position {
 
@@ -145,7 +145,7 @@ func _gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _data ...
 
 }
 
-func (stack *Stack) _gostack_back_iterator(lambda func(*Stack, *Card) bool) {
+func (stack *Stack) gostack_back_iterator(lambda func(*Stack, *Card) bool) {
 	newStack := new(Stack)
 	for _, card := range stack.cards {
 		if lambda(stack, card) {

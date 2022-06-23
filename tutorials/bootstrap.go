@@ -1,20 +1,20 @@
 package tutorials
 
-func _gostack_tutorials_pop() {
+func gostack_tutorials_pop() {
 
 	// > `stack.Extract(RETURN_Card, POSITION_First)`
 	// >> *removes and returns the first card in the stack*
 
 }
 
-func _gostack_tutorials_push() {
+func gostack_tutorials_push() {
 
 	// > `stack.Add(insert)`
 	// >> *adds a card to the beginning of the stack (see default enum types)*
 
 }
 
-func _gostack_tutorials_indexOf() {
+func gostack_tutorials_indexOf() {
 
 	// > `stack.Get(RETURN_Idx, POSITION_Card, cardToMatch, MATCH_Object)`
 	// >> *returns the index of the first found matching card*
@@ -23,8 +23,8 @@ func _gostack_tutorials_indexOf() {
 
 func Bootstrap() {
 
-	_gostack_tutorials_pop()
-	_gostack_tutorials_push()
-	_gostack_tutorials_indexOf()
+	gostack_tutorials_pop()
+	gostack_tutorials_push()
+	gostack_tutorials_indexOf()
 
 }
