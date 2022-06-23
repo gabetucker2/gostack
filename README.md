@@ -165,7 +165,7 @@
  >>>>> [STRUCTURE](#STRUCTURE)
  >>>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
- >>>> [MakeStack()](#MakeStack)
+ >>>> [MakeStack(...)](#MakeStack)
  >>>
  >>>> [MakeCard(...)](#MakeCard)
  >>>
@@ -204,6 +204,8 @@
  >
  >> **testend.go** contains functions to implement **caseend.go** functions
  >
+ >> **unaddedcases.txt** is where data to be added into future case tests is stored
+ >
  > *images*
  >> **gostack_Smaller.png** is the banner image for this project
  >
@@ -212,7 +214,7 @@
  >
  >> **lambda.go** is a tutorial on how to implement lambda functions
  >
- >> **unaddedData.txt** is where data to be added into future tutorials is stored
+ >> **unaddedtutorials.txt** is where data to be added into future tutorials is stored
  >
  > **go.mod** is to initialize the directories
  >
