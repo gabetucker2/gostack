@@ -1,7 +1,16 @@
- <h1>Comparison</h1>
+ <h1>Race</h1>
 
- Assume you would A) like to make a list representing a non-duplicating set of values from a map where its keys are either "Key A", 2.5, or "Michael Keaton".  You would B) then like to create a new map such that the list's values are its keys and its values are the corresponding indices from the original list.  Finally, you would C) like, in a copy of B's map, to replace pairs whose values are between 1 and 3 with a new array of key-value pairs.  Ensure no object is cloned in the process.  In pseudocode...
+ <h2>Introduction</h2>
 
+ Welcome to the race!
+
+ Assume you would like to...
+   A) ...make a list representing a non-duplicating set of values from a map where its keys are either "Key A", 2.5, or "Michael Keaton"
+   B) ...create a new map such that the list's values are its keys and its values are the corresponding indices from the original list 
+   C) ...and, in a copy of B's map, replace pairs whose values are between 1 and 3 with a new array of key-value pairs.
+ ...all the while ensuring no object is cloned in the process, you could use ***classical go*** or ***gostack***.
+
+ <h3>Pseudocode Outline</h3>
  ```
  // INIT
  start <"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520>
@@ -18,9 +27,9 @@
  => taskC <40 : 0, "I" : "Am new", "To" : "This set", 520 : 4>
  ```
 
- Now, let's see how quickly we can do this using...
+ <h2>Now, let's see how quickly we can do this using...</h2>
 
-...***classical go***
+ <h3>...classical go</h3>
  ```
  // INIT
  start := map[interface{}]interface{} {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520}
@@ -77,7 +86,7 @@
  ```
  `lines: 45`
 
-...***gostack***
+ <h3>...gostack</h3>
  ```
  // INIT
  start := MakeStack(STRUCTURE_Map, map[interface{}]interface{} {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520})
