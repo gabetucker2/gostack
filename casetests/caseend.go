@@ -2,7 +2,7 @@ package casetests
 
 // variables
 
-var showTestText = true // false for cleaner console, true for debugging
+var showTestText bool
 
 // functions
 
@@ -222,7 +222,9 @@ func _gostack_case_Index(funcName string) {
 
 // MAIN FUNCTION
 
-func Run() {
+func Run(_showTestText bool) {
+
+	showTestText = _showTestText
 
 	println("- BEGINNING TESTS")
 

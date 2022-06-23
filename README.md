@@ -40,8 +40,6 @@
  >> [File Explanations](#fileExplanations)
 
  > [Overview](#overview)
- >> [Examples](#examples)
- >
  >> [Brief Documentation](#briefDocumentation)
  >>> [Data Structures](#dataStructuresBrief)
  >>>> [structs](#structsBrief)
@@ -63,6 +61,8 @@
  >>>>> [RETURN](#RETURN)
  >>>>
  >>>>> [POSITION](#POSITION)
+ >>>>
+ >>>>> [TYPE](#TYPE)
  >>>>
  >>>>> [ORDER](#ORDER)
  >>>>
@@ -88,30 +88,33 @@
  >>>
  >>>> [stack.Has(...)](#Has)
  >
- >> [To Add](#toAdd)
+ >> [Future Updates](#futureUpdates)
  >
  >> [Footer](#footer)
 
 <h1 name = "fileExplanations">File Explanations</h1>
 
- > ***aorta***
+ > *aorta*
  >> **backend.go** contains the functions to implement **frontend.go** and **caseend.go** functions
  >
  >> **datastructures.go** initializes structs and enums
  >
  >> **frontend.go** contains the functions that the programmer using `gostack` will be calling
  >
- > ***casetests***
+ > *casetests*
  >> **caseend.go** contains case tests for **frontend.go** functions
  >
  >> **testend.go** contains functions to implement **caseend.go** functions
  >
- > ***images***
+ > *images*
  >> **gostack_Smaller.png** is the banner image for this project
  >
- > ***tutorials***
+ > *tutorials*
  >> **bootstrap.go** is a tutorial on how to implement some common functions using golang
+ >
  >> **lambda.go** is a tutorial on how to implement lambda functions
+ >
+ >> **unaddedData.txt** is where data to be added into future tutorials is stored
  >
  > **go.mod** is to initialize the directories
  >
@@ -123,66 +126,16 @@
 
 <h1 name = "overview">OVERVIEW</h1>
 
-<h2 name = "examples">Examples</h2>
- 
- <h3>...to Demonstrate Flexibility</h3>
-
- > `stack.Get(RETURN_Card, POSITION_First)`
- >> *returns the first card in the Stack*
- >
- > `stack.Get(RETURN_Card, POSITION_Val, "String Value", MATCH_Object)`
- >> *goes through the stack, finds the first card with val "String Value", and returns that card*
- >
- > `stack.Get(RETURN_Card, POSITION_Key, "String Key", MATCH_Object)`
- >> *goes through the stack, finds the first card with key "String Key", and returns that card*
- >
- > `stack.Get(RETURN_Cards, POSITION_Lambda, {TODO: add})`
- >> *goes through the stack, finds each card for which the lambda expression is true, and return a stack of these cards*
- >
- > `stack.Get(RETURN_Cards, POSITION_Val, "String Value", MATCH_Object)`
- >> *goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
- >
- > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues, MATCH_Object)`
- >> *goes through the stack, finds the first card with one of the values in stackOfValues, and returns that card*
- >
- > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues, MATCH_Object)`
- >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
- >
- > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues, MATCH_Reference)`
- >> *goes through the stack, finds the first card with the same memory address as one the values in stackOfValues, and returns that card*
- >
- > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues, MATCH_Reference)`
- >> *goes through the stack, finds each card with a memory address matching one in stackOfValues, and returns a Stack of each of those cards*
-
- <h3>stack.Push() Function Equivalent</h3>
-
- > `stack.Add(insert, ORDER_BEFORE, POSITION_First)`
- >> *adds a card to the beginning of the stack*
-
- <h3>stack.Pop() Function Equivalent</h3>
-
- > `stack.Extract(RETURN_Card, POSITION_First)`
- >> *removes and returns the first card in the stack*
-
- <h3>stack.IndexOf(card) Function Equivalent</h3>
- 
- > `stack.Get(RETURN_Idx, POSITION_Card, cardToMatch, MATCH_Object)`
- >> *returns the index of the first found matching card*
-
 <h1 name = "briefDocumentation">Brief Documentation</h1>
 
 <h2 name = "dataStructuresBrief">Data Structures</h2>
 
- > ***name*** means it is conventionally acceptable to access this value manually
- >
- > **name** means it is highly recommended against accessing  value manually; you should instead use our functions
-
 <h3 name = "structsBrief">Structs</h3>
 
- > ***stack*** *Stack*
+ > **stack** *Stack*
  >> **cards** *[]\*Card*
  >
- >> ***size*** *int*
+ >> **size** *int*
 
  > **card** *Card*
  >> **key** *any type*
@@ -191,7 +144,7 @@
 
 <h3 name = "enumsBrief">Enums</h3>
 
- > ***RETURN***
+ > **RETURN**
  > * _RETURN_NotationSample *type that's returned*
  > * RETURN_None *NONE*
  > * RETURN_Idx *int*
@@ -203,7 +156,7 @@
  > * RETURN_Card *Card*
  > * RETURN_Cards *Stack of Cards*
 
- > ***POSITION***
+ > **POSITION**
  > * _POSITION_NotationSample *POSITIONDATA argument type*
  > * POSITION_First *NONE*
  > * POSITION_Last *NONE*
@@ -216,13 +169,13 @@
  > * POSITION_Card *Card*
  > * POSITION_Cards *Stack of Cards*
  > * POSITION_All *NONE*
- > * POSITION_Lambda *TODO: figure out Lambda*
+ > * POSITION_Lambda *lambda function*
 
- > ***ORDER***
+ > **ORDER**
  > * ORDER_Before
  > * ORDER_After
 
- > ***MATCH***
+ > **MATCH**
  > * MATCH_Object
  > * MATCH_Reference
 
@@ -245,8 +198,6 @@
 
 <h2 name = "dataStructures">Data Structures</h2>
 
- It is highly advised against using these data structures for reasons other than those listed in the *Example Uses* sections.  The entire purpose of this project is for you not to have to manage arrays manually, but documentation for objects intended to be hidden still exists for those who would like to add their own Stack functions
-
 <h3 name = "structs">structs</h3>
 
 <h4 name = "stack">Stack</h4>
@@ -259,25 +210,19 @@
  >> `size` *int*
  >>> Returns the cardinality (i.e., `len(stack.cards)`) of this Stack
 
- ***Example Uses***
-
- > `stack.size`
- >> *returns the cardinality of the stack's cards (i.e., amount of cards in the stack)*
-
 <h4 name = "card">Card</h4>
 
  This is a struct for our elements/maps within stacks.
 
  >> `card` *Card{}*
+ >>> `card.idx` *int*
+ >>>> The index of this card
+ >>>
  >>> `card.key` *any type (interface{})*
- >>>> A key for this card-map (or nil if doesn't exist)
+ >>>> The key of this card (or nil if doesn't exist)
  >>>
  >>> `card.val` *any type (interface{})*
  >>>> The val of this card (or nil if doesn't exist)
-
- ***Example Uses***
- 
- > *None*
 
 <h3 name = "enums">enums</h3>
 
@@ -319,20 +264,6 @@
  >>
  >> RETURN_Cards
  >>> Stack of Cards
-
- ***Example Uses***
- 
- > `stack.Get(RETURN_Card, POSITION_Val, "String Value", MATCH_Object)`
- >> *goes through the stack, finds the first card with val "String Value", and returns that card*
- >
- > `stack.Get(RETURN_Cards, POSITION_Val, "String Value", MATCH_Object)`
- >> *goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
- >
- > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues, MATCH_Object)`
- >> *goes through the stack, finds the first card with one of the values in stackOfValues, and returns that card*
- >
- > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues, MATCH_Object)`
- >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
 
 <h4 name = "POSITION">POSITION</h4>
 
@@ -378,38 +309,27 @@
  >>> *NONE*
  >>
  >> POSITION_Lambda
- >>> interface{} *TODO: figure out lambda*
-
- ***Example Uses***
+ >>> interface{} *lambda function*
  
- > `stack.Get(RETURN_Card, POSITION_First)`
- >> *returns the first card in the Stack*
- >
- > `stack.Get(RETURN_Card, POSITION_Val, "String Value", MATCH_Object)`
- >> *goes through the stack, finds the first card with val "String Value", and returns that card*
- >
- > `stack.Get(RETURN_Card, POSITION_Key, "String Key", MATCH_Object)`
- >> *goes through the stack, finds the first card with key "String Key", and returns that card*
- >
- > `stack.Get(RETURN_Cards, POSITION_Lambda, {TODO: add})`
- >> *goes through the stack, finds each card for which the lambda expression is true, and return a stack of these cards*
+<h4 name = "TYPE">TYPE</h4>
+
+ This is an enum intended to make it easy to tell certain functions the type of value being targeted.
+
+> ***TYPE***
+>> TYPE_Key
+>
+>> TYPE_Val
+>
+>> TYPE_Card
  
 <h4 name = "ORDER">ORDER</h4>
 
  This is an enum intended to make it easy to tell certain functions whether to insert a value before or after the input index.
 
-> ***Order***
+> ***ORDER***
 >> ORDER_Before
 >>> default
 >> ORDER_After
-
- ***Example Uses***
- 
- > `stack.Add(cardToAdd, ORDER_Before, POSITION_Last)`
- >> *insert a card at the second-to-last index of the stack*
- >
- > `stack.Add(cardToAdd, ORDER_After, POSITION_Last)`
- >> *insert a card at the last index of the stack*
 
 <h4 name = "MATCH">MATCH</h4>
 
@@ -419,18 +339,10 @@
 
  Take care to note that all cases where objects are matching by reference will also be matching by object.
 
- > ***Match***
+ > ***MATCH***
  >> MATCH_Object
  >>> default
  >> MATCH_Reference
-
- ***Example Uses***
- 
- > `stack.Get(RETURN_Card, POSITION_Card, cardStructureToFind, MATCH_Object)`
- >> *returns the first card that has the same structure (key and value) as cardStructureToFind*
- >
- > stack.Get(RETURN_Card, POSITION_Card, exactCardToFind, MATCH_Reference)`
- >> *returns the first card that IS exactCardToFind as stored in memory—not just that's the same structurally*
 
 <h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>
 
@@ -519,7 +431,8 @@
 <h3 name = "Replace">Replace</h3>
  
  > `stack.Replace(insert, RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
- >> CONSTRUCTOR: ***FALSE***
+ >> CONSTRUCTOR: ***SOMETIMES***
+ >>> Make Stack if RETURNing multiple types
  >
  >> GETTER: ***TRUE***
  >>> RETURN objects that were removed *or* nil
@@ -542,7 +455,8 @@
 <h3 name = "Extract">Extract</h3>
  
  > `stack.Extract(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
- >> CONSTRUCTOR: ***FALSE***
+ >> CONSTRUCTOR: ***SOMETIMES***
+ >>> Make Stack if RETURNing multiple types
  >
  >> GETTER: ***TRUE***
  >>> RETURN objects that were removed *or* nil
@@ -578,10 +492,11 @@
 <h3 name = "Get">Get</h3>
  
  > `stack.Get(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
- >> CONSTRUCTOR: ***FALSE***
+ >> CONSTRUCTOR: ***SOMETIMES***
+ >>> Make Stack if RETURNing multiple types
  >
  >> GETTER: ***TRUE***
- >>> desired card
+ >>> RETURN objects that were gotten *or* nil
  >
  >> SETTER: ***FALSE***
 
@@ -609,7 +524,7 @@
  >> **ELSE**
  >>> return false
  
-<h2 name = "toAdd">To Add</h2>
+<h2 name = "futureUpdates">Future Updates</h2>
 
  <h3>Generalized Functions</h3>
 

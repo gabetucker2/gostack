@@ -1,18 +1,10 @@
 This project:
 
-* move examples to tutorials
-* add type enum to documetnation
 * update constructor attributes in documentation
-* add idx attribute to cards
 
-* Implement Lambda
- - ctrl + f to see "TODO"
+* Ensure public functions are capital whereas private functions are lowercase
+* Restructure functions to have receiver of type Stack AND Card
+* Restructure all functions
 
-* Implement Add()'s before/after
-
-* Restructure functions to use new parameters
-* Restructure functions to intake Stacks and Cards
-
+* Implement tutorials
 * Implement more case tests
-
-* Add bootstrap functions script (e.g., stack.IndexOf(card), stack.Pop(), etc)

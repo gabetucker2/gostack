@@ -1,14 +1,14 @@
 package aorta
 
 type Card struct {
-	idx int
-	key interface{}
-	val interface{}
+	idx int = -1
+	key interface{} = nil
+	val interface{} = nil
 }
 
 type Stack struct {
-	cards []*Card
-	size  int
+	cards []*Card = []*Card
+	size  int = 0
 }
 
 type RETURN int

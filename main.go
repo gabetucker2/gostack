@@ -2,10 +2,13 @@ package main
 
 func main() {
 
-	// to run case tests
-	//casetests.Run()
+	// tests
 
-	// to run tutorials
+	//casetests.Run(false)
+
+	// tutorials
+
+	//tutorials.Bootstrap()
 	//tutorials.Lambda()
 
 }

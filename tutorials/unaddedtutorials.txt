@@ -1,0 +1,86 @@
+<h3>...to Demonstrate Flexibility</h3>
+
+ > `stack.Get(RETURN_Card, POSITION_First)`
+ >> *returns the first card in the Stack*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Val, "String Value", MATCH_Object)`
+ >> *goes through the stack, finds the first card with val "String Value", and returns that card*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Key, "String Key", MATCH_Object)`
+ >> *goes through the stack, finds the first card with key "String Key", and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Lambda, lambda function)` - update
+ >> *goes through the stack, finds each card for which the lambda expression is true, and return a stack of these cards*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Val, "String Value", MATCH_Object)`
+ >> *goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues, MATCH_Object)`
+ >> *goes through the stack, finds the first card with one of the values in stackOfValues, and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues, MATCH_Object)`
+ >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues, MATCH_Reference)`
+ >> *goes through the stack, finds the first card with the same memory address as one the values in stackOfValues, and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues, MATCH_Reference)`
+ >> *goes through the stack, finds each card with a memory address matching one in stackOfValues, and returns a Stack of each of those cards*
+
+
+ ***TYPE Example Uses***
+ 
+ > `stack.Add(cardToAdd, ORDER_Before, POSITION_Last)`
+ >> *insert a card at the second-to-last index of the stack*
+ >
+ > `stack.Add(cardToAdd, ORDER_After, POSITION_Last)`
+ >> *insert a card at the last index of the stack*
+
+ ***ORDER Example Uses***
+ 
+ > `stack.Add(cardToAdd, ORDER_Before, POSITION_Last)`
+ >> *insert a card at the second-to-last index of the stack*
+ >
+ > `stack.Add(cardToAdd, ORDER_After, POSITION_Last)`
+ >> *insert a card at the last index of the stack*
+
+ ***MATCH Example Uses***
+ 
+ > `stack.Get(RETURN_Card, POSITION_Card, cardStructureToFind, MATCH_Object)`
+ >> *returns the first card that has the same structure (key and value) as cardStructureToFind*
+ >
+ > stack.Get(RETURN_Card, POSITION_Card, exactCardToFind, MATCH_Reference)`
+ >> *returns the first card that IS exactCardToFind as stored in memory—not just that's the same structurally*
+
+ ***Stack Example Uses***
+
+ > `stack.size`
+ >> *returns the cardinality of the stack's cards (i.e., amount of cards in the stack)*
+
+ ***RETURN Example Uses***
+ 
+ > `stack.Get(RETURN_Card, POSITION_Val, "String Value", MATCH_Object)`
+ >> *goes through the stack, finds the first card with val "String Value", and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Val, "String Value", MATCH_Object)`
+ >> *goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Val, stackOfValues, MATCH_Object)`
+ >> *goes through the stack, finds the first card with one of the values in stackOfValues, and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Val, stackOfValues, MATCH_Object)`
+ >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
+
+ ***POSITION Example Uses***
+ 
+ > `stack.Get(RETURN_Card, POSITION_First)`
+ >> *returns the first card in the Stack*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Val, "String Value", MATCH_Object)`
+ >> *goes through the stack, finds the first card with val "String Value", and returns that card*
+ >
+ > `stack.Get(RETURN_Card, POSITION_Key, "String Key", MATCH_Object)`
+ >> *goes through the stack, finds the first card with key "String Key", and returns that card*
+ >
+ > `stack.Get(RETURN_Cards, POSITION_Lambda, lambda function)` - update
+ >> *goes through the stack, finds each card for which the lambda expression is true, and return a stack of these cards*

@@ -12,7 +12,6 @@ func _gostack_back_NewCard(val interface{}) (card *Card) {
 
 }
 
-// TODO: implement for range
 func _gostack_back_AddCard(stack *Stack, card *Card, idx interface{}, beforeNotAfter bool) *Stack {
 
 	// insert card into new array slice to satisfy append function
@@ -156,4 +155,14 @@ func _gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _data ...
 
 	return
 
+}
+
+func (stack *Stack) _gostack_back_iterator(lambda func(*Stack, *Card) bool) {
+	newStack := new(Stack)
+	for _, card := range stack.cards {
+		if lambda(stack, card) {
+			newStack.cards = append(newStack.cards, card)
+		}
+	}
+	stack.cards = newStack.cards
 }

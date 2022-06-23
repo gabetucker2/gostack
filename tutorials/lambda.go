@@ -6,7 +6,7 @@ import (
 
 // TEMPLATE:
 /*
-func gostack_NameHere(stack *Stack, card *Card, workingMemory *interface{}) (ret bool) { // TODO: look into workarounds for efficiency cost
+func gostack_NameHere(stack *Stack, card *Card, workingMemory *interface{}) (ret bool) {
 
 	if workingMemory == nil { // first run setup
 		workingMemory = MakeStack()
@@ -54,20 +54,9 @@ func gostack_BothInRange(stack *Stack, card *Card, workingMemory ...*Stack) (ret
 	return gostack_ValInRange(stack, card) && gostack_KeyInRange(stack, card)
 }
 
-// TODO: rename iterator
-func (stack *Stack) Iterator(lambda func(*Stack, *Card) bool) {
-	newStack := new(Stack)
-	for _, card := range stack.cards {
-		if lambda(stack, card) {
-			newStack.cards = append(newStack.cards, card)
-		}
-	}
-	stack.cards = newStack.cards
-}
-
 func (stack *Stack) MainFunc(lambda func(*Stack, *Card) bool) {
 
-	stack.Iterator(lambda)
+	stack._gostack_back_iterator(lambda)
 
 	fmt.Println(" - vals after:")
 	for _, card := range stack.cards {
