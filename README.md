@@ -194,37 +194,37 @@
 
 <h1 name = "fileExplanations">File Explanations</h1>
 
- > *aorta*
- >> **backend.go** contains the functions to implement **frontend.go** and **caseend.go** functions
+ > [aorta](/aorta)
+ >> [backend.go](/aorta/backend.go) contains the functions to implement **frontend.go** and **caseend.go** functions
  >
- >> **datastructures.go** initializes structs and enums
+ >> [datastructures.go](/aorta/datastructures.go) initializes structs and enums
  >
- >> **frontend.go** contains the functions that the user of this library will be calling
+ >> [frontend.go](/aorta/frontend.go) contains the functions that the user of this library will be calling
  >
- > *casetests*
- >> **caseend.go** contains case tests for **frontend.go** functions
+ > [casetests](/casetests)
+ >> [caseend.go](/casetests/caseend.go) contains case tests for **frontend.go** functions
  >
- >> **testend.go** contains functions to implement **caseend.go** functions
+ >> [testend.go](/casetests/testend.go) contains functions to implement **caseend.go** functions
  >
- >> **unaddedcases.txt** is where data to be added into future case tests is stored
+ >> [unaddedcases.txt](/casetests/unaddedcases.txt) is where data to be added into future case tests is stored
  >
- > *images*
+ > [images](/images)
  >> **gostack_Smaller.png** is the banner image for this project
  >
- > *tutorials*
- >> **bootstrap.go** is a tutorial on how to implement some common functions using golang
+ > [tutorials](/tutorials)
+ >> [bootstrap.go](tutorials/bootstrap.go) is a tutorial on how to implement some common functions using golang
  >
- >> **lambda.go** is a tutorial on how to implement lambda functions
+ >> [lambda.go](/tutorials/lambda.go) is a tutorial on how to implement lambda functions
  >
- >> **unaddedtutorials.txt** is where data to be added into future tutorials is stored
+ >> [unaddedtutorials.txt](/tutorials/unaddedtutorials.txt) is where data to be added into future tutorials is stored
  >
- > **go.mod** is to initialize the directories
+ > [go.mod](/go.mod) is to initialize the directories
  >
- > **main.go** is to call functions in this project, either for the case of case testing or executing tutorials
+ > [main.go](main.go) is to call functions in this project, either for the case of case testing or executing tutorials
  >
- > **README.md** is this file
+ > [README.md](/README.md) is this file
  >
- > **TODO.txt** is a task list relevant to developers
+ > [TODO.txt](/TODO.txt) is a task list relevant to developers
 
 <h1 name = "overview">OVERVIEW</h1>
 
