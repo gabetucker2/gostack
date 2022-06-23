@@ -10,35 +10,35 @@
    C) ...and, in a copy of B's map, replace pairs whose values are between 1 and 3 with a new array of key-value pairs.
  ...all the while ensuring no object is cloned in the process, you could use ***classical go*** or ***gostack***.
 
- <h3>Pseudocode Outline</h3>
- ```
- // INIT
- start <"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520>
- searchKeys <"Key A", 2.5, "Michael Keaton">
- pairsToInsert <"I" : "Am new", "To" : "This set">
+<h3>Pseudocode Outline</h3>
+```
+// INIT
+start <"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520>
+searchKeys <"Key A", 2.5, "Michael Keaton">
+pairsToInsert <"I" : "Am new", "To" : "This set">
  
- // TASK A
- => taskA <40, "Hello", 520>
+// TASK A
+=> taskA <40, "Hello", 520>
  
- // TASK B
- => taskB <40 : 0, "Hello" : 2, 520 : 4>
+// TASK B
+=> taskB <40 : 0, "Hello" : 2, 520 : 4>
 
- // TASK C
- => taskC <40 : 0, "I" : "Am new", "To" : "This set", 520 : 4>
- ```
+// TASK C
+=> taskC <40 : 0, "I" : "Am new", "To" : "This set", 520 : 4>
+```
 
- <h2>Now, let's see how quickly we can do this using...</h2>
+<h2>Now, let's see how quickly we can do this using...</h2>
 
- <h3>...classical go</h3>
- ```
- // INIT
- start := map[interface{}]interface{} {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520}
- searchKeys := []interface{} {"Key A", 2.5, "Michael Keaton"}
- pairsToInsert := map[interface{}]interface{} {"I" : "Am new", "To" : "This set"}
+<h3>...classical go</h3>
+```
+// INIT
+start := map[interface{}]interface{} {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520}
+searchKeys := []interface{} {"Key A", 2.5, "Michael Keaton"}
+pairsToInsert := map[interface{}]interface{} {"I" : "Am new", "To" : "This set"}
  
- // TASK A
- var taskA []interface{}
- for i := range len(start) {
+// TASK A
+var taskA []interface{}
+for i := range len(start) {
     k := start[i] // circumvent for loop cloning of k
     for _, search := range searchKeys {
         if k == search {
@@ -55,12 +55,12 @@
             break
         }
     }
- }
+}
  
- // TASK B
- var taskB map[interface{}]interface{}
- i = 0
- for k, v := range start {
+// TASK B
+var taskB map[interface{}]interface{}
+i = 0
+for k, v := range start {
     for j := range len(taskA) {
         a := taskA[j] // circumvent for loop cloning of a
         if a == v {
@@ -68,11 +68,11 @@
         }
     }
     i++
- }
+}
 
- // TASK C
- var taskC map[interface{}]interface{}
- for k, v := range taskB {
+// TASK C
+var taskC map[interface{}]interface{}
+for k, v := range taskB {
     k2, v2 := taskB[k] // circumvent for loop cloning
     if 1 < v && v < 4 {
         for k3 := range pairsToInsert {
@@ -82,29 +82,31 @@
     } else {
         taskC[k2] = v2
     }
- }
- ```
- `lines: 45`
+}
+```
+`lines: 45`
 
- <h3>...gostack</h3>
- ```
- // INIT
- start := MakeStack(STRUCTURE_Map, map[interface{}]interface{} {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520})
- searchKeys := MakeStack(STRUCTURE_Arr, []interface{} {"Key A", 2.5, "Michael Keaton"})
- pairsToInsert := MakeStack(STRUCTURE_Map, map[interface{}]interface{} {"I" : "Am new", "To" : "This set"})
+<h3>...gostack</h3>
+```
+// INIT
+start := MakeStack(STRUCTURE_Map, map[interface{}]interface{} {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520})
+searchKeys := MakeStack(STRUCTURE_Arr, []interface{} {"Key A", 2.5, "Michael Keaton"})
+pairsToInsert := MakeStack(STRUCTURE_Map, map[interface{}]interface{} {"I" : "Am new", "To" : "This set"})
 
- // TASK A
- taskA := start.Get(RETURN_Vals, POSITION_Keys, searchKeys).Unique(TYPE_Val)
+// TASK A
+taskA := start.Get(RETURN_Vals, POSITION_Keys, searchKeys).Unique(TYPE_Val)
 
- // TASK B
- taskB := MakeStack(STRUCTURE_Map, taskA, start.Get(RETURN_Idxs, POSITION_Vals, taskA).Unique(TYPE_Val))
+// TASK B
+taskB := MakeStack(STRUCTURE_Map, taskA, start.Get(RETURN_Idxs, POSITION_Vals, taskA).Unique(TYPE_Val))
 
  // TASK C
- func gostack_ValInRange(stack *Stack, card *Card) {
+func gostack_ValInRange(stack *Stack, card *Card) {
     v := card.val.(int)
 	return 1 < v && v < 3
- }
+}
 
- taskC := taskB.Clone().Replace(pairsToInsert, RETURN_Stack, POSITION_Lambda, gostack_ValInRange)
- ```
- `lines: 10`
+taskC := taskB.Clone().Replace(pairsToInsert, RETURN_Stack, POSITION_Lambda, gostack_ValInRange)
+```
+`lines: 10`
+
+[Return to the main page](/../../)
