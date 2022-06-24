@@ -7,13 +7,13 @@
  Introducing **Stacks**—sets of **Card** elements (like a stack of cards)—***gostack*** serves as an all-in-one library for concise, parsimonious, and elegant data management in *golang*.
 
  ***gostack***'s stacks...
- * ...replace maps and arrays, removing the need for pesky index-key-value fetching and conversion between maps and arrays
- * ...support built-in functions for smooth conversion between stacks and your existing arrays and maps
+ * ...replace maps and arrays, removing the need for pesky index-key-value fetching or translating data between maps and arrays, all the while supporting smooth conversion between stacks and your existing maps and arrays
+ * ...remove the need for interfaces, meaning no more convoluted on-the-go frameworks for handling arbitrary argument types are necessary
  * ...offer the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity of 4 nested for-loops in a single line
- * ...allow the user to get and set based on reference or object with ease, preventing the user from having to define all their arrays as  
- * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create complex sorting mechanisms of their own design
+ * ...allow the user to get and set based on reference or object with ease, preventing the user from having to worry about convoluted pointer/address management
+ * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create sorting mechanisms of their own design
 
- Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish line, ***gostack*** went 450% faster, taking merely 10—[see for yourself!](tutorials/race.md)
+ Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish, ***gostack*** took roughly one fifth the amount of lines (merely 10)—[see for yourself!](tutorials/race.md)
 
  To get a better feel of the library, feel free to take a look at some [examples](/tutorials/bootstrap.go) of how ***gostack*** can substitute commonly-used functions.
 

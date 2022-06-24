@@ -1,5 +1,6 @@
 ---------------------------------------------------------------
 GABE:
+* Create function annotation convention
 * Make ORDER_*, POSITION_* optional for add function (only if first value being inserted)
 * Function cleanup
  - Ensure public functions are capital whereas private functions are lowercase

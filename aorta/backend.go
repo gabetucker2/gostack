@@ -1,14 +1,20 @@
 package aorta
 
-func GOSTACK_back_UnpackVariadic(variadic []interface{}, varsToDefine ...*interface{}) ...interface{} {
-	for i, v := range varsToDefine {
+func GOSTACK_back_GetIndexFromMap(m []*map) {
+	
+}
+
+func GOSTACK_back_UnpackVariadic(variadic []*interface{}, into ...*interface{}) {
+	for i, v := range into {
 		*v = variadic[i]
 	}
 }
 
-func gostack_back_MakeCard(idx int, val ...*interface{}, key ...*interface{}) (card *Card) {
+func GOSTACK_back_MakeCard(idx int, variadic ...*interface{}) (card *Card) {
 
-	val := variadic[0]
+	// unpack variadic into optional parameters
+	var val, key *interface{}
+	GOSTACK_back_UnpackVariadic(variadic, val, key)
 
 	// initialize and set new Card
 	card = new(Card)
