@@ -10,7 +10,7 @@
  * ...replace maps and arrays, removing the need for pesky index-key-value fetching and conversion between maps and arrays
  * ...support built-in functions for smooth conversion between stacks and your existing arrays and maps
  * ...offer the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity of 4 nested for-loops in a single line
- * ...allow the user to get and set based on reference or object with ease
+ * ...allow the user to get and set based on reference or object with ease, preventing the user from having to define all their arrays as  
  * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create complex sorting mechanisms of their own design
 
  Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish line, ***gostack*** went 450% faster, taking merely 10—[see for yourself!](tutorials/race.md)
@@ -585,12 +585,12 @@
  <h3>Generalized Functions</h3>
 
  * Add **Move** function
- * Add **Fill** function
  * Add **Set(newData, TYPE_*, POSITION_*, ...POSITIONDATA)** function for more efficient replacement as opposed to replace... implement all search functions for individual cards, so card.set, card.replace, card.extract, etc
+ * Add **Print** function
+ * Add **CombineWith** function
 
  <h3>Non-Generalized Functions</h3>
 
- * Add **CombineWith** function
  * Add **Flip** function
  * Add **Shuffle** function
  * Add **Clone** function

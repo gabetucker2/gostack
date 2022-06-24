@@ -1,5 +1,26 @@
 package aorta
 
+func GOSTACK_back_UnpackVariadic(variadic []interface{}, varsToDefine ...*interface{}) ...interface{} {
+	for i, v := range varsToDefine {
+		*v = variadic[i]
+	}
+}
+
+func gostack_back_MakeCard(idx int, val ...*interface{}, key ...*interface{}) (card *Card) {
+
+	val := variadic[0]
+
+	// initialize and set new Card
+	card = new(Card)
+	card.idx = idx
+	card.key = key
+	card.val = val
+
+	// return
+	return
+
+}
+
 func gostack_back_AddCard(stack *Stack, card *Card, idx interface{}, beforeNotAfter bool) *Stack {
 
 	// insert card into new array slice to satisfy append function

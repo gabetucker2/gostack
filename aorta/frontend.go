@@ -1,15 +1,9 @@
 package aorta
 
 func MakeCard(idx int, val ...*interface{}, key ...*interface{}) (card *Card) {
-
-	// initialize and set new Card
-	card = new(Card)
-	card.idx = idx
-	card.key = key
-	card.val = val
-
+	
 	// return
-	return
+	return gostack_back_MakeCard(idx, val, key)
 
 }
 

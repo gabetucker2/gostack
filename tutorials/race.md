@@ -46,7 +46,7 @@ pairsToInsert <"I" : "Am new", "To" : "This set">
 
 ```
 // INIT
-start := map[interface{}]interface{} {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520}
+start := map[interface{}]interface{} {"1_Key A" : 40, "Bad Key" : "Bad Value", "2_Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520} // can't have same key twice so need x_KEYNAME
 searchKeys := []interface{} {"Key A", 2.5, "Michael Keaton"}
 pairsToInsert := map[interface{}]interface{} {"I" : "Am new", "To" : "This set"}
  
