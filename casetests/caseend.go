@@ -1,4 +1,4 @@
-package gostack_casetests
+package casetests
 
 // variables
 var showTestText bool
@@ -28,7 +28,7 @@ func gostack_case_MakeCard(funcName string) {
 
 	gostack_test_Start(funcName, showTestText)
 
-	stack := aorta.MakeCard()
+	stack := gostack_aorta.MakeCard()
 
 	conditions := []bool{
 		gostack_test_LenAndSize(stack, 0),
