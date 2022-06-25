@@ -1,14 +1,17 @@
 ---------------------------------------------------------------
 GABE:
+* Resolve issue with frontend: https://stackoverflow.com/questions/72750480/passing-variables-of-different-types-by-reference-as-arguments-to-same-variadic
 * Create function annotation convention
 * Make ORDER_*, POSITION_* optional for add function (only if first value being inserted)
 * Function cleanup
  - Ensure public functions are capital whereas private functions are lowercase
  - Restructure functions to have receiver of type Stack AND Card
  - Restructure all functions
+ - Implement errors for function bug conditions (fmt.Errorf())
 * Implement all documented functions
 * Implement rest of functions in ToAdd documentation
 * Update gostack banner to have code from a tutorial
+* Add conventions section to README
 
 ---------------------------------------------------------------
 ANDY:
@@ -16,11 +19,13 @@ ANDY:
  - See unaddedcases.txt for reference
 * Fix faulty classical go code in tutorials/race.md
  - I am avoiding for-loop cloning incorrectly since the for-loop is iterating over a map, see my StackOverflow post https://stackoverflow.com/questions/20185511/range-references-instead-values/72740187#72740187
+ - Remove comments saying "avoid for-loop cloning"
+ - Update percentage descriptions corresponding to amount of lines after update
  - The initial map cannot have two of the same key, meaning we have to implement x_KEYNAME for each key in the map and then decode this within the procedure
 * Lambda tutorial updates
  - Replace makeSampleStack() with MakeStack() from frontend.go
  - Make some more lambda function examples which use workingMemory param
- - Remove mainFunc, replace mainFunc calls in Lambda() with Get()
+ - Remove MainFunc, replace MainFunc calls in Lambda() with Get() and other frontend functions
 * Implement bootstrap functions, take inspiration from common functions in other languages
 * Add some more tutorials using functions in the documentation even if they haven't been implemented yet
 

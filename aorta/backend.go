@@ -1,24 +1,23 @@
 package aorta
 
-func GOSTACK_back_GetIndexFromMap(m []*map) {
-	
-}
-
+// (variadic []*interface{}, var1 interface{}, var2 interface{}, ..., varn interface{})
 func GOSTACK_back_UnpackVariadic(variadic []*interface{}, into ...*interface{}) {
 	for i, v := range into {
 		*v = variadic[i]
 	}
 }
 
-func GOSTACK_back_MakeCard(idx int, variadic ...*interface{}) (card *Card) {
+// (val ...interface{}, key ...interface{}, idx ...int)
+func GOSTACK_back_MakeCard(variadic ...*interface{}) (card *Card) {
 
 	// unpack variadic into optional parameters
-	var val, key *interface{}
-	GOSTACK_back_UnpackVariadic(variadic, val, key)
+	var val, key *interface{} // pass by reference
+	var idx interface{} // pass by object
+	GOSTACK_back_UnpackVariadic(variadic, val, key, &idx)
 
 	// initialize and set new Card
 	card = new(Card)
-	card.idx = idx
+	card.idx = idx.(int) // pass a copy of idx into card.idx
 	card.key = key
 	card.val = val
 
@@ -27,6 +26,18 @@ func GOSTACK_back_MakeCard(idx int, variadic ...*interface{}) (card *Card) {
 
 }
 
+// stack.(lambda func(stack *Stack, card *Card) bool)
+func (stack *Stack) GOSTACK_back_iterator(lambda func(*Stack, *Card) bool) {
+	newStack := new(Stack)
+	for _, card := range stack.cards {
+		if lambda(stack, card) {
+			newStack.cards = append(newStack.cards, card)
+		}
+	}
+	stack.cards = newStack.cards
+}
+
+/*
 func gostack_back_AddCard(stack *Stack, card *Card, idx interface{}, beforeNotAfter bool) *Stack {
 
 	// insert card into new array slice to satisfy append function
@@ -171,13 +182,4 @@ func gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _data ...i
 	return
 
 }
-
-func (stack *Stack) gostack_back_iterator(lambda func(*Stack, *Card) bool) {
-	newStack := new(Stack)
-	for _, card := range stack.cards {
-		if lambda(stack, card) {
-			newStack.cards = append(newStack.cards, card)
-		}
-	}
-	stack.cards = newStack.cards
-}
+*/

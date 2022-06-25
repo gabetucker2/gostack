@@ -116,15 +116,13 @@ taskA := start.Get(RETURN_Vals, POSITION_Keys, searchKeys).Unique(TYPE_Val)
 taskB := MakeStack(STRUCTURE_Map, taskA, start.Get(RETURN_Idxs, POSITION_Vals, taskA).Unique(TYPE_Val))
 
  // TASK C
-func gostack_ValInRange(stack *Stack, card *Card) {
+taskC := taskB.Clone().Replace(pairsToInsert, RETURN_Stack, POSITION_Lambda, func(stack *Stack, card *Card) {
     v := card.val.(int)
-	return 1 < v && v < 3
-}
-
-taskC := taskB.Clone().Replace(pairsToInsert, RETURN_Stack, POSITION_Lambda, gostack_ValInRange)
+    return 1 < v && v < 3
+})
 ```
 
-`lines: 10`
+`lines: 9`
 
 <h2>Conclusion</h2>
 

@@ -1,19 +1,23 @@
 package aorta
 
-import "fmt"
+//
+func Interface(x interface{}) *interface{} {
+	return &x
+}
 
-// (idx int, val ...interface{}, key ...interface{})
-func MakeCard(idx int, variadic ...*interface{}) (card *Card) {
+// (val ...interface{}, key ...interface{}, idx ...int)
+func MakeCard(variadic ...*interface{}) (card *Card) {
 
 	// unpack variadic into optional parameters
-	var val, key interface{}
-	GOSTACK_back_UnpackVariadic(variadic, &val, &key)
+	var val, key, idx *interface{}
+	GOSTACK_back_UnpackVariadic(variadic, val, key, idx)
 
 	// return
-	return GOSTACK_back_MakeCard(idx, &val, &key)
+	return GOSTACK_back_MakeCard(val, key, idx)
 
 }
 
+// dependent upon MakeCard
 // (structureType STRUCTURE, input1 ...interface{}, input2 ...interface{})
 func MakeCards(structureType STRUCTURE, variadic ...*interface{}) (stack *Stack) {
 
@@ -23,56 +27,56 @@ func MakeCards(structureType STRUCTURE, variadic ...*interface{}) (stack *Stack)
 
 	stack = MakeStack()
 
-	if structureType == STRUCTURE_Map {
+	switch structureType {
 
-		switch fmt.Sprintf("%t", input1) {
+	case STRUCTURE_Arr:
 
-		case "[]":
+		_input1 := input1.([]*interface{})
+		for i := range _input1 {
+			MakeCard(_input1[i], nil, Interface(5))
+		}
 
-			if rec, ok := input1.(map[string]*interface{}); ok {
-				for i := range rec {
-					k, v := rec[i] // avoid for-loop cloning
-					MakeCard(i, v, k)
-				}
+	case STRUCTURE_Map:
+
+		switch input1.(type) {
+
+		case []interface{}:
+
+			_input1 := input1.([]interface{})
+			_input2 := input2.([]interface{})
+			for i := range _input1 {
+				MakeCard(&_input2[i], &_input1[i], i)
 			}
 
-		case "map[]": // case []interface{}
+		case map[interface{}]interface{}: // case []interface{}
 
-			for i := range len(input1) {
-				k := input1[i] // avoid for-loop cloning
-				v := input2[i] // avoid for-loop cloning
-				MakeCard(i, v, k)
+			_input1 := input1.(map[interface{}]interface{})
+			i := 0
+			for _k := range _input1 {
+				v := _input1[_k]
+				k := _input1[_k]//todo:fix
+				MakeCard(&v, &k, i)
+				i++
 			}
 
 		}
-
-	} else if STRUCTURETYPE == STRUCTURE_Arr {
-
-		for i := range len(input1) {
-			v := input1[i] // avoid for-loop cloning
-			MakeCard(i, v)
-		}
-
 	}
 
 	return
 
 }
 
+// dependent upon MakeCards
 // (structureType ...STRUCTURE, input1 ...interface{}, input2 ...interface{})
 func MakeStack(variadic ...*interface{}) (stack *Stack) {
 
-	var structureType STRUCTURE
+	var structureType *STRUCTURE
 	var input1, input2 *interface{}
 	GOSTACK_back_UnpackVariadic(variadic, input1, input2)
 
 	if structureType != nil {
 		// if structureType passed in, get stack of cards from MakeCards
-		if input2 != nil {
-			stack = MakeCards(structureType, input1, input2)
-		} else {
-			stack = MakeCards(structureType, input1)
-		}
+		stack = MakeCards(*structureType, input1, input2)
 	} else {
 		// if no structureType passed in, just execute normally
 		stack = new(Stack)
@@ -84,6 +88,7 @@ func MakeStack(variadic ...*interface{}) (stack *Stack) {
 
 }
 
+// ()
 func (stack *Stack) Empty() *Stack {
 
 	stack.size = 0

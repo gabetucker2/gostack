@@ -6,7 +6,7 @@ import (
 
 // TEMPLATE:
 /*
-func gostack_NameHere(stack *Stack, card *Card, workingMemory *interface{}) (ret bool) {
+func gostack_tutorials_lambda_NameHere(stack *Stack, card *Card, workingMemory *interface{}) (ret bool) {
 
 	if workingMemory == nil { // first run setup
 		workingMemory = MakeStack()
@@ -23,21 +23,21 @@ func gostack_NameHere(stack *Stack, card *Card, workingMemory *interface{}) (ret
 }
 */
 
-func gostack_lambda_ValInRange(stack *Stack, card *Card, workingMemory ...*Stack) bool {
+func gostack_tutorials_lambda_ValInRange(stack *Stack, card *Card, workingMemory ...*Stack) bool {
 	v := card.val.(int)
 	return 5 < v && v < 14 && v%2 == 0
 }
 
-func gostack_lambda_KeyInRange(stack *Stack, card *Card, workingMemory ...*Stack) bool {
+func gostack_tutorials_lambda_KeyInRange(stack *Stack, card *Card, workingMemory ...*Stack) bool {
 	k := card.key.(int)
 	return k%5 == 0
 }
 
-func gostack_lambda_BothInRange(stack *Stack, card *Card, workingMemory ...*Stack) bool {
+func gostack_tutorials_lambda_BothInRange(stack *Stack, card *Card, workingMemory ...*Stack) bool {
 	return gostack_ValInRange(stack, card) && gostack_KeyInRange(stack, card)
 }
 
-func gostack_lambda_Max(stack *Stack, card *Card, workingMemory ...*Stack) bool {
+func gostack_tutorials_lambda_Max(stack *Stack, card *Card, workingMemory ...*Stack) bool {
 
 	if workingMemory == nil { // first run setup
 		workingMemory = MakeStack()
@@ -56,7 +56,7 @@ func gostack_lambda_Max(stack *Stack, card *Card, workingMemory ...*Stack) bool 
 
 func (stack *Stack) MainFunc(lambda func(*Stack, *Card) bool) { // TODO: delete
 
-	stack.gostack_back_iterator(lambda)
+	stack.GOSTACK_back_iterator(lambda)
 
 	fmt.Println(" - vals after:")
 	for _, card := range stack.cards {
@@ -82,14 +82,24 @@ func makeSampleStack() *Stack { // very rough ugly outline
 
 func Lambda() {
 
-	// `stack.Get(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
+	//////////////////////////////////
 
-	makeSampleStack().MainFunc(gostack_lambda_ValInRange) // 10, 12
+	// val in range
+	makeSampleStack().MainFunc(func(stack *Stack, card *Card, workingMemory ...*Stack) bool {
+		v := card.val.(int)
+		return 5 < v && v < 14 && v%2 == 0
+	}) // 10, 12
 
-	makeSampleStack().MainFunc(gostack_lambda_KeyInRange) // 2, 10, 40
+	// SAME AS
 
-	makeSampleStack().MainFunc(gostack_lambda_BothInRange) // 10
+	makeSampleStack().MainFunc(gostack_tutorials_lambda_ValInRange) // 10, 12
 
-	makeSampleStack().Get(.., gostack_lambda_Max) // 40
+	//////////////////////////////////
+
+	makeSampleStack().MainFunc(gostack_tutorials_lambda_KeyInRange) // 2, 10, 40
+
+	makeSampleStack().MainFunc(gostack_tutorials_lambda_BothInRange) // 10
+
+	makeSampleStack().MainFunc(gostack_tutorials_lambda_Max) // 40
 
 }

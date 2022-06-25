@@ -4,10 +4,10 @@ import "strconv"
 
 // test variables
 
-var testCardA = gostack_back_NewCard("Card A") // in sample stack
-var testCardB = gostack_back_NewCard("Card B") // in sample stack
-var testCardC = gostack_back_NewCard("Card C") // in sample stack
-var testCardD = gostack_back_NewCard("Card D") // out of sample stack
+var testCardA = GOSTACK_back_MakeCard("Card A") // in sample stack
+var testCardB = GOSTACK_back_MakeCard("Card B") // in sample stack
+var testCardC = GOSTACK_back_MakeCard("Card C") // in sample stack
+var testCardD = GOSTACK_back_MakeCard("Card D") // out of sample stack
 
 // test functions
 

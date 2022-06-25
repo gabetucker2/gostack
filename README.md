@@ -27,6 +27,8 @@
  >> [Glossary](#glossary)
  >
  >> [File Explanations](#fileExplanations)
+ >
+ >> [Conventions](#conventions)
 
  > [Overview](#overview)
  >> [Brief Documentation](#briefDocumentation)
@@ -123,6 +125,16 @@
  >
  > [TODO.txt](/TODO.txt) is a task list, intended only for the developers
 
+<h1 name = "conventions">CONVENTIONS</h1>
+
+ <h2>Naming</h2>
+
+ * "FunctionName" functions are public frontend functions
+ * "GOSTACK_..." functions are public backend functions
+ * "gostack_..." functions are private backend functions
+
+ When you create or update a new stack, card, or card property, the **key** and **val** properties of that card—as well as the card and the stacks themselves—will always be updated by passing your arguments by reference.  **idx** is not passed by reference because if the user passed the same **idx** object into multiple cards without first cloning, this could cause catastrophic internal damage (whereas for **key** and **val**, this is a feature of the ***gostack***).
+
 <h1 name = "overview">OVERVIEW</h1>
 
 <h1 name = "briefDocumentation">Brief Documentation</h1>
@@ -180,7 +192,7 @@
 
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
- * **MakeCard(idx, ...key, ...val)**
+ * **MakeCard(...idx, ...key, ...val)**
  * **MakeCards(STRUCTURE_*, ...input1, ...input1)**
  * **MakeStack(...STRUCTURE_*, ...input1, ...input2)**
  * **stack.Empty()**
@@ -357,7 +369,7 @@
 
 <h3 name = "MakeCard">MakeCard</h3>
 
- > `MakeCard(idx, ...val, ...key)`
+ > `MakeCard(...val, ...key, ...idx)`
  >> CONSTRUCTOR: ***TRUE***
  >>> Card
  >
@@ -367,11 +379,11 @@
  >> SETTER: ***FALSE***
  
  > ***Special Parameters***
- >> **idx** *int* the index to which to set this card
- >
  >> **...val** *any type* representing the card's value (or nil if not passed)
  >
  >> **...key** *any type* representing the card's key (or nil if not passed)
+ >
+ >> **idx** *int* the index to which to set this card
  
  > ***Pseudocode***
  >> returns a new Card whose val is val and key is key
