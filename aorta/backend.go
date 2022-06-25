@@ -1,23 +1,22 @@
 package aorta
 
-// (variadic []*interface{}, var1 interface{}, var2 interface{}, ..., varn interface{})
-func GOSTACK_back_UnpackVariadic(variadic []*interface{}, into ...*interface{}) {
+// (variadic, var1 any, var2 any, ..., varn any)
+func GOSTACK_back_UnpackVariadic(variadic []interface{}, into ...*interface{}) {
 	for i, v := range into {
 		*v = variadic[i]
 	}
 }
 
-// (val ...interface{}, key ...interface{}, idx ...int)
-func GOSTACK_back_MakeCard(variadic ...*interface{}) (card *Card) {
+// (val ...any, key ...any, idx ...int)
+func GOSTACK_back_MakeCard(variadic ...interface{}) (card *Card) {
 
 	// unpack variadic into optional parameters
-	var val, key *interface{} // pass by reference
-	var idx interface{} // pass by object
-	GOSTACK_back_UnpackVariadic(variadic, val, key, &idx)
+	var val, key, idx interface{}
+	GOSTACK_back_UnpackVariadic(variadic, &val, &key, &idx)
 
 	// initialize and set new Card
 	card = new(Card)
-	card.idx = idx.(int) // pass a copy of idx into card.idx
+	card.idx = idx.(int)
 	card.key = key
 	card.val = val
 

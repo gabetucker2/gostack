@@ -8,7 +8,6 @@
 
  ***gostack***'s stacks...
  * ...replace maps and arrays, removing the need for pesky index-key-value fetching or translating data between maps and arrays, all the while supporting smooth conversion between stacks and your existing maps and arrays
- * ...remove the need for interfaces, meaning no more convoluted on-the-go frameworks for handling arbitrary argument types are necessary
  * ...offer the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity of 4 nested for-loops in a single line
  * ...allow the user to get and set based on reference or object with ease, preventing the user from having to worry about convoluted pointer/address management
  * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create sorting mechanisms of their own design
@@ -133,7 +132,9 @@
  * "GOSTACK_..." functions are public backend functions
  * "gostack_..." functions are private backend functions
 
- When you create or update a new stack, card, or card property, the **key** and **val** properties of that card—as well as the card and the stacks themselves—will always be updated by passing your arguments by reference.  **idx** is not passed by reference because if the user passed the same **idx** object into multiple cards without first cloning, this could cause catastrophic internal damage (whereas for **key** and **val**, this is a feature of the ***gostack***).
+ <h2>Design-By-Contract</h2>
+
+ We use design-by-contract principles with JDoc annotations, as implemented by OSU's CSE department (http://web.cse.ohio-state.edu/software/2221/web-sw1/extras/slides/09.Design-by-Contract.pdf).
 
 <h1 name = "overview">OVERVIEW</h1>
 
@@ -149,9 +150,9 @@
  >> **size** *int*
 
  > **card** *Card*
- >> **key** *any type*
+ >> **key** *any*
  >
- >> **val** *any type*
+ >> **val** *any*
 
 <h3 name = "enumsBrief">Enums</h3>
 
@@ -160,10 +161,10 @@
  > * RETURN_Stack *input Stack*
  > * RETURN_Idx *int*
  > * RETURN_Idxs *Stack of ints*
- > * RETURN_Key *any type*
- > * RETURN_Keys *Stack of any type*
- > * RETURN_Val *any type*
- > * RETURN_Vals *Stack of any type*
+ > * RETURN_Key *any*
+ > * RETURN_Keys *Stack of any*
+ > * RETURN_Val *any*
+ > * RETURN_Vals *Stack of any*
  > * RETURN_Card *Card*
  > * RETURN_Cards *Stack of Cards*
 
@@ -173,10 +174,10 @@
  > * POSITION_Last *NONE*
  > * POSITION_Idx *int*
  > * POSITION_Idxs *Stack of ints*
- > * POSITION_Val *any type*
- > * POSITION_Vals *Stack of any type*
- > * POSITION_Key *any type*
- > * POSITION_Keys *Stack of any type*
+ > * POSITION_Val *any*
+ > * POSITION_Vals *Stack of any*
+ > * POSITION_Key *any*
+ > * POSITION_Keys *Stack of any*
  > * POSITION_Card *Card*
  > * POSITION_Cards *Stack of Cards*
  > * POSITION_All *NONE*
@@ -193,8 +194,8 @@
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
  * **MakeCard(...idx, ...key, ...val)**
- * **MakeCards(STRUCTURE_*, ...input1, ...input1)**
- * **MakeStack(...STRUCTURE_*, ...input1, ...input2)**
+ * **MakeCards(...input1, ...input1)**
+ * **MakeStack(...input1, ...input2)**
  * **stack.Empty()**
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
@@ -230,10 +231,10 @@
  >>> `card.idx` *int*
  >>>> The index of this card
  >>>
- >>> `card.key` *any type (interface{})*
+ >>> `card.key` *any (interface{})*
  >>>> The key of this card (or nil if doesn't exist)
  >>>
- >>> `card.val` *any type (interface{})*
+ >>> `card.val` *any (interface{})*
  >>>> The val of this card (or nil if doesn't exist)
 
 <h3 name = "enums">enums</h3>
@@ -301,16 +302,16 @@
  >>> Stack of ints
  >>
  >> POSITION_Val
- >>>  any type (interface{})
+ >>>  any (interface{})
  >>
  >> POSITION_Vals
- >>> Stack of any type (interface{})
+ >>> Stack of any (interface{})
  >>
  >> POSITION_Key
- >>>  any type (interface{})
+ >>>  any (interface{})
  >>
  >> POSITION_Keys
- >>> Stack of  any type (interface{})
+ >>> Stack of  any (interface{})
  >>
  >> POSITION_Card
  >>> Card
@@ -357,14 +358,6 @@
  >>> default
  >> MATCH_Reference
 
-<h4 name = "STRUCTURE">STRUCTURE</h4>
-
- This is an enum intended to make it easy to target whether an array or a map is the intended data structure to create.
-
- > ***MATCH***
- >> STRUCTURE_Map
- >> STRUCTURE_Arr
-
 <h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>
 
 <h3 name = "MakeCard">MakeCard</h3>
@@ -379,9 +372,9 @@
  >> SETTER: ***FALSE***
  
  > ***Special Parameters***
- >> **...val** *any type* representing the card's value (or nil if not passed)
+ >> **...val** *any* representing the card's value (or nil if not passed)
  >
- >> **...key** *any type* representing the card's key (or nil if not passed)
+ >> **...key** *any* representing the card's key (or nil if not passed)
  >
  >> **idx** *int* the index to which to set this card
  
@@ -390,42 +383,36 @@
 
 <h3 name = "MakeCards">MakeCards</h3>
 
- > `MakeCards(STRUCTURE_*, ...input1, ...input2)`
- >> CONSTRUCTOR: ***TRUE***
- >>> Stack, Cards
- >
- >> GETTER: ***TRUE***
- >>> Stack
- >
- >> SETTER: ***FALSE***
+ `MakeCards(...input1, ...input2)`
  
- > ***Special Parameters***
- >> **input1** *[]interface{} OR map[interface{}]interface{}*
- >>> *see pseudocode for explanation*
- >
- >> **input2** *[]interface{}*
- >>> *see pseudocode for explanation*
- >>
- >> *len(input1) must equal len(input2)*
- 
- > ***Pseudocode***
- >> creates a new stack of cards with size == len(either input)
- >
- >> **IF STRUCTURE_Map**
- >>> **IF input1 IS AN INTERFACE ARRAY**
- >>>> for each card at index i, its key is input1[i] and its value is input2[i]
- >>
- >>> **ELSE IF input1 IS A MAP**
- >>>> for each card, its key and value are set to the input1's corresponding cards' keys and values (input 2 is ignored)
- >>
- >> **ELSE IF STRUCTURE_Arr**
- >>> for each card, its value is set to the input1's corresponding cards' values (input 2 is ignored)
- >
- >> returns the stack of cards
+ /**
+ Makes a stack of cards with inputted vals and keys
+ @param optional `input1` type{any, []any, map[any]any}
+ @param optional `input2` type{any, []any}
+ @returns type{*Stack} the newly-constructed stack of cards
+ @constructs type{*Stack} a newly-constructed stack of cards
+ @requires
+  * `input1` is map and no `input2` passed
+      OR `input1` is an array and no `input2` passed
+	  OR `input1` is an array and `input2` is an array
+  * IF `input1` and `input2` are both passed as arguments
+      |`input1`| == |`input2`|
+  * MakeCard() has been implemented
+ @ensures
+  * IF `input1` is passed
+	    IF `input1` is a map
+          unpack the map into new cards with corresponding keys and vals
+        ELSEIF `input1` is an array and `input2` is not passed
+          unpack values from `input1` into new cards
+        ELSEIF `input1` is an array and `input2` is an array
+		  unpack keys from `input1` and values from `input2` into new cards
+	ELSE
+	  the stack is empty
+ */
 
 <h3 name = "MakeStack">MakeStack</h3>
 
- > `MakeStack(...STRUCTURE_*, ...input1, ...input2)`
+ > `MakeStack(...input1, ...input2)`
  >> CONSTRUCTOR: ***TRUE***
  >>> Stack
  >
@@ -611,7 +598,7 @@
 
 <h2 name = "footer">Footer</h1>
 
-This project was created by Gabe Tucker with the help of Andy Chen.
+This project was created by Gabe Tucker with contributions from Andy Chen.
 
 If there are any changes or comments you would like to have made in respect to this project, please email `tucker.854@osu.edu`.  I appreciate any feedback and will usually respond within 1-2 business days.
 

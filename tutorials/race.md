@@ -105,15 +105,15 @@ for k, v := range taskB {
 
 ```
 // INIT
-start := MakeStack(STRUCTURE_Map, map[interface{}]interface{} {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520})
-searchKeys := MakeStack(STRUCTURE_Arr, []interface{} {"Key A", 2.5, "Michael Keaton"})
-pairsToInsert := MakeStack(STRUCTURE_Map, map[interface{}]interface{} {"I" : "Am new", "To" : "This set"})
+start := MakeStack(map[interface{}]interface{} {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520})
+searchKeys := MakeStack([]interface{} {"Key A", 2.5, "Michael Keaton"})
+pairsToInsert := MakeStack(map[interface{}]interface{} {"I" : "Am new", "To" : "This set"})
 
 // TASK A
 taskA := start.Get(RETURN_Vals, POSITION_Keys, searchKeys).Unique(TYPE_Val)
 
 // TASK B
-taskB := MakeStack(STRUCTURE_Map, taskA, start.Get(RETURN_Idxs, POSITION_Vals, taskA).Unique(TYPE_Val))
+taskB := MakeStack(taskA, start.Get(RETURN_Idxs, POSITION_Vals, taskA).Unique(TYPE_Val))
 
  // TASK C
 taskC := taskB.Clone().Replace(pairsToInsert, RETURN_Stack, POSITION_Lambda, func(stack *Stack, card *Card) {

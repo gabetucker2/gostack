@@ -1,7 +1,7 @@
 ---------------------------------------------------------------
 GABE:
 * Resolve issue with frontend: https://stackoverflow.com/questions/72750480/passing-variables-of-different-types-by-reference-as-arguments-to-same-variadic
-* Create function annotation convention
+* Add jdoc comments for functions
 * Make ORDER_*, POSITION_* optional for add function (only if first value being inserted)
 * Function cleanup
  - Ensure public functions are capital whereas private functions are lowercase
@@ -11,7 +11,6 @@ GABE:
 * Implement all documented functions
 * Implement rest of functions in ToAdd documentation
 * Update gostack banner to have code from a tutorial
-* Add conventions section to README
 
 ---------------------------------------------------------------
 ANDY:
@@ -28,6 +27,7 @@ ANDY:
  - Remove MainFunc, replace MainFunc calls in Lambda() with Get() and other frontend functions
 * Implement bootstrap functions, take inspiration from common functions in other languages
 * Add some more tutorials using functions in the documentation even if they haven't been implemented yet
+ - Add passing-by-object vs passing-by-address tutorial (just & before variable, our functions support that)
 
 ---------------------------------------------------------------
 IMPLEMENTED TESTED DOCUMENTED FUNCTIONS:

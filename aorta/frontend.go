@@ -1,12 +1,7 @@
 package aorta
 
-//
-func Interface(x interface{}) *interface{} {
-	return &x
-}
-
-// (val ...interface{}, key ...interface{}, idx ...int)
-func MakeCard(variadic ...*interface{}) (card *Card) {
+// (val ...any, key ...any, idx ...int)
+func MakeCard(variadic ...interface{}) (card *Card) {
 
 	// unpack variadic into optional parameters
 	var val, key, idx *interface{}
@@ -17,9 +12,31 @@ func MakeCard(variadic ...*interface{}) (card *Card) {
 
 }
 
-// dependent upon MakeCard
-// (structureType STRUCTURE, input1 ...interface{}, input2 ...interface{})
-func MakeCards(structureType STRUCTURE, variadic ...*interface{}) (stack *Stack) {
+/**
+ Makes a stack of cards with inputted vals and keys
+ @param optional `input1` type{any, []any, map[any]any}
+ @param optional `input2` type{any, []any}
+ @returns type{*Stack} the newly-constructed stack of cards
+ @constructs type{*Stack} a newly-constructed stack of cards
+ @requires
+  * `input1` is map and no `input2` passed
+      OR `input1` is an array and no `input2` passed
+	  OR `input1` is an array and `input2` is an array
+  * IF `input1` and `input2` are both passed as arguments
+      |`input1`| == |`input2`|
+  * MakeCard() has been implemented
+ @ensures
+  * IF `input1` is passed
+	    IF `input1` is a map
+          unpack the map into new cards with corresponding keys and vals
+        ELSEIF `input1` is an array and `input2` is not passed
+          unpack values from `input1` into new cards
+        ELSEIF `input1` is an array and `input2` is an array
+		  unpack keys from `input1` and values from `input2` into new cards
+	ELSE
+	  the stack is empty
+ */
+func MakeCards(variadic ...interface{}) (stack *Stack) {
 
 	// unpack variadic into optional parameters
 	var input1, input2 interface{}
@@ -31,35 +48,34 @@ func MakeCards(structureType STRUCTURE, variadic ...*interface{}) (stack *Stack)
 
 	case STRUCTURE_Arr:
 
-		_input1 := input1.([]*interface{})
-		for i := range _input1 {
-			MakeCard(_input1[i], nil, Interface(5))
+		vals := input1.([]interface{})
+		for i := range vals {
+			MakeCard(&vals[i], nil, i)
 		}
 
 	case STRUCTURE_Map:
 
-		switch input1.(type) {
+		switch reflect.TypeOf(input1).Key() {
 
 		case []interface{}:
 
-			_input1 := input1.([]interface{})
-			_input2 := input2.([]interface{})
-			for i := range _input1 {
-				MakeCard(&_input2[i], &_input1[i], i)
+			keys := input1.([]interface{})
+			vals := input2.([]interface{})
+			for i := range keys {
+				MakeCard(&vals[i], &keys[i], i)
 			}
 
-		case map[interface{}]interface{}: // case []interface{}
+		case map[interface{}]interface{}:
 
-			_input1 := input1.(map[interface{}]interface{})
+			m := input1.(map[interface{}]interface{})
 			i := 0
-			for _k := range _input1 {
-				v := _input1[_k]
-				k := _input1[_k]//todo:fix
-				MakeCard(&v, &k, i)
+			for k, v := range m {
+				MakeCard(v, k, i)
 				i++
 			}
 
 		}
+
 	}
 
 	return
@@ -67,18 +83,17 @@ func MakeCards(structureType STRUCTURE, variadic ...*interface{}) (stack *Stack)
 }
 
 // dependent upon MakeCards
-// (structureType ...STRUCTURE, input1 ...interface{}, input2 ...interface{})
-func MakeStack(variadic ...*interface{}) (stack *Stack) {
+// (input1 ...interface{}, input2 ...interface{})
+func MakeStack(variadic ...interface{}) (stack *Stack) {
 
-	var structureType *STRUCTURE
 	var input1, input2 *interface{}
 	GOSTACK_back_UnpackVariadic(variadic, input1, input2)
 
-	if structureType != nil {
-		// if structureType passed in, get stack of cards from MakeCards
-		stack = MakeCards(*structureType, input1, input2)
+	if input1 != nil {
+		// if input is passed in, pass input values to MakeCards
+		stack = MakeCards(input1, input2)
 	} else {
-		// if no structureType passed in, just execute normally
+		// if no input is passed in, just make an empty stack
 		stack = new(Stack)
 		stack.size = 0
 	}
