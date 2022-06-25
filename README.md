@@ -63,11 +63,9 @@
  >>>>> [STRUCTURE](#STRUCTURE)
  >>>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
- >>>> [MakeStack(...)](#MakeStack)
- >>>
  >>>> [MakeCard(...)](#MakeCard)
  >>>
- >>>> [MakeCards(...)](#MakeCards)
+ >>>> [MakeStack(...)](#MakeStack)
  >>>
  >>>> [stack.Empty()](#Empty)
  >>>
@@ -194,8 +192,7 @@
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
  * **MakeCard(...idx, ...key, ...val)**
- * **MakeCards(...input1, ...input1, ...repeats)**
- * **MakeStack(...input1, ...input2)**
+ * **MakeStack(...input1, ...input2, ...repeats)**
  * **stack.Empty()**
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
@@ -374,16 +371,16 @@
  @ensures the new card will have val `val`, key `key`, and idx `idx`
  ```
 
-<h3 name = "MakeCards">MakeCards</h3>
+<h3 name = "MakeStack">MakeStack</h3>
 
- `MakeCards(...input1, ...input2, ...repeats)`
+ `MakeStack(...input1, ...input2, ...repeats)`
  ```
- Makes a stack of cards with inputted vals and keys
- 
- @param optional `input1` type{[]any, map[any]any}
- @param optional `input2` type{[]any}
- @param optional `repeats` type{int}
- @returns type{*Stack} the newly-constructed stack of cards
+Makes a stack of cards with inputted vals and keys
+
+@param optional `input1` type{[]any, map[any]any}
+@param optional `input2` type{[]any}
+@param optional `repeats` type{int}
+@returns type{*Stack} the newly-constructed stack of ards
  @constructs type{*Stack} a newly-constructed stack of cards
  @requires
   * `input1` is map and nil `input2`
@@ -404,34 +401,6 @@
 	  ELSE
 	    the stack is empty
  ```
-
-<h3 name = "MakeStack">MakeStack</h3>
-
- > `MakeStack(...input1, ...input2)`
- >> CONSTRUCTOR: ***TRUE***
- >>> Stack
- >
- >> GETTER: ***TRUE***
- >>> \*Stack
- >
- >> SETTER: ***FALSE***
- 
- > ***Special Parameters***
- >> **input1** *[]interface{} OR map[interface{}]interface{}*
- >>> *see pseudocode for explanation*
- >
- >> **input2** *[]interface{}*
- >>> *see pseudocode for explanation*
- 
- > ***Pseudocode***
- >> makes a new Stack 
- >>
- >> **IF STRUCTURE_* IS DEFINED**
- >>> invokes MakeCards() passing this function's inputted parameters as arguments
- >>
- >>> fills the stack with the new cards
- >>
- >> returns the new Stack
  
 <h3 name = "Empty">Empty</h3>
  

@@ -24,13 +24,13 @@ func MakeCard(variadic ...interface{}) (card *Card) {
 
 }
 
-/** Makes a stack of cards with inputted vals and keys
+/** Makes a stack of cards with optional starting cards
  
  @param optional `input1` type{[]any, map[any]any}
  @param optional `input2` type{[]any}
  @param optional `repeats` type{int}
- @returns type{*Stack} the newly-constructed stack of cards
- @constructs type{*Stack} a newly-constructed stack of cards
+ @returns type{*Stack} the newly-constructed stack of newly-constructed cards
+ @constructs type{*Stack} a newly-constructed stack of newly-constructed cards
  @requires
   * `input1` is map and nil `input2`
       OR `input1` is an array and nil `input2`
@@ -50,11 +50,11 @@ func MakeCard(variadic ...interface{}) (card *Card) {
 	  ELSE
 	    the stack is empty
  */
-func MakeCards(variadic ...interface{}) (stack *Stack) {
+func MakeStack(variadic ...interface{}) (stack *Stack) {
 
 	// INIT
 	// initialize stack
-	stack = MakeStack()
+	stack = new(Stack)
 
 	// unpack variadic into optional parameters
 	var input1, input2, repeats interface{}
@@ -106,35 +106,13 @@ func MakeCards(variadic ...interface{}) (stack *Stack) {
 						)
 					}
 				}
-
 			}
-			
 		}
-
 	}
+
+	stack.size = len(stack.cards)
 
 	return
-
-}
-
-// dependent upon MakeCards
-// (input1 ...interface{}, input2 ...interface{})
-func MakeStack(variadic ...interface{}) (stack *Stack) {
-
-	var input1, input2 *interface{}
-	GOSTACK_back_UnpackVariadic(variadic, input1, input2)
-
-	if input1 != nil {
-		// if input is passed in, pass input values to MakeCards
-		stack = MakeCards(input1, input2)
-	} else {
-		// if no input is passed in, just make an empty stack
-		stack = new(Stack)
-		stack.size = 0
-	}
-
-	// return
-	return stack
 
 }
 

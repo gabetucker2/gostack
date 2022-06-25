@@ -16,7 +16,6 @@ type POSITION int
 type TYPE int
 type ORDER int
 type MATCH int
-type STRUCTURE int
 
 const (
 	RETURN_Stack RETURN = iota
@@ -59,9 +58,4 @@ const (
 const (
 	MATCH_Object MATCH = iota
 	MATCH_Reference
-)
-
-const (
-	STRUCTURE_Map STRUCTURE = iota
-	STRUCTURE_Arr
 )
