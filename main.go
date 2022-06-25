@@ -4,7 +4,6 @@ import (
 	"github.com/gabetucker2/gostack/gostack_casetests"
 	"github.com/gabetucker2/gostack/gostack_tutorials"
 	"github.com/gabetucker2/gostack/gostack_aorta"
-	"github.com/gabetucker2/gostack/gostack"
 )
 
 func main() {

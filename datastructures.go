@@ -1,4 +1,4 @@
-package gostack
+package main
 
 type Card struct {
 	idx int

@@ -1,4 +1,4 @@
-package gostack
+package main
 
 import (
 	"reflect"

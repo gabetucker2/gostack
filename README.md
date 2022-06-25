@@ -98,10 +98,9 @@
  >
  >> [unaddedcases.txt](/casetests/unaddedcases.txt) is where data to be added into future case tests is stored, intended only for the developers
  >
- > [gostack](/gostack) [**gostack** package]
- >> [datastructures.go](/aorta/datastructures.go) initializes structs and enums
+ > [datastructures.go](/datastructures.go) initializes structs and enums
  >
- >> [frontend.go](/aorta/frontend.go) contains the functions that the user of this library will be calling
+ > [frontend.go](/frontend.go) contains the functions that the user of this library will be calling
  >
  > [images](/images)
  >> **gostack_Smaller.png** is the banner image for this project

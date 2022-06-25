@@ -1,9 +1,5 @@
 package gostack_aorta
 
-import (
-	"github.com/gabetucker2/gostack/gostack"
-)
-
 // (variadic, var1 any, var2 any, ..., varn any)
 func GOSTACK_back_UnpackVariadic(variadic []interface{}, into ...*interface{}) {
 	for i, v := range into {
