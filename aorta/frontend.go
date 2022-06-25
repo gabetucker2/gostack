@@ -1,6 +1,18 @@
 package aorta
 
-// (val ...any, key ...any, idx ...int)
+import (
+	"reflect"
+)
+
+/** Makes a card with inputted vals and keys
+
+ @param optional `val` type{any}
+ @param optional `key` type{any}
+ @param optional `idx` type{int}
+ @returns type{*Card} the newly-constructed card
+ @constructs type{*Card} a newly-constructed card
+ @ensures the new card will have val `val`, key `key`, and idx `idx`
+*/
 func MakeCard(variadic ...interface{}) (card *Card) {
 
 	// unpack variadic into optional parameters
@@ -12,68 +24,91 @@ func MakeCard(variadic ...interface{}) (card *Card) {
 
 }
 
-/**
- Makes a stack of cards with inputted vals and keys
- @param optional `input1` type{any, []any, map[any]any}
- @param optional `input2` type{any, []any}
+/** Makes a stack of cards with inputted vals and keys
+ 
+ @param optional `input1` type{[]any, map[any]any}
+ @param optional `input2` type{[]any}
+ @param optional `repeats` type{int}
  @returns type{*Stack} the newly-constructed stack of cards
  @constructs type{*Stack} a newly-constructed stack of cards
  @requires
-  * `input1` is map and no `input2` passed
-      OR `input1` is an array and no `input2` passed
+  * `input1` is map and nil `input2`
+      OR `input1` is an array and nil `input2`
 	  OR `input1` is an array and `input2` is an array
   * IF `input1` and `input2` are both passed as arguments
       |`input1`| == |`input2`|
   * MakeCard() has been implemented
  @ensures
-  * IF `input1` is passed
-	    IF `input1` is a map
-          unpack the map into new cards with corresponding keys and vals
-        ELSEIF `input1` is an array and `input2` is not passed
-          unpack values from `input1` into new cards
-        ELSEIF `input1` is an array and `input2` is an array
-		  unpack keys from `input1` and values from `input2` into new cards
-	ELSE
-	  the stack is empty
+  * `repeats` (or, if nil or under 0, 1) amount of times
+      IF `input1` is passed
+	      IF `input1` is a map
+            unpack the map into new cards with corresponding keys and vals
+          ELSEIF `input1` is an array and `input2` is not passed
+            unpack values from `input1` into new cards
+          ELSEIF `input1` is an array and `input2` is an array
+		    unpack keys from `input1` and values from `input2` into new cards
+	  ELSE
+	    the stack is empty
  */
 func MakeCards(variadic ...interface{}) (stack *Stack) {
 
-	// unpack variadic into optional parameters
-	var input1, input2 interface{}
-	GOSTACK_back_UnpackVariadic(variadic, &input1, &input2)
-
+	// INIT
+	// initialize stack
 	stack = MakeStack()
 
-	switch structureType {
+	// unpack variadic into optional parameters
+	var input1, input2, repeats interface{}
+	GOSTACK_back_UnpackVariadic(variadic, &input1, &input2, &repeats)
 
-	case STRUCTURE_Arr:
+	// BODY
+	// `repeats` (or, if nil or under 0, 1) amount of times
+	if repeats == nil || repeats.(int) < 0 { repeats = 1 }
+	for i := 0; i < repeats.(int); i++ {
 
-		vals := input1.([]interface{})
-		for i := range vals {
-			MakeCard(&vals[i], nil, i)
-		}
+		// IF `input1` is passed
+		if input1 != nil {
 
-	case STRUCTURE_Map:
+			input1Type := reflect.ValueOf(input1).Kind()
+			switch input1Type {
+			
+			// IF `input1` is a map
+			case reflect.Map:
+				// unpack the map into new cards with corresponding keys and vals
+				i := 0
+				for k, v := range input1.(map[interface{}]interface{}) {
+					stack.cards = append(
+						stack.cards,
+						MakeCard(&v, &k, i),
+					)
+					i++
+				}
+			
+			case reflect.Array:
+				input1Len := len(input1.([]interface{}))
 
-		switch reflect.TypeOf(input1).Key() {
+				// ELSEIF `input1` is an array and `input2` is not passed
+				if input2 != nil {
+					// unpack values from `input1` into new cards
+					for i := 0; i < input1Len; i++ {
+						stack.cards = append(
+							stack.cards,
+							MakeCard(&input1.([]interface{})[i], nil, i),
+						)
+					}
 
-		case []interface{}:
+				// ELSEIF `input1` is an array and `input2` is an array
+				} else {
+					// unpack keys from `input1` and values from `input2` into new cards
+					for i := 0; i < input1Len; i++ {
+						stack.cards = append(
+							stack.cards,
+							MakeCard(&input1.([]interface{})[i], &input2.([]interface{})[i], i),
+						)
+					}
+				}
 
-			keys := input1.([]interface{})
-			vals := input2.([]interface{})
-			for i := range keys {
-				MakeCard(&vals[i], &keys[i], i)
 			}
-
-		case map[interface{}]interface{}:
-
-			m := input1.(map[interface{}]interface{})
-			i := 0
-			for k, v := range m {
-				MakeCard(v, k, i)
-				i++
-			}
-
+			
 		}
 
 	}

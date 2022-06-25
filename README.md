@@ -194,7 +194,7 @@
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
  * **MakeCard(...idx, ...key, ...val)**
- * **MakeCards(...input1, ...input1)**
+ * **MakeCards(...input1, ...input1, ...repeats)**
  * **MakeStack(...input1, ...input2)**
  * **stack.Empty()**
 
@@ -363,52 +363,46 @@
 <h3 name = "MakeCard">MakeCard</h3>
 
  > `MakeCard(...val, ...key, ...idx)`
- >> CONSTRUCTOR: ***TRUE***
- >>> Card
- >
- >> GETTER: ***TRUE***
- >>> Card
- >
- >> SETTER: ***FALSE***
- 
- > ***Special Parameters***
- >> **...val** *any* representing the card's value (or nil if not passed)
- >
- >> **...key** *any* representing the card's key (or nil if not passed)
- >
- >> **idx** *int* the index to which to set this card
- 
- > ***Pseudocode***
- >> returns a new Card whose val is val and key is key
+ ```
+ Makes a card with inputted vals and keys
+
+ @param optional `val` type{any}
+ @param optional `key` type{any}
+ @param optional `idx` type{int}
+ @returns type{*Card} the newly-constructed card
+ @constructs type{*Card} a newly-constructed card
+ @ensures the new card will have val `val`, key `key`, and idx `idx`
+ ```
 
 <h3 name = "MakeCards">MakeCards</h3>
 
- `MakeCards(...input1, ...input2)`
+ `MakeCards(...input1, ...input2, ...repeats)`
  ```
- /**
  Makes a stack of cards with inputted vals and keys
- @param optional `input1` type{any, []any, map[any]any}
- @param optional `input2` type{any, []any}
+ 
+ @param optional `input1` type{[]any, map[any]any}
+ @param optional `input2` type{[]any}
+ @param optional `repeats` type{int}
  @returns type{*Stack} the newly-constructed stack of cards
  @constructs type{*Stack} a newly-constructed stack of cards
  @requires
-  * `input1` is map and no `input2` passed
-      OR `input1` is an array and no `input2` passed
+  * `input1` is map and nil `input2`
+      OR `input1` is an array and nil `input2`
 	  OR `input1` is an array and `input2` is an array
   * IF `input1` and `input2` are both passed as arguments
       |`input1`| == |`input2`|
   * MakeCard() has been implemented
  @ensures
-  * IF `input1` is passed
-	    IF `input1` is a map
-          unpack the map into new cards with corresponding keys and vals
-        ELSEIF `input1` is an array and `input2` is not passed
-          unpack values from `input1` into new cards
-        ELSEIF `input1` is an array and `input2` is an array
-		  unpack keys from `input1` and values from `input2` into new cards
-	ELSE
-	  the stack is empty
- */
+  * `repeats` (or, if nil, 1) amount of times:
+      IF `input1` is passed
+	      IF `input1` is a map
+            unpack the map into new cards with corresponding keys and vals
+          ELSEIF `input1` is an array and `input2` is not passed
+            unpack values from `input1` into new cards
+          ELSEIF `input1` is an array and `input2` is an array
+		    unpack keys from `input1` and values from `input2` into new cards
+	  ELSE
+	    the stack is empty
  ```
 
 <h3 name = "MakeStack">MakeStack</h3>
