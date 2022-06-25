@@ -17,7 +17,7 @@ func MakeCard(variadic ...interface{}) *Card {
 
 	// unpack variadic into optional parameters
 	var val, key, idx *interface{}
-	aorta.GOSTACK_back_UnpackVariadic(variadic, val, key, idx)
+	gostack_aorta.GOSTACK_back_UnpackVariadic(variadic, val, key, idx)
 
 	// return
 	return aorta.GOSTACK_back_MakeCard(val, key, idx)

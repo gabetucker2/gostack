@@ -1,5 +1,9 @@
 package gostack_aorta
 
+import (
+	"github.com/gabetucker2/gostack/gostack"
+)
+
 // (variadic, var1 any, var2 any, ..., varn any)
 func GOSTACK_back_UnpackVariadic(variadic []interface{}, into ...*interface{}) {
 	for i, v := range into {
@@ -21,7 +25,7 @@ func GOSTACK_back_UnpackVariadic(variadic []interface{}, into ...*interface{}) {
  @constructs type{*Card} a newly-constructed card
  @ensures the new card will have val `val`, key `key`, and idx `idx`
 */
-func GOSTACK_back_MakeCard(variadic ...interface{}) (card *Card) {
+func GOSTACK_back_MakeCard(variadic ...interface{}) (card *gostack.Card) {
 
 	// unpack variadic into optional parameters
 	var val, key, idx interface{}
