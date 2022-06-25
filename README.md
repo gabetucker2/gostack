@@ -384,7 +384,7 @@
 <h3 name = "MakeCards">MakeCards</h3>
 
  `MakeCards(...input1, ...input2)`
- 
+ ```
  /**
  Makes a stack of cards with inputted vals and keys
  @param optional `input1` type{any, []any, map[any]any}
@@ -409,6 +409,7 @@
 	ELSE
 	  the stack is empty
  */
+ ```
 
 <h3 name = "MakeStack">MakeStack</h3>
 
