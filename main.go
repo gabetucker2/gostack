@@ -1,9 +1,8 @@
 package main
 
 import (
-	"github.com/gabetucker2/gostack/casetests"
-	"github.com/gabetucker2/gostack/tutorials"
-	"github.com/gabetucker2/gostack/aorta"
+	"github.com/gabetucker2/gostack/gostack/casetests"
+	//"github.com/gabetucker2/gostack/gostack/tutorials"
 )
 
 func main() {

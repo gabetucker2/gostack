@@ -3,15 +3,15 @@ package casetests
 import (
 	"strconv"
 
-	"github.com/gabetucker2/gostack/aorta"
+	"github.com/gabetucker2/gostack/backend"
 )
 
 // test variables
 
-var testCardA = aorta.GOSTACK_back_MakeCard("Card A") // in sample stack
-var testCardB = aorta.GOSTACK_back_MakeCard("Card B") // in sample stack
-var testCardC = aorta.GOSTACK_back_MakeCard("Card C") // in sample stack
-var testCardD = aorta.GOSTACK_back_MakeCard("Card D") // out of sample stack
+var testCardA = backend.GOSTACK_back_MakeCard("Card A") // in sample stack
+var testCardB = backend.GOSTACK_back_MakeCard("Card B") // in sample stack
+var testCardC = backend.GOSTACK_back_MakeCard("Card C") // in sample stack
+var testCardD = backend.GOSTACK_back_MakeCard("Card D") // out of sample stack
 
 // test functions
 

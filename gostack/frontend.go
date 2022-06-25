@@ -1,4 +1,4 @@
-package main
+package gostack
 
 import (
 	"reflect"
@@ -6,21 +6,21 @@ import (
 
 /** Makes a card with inputted vals and keys
 
- @param optional `val` type{any}
- @param optional `key` type{any}
- @param optional `idx` type{int}
- @returns type{*Card} the newly-constructed card
- @constructs type{*Card} a newly-constructed card
- @ensures the new card will have val `val`, key `key`, and idx `idx`
+@param optional `val` type{any}
+@param optional `key` type{any}
+@param optional `idx` type{int}
+@returns type{*Card} the newly-constructed card
+@constructs type{*Card} a newly-constructed card
+@ensures the new card will have val `val`, key `key`, and idx `idx`
 */
 func MakeCard(variadic ...interface{}) *Card {
 
 	// unpack variadic into optional parameters
 	var val, key, idx *interface{}
-	gostack_aorta.GOSTACK_back_UnpackVariadic(variadic, val, key, idx)
+	gostack_backend.GOSTACK_back_UnpackVariadic(variadic, val, key, idx)
 
 	// return
-	return aorta.GOSTACK_back_MakeCard(val, key, idx)
+	return backend.GOSTACK_back_MakeCard(val, key, idx)
 
 }
 

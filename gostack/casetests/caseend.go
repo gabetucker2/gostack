@@ -28,7 +28,7 @@ func gostack_case_MakeCard(funcName string) {
 
 	gostack_test_Start(funcName, showTestText)
 
-	stack := gostack_aorta.MakeCard()
+	stack := gostack_backend.MakeCard()
 
 	conditions := []bool{
 		gostack_test_LenAndSize(stack, 0),

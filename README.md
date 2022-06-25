@@ -88,31 +88,32 @@
 
 <h1 name = "fileExplanations">File Explanations</h1>
 
- > [aorta](/aorta) [**gostack_aorta** package]
- >> [backend.go](/aorta/backend.go) contains the functions to implement **frontend.go** and **caseend.go** functions
- >
- > [casetests](/casetests) [**gostack_casetests** package]
- >> [caseend.go](/casetests/caseend.go) contains case tests for **frontend.go** functions
- >
- >> [testend.go](/casetests/testend.go) contains functions to implement **caseend.go** functions
- >
- >> [unaddedcases.txt](/casetests/unaddedcases.txt) is where data to be added into future case tests is stored, intended only for the developers
- >
- > [datastructures.go](/datastructures.go) initializes structs and enums
- >
- > [frontend.go](/frontend.go) contains the functions that the user of this library will be calling
- >
- > [images](/images)
- >> **gostack_Smaller.png** is the banner image for this project
- >
- > [tutorials](/tutorials) [**gostack_tutorials** package]
- >> [bootstrap.go](tutorials/bootstrap.go) is a tutorial on how to implement some common functions using golang
- >
- >> [comparison.md](tutorials/comparison.md) showcases a race to complete the same set of tasks using ***classical go*** vs ***gostack***
- >
- >> [lambda.go](/tutorials/lambda.go) is a tutorial on how to implement lambda functions
- >
- >> [unaddedtutorials.txt](/tutorials/unaddedtutorials.txt) is where data to be added into future tutorials is stored, intended only for the developers
+ > [gostack](/gostack)
+ >> [backend](/gostack/backend) [**gostack_backend** package]
+ >>> [backend.go](/gostack/backend/backend.go) contains the functions to implement **frontend.go** and **caseend.go** functions
+ >>
+ >> [casetests](/gostack/casetests) [**gostack_casetests** package]
+ >>> [caseend.go](/gostack/casetests/caseend.go) contains case tests for **frontend.go** functions
+ >>
+ >>> [testend.go](/gostack/casetests/testend.go) contains functions to implement **caseend.go** functions
+ >>
+ >>> [unaddedcases.txt](/gostack/casetests/unaddedcases.txt) is where data to be added into future case tests is stored, intended only for the developers
+ >>
+ >> [datastructures.go](/gostack/datastructures.go) initializes structs and enums
+ >>
+ >> [frontend.go](/gostack/frontend.go) contains the functions that the user of this library will be calling
+ >>
+ >> [images](/images)
+ >>> **gostack_Smaller.png** is the banner image for this project
+ >>
+ >> [tutorials](/gostack/tutorials) [**gostack_tutorials** package]
+ >>> [bootstrap.go](/gostack/tutorials/bootstrap.go) is a tutorial on how to implement some common functions using golang
+ >>
+ >>> [comparison.md](/gostack/tutorials/comparison.md) showcases a race to complete the same set of tasks using ***classical go*** vs ***gostack***
+ >>
+ >>> [lambda.go](/gostack/tutorials/lambda.go) is a tutorial on how to implement lambda functions
+ >>
+ >>> [unaddedtutorials.txt](/gostack/tutorials/unaddedtutorials.txt) is where data to be added into future tutorials is stored, intended only for the developers
  >
  > [go.mod](/go.mod) is to initialize the directories
  >
