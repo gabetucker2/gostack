@@ -1,4 +1,4 @@
-package aorta
+package gostack
 
 import (
 	"reflect"
@@ -13,14 +13,14 @@ import (
  @constructs type{*Card} a newly-constructed card
  @ensures the new card will have val `val`, key `key`, and idx `idx`
 */
-func MakeCard(variadic ...interface{}) (card *Card) {
+func MakeCard(variadic ...interface{}) *Card {
 
 	// unpack variadic into optional parameters
 	var val, key, idx *interface{}
-	GOSTACK_back_UnpackVariadic(variadic, val, key, idx)
+	aorta.GOSTACK_back_UnpackVariadic(variadic, val, key, idx)
 
 	// return
-	return GOSTACK_back_MakeCard(val, key, idx)
+	return aorta.GOSTACK_back_MakeCard(val, key, idx)
 
 }
 
@@ -50,11 +50,11 @@ func MakeCard(variadic ...interface{}) (card *Card) {
 	  ELSE
 	    the stack is empty
  */
-func MakeStack(variadic ...interface{}) (stack *Stack) {
+func MakeStack(variadic ...interface{}) *Stack {
 
 	// INIT
 	// initialize stack
-	stack = new(Stack)
+	stack := new(Stack)
 
 	// unpack variadic into optional parameters
 	var input1, input2, repeats interface{}
@@ -112,13 +112,20 @@ func MakeStack(variadic ...interface{}) (stack *Stack) {
 
 	stack.size = len(stack.cards)
 
-	return
+	return stack
 
 }
 
-// ()
+
+/** Makes a card with inputted vals and keys
+
+ @receiver `stack` type{*Stack}
+ @returns `stack`
+ @updates `stack.cards` to be empty
+*/
 func (stack *Stack) Empty() *Stack {
 
+	// clear stack.cards
 	stack.size = 0
 	stack.cards = []*Card{} // avoid replacing stack object
 

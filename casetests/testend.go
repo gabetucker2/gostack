@@ -1,10 +1,17 @@
-package casetests
+package gostack_casetests
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/gabetucker2/gostack/gostack_casetests"
+	"github.com/gabetucker2/gostack/gostack_tutorials"
+	"github.com/gabetucker2/gostack/gostack_aorta"
+	"github.com/gabetucker2/gostack/gostack"
+)
 
 // test variables
 
-var testCardA = GOSTACK_back_MakeCard("Card A") // in sample stack
+var testCardA = gostack_aorta.GOSTACK_back_MakeCard("Card A") // in sample stack
 var testCardB = GOSTACK_back_MakeCard("Card B") // in sample stack
 var testCardC = GOSTACK_back_MakeCard("Card C") // in sample stack
 var testCardD = GOSTACK_back_MakeCard("Card D") // out of sample stack

@@ -1,4 +1,4 @@
-package tutorials
+package gostack_tutorials
 
 import (
 	"fmt"

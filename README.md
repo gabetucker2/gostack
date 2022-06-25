@@ -88,24 +88,25 @@
 
 <h1 name = "fileExplanations">File Explanations</h1>
 
- > [aorta](/aorta)
+ > [aorta](/aorta) [**gostack_aorta** package]
  >> [backend.go](/aorta/backend.go) contains the functions to implement **frontend.go** and **caseend.go** functions
  >
- >> [datastructures.go](/aorta/datastructures.go) initializes structs and enums
- >
- >> [frontend.go](/aorta/frontend.go) contains the functions that the user of this library will be calling
- >
- > [casetests](/casetests)
+ > [casetests](/casetests) [**gostack_casetests** package]
  >> [caseend.go](/casetests/caseend.go) contains case tests for **frontend.go** functions
  >
  >> [testend.go](/casetests/testend.go) contains functions to implement **caseend.go** functions
  >
  >> [unaddedcases.txt](/casetests/unaddedcases.txt) is where data to be added into future case tests is stored, intended only for the developers
  >
+ > [gostack](/gostack) [**gostack** package]
+ >> [datastructures.go](/aorta/datastructures.go) initializes structs and enums
+ >
+ >> [frontend.go](/aorta/frontend.go) contains the functions that the user of this library will be calling
+ >
  > [images](/images)
  >> **gostack_Smaller.png** is the banner image for this project
  >
- > [tutorials](/tutorials)
+ > [tutorials](/tutorials) [**gostack_tutorials** package]
  >> [bootstrap.go](tutorials/bootstrap.go) is a tutorial on how to implement some common functions using golang
  >
  >> [comparison.md](tutorials/comparison.md) showcases a race to complete the same set of tasks using ***classical go*** vs ***gostack***
@@ -116,7 +117,7 @@
  >
  > [go.mod](/go.mod) is to initialize the directories
  >
- > [main.go](main.go) is to call functions in this project, either for the case of case testing or executing tutorials
+ > [main.go](main.go) [**main** package] is to call functions in this project, either for the case of case testing or executing tutorials
  >
  > [README.md](/README.md) is this file
  >
@@ -191,8 +192,8 @@
 
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
- * **MakeCard(...idx, ...key, ...val)**
- * **MakeStack(...input1, ...input2, ...repeats)**
+ * **gostack.MakeCard(...idx, ...key, ...val)**
+ * **gostack.MakeStack(...input1, ...input2, ...repeats)**
  * **stack.Empty()**
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
@@ -359,7 +360,7 @@
 
 <h3 name = "MakeCard">MakeCard</h3>
 
- > `MakeCard(...val, ...key, ...idx)`
+ > `gostack.MakeCard(...val, ...key, ...idx)`
  ```
  Makes a card with inputted vals and keys
 
@@ -373,7 +374,7 @@
 
 <h3 name = "MakeStack">MakeStack</h3>
 
- `MakeStack(...input1, ...input2, ...repeats)`
+ `gostack.MakeStack(...input1, ...input2, ...repeats)`
  ```
 Makes a stack of cards with inputted vals and keys
 

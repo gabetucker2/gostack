@@ -1,4 +1,4 @@
-package aorta
+package gostack_aorta
 
 // (variadic, var1 any, var2 any, ..., varn any)
 func GOSTACK_back_UnpackVariadic(variadic []interface{}, into ...*interface{}) {
@@ -7,7 +7,20 @@ func GOSTACK_back_UnpackVariadic(variadic []interface{}, into ...*interface{}) {
 	}
 }
 
-// (val ...any, key ...any, idx ...int)
+
+/** Makes a card with inputted vals and keys
+ This back-end function exists because MakeCard()
+ needs to be case-tested using test cards.  Make
+ the test cards with this function with which to
+ test MakeCard().
+
+ @param optional `val` type{any}
+ @param optional `key` type{any}
+ @param optional `idx` type{int}
+ @returns type{*Card} the newly-constructed card
+ @constructs type{*Card} a newly-constructed card
+ @ensures the new card will have val `val`, key `key`, and idx `idx`
+*/
 func GOSTACK_back_MakeCard(variadic ...interface{}) (card *Card) {
 
 	// unpack variadic into optional parameters

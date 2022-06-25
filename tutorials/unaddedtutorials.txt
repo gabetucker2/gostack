@@ -116,9 +116,6 @@
 
 
 ***POINTER MAP EXAMPLE*** but implement with our functions
-package main
-
-import "fmt"
 
 func main() {
 	fmt.Println("------------------")

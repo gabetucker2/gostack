@@ -1,4 +1,4 @@
-package aorta
+package gostack
 
 type Card struct {
 	idx int

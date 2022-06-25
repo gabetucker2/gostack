@@ -1,4 +1,4 @@
-package tutorials
+package gostack_tutorials
 
 func gostack_tutorials_bootstrap_pop() {
 

@@ -31,10 +31,10 @@ ANDY:
 
 ---------------------------------------------------------------
 IMPLEMENTED TESTED DOCUMENTED FUNCTIONS:
-MakeCard
+/
 
 IMPLEMENTED UNTESTED DOCUMENTED FUNCTIONS:
-MakeCards, MakeStack, Empty
+MakeCard, MakeStack, Empty
 
 UNIMPLEMENTED DOCUMENTED FUNCTIONS:
 Add, Extract, Replace, Get, Has
