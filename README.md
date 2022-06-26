@@ -88,7 +88,7 @@
 
 <h1 name = "fileExplanations">File Explanations</h1>
 
- > [gostack](#Files) [**.../gostack** package] any .go files that are direct children will be built to the gostack package
+ > [gostack](#Files) [**.../gostack** package] any .go files that are direct children of this folder will be built to the **.../gostack** package
  >>
  >> [casetests](/casetests) [**.../gostack/casetests** package]
  >>> [CaseEnd.go](/casetests/CaseEnd.go) contains case tests for **library.go** functions
@@ -99,7 +99,7 @@
  >>
  >>> [unaddedcases.txt](/casetests/unaddedcases.txt) is where data to be added into future case tests is stored, intended only for the developers
  >>
- >> [executive](/executive) [**.../gostack/executive package**]
+ >> [executive](/executive) [**.../gostack/executive** package]
  >>> [executive.go](/executive.go) exists to call functions in this project, either for case testing or executing tutorials
  >>
  >> [images](/images)
@@ -107,7 +107,7 @@
  >>
  >>> **packages.png** is a layout of the package dependencies/structure of this project
  >>
- >> [tutorials](/tutorials) [**gostack_tutorials** package]
+ >> [tutorials](/tutorials) [**.../gostack/tutorials** package]
  >>> [Bootstrap.go](/tutorials/Bootstrap.go) is a tutorial on how to implement some common functions using golang
  >>
  >>> [Init.go](/tutorials/Init.go) contains an empty function that prevents compiler errors when importing but not referencing this package
