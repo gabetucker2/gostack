@@ -1,9 +1,7 @@
 ---------------------------------------------------------------
 GABE:
-* Update fileExplanations
 * Update documentation to reflect capitalization changes
-* Add jdoc comments for functions
- - Replace function documentation with jdoc
+*  Replace function documentation with jdoc
 * Implement variadic error-catching function for bad argument conditions (fmt.Errorf())
 * Function cleanup
  - Ensure public functions are capital whereas private functions are lowercase

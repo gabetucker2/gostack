@@ -27,6 +27,7 @@ func tutorials_bootstrap_indexOf() {
 
 }
 
+/** Executes the Bootstrap.go tutorial */
 func Bootstrap() {
 
 	fmt.Println("tutorials.Bootstrap()")

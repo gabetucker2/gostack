@@ -59,7 +59,7 @@ func case_MakeCard(funcName string) {
 
 }
 
-// main function
+/** Executes all case tests */
 func Run(_showTestText bool) {
 
 	showTestText = _showTestText

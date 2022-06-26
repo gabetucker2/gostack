@@ -1,6 +1,11 @@
 package gostack
 
-// (variadic, var1 any, var2 any, ..., varn any)
+/** Sets a set of variables to the variable set passed into a variadic parameter
+ 
+ @param `variadic` type{...[]interface{}}
+ @param `var1, var2, ..., varN` type{any}
+ @updates `var1, var2, ..., varN` are set to each of the values in the variadic array, or nil if undefined, respectively
+ */
 func unpackVariadic(variadic []interface{}, into ...*interface{}) {
 	vLen := len(variadic)
 	for i, v := range into {
@@ -12,11 +17,17 @@ func unpackVariadic(variadic []interface{}, into ...*interface{}) {
 	}
 }
 
-// stack.(lambda func(stack *Stack, card *Card) bool)
-func iterator(stack *Stack, lambda func(*Stack, *Card) bool) {
+/** Removes the cards from a stack for which lambda(card) is false
+ 
+ @param `stack` type{*Stack}
+ @param `lambda` type{func(*Stack, *Card) bool}
+ @returns `stack`
+ @updates `stack.Cards` to a new set of Cards filtered using `lambda`
+ */
+func iterator(stack *Stack, lambda func(*Card, ...interface{}) bool) {
 	newStack := new(Stack)
 	for _, card := range stack.Cards {
-		if lambda(stack, card) {
+		if lambda(card, stack) {
 			newStack.Cards = append(newStack.Cards, card)
 		}
 	}

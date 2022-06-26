@@ -156,14 +156,14 @@
 <h3 name = "structsBrief">Structs</h3>
 
  > **stack** *Stack*
- >> **cards** *[]\*Card*
+ >> **Cards** *[]\*Card*
  >
- >> **size** *int*
+ >> **Size** *int*
 
  > **card** *Card*
- >> **key** *any*
+ >> **Key** *any*
  >
- >> **val** *any*
+ >> **Val** *any*
 
 <h3 name = "enumsBrief">Enums</h3>
 
@@ -228,23 +228,23 @@
  This is the main struct in the project.
 
  > `stack` *Stack{}*
- >> `cards` *[]\*Card{}*
+ >> `Cards` *[]\*Card{}*
  >>> Returns an interface array to represent the elements in the Stack
- >> `size` *int*
+ >> `Size` *int*
  >>> Returns the cardinality (i.e., `len(stack.cards)`) of this Stack
 
 <h4 name = "card">Card</h4>
 
  This is a struct for our elements/maps within stacks.
 
- >> `card` *Card{}*
- >>> `card.idx` *int*
+ >> `Card` *Card{}*
+ >>> `card.Idx` *int*
  >>>> The index of this card
  >>>
- >>> `card.key` *any (interface{})*
+ >>> `card.Key` *any (interface{})*
  >>>> The key of this card (or nil if doesn't exist)
  >>>
- >>> `card.val` *any (interface{})*
+ >>> `card.Val` *any (interface{})*
  >>>> The val of this card (or nil if doesn't exist)
 
 <h3 name = "enums">enums</h3>
