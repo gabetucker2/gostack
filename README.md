@@ -43,11 +43,9 @@
  >> [Exhaustive Documentation](#exhaustiveDocumentation)
  >>> [Data Structures](#dataStructures)
  >>>> [structs](#structs)
+ >>>>> [stack](#stack)
+ >>>>
  >>>>> [Card](#card)
- >>>>
- >>>>> [Cards](#cards)
- >>>>
- >>>>> [Stack](#stack)
  >>>>
  >>>> [enums](#enums)
  >>>>> [RETURN](#RETURN)
