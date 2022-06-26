@@ -43,7 +43,7 @@
  >> [Exhaustive Documentation](#exhaustiveDocumentation)
  >>> [Data Structures](#dataStructures)
  >>>> [structs](#structs)
- >>>>> [stack](#stack)
+ >>>>> [Stack](#stack)
  >>>>
  >>>>> [Card](#card)
  >>>>
@@ -95,7 +95,7 @@
  >>
  >>> [testend.go](/casetests/testend.go) contains functions to implement **caseend.go** functions
  >>
- >>> [unaddedcases.txt](/casetests/unaddedcases.txt) is where data to be added into future case tests is stored, intended only for the developers
+ >>> [unaddedcases.txt](/casetests/unaddedcases.txt) is where obsolete data to be added into future case tests is stored, intended only for the developers
  >>
  >> [executive](/executive) [**main** package]
  >>> [executive.go](/executive.go) exists to call functions in this project, either for case testing or executing tutorials
@@ -114,7 +114,7 @@
  >>
  >>> [race.md](/tutorials/race.md) showcases a race to complete the same set of tasks using ***classical go*** vs ***gostack***
  >>
- >>> [unaddedtutorials.txt](/tutorials/unaddedtutorials.txt) is where data to be added into future tutorials is stored, intended only for the developers
+ >>> [unaddedtutorials.txt](/tutorials/unaddedtutorials.txt) is where obsolete data to be added into future tutorials is stored, intended only for the developers
  >>
  >> [backend.go](/backend/backend.go) contains private functions to implement **Library.go**
  >>
@@ -127,6 +127,8 @@
  >> [README.md](/README.md) is this file
  >>
  >> [TODO.txt](/TODO.txt) is a task list, intended only for the developers
+ >>
+ >> [unaddedgostack.txt](/unaddedgostack.txt) is where obsolete data to be added back into backend.go and Library.go
 
 ![Packages](images/packages.png)
 
