@@ -88,43 +88,43 @@
 
 <h1 name = "fileExplanations">File Explanations</h1>
 
- > [backend](/backend) [**.../gostack/backend** package]
- >> [backend.go](/backend/backend.go) contains functions to implement **library.go** and **caseend.go** functions
- >
- > [casetests](/casetests) [**.../gostack/casetests** package]
- >> [caseend.go](/casetests/caseend.go) contains case tests for **library.go** functions
- >
- >> [testend.go](/casetests/testend.go) contains functions to implement **caseend.go** functions
- >
- >> [unaddedcases.txt](/casetests/unaddedcases.txt) is where data to be added into future case tests is stored, intended only for the developers
- >
- > [datastructures](/datastructures) [**.../gostack/datastructures package**]
- >> [datastructures.go](/datastructures/datastructures.go) initializes structs and enums, as well as methods for conversion
- >
- > [executive](/executive) [**.../gostack/executive package**]
- >> [executive.go](/executive.go)
- >
- > [frontend.go](/frontend.go) contains the functions that the user of this library will be calling
- >
- > [images](/images)
- >> **gostack_Smaller.png** is the banner image for this project
- >
- > [tutorials](/tutorials) [**gostack_tutorials** package]
- >> [bootstrap.go](/tutorials/bootstrap.go) is a tutorial on how to implement some common functions using golang
- >
- >> [comparison.md](/tutorials/comparison.md) showcases a race to complete the same set of tasks using ***classical go*** vs ***gostack***
- >
- >> [lambda.go](/tutorials/lambda.go) is a tutorial on how to implement lambda functions
- >
- >> [unaddedtutorials.txt](/tutorials/unaddedtutorials.txt) is where data to be added into future tutorials is stored, intended only for the developers
- >
- > [go.mod](/go.mod) is to initialize the directories
- >
- > [main.go](main.go) [**main** package] is to call functions in this project, either for the case of case testing or executing tutorials
- >
- > [README.md](/README.md) is this file
- >
- > [TODO.txt](/TODO.txt) is a task list, intended only for the developers
+ > [gostack](#Files) [**.../gostack** package] any .go files that are direct children will be built to the gostack package
+ >>
+ >> [casetests](/casetests) [**.../gostack/casetests** package]
+ >>> [caseend.go](/casetests/caseend.go) contains case tests for **library.go** functions
+ >>
+ >>> [testend.go](/casetests/testend.go) contains functions to implement **caseend.go** functions
+ >>
+ >>> [unaddedcases.txt](/casetests/unaddedcases.txt) is where data to be added into future case tests is stored, intended only for the developers
+ >>
+ >> [datastructures](/datastructures) [**.../gostack/datastructures package**]
+ >>> [datastructures.go](/datastructures/datastructures.go) initializes structs and enums, as well as methods for conversion
+ >>
+ >> [executive](/executive) [**.../gostack/executive package**]
+ >>> [executive.go](/executive.go)
+ >> [images](/images)
+ >>> **gostack_Smaller.png** is the banner image for this project
+ >>
+ >> [tutorials](/tutorials) [**gostack_tutorials** package]
+ >>> [bootstrap.go](/tutorials/bootstrap.go) is a tutorial on how to implement some common functions using golang
+ >>
+ >>> [comparison.md](/tutorials/comparison.md) showcases a race to complete the same set of tasks using ***classical go*** vs ***gostack***
+ >>
+ >>> [lambda.go](/tutorials/lambda.go) is a tutorial on how to implement lambda functions
+ >>
+ >>> [unaddedtutorials.txt](/tutorials/unaddedtutorials.txt) is where data to be added into future tutorials is stored, intended only for the developers
+ >>
+ >> [backend.go](/backend/backend.go) contains private functions to implement **Library.go**
+ >>
+ >> [go.mod](/go.mod) is to initialize the directories
+ >>
+ >> [frontend.go](/frontend.go)  contains public functions that the user will be calling
+ >>
+ >> [main.go](main.go) [**main** package] is to call functions in this project, either for the case of case testing or executing tutorials
+ >>
+ >> [README.md](/README.md) is this file
+ >>
+ >> [TODO.txt](/TODO.txt) is a task list, intended only for the developers
 
 ![Packages](images/packages.png)
 
