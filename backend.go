@@ -1,52 +1,26 @@
-package backend
+package gostack
 
 // (variadic, var1 any, var2 any, ..., varn any)
-func GOSTACK_back_UnpackVariadic(variadic []interface{}, into ...*interface{}) {
+func unpackVariadic(variadic []interface{}, into ...*interface{}) {
+	vLen := len(variadic)
 	for i, v := range into {
-		*v = variadic[i]
+		if i < vLen {
+			*v = variadic[i]
+		} else {
+			*v = nil
+		}
 	}
-}
-
-
-/** Makes a card with inputted vals and keys
- This back-end function exists because MakeCard()
- needs to be case-tested using test cards.  Make
- the test cards with this function with which to
- test MakeCard().
-
- @param optional `val` type{any}
- @param optional `key` type{any}
- @param optional `idx` type{int}
- @returns type{*Card} the newly-constructed card
- @constructs type{*Card} a newly-constructed card
- @ensures the new card will have val `val`, key `key`, and idx `idx`
-*/
-func GOSTACK_back_MakeCard(variadic ...interface{}) (card *gostack.Card) {
-
-	// unpack variadic into optional parameters
-	var val, key, idx interface{}
-	GOSTACK_back_UnpackVariadic(variadic, &val, &key, &idx)
-
-	// initialize and set new Card
-	card = new(Card)
-	card.idx = idx.(int)
-	card.key = key
-	card.val = val
-
-	// return
-	return
-
 }
 
 // stack.(lambda func(stack *Stack, card *Card) bool)
-func (stack *Stack) GOSTACK_back_iterator(lambda func(*Stack, *Card) bool) {
+func iterator(stack *Stack, lambda func(*Stack, *Card) bool) {
 	newStack := new(Stack)
-	for _, card := range stack.cards {
+	for _, card := range stack.Cards {
 		if lambda(stack, card) {
-			newStack.cards = append(newStack.cards, card)
+			newStack.Cards = append(newStack.Cards, card)
 		}
 	}
-	stack.cards = newStack.cards
+	stack.Cards = newStack.Cards
 }
 
 /*

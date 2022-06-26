@@ -12,7 +12,7 @@
  * ...allow the user to get and set based on reference or object with ease, preventing the user from having to worry about convoluted pointer/address management
  * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create sorting mechanisms of their own design
 
- Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish, ***gostack*** took roughly one fifth the amount of lines (merely 10)—[see for yourself!](tutorials/race.md)
+ Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish, ***gostack*** took roughly one fifth the amount of lines (merely 10)—[see for yourself!](/tutorials/race.md)
 
  To get a better feel of the library, feel free to take a look at some [examples](/tutorials/bootstrap.go) of how ***gostack*** can substitute commonly-used functions.
 
@@ -88,32 +88,35 @@
 
 <h1 name = "fileExplanations">File Explanations</h1>
 
- > [gostack](/gostack)
- >> [backend](/gostack/backend) [**gostack_backend** package]
- >>> [backend.go](/gostack/backend/backend.go) contains the functions to implement **frontend.go** and **caseend.go** functions
- >>
- >> [casetests](/gostack/casetests) [**gostack_casetests** package]
- >>> [caseend.go](/gostack/casetests/caseend.go) contains case tests for **frontend.go** functions
- >>
- >>> [testend.go](/gostack/casetests/testend.go) contains functions to implement **caseend.go** functions
- >>
- >>> [unaddedcases.txt](/gostack/casetests/unaddedcases.txt) is where data to be added into future case tests is stored, intended only for the developers
- >>
- >> [datastructures.go](/gostack/datastructures.go) initializes structs and enums
- >>
- >> [frontend.go](/gostack/frontend.go) contains the functions that the user of this library will be calling
- >>
- >> [images](/images)
- >>> **gostack_Smaller.png** is the banner image for this project
- >>
- >> [tutorials](/gostack/tutorials) [**gostack_tutorials** package]
- >>> [bootstrap.go](/gostack/tutorials/bootstrap.go) is a tutorial on how to implement some common functions using golang
- >>
- >>> [comparison.md](/gostack/tutorials/comparison.md) showcases a race to complete the same set of tasks using ***classical go*** vs ***gostack***
- >>
- >>> [lambda.go](/gostack/tutorials/lambda.go) is a tutorial on how to implement lambda functions
- >>
- >>> [unaddedtutorials.txt](/gostack/tutorials/unaddedtutorials.txt) is where data to be added into future tutorials is stored, intended only for the developers
+ > [backend](/backend) [**.../gostack/backend** package]
+ >> [backend.go](/backend/backend.go) contains functions to implement **library.go** and **caseend.go** functions
+ >
+ > [casetests](/casetests) [**.../gostack/casetests** package]
+ >> [caseend.go](/casetests/caseend.go) contains case tests for **library.go** functions
+ >
+ >> [testend.go](/casetests/testend.go) contains functions to implement **caseend.go** functions
+ >
+ >> [unaddedcases.txt](/casetests/unaddedcases.txt) is where data to be added into future case tests is stored, intended only for the developers
+ >
+ > [datastructures](/datastructures) [**.../gostack/datastructures package**]
+ >> [datastructures.go](/datastructures/datastructures.go) initializes structs and enums, as well as methods for conversion
+ >
+ > [executive](/executive) [**.../gostack/executive package**]
+ >> [executive.go](/executive.go)
+ >
+ > [frontend.go](/frontend.go) contains the functions that the user of this library will be calling
+ >
+ > [images](/images)
+ >> **gostack_Smaller.png** is the banner image for this project
+ >
+ > [tutorials](/tutorials) [**gostack_tutorials** package]
+ >> [bootstrap.go](/tutorials/bootstrap.go) is a tutorial on how to implement some common functions using golang
+ >
+ >> [comparison.md](/tutorials/comparison.md) showcases a race to complete the same set of tasks using ***classical go*** vs ***gostack***
+ >
+ >> [lambda.go](/tutorials/lambda.go) is a tutorial on how to implement lambda functions
+ >
+ >> [unaddedtutorials.txt](/tutorials/unaddedtutorials.txt) is where data to be added into future tutorials is stored, intended only for the developers
  >
  > [go.mod](/go.mod) is to initialize the directories
  >
@@ -123,13 +126,18 @@
  >
  > [TODO.txt](/TODO.txt) is a task list, intended only for the developers
 
+![Packages](images/packages.png)
+
 <h1 name = "conventions">CONVENTIONS</h1>
+
+ Executing `go run executive/executive.go` in a terminal in the main directory, or executing `go run .` in the executive directory, will run whichever file(s) are called by `executive.go`.
 
  <h2>Naming</h2>
 
- * "FunctionName" functions are public frontend functions
- * "GOSTACK_..." functions are public backend functions
- * "gostack_..." functions are private backend functions
+ * "FunctionName" functions are public functions, accessible to the user
+ * "functionName" functions are private functions, hidden from the user
+ * "FileName" files contain at least one public function (ideally which calls all private functions within that file)/struct, accessible to the user
+ * "filename" files contain all private stuff, hidden from the user
 
  <h2>Design-By-Contract</h2>
 
@@ -198,7 +206,7 @@
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
- * **stack.Add(insert, ORDER_\*, POSITION_\*, ...POSITIONDATA)**
+ * **stack.Add(insert, ...ORDER_\*, ...POSITION_\*, ...POSITIONDATA)**
  * **stack.Replace(insert, RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
  * **stack.Extract(RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
  * **stack.Unique(TYPE_\*)**
@@ -364,9 +372,9 @@
  ```
  Makes a card with inputted vals and keys
 
- @param optional `val` type{any}
- @param optional `key` type{any}
- @param optional `idx` type{int}
+ @param optional `val` type{any} default nil
+ @param optional `key` type{any} default nil
+ @param optional `idx` type{int} default -1 no pass-by-reference
  @returns type{*Card} the newly-constructed card
  @constructs type{*Card} a newly-constructed card
  @ensures the new card will have val `val`, key `key`, and idx `idx`
@@ -378,9 +386,9 @@
  ```
 Makes a stack of cards with inputted vals and keys
 
-@param optional `input1` type{[]any, map[any]any}
-@param optional `input2` type{[]any}
-@param optional `repeats` type{int}
+@param optional `input1` type{[]any, map[any]any} default nil
+@param optional `input2` type{[]any} default nil
+@param optional `repeats` type{int} default 1
 @returns type{*Stack} the newly-constructed stack of ards
  @constructs type{*Stack} a newly-constructed stack of cards
  @requires

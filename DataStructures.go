@@ -1,14 +1,14 @@
 package gostack
 
 type Card struct {
-	idx int
-	key interface{}
-	val interface{}
+	Idx int
+	Key interface{}
+	Val interface{}
 }
 
 type Stack struct {
-	cards []*Card
-	size  int
+	Cards []*Card
+	Size  int
 }
 
 type RETURN int

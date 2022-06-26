@@ -1,14 +1,15 @@
 package gostack
 
 import (
+	"fmt"
 	"reflect"
 )
 
 /** Makes a card with inputted vals and keys
 
-@param optional `val` type{any}
-@param optional `key` type{any}
-@param optional `idx` type{int}
+@param optional `val` type{any} default nil
+@param optional `key` type{any} default nil
+@param optional `idx` type{int} default -1 no pass-by-reference
 @returns type{*Card} the newly-constructed card
 @constructs type{*Card} a newly-constructed card
 @ensures the new card will have val `val`, key `key`, and idx `idx`
@@ -16,19 +17,30 @@ import (
 func MakeCard(variadic ...interface{}) *Card {
 
 	// unpack variadic into optional parameters
-	var val, key, idx *interface{}
-	gostack_backend.GOSTACK_back_UnpackVariadic(variadic, val, key, idx)
+	var Val, Key, Idx interface{}
+	unpackVariadic(variadic, &Val, &Key, &Idx)
+
+	var newIdx int
+	if Idx == nil { newIdx = -1 } else { newIdx = Idx.(int) }
+
+	fmt.Println(Key)
+
+	// initialize and set new Card
+	card := new(Card)
+	card.Idx = newIdx // clones Idx
+	card.Key = &Key
+	card.Val = &Val
 
 	// return
-	return backend.GOSTACK_back_MakeCard(val, key, idx)
+	return card
 
 }
 
 /** Makes a stack of cards with optional starting cards
  
- @param optional `input1` type{[]any, map[any]any}
- @param optional `input2` type{[]any}
- @param optional `repeats` type{int}
+ @param optional `input1` type{[]any, map[any]any} default nil
+ @param optional `input2` type{[]any} default nil
+ @param optional `repeats` type{int} default 1
  @returns type{*Stack} the newly-constructed stack of newly-constructed cards
  @constructs type{*Stack} a newly-constructed stack of newly-constructed cards
  @requires
@@ -58,7 +70,7 @@ func MakeStack(variadic ...interface{}) *Stack {
 
 	// unpack variadic into optional parameters
 	var input1, input2, repeats interface{}
-	GOSTACK_back_UnpackVariadic(variadic, &input1, &input2, &repeats)
+	unpackVariadic(variadic, &input1, &input2, &repeats)
 
 	// BODY
 	// `repeats` (or, if nil or under 0, 1) amount of times
@@ -76,8 +88,8 @@ func MakeStack(variadic ...interface{}) *Stack {
 				// unpack the map into new cards with corresponding keys and vals
 				i := 0
 				for k, v := range input1.(map[interface{}]interface{}) {
-					stack.cards = append(
-						stack.cards,
+					stack.Cards = append(
+						stack.Cards,
 						MakeCard(&v, &k, i),
 					)
 					i++
@@ -90,8 +102,8 @@ func MakeStack(variadic ...interface{}) *Stack {
 				if input2 != nil {
 					// unpack values from `input1` into new cards
 					for i := 0; i < input1Len; i++ {
-						stack.cards = append(
-							stack.cards,
+						stack.Cards = append(
+							stack.Cards,
 							MakeCard(&input1.([]interface{})[i], nil, i),
 						)
 					}
@@ -100,8 +112,8 @@ func MakeStack(variadic ...interface{}) *Stack {
 				} else {
 					// unpack keys from `input1` and values from `input2` into new cards
 					for i := 0; i < input1Len; i++ {
-						stack.cards = append(
-							stack.cards,
+						stack.Cards = append(
+							stack.Cards,
 							MakeCard(&input1.([]interface{})[i], &input2.([]interface{})[i], i),
 						)
 					}
@@ -110,7 +122,7 @@ func MakeStack(variadic ...interface{}) *Stack {
 		}
 	}
 
-	stack.size = len(stack.cards)
+	stack.Size = len(stack.Cards)
 
 	return stack
 
@@ -121,13 +133,13 @@ func MakeStack(variadic ...interface{}) *Stack {
 
  @receiver `stack` type{*Stack}
  @returns `stack`
- @updates `stack.cards` to be empty
+ @updates `stack.Cards` to be empty
 */
 func (stack *Stack) Empty() *Stack {
 
-	// clear stack.cards
-	stack.size = 0
-	stack.cards = []*Card{} // avoid replacing stack object
+	// clear stack.Cards
+	stack.Size = 0
+	stack.Cards = []*Card{} // avoid replacing stack object
 
 	// return
 	return stack
