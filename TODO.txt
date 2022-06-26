@@ -16,6 +16,7 @@ GABE:
 ---------------------------------------------------------------
 ANDY:
 * Fix MakeCard() function
+* Implement JDoc comments for backend
 * Implement case tests for functions listed in IMPLEMENTED UNTESTED DOCUMENTED FUNCTIONS list below (make sure to implement them in order)
  - See unaddedcases.txt for reference
 * Fix faulty classical go code in tutorials/race.md

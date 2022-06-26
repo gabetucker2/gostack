@@ -1,18 +1,17 @@
 package gostack
 
 import (
-	"fmt"
 	"reflect"
 )
 
 /** Makes a card with inputted vals and keys
 
-@param optional `val` type{any} default nil
-@param optional `key` type{any} default nil
-@param optional `idx` type{int} default -1 no pass-by-reference
-@returns type{*Card} the newly-constructed card
-@constructs type{*Card} a newly-constructed card
-@ensures the new card will have val `val`, key `key`, and idx `idx`
+ @param optional `val` type{any} default nil
+ @param optional `key` type{any} default nil
+ @param optional `idx` type{int} default -1 no pass-by-reference
+ @returns type{*Card} the newly-constructed card
+ @constructs type{*Card} a newly-constructed card
+ @ensures the new card will have val `val`, key `key`, and idx `idx`
 */
 func MakeCard(variadic ...interface{}) *Card {
 
@@ -20,10 +19,10 @@ func MakeCard(variadic ...interface{}) *Card {
 	var Val, Key, Idx interface{}
 	unpackVariadic(variadic, &Val, &Key, &Idx)
 
+	// TODO: Andy changes here
+
 	var newIdx int
 	if Idx == nil { newIdx = -1 } else { newIdx = Idx.(int) }
-
-	fmt.Println(Key)
 
 	// initialize and set new Card
 	card := new(Card)

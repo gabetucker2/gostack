@@ -91,36 +91,40 @@
  > [gostack](#Files) [**.../gostack** package] any .go files that are direct children will be built to the gostack package
  >>
  >> [casetests](/casetests) [**.../gostack/casetests** package]
- >>> [caseend.go](/casetests/caseend.go) contains case tests for **library.go** functions
+ >>> [CaseEnd.go](/casetests/CaseEnd.go) contains case tests for **library.go** functions
+ >>
+ >>> [Init.go](/casetests/Init.go) contains an empty function that prevents compiler errors when importing but not referencing this package
  >>
  >>> [testend.go](/casetests/testend.go) contains functions to implement **caseend.go** functions
  >>
  >>> [unaddedcases.txt](/casetests/unaddedcases.txt) is where data to be added into future case tests is stored, intended only for the developers
  >>
- >> [datastructures](/datastructures) [**.../gostack/datastructures package**]
- >>> [datastructures.go](/datastructures/datastructures.go) initializes structs and enums, as well as methods for conversion
- >>
  >> [executive](/executive) [**.../gostack/executive package**]
- >>> [executive.go](/executive.go)
+ >>> [executive.go](/executive.go) exists to call functions in this project, either for case testing or executing tutorials
+ >>
  >> [images](/images)
  >>> **gostack_Smaller.png** is the banner image for this project
  >>
+ >>> **packages.png** is a layout of the package dependencies/structure of this project
+ >>
  >> [tutorials](/tutorials) [**gostack_tutorials** package]
- >>> [bootstrap.go](/tutorials/bootstrap.go) is a tutorial on how to implement some common functions using golang
+ >>> [Bootstrap.go](/tutorials/Bootstrap.go) is a tutorial on how to implement some common functions using golang
  >>
- >>> [comparison.md](/tutorials/comparison.md) showcases a race to complete the same set of tasks using ***classical go*** vs ***gostack***
+ >>> [Init.go](/tutorials/Init.go) contains an empty function that prevents compiler errors when importing but not referencing this package
  >>
- >>> [lambda.go](/tutorials/lambda.go) is a tutorial on how to implement lambda functions
+ >>> [Lambda.go](/tutorials/Lambda.go) is a tutorial on how to implement lambda functions
+ >>
+ >>> [race.md](/tutorials/race.md) showcases a race to complete the same set of tasks using ***classical go*** vs ***gostack***
  >>
  >>> [unaddedtutorials.txt](/tutorials/unaddedtutorials.txt) is where data to be added into future tutorials is stored, intended only for the developers
  >>
  >> [backend.go](/backend/backend.go) contains private functions to implement **Library.go**
  >>
+ >> [DataStructures.go](/DataStructures.go) initializes structs and enums, as well as methods for conversion
+ >>
  >> [go.mod](/go.mod) is to initialize the directories
  >>
  >> [frontend.go](/frontend.go)  contains public functions that the user will be calling
- >>
- >> [main.go](main.go) [**main** package] is to call functions in this project, either for the case of case testing or executing tutorials
  >>
  >> [README.md](/README.md) is this file
  >>
