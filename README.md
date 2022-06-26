@@ -99,7 +99,7 @@
  >>
  >>> [unaddedcases.txt](/casetests/unaddedcases.txt) is where data to be added into future case tests is stored, intended only for the developers
  >>
- >> [executive](/executive) [**.../gostack/executive** package]
+ >> [executive](/executive) [**main** package]
  >>> [executive.go](/executive.go) exists to call functions in this project, either for case testing or executing tutorials
  >>
  >> [images](/images)
