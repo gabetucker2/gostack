@@ -61,9 +61,9 @@ func setRETURNDefaultIfNil(returnType interface{}) {
 	}
 }
 
-func setFINDBYDefaultIfNil(positionType interface{}) {
-	if positionType == nil {
-		positionType = FINDBY_First
+func setFINDBYDefaultIfNil(findByType interface{}) {
+	if findByType == nil {
+		findByType = FINDBY_First
 	}
 }
 
@@ -73,8 +73,8 @@ func setORDERDefaultIfNil(orderType interface{}) {
 	}
 }
 
-func setMATCHBYDefaultIfNil(matchType interface{}) {
-	if matchType == nil {
-		matchType = MATCHBY_Object
+func setMATCHBYDefaultIfNil(matchByType interface{}) {
+	if matchByType == nil {
+		matchByType = MATCHBY_Object
 	}
 }

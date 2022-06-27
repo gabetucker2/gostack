@@ -1,6 +1,8 @@
 ---------------------------------------------------------------
 GABE:
+* Add POSITION_Slice
 * Update race.md and related documentation
+ - Fix taskC.replace()
 * Update card.idx whenever it's updated
 * Implement all documented functions
 * Turn MakeStack into a more flexible function, intialize with keys (instead of values) option

@@ -5,7 +5,6 @@ import (
 )
 
 
-
 func bootstrap_pop() {
 
 	// > `stack.Extract(RETURN_Card, FINDBY_First)`
@@ -14,6 +13,7 @@ func bootstrap_pop() {
 	//
 	stack.Extract(RETURN_Card, POSITION_First)
 }
+
 
 
 func bootstrap_push(card Card*, stack *Stack) bool {
@@ -27,8 +27,8 @@ func bootstrap_push(card Card*, stack *Stack) bool {
 
 }
 
-
 func bootstrap_indexOf(stack *Stack, val interface{}) int {
+
 
 	//return stack.Get(FINDBY_Val, val).Idx
 	// >> *returns the index of the first found matching card*

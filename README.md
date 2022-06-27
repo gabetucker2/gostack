@@ -179,6 +179,8 @@
  >> **Size** *int*
 
  > **card** *Card*
+ >> **Idx** *int*
+ >
  >> **Key** *any*
  >
  >> **Val** *any*
@@ -193,7 +195,7 @@
  > * RETURN_Cards *stack of Cards*
 
  > **FINDBY**
- > * _FINDBY_NotationSample *positionData argument type*
+ > * _FINDBY_NotationSample *findByData argument type*
  > * FINDBY_First *NONE*
  > * FINDBY_Last *NONE*
  > * FINDBY_Idx *int*
@@ -226,7 +228,7 @@
  * **gostack.MakeStack(...input1, ...input2, ...repeats)**
  * **stack.Empty()**
  * **{card, stack}.Clone()**
- * **stack.Unique(typeType, ...matchType)**
+ * **stack.Unique(typeType, ...matchByType)**
  * **stack.ToArray()**
  * **stack.ToMap()**
  * **stack.Shuffle()**
@@ -235,15 +237,15 @@
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
- * **stack.Add(insert, ...orderType, ...positionType, ...positionData, ...matchType)**
- * **stack.Replace(insert, positionType, ...positionData, ...matchType)**
- * **stack.ReplaceMany(insert, positionType, ...positionData, ...returnType, ...matchType)**
- * **stack.Extract(positionType, ...positionData, ...matchType)**
- * **stack.ExtractMany(positionType, ...positionData, ...returnType, ...matchType)**
- * **stack.Move(positionType, ...positionData)**
- * **stack.Get(...positionType, ...positionData, ...matchType)**
- * **stack.GetMany(...positionType, ...positionData, ...returnType, ...matchType)**
- * **stack.Has(returnType, positionType, ...positionData, ...matchType)**
+ * **stack.Add(insert, ...orderType, ...findByType, ...findByData, ...matchByType)**
+ * **stack.Replace(insert, findByType, ...findByData, ...matchByType)**
+ * **stack.ReplaceMany(insert, findByType, ...findByData, ...returnType, ...matchByType)**
+ * **stack.Extract(findByType, ...findByData, ...matchByType)**
+ * **stack.ExtractMany(findByType, ...findByData, ...returnType, ...matchByType)**
+ * **stack.Move(findByType, ...findByData)**
+ * **stack.Get(...findByType, ...findByData, ...matchByType)**
+ * **stack.GetMany(...findByType, ...findByData, ...returnType, ...matchByType)**
+ * **stack.Has(returnType, findByType, ...findByData, ...matchByType)**
 
 <h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
 
@@ -465,29 +467,29 @@ Makes a stack of cards with inputted vals and keys
  
 <h3 name = "Add">Add</h3>
  
- `stack.Add(insert, ...orderType, ...positionType, ...positionData, ...matchType)`
+ `stack.Add(insert, ...orderType, ...findByType, ...findByData, ...matchByType)`
  ```
  Adds to a stack of cards or a cards at (each) position(s) 
  
  @receiver `stack` type{Stack}
  @param `insert` type{Card, Stack}
  @param optional `orderType` type{ORDER} default ORDER_After
- @param optional `positionType` type{FINDBY} default FINDBY_First
- @param optional `positionData` type{interface{}} default nil
- @param optional `matchType` type{MATCHBY} default MATCHBY_Object
+ @param optional `findByType` type{FINDBY} default FINDBY_First
+ @param optional `findByData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates `stack.Cards` to have new cards before/after each designated position
  ```
  
 <h3 name = "Unique">Unique</h3>
  
- `stack.Unique(typeType, ...matchType)`
+ `stack.Unique(typeType, ...matchByType)`
  ```
  Removes all cards from `stack` which share the same field value as another card before
 
  @receiver `stack` type{Stack}
  @param `typeType` type{TYPE}
- @param optional `matchType` type{MATCHBY} default MATCHBY_Object
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates `stack` to have no repeating values between field `typeType`
  ```
@@ -559,28 +561,28 @@ Makes a stack of cards with inputted vals and keys
  
 <h3 name = "Get">Get</h3>
  
- `stack.Get(...positionType, ...positionData, ...matchType)`
+ `stack.Get(...findByType, ...findByData, ...matchByType)`
  ```
  Gets a card from specified parameters in a stack, or nil if does not exist
 
  @receiver `stack` type{Stack}
- @param optional `positionType` type{FINDBY} default FINDBY_First
- @param optional `positionData` type{interface{}} default nil
- @param optional `matchType` type{MATCHBY} default MATCHBY_Object
+ @param optional `findByType` type{FINDBY} default FINDBY_First
+ @param optional `findByData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns type{*Card} the found card OR nil
  ```
  
 <h3 name = "GetMany">GetMany</h3>
  
- `stack.GetMany(positionType, ...positionData, ...returnType, ...matchType)`
+ `stack.GetMany(findByType, ...findByData, ...returnType, ...matchByType)`
  ```
  Gets a stack from specified parameters in a stack
  
  @receiver `stack` type{Stack}
- @param `positionType` type{FINDBY}
- @param optional `positionData` type{interface{}} default nil
+ @param `findByType` type{FINDBY}
+ @param optional `findByData` type{interface{}} default nil
  @param optional `returnType` type{RETURN} default RETURN_Cards
- @param optional `matchType` type{MATCHBY} default MATCHBY_Object
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns type{*Stack} the new stack
  @constructs type{*Stack} new stack of specified values from specified cards in `stack`
  ```
