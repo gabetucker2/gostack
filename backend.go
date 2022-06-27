@@ -38,7 +38,7 @@ func iterator(stack *Stack, lambda func(*Card, ...interface{}) bool) {
  
  @param `getFirst` type{bool}
  @param `stack` type{Stack} no pass-by-reference
- @param `positionType` type{POSITION}
+ @param `positionType` type{FINDBY}
  @param `positionData` type{interface{}}
  @returns the []int of targeted positions
  @constructor creates a new []int
@@ -53,21 +53,21 @@ func iterator(stack *Stack, lambda func(*Card, ...interface{}) bool) {
    ELSE
      return idxs
  */
-func getPositions(getFirst bool, stack *Stack, positionType POSITION, positionData interface{}, matchType MATCH) (targets []int) {
+func getPositions(getFirst bool, stack *Stack, positionType FINDBY, positionData interface{}, matchType MATCHBY) (targets []int) {
 
 	switch positionType {
 
-	case POSITION_First:
+	case FINDBY_First:
 		targets = append(targets, 0)
 
 		//... and so on
 
-	case POSITION_Keys:
+	case FINDBY_Keys:
 		keyArr := positionData.([]interface{})
 		for i := 0; i < len(keyArr); i++ {
 			for j, c := range stack.Cards {
-				if (matchType == MATCH_Object    &&  keyArr[i] ==  c.Key) ||
-				   (matchType == MATCH_Reference && &keyArr[i] == &c.Key) {
+				if (matchType == MATCHBY_Object    &&  keyArr[i] ==  c.Key) ||
+				   (matchType == MATCHBY_Reference && &keyArr[i] == &c.Key) {
 					targets = append(targets, j)
 					if getFirst { break }
 				}
@@ -76,7 +76,7 @@ func getPositions(getFirst bool, stack *Stack, positionType POSITION, positionDa
 
 	//... and so on
 
-	case POSITION_Lambda:
+	case FINDBY_Lambda:
 		filterStack := stack.Clone()
 		iterator(filterStack, positionData.(func(*Card, ...interface{}) bool))
 		for i := range filterStack.Cards {

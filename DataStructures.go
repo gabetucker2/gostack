@@ -12,10 +12,10 @@ type Stack struct {
 }
 
 type RETURN int
-type POSITION int
+type FINDBY int
 type TYPE int
 type ORDER int
-type MATCH int
+type MATCHBY int
 
 const (
 	RETURN_Idxs RETURN = iota
@@ -25,18 +25,18 @@ const (
 )
 
 const (
-	POSITION_First POSITION = iota
-	POSITION_Last
-	POSITION_Idx
-	POSITION_Idxs
-	POSITION_Key
-	POSITION_Keys
-	POSITION_Val
-	POSITION_Vals
-	POSITION_Card
-	POSITION_Cards
-	POSITION_All
-	POSITION_Lambda
+	FINDBY_First FINDBY = iota
+	FINDBY_Last
+	FINDBY_Idx
+	FINDBY_Idxs
+	FINDBY_Key
+	FINDBY_Keys
+	FINDBY_Val
+	FINDBY_Vals
+	FINDBY_Card
+	FINDBY_Cards
+	FINDBY_All
+	FINDBY_Lambda
 )
 
 const (
@@ -51,8 +51,8 @@ const (
 )
 
 const (
-	MATCH_Object MATCH = iota
-	MATCH_Reference
+	MATCHBY_Object MATCHBY = iota
+	MATCHBY_Reference
 )
 
 func setRETURNDefaultIfNil(returnType interface{}) {
@@ -61,9 +61,9 @@ func setRETURNDefaultIfNil(returnType interface{}) {
 	}
 }
 
-func setPOSITIONDefaultIfNil(positionType interface{}) {
+func setFINDBYDefaultIfNil(positionType interface{}) {
 	if positionType == nil {
-		positionType = POSITION_First
+		positionType = FINDBY_First
 	}
 }
 
@@ -73,8 +73,8 @@ func setORDERDefaultIfNil(orderType interface{}) {
 	}
 }
 
-func setMATCHDefaultIfNil(matchType interface{}) {
+func setMATCHBYDefaultIfNil(matchType interface{}) {
 	if matchType == nil {
-		matchType = MATCH_Object
+		matchType = MATCHBY_Object
 	}
 }

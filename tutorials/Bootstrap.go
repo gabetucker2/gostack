@@ -3,12 +3,12 @@ package tutorials
 import (
 	"fmt"
 
-	//. "github.com/gabetucker2/gostack"
+	. "github.com/gabetucker2/gostack"
 )
 
 func tutorials_bootstrap_pop() {
 
-	// > `stack.Extract(RETURN_Card, POSITION_First)`
+	// > `stack.Extract(RETURN_Card, FINDBY_First)`
 	// >> *removes and returns the first card in the stack*
 
 }
@@ -20,9 +20,9 @@ func tutorials_bootstrap_push() {
 
 }
 
-func tutorials_bootstrap_indexOf() {
+func tutorials_bootstrap_indexOf(stack *Stack, val interface{}) int {
 
-	// > `stack.Get(RETURN_Idx, POSITION_Card, cardToMatch, MATCH_Object)`
+	//return stack.Get(FINDBY_Val, val).Idx
 	// >> *returns the index of the first found matching card*
 
 }
