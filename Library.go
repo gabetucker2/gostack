@@ -1,20 +1,20 @@
 package gostack
 
 import (
-	"reflect"
-	"math/rand"
-	"time"
 	"fmt"
+	"math/rand"
+	"reflect"
+	"time"
 )
 
 /** Makes a card with inputted vals and keys
 
- @param optional `val` type{any} default nil
- @param optional `key` type{any} default nil
- @param optional `idx` type{int} default -1 no pass-by-reference
- @returns type{*Card} the newly-constructed card
- @constructs type{*Card} a newly-constructed card
- @ensures the new card will have val `val`, key `key`, and idx `idx`
+@param optional `val` type{any} default nil
+@param optional `key` type{any} default nil
+@param optional `idx` type{int} default -1 no pass-by-reference
+@returns type{*Card} the newly-constructed card
+@constructs type{*Card} a newly-constructed card
+@ensures the new card will have val `val`, key `key`, and idx `idx`
 */
 func MakeCard(variadic ...interface{}) *Card {
 
@@ -190,9 +190,9 @@ func (card *Card) Clone() *Card {
  @receiver `stack` type{Stack}
  @param `insert` type{Card, Stack}
  @param optional `orderType` type{ORDER} default ORDER_After
- @param optional `positionType` type{POSITION} default POSITION_First
+ @param optional `positionType` type{FINDBY} default FINDBY_First
  @param optional `positionData` type{interface{}} default nil
- @param optional `matchType` type{MATCH} default MATCH_Object
+ @param optional `matchType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates `stack` to have new cards before/after each designated position
  */
@@ -204,8 +204,8 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 
 	// set types to default values
 	setORDERDefaultIfNil(orderType)
-	setPOSITIONDefaultIfNil(positionType)
-	setMATCHDefaultIfNil(matchType)
+	setFINDBYDefaultIfNil(positionType)
+	setMATCHBYDefaultIfNil(matchType)
 
 	// convert insert into slice of cards
 	var cardsIn []*Card
@@ -223,7 +223,7 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 	var cardsWithAdded []*Card
 
 	// get targeted cards
-	targets := getPositions(false, stack, positionType.(POSITION), positionData, matchType.(MATCH))
+	targets := getPositions(false, stack, positionType.(FINDBY), positionData, matchType.(MATCHBY))
 
 	// fill the array
 	for i := range stack.Cards {
@@ -271,7 +271,7 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 
  @receiver `stack` type{Stack}
  @param `typeType` type{TYPE}
- @param optional `matchType` type{MATCH} default MATCH_Object
+ @param optional `matchType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates `stack` to have no repeating values between field `typeType`
  */
@@ -290,8 +290,8 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...interface{}) *Stack {
 		addToNewCards := true
 		for j := range newCards {
 			newCard := newCards[j]
-			if (matchType == MATCH_Object    &&  oldCard ==  newCard) ||
-			   (matchType == MATCH_Reference && &oldCard == &newCard) {
+			if (matchType == MATCHBY_Object    &&  oldCard ==  newCard) ||
+			   (matchType == MATCHBY_Reference && &oldCard == &newCard) {
 				addToNewCards = false
 				break
 			}
@@ -425,9 +425,9 @@ func (stack *Stack) Print() {
 /** Gets a card from specified parameters in a stack, or nil if does not exist
 
  @receiver `stack` type{Stack}
- @param optional `positionType` type{POSITION} default POSITION_First
+ @param optional `positionType` type{FINDBY} default FINDBY_First
  @param optional `positionData` type{interface{}} default nil
- @param optional `matchType` type{MATCH} default MATCH_Object
+ @param optional `matchType` type{MATCHBY} default MATCHBY_Object
  @returns type{*Card} the found card OR nil
  */
 func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
@@ -437,11 +437,11 @@ func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
 	unpackVariadic(variadic, &positionType, &positionData, &matchType)
 
 	// set types to default values
-	setPOSITIONDefaultIfNil(positionType)
-	setMATCHDefaultIfNil(matchType)
+	setFINDBYDefaultIfNil(positionType)
+	setMATCHBYDefaultIfNil(matchType)
 
 	// get targeted card OR nil
-	positions := getPositions(true, stack, positionType.(POSITION), positionData, matchType.(MATCH))
+	positions := getPositions(true, stack, positionType.(FINDBY), positionData, matchType.(MATCHBY))
 	if len(positions) > 0 {
 		ret = stack.Cards[positions[0]]
 	} else {
@@ -456,14 +456,14 @@ func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
 /** Gets a stack from specified parameters in a stack
  
  @receiver `stack` type{Stack}
- @param `positionType` type{POSITION}
+ @param `positionType` type{FINDBY}
  @param optional `positionData` type{interface{}} default nil
  @param optional `returnType` type{RETURN} default RETURN_Cards
- @param optional `matchType` type{MATCH} default MATCH_Object
+ @param optional `matchType` type{MATCHBY} default MATCHBY_Object
  @returns type{*Stack} the new stack
  @constructs type{*Stack} new stack of specified values from specified cards in `stack`
  */
-func (stack *Stack) GetMany(positionType POSITION, variadic ...interface{}) *Stack {
+func (stack *Stack) GetMany(positionType FINDBY, variadic ...interface{}) *Stack {
 
 	// unpack variadic into optional parameters
 	var positionData, returnType, matchType interface{}
@@ -471,13 +471,13 @@ func (stack *Stack) GetMany(positionType POSITION, variadic ...interface{}) *Sta
 
 	// set types to default values
 	setRETURNDefaultIfNil(returnType)
-	setMATCHDefaultIfNil(matchType)
+	setMATCHBYDefaultIfNil(matchType)
 
 	// create new stack which returns the searched-for cards
 	newStack := MakeStack()
 
 	// get targeted cards
-	targets := getPositions(false, stack, positionType, positionData, matchType.(MATCH))
+	targets := getPositions(false, stack, positionType, positionData, matchType.(MATCHBY))
 
 	// fill new stack with targeted cards
 	for _, i := range targets {

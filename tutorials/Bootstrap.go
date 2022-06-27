@@ -1,19 +1,22 @@
 package tutorials
 
-func _gostack_tutorials_pop(stack *Stack) *Card {
+import (
+	. "github.com/gabetucker2/gostack"
+)
 
 
-	// > `stack.Extract(RETURN_Card, POSITION_First)`
+
+func bootstrap_pop() {
+
+	// > `stack.Extract(RETURN_Card, FINDBY_First)`
 	// >> *removes and returns the first card in the stack*
 	
 	//
 	stack.Extract(RETURN_Card, POSITION_First)
-
-
 }
 
 
-func _gostack_tutorials_push(card Card*, stack *Stack) bool {
+func bootstrap_push(card Card*, stack *Stack) bool {
 
 	// > `stack.Add(insert, ORDER_BEFORE, POSITION_First)`
 	// >> *adds a card to the beginning of the stack*
@@ -24,14 +27,15 @@ func _gostack_tutorials_push(card Card*, stack *Stack) bool {
 
 }
 
-func _gostack_tutorials_indexOf(stack *Stack, card *Card) int{
 
-	// > `stack.Get(RETURN_Idx, POSITION_Card, cardToMatch, MATCH_Object)`
+func bootstrap_indexOf(stack *Stack, val interface{}) int {
+
+	//return stack.Get(FINDBY_Val, val).Idx
 	// >> *returns the index of the first found matching card*
-	return stack.Get(POSITION_Card, card).Idx
+	return stack.Get(POSITION_Card, val).Idx
 }
 
-func _gostack_tutorials_keyset(stack *Stack) *Stack{
+func bootstrap_keyset(stack *Stack) *Stack{
 	/**
 	@Param: stack
 	@Return: stack
@@ -39,7 +43,7 @@ func _gostack_tutorials_keyset(stack *Stack) *Stack{
 	return stack.GetMany(RETURN_Key, POSITION_All)
 }
 
-func _gostack_tutorials_valset(stack Stack*) Stack*{
+func bootstrap_valset(stack Stack*) Stack*{
 	return stack.GetMany(RETURN_VAL, POSITION_All)
 }
 

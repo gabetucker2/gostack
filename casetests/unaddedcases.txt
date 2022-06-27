@@ -33,7 +33,7 @@ func gostack_case_Add_First(funcName string) {
 	gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
-	stack.Add(testCardC, POSITION_First).Add(testCardB, POSITION_First).Add(testCardA, POSITION_First)
+	stack.Add(testCardC, FINDBY_First).Add(testCardB, FINDBY_First).Add(testCardA, FINDBY_First)
 
 	conditions := []bool{
 		gostack_test_LenAndSize(stack, 3),
@@ -51,7 +51,7 @@ func gostack_case_Add_Last(funcName string) {
 	gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
-	stack.Add(testCardA, POSITION_Last).Add(testCardB, POSITION_Last).Add(testCardC, POSITION_Last)
+	stack.Add(testCardA, FINDBY_Last).Add(testCardB, FINDBY_Last).Add(testCardC, FINDBY_Last)
 
 	conditions := []bool{
 		gostack_test_LenAndSize(stack, 3),
@@ -69,7 +69,7 @@ func gostack_case_Extract_Empty(funcName string) {
 	gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
-	extract := stack.Extract(POSITION_First)
+	extract := stack.Extract(FINDBY_First)
 
 	conditions := []bool{
 		gostack_test_LenAndSize(stack, 0),
@@ -85,7 +85,7 @@ func gostack_case_Extract_First(funcName string) {
 	gostack_test_Start(funcName, showTestText)
 
 	stack := gostack_test_SampleStack()
-	extract := stack.Extract(POSITION_First)
+	extract := stack.Extract(FINDBY_First)
 
 	conditions := []bool{
 		gostack_test_LenAndSize(stack, 2),
@@ -103,7 +103,7 @@ func gostack_case_Extract_Last(funcName string) {
 	gostack_test_Start(funcName, showTestText)
 
 	stack := gostack_test_SampleStack()
-	extract := stack.Extract(POSITION_Last)
+	extract := stack.Extract(FINDBY_Last)
 
 	conditions := []bool{
 		gostack_test_LenAndSize(stack, 2),
@@ -121,7 +121,7 @@ func gostack_case_Replace_Empty(funcName string) {
 	gostack_test_Start(funcName, showTestText)
 
 	stack := MakeStack()
-	extract := stack.Replace(testCardA, POSITION_First)
+	extract := stack.Replace(testCardA, FINDBY_First)
 
 	conditions := []bool{
 		gostack_test_LenAndSize(stack, 0),
@@ -137,7 +137,7 @@ func gostack_case_Replace_First(funcName string) {
 	gostack_test_Start(funcName, showTestText)
 
 	stack := gostack_test_SampleStack()
-	extract := stack.Replace(testCardC, POSITION_First)
+	extract := stack.Replace(testCardC, FINDBY_First)
 
 	conditions := []bool{
 		gostack_test_LenAndSize(stack, 3),
@@ -156,7 +156,7 @@ func gostack_case_Replace_Last(funcName string) {
 	gostack_test_Start(funcName, showTestText)
 
 	stack := gostack_test_SampleStack()
-	extract := stack.Replace(testCardA, POSITION_Last)
+	extract := stack.Replace(testCardA, FINDBY_Last)
 
 	conditions := []bool{
 		gostack_test_LenAndSize(stack, 3),
@@ -177,14 +177,14 @@ func gostack_case_Has(funcName string) {
 	stack := gostack_test_SampleStack()
 
 	conditions := []bool{
-		stack.Has(POSITION_Card, testCardA),
-		stack.Has(POSITION_Card, testCardB),
-		stack.Has(POSITION_Card, testCardC),
-		stack.Has(POSITION_Val, testCardA.val),
-		stack.Has(POSITION_Val, testCardB.val),
-		stack.Has(POSITION_Val, testCardC.val),
-		!stack.Has(POSITION_Card, testCardD),
-		!stack.Has(POSITION_Val, testCardD.val),
+		stack.Has(FINDBY_Card, testCardA),
+		stack.Has(FINDBY_Card, testCardB),
+		stack.Has(FINDBY_Card, testCardC),
+		stack.Has(FINDBY_Val, testCardA.val),
+		stack.Has(FINDBY_Val, testCardB.val),
+		stack.Has(FINDBY_Val, testCardC.val),
+		!stack.Has(FINDBY_Card, testCardD),
+		!stack.Has(FINDBY_Val, testCardD.val),
 	}
 
 	gostack_test_End(funcName, conditions)
@@ -198,14 +198,14 @@ func gostack_case_Index(funcName string) {
 	stack := gostack_test_SampleStack()
 
 	conditions := []bool{
-		stack.Index(POSITION_Card, testCardA) == 0,
-		stack.Index(POSITION_Card, testCardB) == 1,
-		stack.Index(POSITION_Card, testCardC) == 2,
-		stack.Index(POSITION_Val, testCardA.val) == 0,
-		stack.Index(POSITION_Val, testCardB.val) == 1,
-		stack.Index(POSITION_Val, testCardC.val) == 2,
-		stack.Index(POSITION_Card, testCardD) == -1,
-		stack.Index(POSITION_Val, testCardD.val) == -1,
+		stack.Index(FINDBY_Card, testCardA) == 0,
+		stack.Index(FINDBY_Card, testCardB) == 1,
+		stack.Index(FINDBY_Card, testCardC) == 2,
+		stack.Index(FINDBY_Val, testCardA.val) == 0,
+		stack.Index(FINDBY_Val, testCardB.val) == 1,
+		stack.Index(FINDBY_Val, testCardC.val) == 2,
+		stack.Index(FINDBY_Card, testCardD) == -1,
+		stack.Index(FINDBY_Val, testCardD.val) == -1,
 	}
 
 	gostack_test_End(funcName, conditions)

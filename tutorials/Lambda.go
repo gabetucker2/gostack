@@ -54,21 +54,12 @@ func lambda_Max(card *Card, workingMemory ...interface{}) bool {
 		//workingMemory[1].Add(MakeCard(workingMax))
 	}
 
-	return false//workingMemory[1].Get(RETURN_Card, POSITION_First) == card
+	return false//workingMemory[1].Get(RETURN_Card, FINDBY_First) == card
 
 }
 
 func makeSampleStack() *Stack { // very rough ugly outline
-	ivals := []int{2, 10, 11, 12, 40}
-	kvals := []int{0, 90, 4, 2, 20}
-	stack := new(Stack)
-	for i := range ivals {
-		newC := new(Card)
-		newC.Val = ivals[i]
-		newC.Key = kvals[i]
-		stack.Cards = append(stack.Cards, newC)
-	}
-	return stack
+	return MakeStack([]int{2, 10, 11, 12, 40}, []int{0, 90, 4, 2, 20})
 }
 
 /** Executes the Lambda.go tutorial */
@@ -79,21 +70,21 @@ func Lambda() {
 	//////////////////////////////////
 
 	// val in range
-	/*makeSampleStack().Get(func(card *Card, stack *Stack, workingMemory ...*Stack) bool {
+	makeSampleStack().Get(func(card *Card) bool {
 		v := card.Val.(int)
 		return 5 < v && v < 14 && v%2 == 0
-	})*/ // 10, 12
+	}) // 10, 12
 
 	// SAME AS
 
-	//makeSampleStack().Get(lambda_ValInRange) // 10, 12
+	makeSampleStack().GetMany(FINDBY_Lambda, lambda_ValInRange) // 10, 12
 
 	//////////////////////////////////
 
-	//makeSampleStack().Get(lambda_KeyInRange) // 2, 10, 40
+	makeSampleStack().GetMany(FINDBY_Lambda, lambda_KeyInRange) // 2, 10, 40
 
-	//makeSampleStack().Get(lambda_BothInRange) // 10
+	makeSampleStack().GetMany(FINDBY_Lambda, lambda_BothInRange) // 10
 
-	//makeSampleStack().Get(lambda_Max) // 40
+	makeSampleStack().GetMany(FINDBY_Lambda, lambda_Max) // 40
 
 }

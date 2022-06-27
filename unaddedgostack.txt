@@ -95,23 +95,23 @@ func gostack_back_UpdatePosData(_data ...interface{}) (data interface{}) {
 	return
 }
 
-func gostack_back_GetIdxFromData(stack *Stack, position POSITION, _data ...interface{}) (idx int) {
+func gostack_back_GetIdxFromData(stack *Stack, position FINDBY, _data ...interface{}) (idx int) {
 	return gostack_back_GetIdxFromPosition(stack, position, gostack_back_UpdatePosData(_data)).(int)
 }
 
 // returns index of searched item if valid
 // else, returns -1
-func gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _data ...interface{}) (idx interface{}) {
+func gostack_back_GetIdxFromPosition(stack *Stack, position FINDBY, _data ...interface{}) (idx interface{}) {
 
 	data := gostack_back_UpdatePosData(_data...)
 
 	switch position {
 
-	case POSITION_First:
+	case FINDBY_First:
 		idx = 0 // nil
-	case POSITION_Last:
+	case FINDBY_Last:
 		idx = stack.size - 1 // nil
-	case POSITION_Card:
+	case FINDBY_Card:
 		idx = -1
 		for i, c := range stack.cards {
 			if c == data { // key
@@ -119,9 +119,9 @@ func gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _data ...i
 				break
 			}
 		}
-	case POSITION_Idx:
+	case FINDBY_Idx:
 		idx = data // int
-	case POSITION_Key:
+	case FINDBY_Key:
 		idx = -1
 		for i, c := range stack.cards {
 			if c.key == data { // key
@@ -129,7 +129,7 @@ func gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _data ...i
 				break
 			}
 		}
-	case POSITION_Val:
+	case FINDBY_Val:
 		idx = -1
 		for i, c := range stack.cards {
 			if c.val == data { // card
@@ -146,7 +146,7 @@ func gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _data ...i
 */
 
 /*
-func (stack *Stack) Extract(position POSITION, data ...interface{}) *Card {
+func (stack *Stack) Extract(position FINDBY, data ...interface{}) *Card {
 
 	// get idx
 	idx := gostack_back_GetIdxFromData(stack, position, data)
@@ -162,7 +162,7 @@ func (stack *Stack) Extract(position POSITION, data ...interface{}) *Card {
 
 }
 
-func (stack *Stack) Replace(toInsert *[]interface{}, position POSITION, data ...interface{}) (oldCards *Stack) {
+func (stack *Stack) Replace(toInsert *[]interface{}, position FINDBY, data ...interface{}) (oldCards *Stack) {
 
 	// get idx
 	idx := gostack_back_GetIdxFromData(stack, position, data)
@@ -182,13 +182,13 @@ func (stack *Stack) Replace(toInsert *[]interface{}, position POSITION, data ...
 
 }
 
-func (stack *Stack) Get(returnType RETURN, positionType POSITION, POSITIONDATA, matchType ...MATCH) interface{} {
+func (stack *Stack) Get(returnType RETURN, positionType FINDBY, FINDBYDATA, matchType ...MATCHBY) interface{} {
 
 
 
 }
 
-func (stack  *Stack) Has(lookFor interface{}, position POSITION, data ...interface{}) bool
+func (stack  *Stack) Has(lookFor interface{}, position FINDBY, data ...interface{}) bool
 
 	// get id
 	idx := gostack_back_GetIdxFromData(stack, position, data)

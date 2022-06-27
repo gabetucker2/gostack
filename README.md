@@ -4,7 +4,7 @@
 
  <h1 name = "introduction">Introduction</h1>
 
- Introducing **Stacks**—sets of **Card** elements (like a stack of cards)—***gostack*** serves as an all-in-one library for concise, parsimonious, and elegant data management in *golang*.
+ Introducing **Stacks**—sets of **Card** elements (like a stack of cards)—***gostack*** serves as an all-in-one library for flexible, parsimonious, and elegant data management in *golang*.
 
  ***gostack***'s stacks...
  * ...replace maps and arrays, removing the need for pesky index-key-value fetching or translating data between maps and arrays, all the while supporting smooth conversion between stacks and your existing maps and arrays
@@ -50,13 +50,13 @@
  >>>> [enums](#enums)
  >>>>> [RETURN](#RETURN)
  >>>>
- >>>>> [POSITION](#POSITION)
+ >>>>> [FINDBY](#FINDBY)
  >>>>
  >>>>> [TYPE](#TYPE)
  >>>>
  >>>>> [ORDER](#ORDER)
  >>>>
- >>>>> [MATCH](#MATCH)
+ >>>>> [MATCHBY](#MATCHBY)
  >>>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
  >>>> [MakeCard(...)](#MakeCard)
@@ -192,20 +192,20 @@
  > * RETURN_Vals *stack of anys*
  > * RETURN_Cards *stack of Cards*
 
- > **POSITION**
- > * _POSITION_NotationSample *positionData argument type*
- > * POSITION_First *NONE*
- > * POSITION_Last *NONE*
- > * POSITION_Idx *int*
- > * POSITION_Idxs *Stack of ints*
- > * POSITION_Val *any*
- > * POSITION_Vals *Stack of any*
- > * POSITION_Key *any*
- > * POSITION_Keys *Stack of any*
- > * POSITION_Card *Card*
- > * POSITION_Cards *Stack of Cards*
- > * POSITION_All *NONE*
- > * POSITION_Lambda *lambda function*
+ > **FINDBY**
+ > * _FINDBY_NotationSample *positionData argument type*
+ > * FINDBY_First *NONE*
+ > * FINDBY_Last *NONE*
+ > * FINDBY_Idx *int*
+ > * FINDBY_Idxs *Stack of ints*
+ > * FINDBY_Val *any*
+ > * FINDBY_Vals *Stack of any*
+ > * FINDBY_Key *any*
+ > * FINDBY_Keys *Stack of any*
+ > * FINDBY_Card *Card*
+ > * FINDBY_Cards *Stack of Cards*
+ > * FINDBY_All *NONE*
+ > * FINDBY_Lambda *lambda function*
 
  > **TYPE**
  > * TYPE_Key
@@ -216,9 +216,9 @@
  > * ORDER_Before
  > * ORDER_After
 
- > **MATCH**
- > * MATCH_Object
- > * MATCH_Reference
+ > **MATCHBY**
+ > * MATCHBY_Object
+ > * MATCHBY_Reference
 
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
@@ -299,52 +299,52 @@
  >>>
  >>> stack of Cards
 
-<h4 name = "POSITION">POSITION</h4>
+<h4 name = "FINDBY">FINDBY</h4>
 
  This is an enum intended to make it easy to flexibly inform functions what the intended target is.
 
- > ***POSITION***
- >> *_POSITION_NotationSample*
+ > ***FINDBY***
+ >> *_FINDBY_NotationSample*
  >>> *The type of the variable (called `data`) that needs to be passed into the function utilizing this constant*
  >>
- >>> *For instance, if you input `POSITION_Keys`, you would need to pass a Stack whose values are the keys you want to find to your `data` parameter*
+ >>> *For instance, if you input `FINDBY_Keys`, you would need to pass a Stack whose values are the keys you want to find to your `data` parameter*
  >>
- >> POSITION_First
+ >> FINDBY_First
  >>>> default
  >>>
  >>> *NONE*
  >>
- >> POSITION_Last
+ >> FINDBY_Last
  >>> *NONE*
  >>
- >> POSITION_Idx
+ >> FINDBY_Idx
  >>> int
  >>
- >> POSITION_Idxs
+ >> FINDBY_Idxs
  >>> Stack of ints
  >>
- >> POSITION_Val
+ >> FINDBY_Val
  >>>  any (interface{})
  >>
- >> POSITION_Vals
+ >> FINDBY_Vals
  >>> Stack of any (interface{})
  >>
- >> POSITION_Key
+ >> FINDBY_Key
  >>>  any (interface{})
  >>
- >> POSITION_Keys
+ >> FINDBY_Keys
  >>> Stack of  any (interface{})
  >>
- >> POSITION_Card
+ >> FINDBY_Card
  >>> Card
  >>
- >> POSITION_Cards
+ >> FINDBY_Cards
  >>> Stack of Cards
  >>
- >> POSITION_All
+ >> FINDBY_All
  >>> *NONE*
  >>
- >> POSITION_Lambda
+ >> FINDBY_Lambda
  >>> interface{} *lambda function*
  
 <h4 name = "TYPE">TYPE</h4>
@@ -368,19 +368,19 @@
 >> ORDER_After
 >>> default
 
-<h4 name = "MATCH">MATCH</h4>
+<h4 name = "MATCHBY">MATCHBY</h4>
 
- This is an enum intended to make it easy to target whether a function searching for a match between input data and data in the stack element is matching by having the same values (MATCH_Object) or the same memory address (MATCH_Reference).
+ This is an enum intended to make it easy to target whether a function searching for a match between input data and data in the stack element is matching by having the same values (MATCHBY_Object) or the same memory address (MATCHBY_Reference).
 
- Matching by reference only works for Val, Key, and Card POSITION types.  It would not make much sense to match an index that's managed on the backend by reference (POSITION_Idx), to match a lambda expression (POSITION_Lambda), or to match using a position that's not even comparing values (POSITION_First, POSITION_Last, POSITION_All).
+ Matching by reference only works for Val, Key, and Card FINDBY types.  It would not make much sense to match an index that's managed on the backend by reference (FINDBY_Idx), to match a lambda expression (FINDBY_Lambda), or to match using a position that's not even comparing values (FINDBY_First, FINDBY_Last, FINDBY_All).
 
  Take care to note that all cases where objects are matching by reference will also be matching by object.
 
- > ***MATCH***
- >> MATCH_Object
+ > ***MATCHBY***
+ >> MATCHBY_Object
  >>> default
  >>
- >> MATCH_Reference
+ >> MATCHBY_Reference
 
 <h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>
 
@@ -472,9 +472,9 @@ Makes a stack of cards with inputted vals and keys
  @receiver `stack` type{Stack}
  @param `insert` type{Card, Stack}
  @param optional `orderType` type{ORDER} default ORDER_After
- @param optional `positionType` type{POSITION} default POSITION_First
+ @param optional `positionType` type{FINDBY} default FINDBY_First
  @param optional `positionData` type{interface{}} default nil
- @param optional `matchType` type{MATCH} default MATCH_Object
+ @param optional `matchType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates `stack.Cards` to have new cards before/after each designated position
  ```
@@ -487,7 +487,7 @@ Makes a stack of cards with inputted vals and keys
 
  @receiver `stack` type{Stack}
  @param `typeType` type{TYPE}
- @param optional `matchType` type{MATCH} default MATCH_Object
+ @param optional `matchType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates `stack` to have no repeating values between field `typeType`
  ```
@@ -564,9 +564,9 @@ Makes a stack of cards with inputted vals and keys
  Gets a card from specified parameters in a stack, or nil if does not exist
 
  @receiver `stack` type{Stack}
- @param optional `positionType` type{POSITION} default POSITION_First
+ @param optional `positionType` type{FINDBY} default FINDBY_First
  @param optional `positionData` type{interface{}} default nil
- @param optional `matchType` type{MATCH} default MATCH_Object
+ @param optional `matchType` type{MATCHBY} default MATCHBY_Object
  @returns type{*Card} the found card OR nil
  ```
  
@@ -577,10 +577,10 @@ Makes a stack of cards with inputted vals and keys
  Gets a stack from specified parameters in a stack
  
  @receiver `stack` type{Stack}
- @param `positionType` type{POSITION}
+ @param `positionType` type{FINDBY}
  @param optional `positionData` type{interface{}} default nil
  @param optional `returnType` type{RETURN} default RETURN_Cards
- @param optional `matchType` type{MATCH} default MATCH_Object
+ @param optional `matchType` type{MATCHBY} default MATCHBY_Object
  @returns type{*Stack} the new stack
  @constructs type{*Stack} new stack of specified values from specified cards in `stack`
  ```
