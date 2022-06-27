@@ -1,11 +1,11 @@
 package gostack
 
 /** Sets a set of variables to the variable set passed into a variadic parameter
- 
- @param `variadic` type{...[]interface{}}
- @param `var1, var2, ..., varN` type{any}
- @updates `var1, var2, ..., varN` are set to each of the values in the variadic array, or nil if undefined, respectively
- */
+
+@param `variadic` type{...[]interface{}}
+@param `var1, var2, ..., varN` type{any}
+@updates `var1, var2, ..., varN` are set to each of the values in the variadic array, or nil if undefined, respectively
+*/
 func unpackVariadic(variadic []interface{}, into ...*interface{}) {
 	vLen := len(variadic)
 	for i, v := range into {
@@ -19,7 +19,7 @@ func unpackVariadic(variadic []interface{}, into ...*interface{}) {
 
 /** Removes the cards from a stack for which lambda(card) is false
  
- @param `stack` type{*Stack}
+ @param `stack` type{Stack}
  @param `lambda` type{func(*Stack, *Card) bool}
  @returns `stack`
  @updates `stack.Cards` to a new set of Cards filtered using `lambda`
@@ -34,144 +34,53 @@ func iterator(stack *Stack, lambda func(*Card, ...interface{}) bool) {
 	stack.Cards = filteredCards
 }
 
-/*
-func gostack_back_AddCard(stack *Stack, card *Card, idx interface{}, beforeNotAfter bool) *Stack {
+/** Returns an []int of indices representing the targeted position(s) in a stack
+ 
+ @param `stack` type{Stack} no pass-by-reference
+ @param `positionType` type{POSITION}
+ @param `data` type{interface{}}
+ @returns the []int of targeted positions
+ @constructor creates a new []int
+ @ensures
+  * SWITCH `positionType`
+	  case POSITION_First
+	    return 0
+	  case POSITION_Last
+	    return len(stack)
+	  case POSITION_Idx
+	    return first idx with card.Idx == data or any in data
+	  case POSITION_Idxs
+	    return all idxs with card.Idx == data or any in data
+	  case POSITION_Key
+	    return first idx with card.Key == data or any in data
+	  case POSITION_Keys
+	    return all idxs with card.Key == data or any in data
+	  case POSITION_Val
+	    return first idx with card.Val == data or any in data
+	  case POSITION_Vals
+	    return all idxs with card.Val == data or any in data
+	  case POSITION_Card
+	    return first idx with card == data or any in data
+	  case POSITION_Cards
+	    return all idxs with card == data or any in data
+	  case POSITION_All
+	    return all idxs
+	  case POSITION_Lambda
+	    return all idxs where lambda(card) == true
+ */
+func getPositions(stack *Stack, positionType POSITION, data interface{}) (targets []int) {
 
-	// insert card into new array slice to satisfy append function
-	newCards := []*Card{}
-
-	if stack.size == 0 { // add card to empty list
-
-		newCards = append(newCards, card)
-
-	} else { // append each card in stack.cards to card
-
-		if beforeNotAfter {
-
-			for i := range stack.cards {
-				c := stack.cards[i]
-				if i != idx {
-					newCards = append(newCards, c)
-				} else if i == idx {
-					newCards = append(newCards, card)
-					newCards = append(newCards, c)
-				}
-			}
-
-			if idx == stack.size {
-				newCards = append(newCards, card)
-			}
-
-		} else {
-
-			for i := range stack.cards {
-				c := stack.cards[i]
-				if i != idx {
-					newCards = append(newCards, c)
-				} else if i == idx {
-					newCards = append(newCards, c)
-					newCards = append(newCards, card)
-				}
-			}
-
-		}
-
-	}
-
-	// set stack.cards to our new array
-	stack.cards = newCards
-
-	// update stack properties
-	stack.size++
-
-	// return
-	return stack
-
-}
-
-func gostack_back_ExtractCard(stack *Stack, idx interface{}) (card *Card) {
-
-	if stack.size == 0 { // if we can't pop it, return nil
-
-		card = nil
-
-	} else { // if we can pop it, return popped card
-
-		// insert card into new array slice to satisfy append function
-		newCards := []*Card{}
-
-		// append each card in stack.cards to card
-		for i := range stack.cards {
-			c := stack.cards[i]
-			if i != idx {
-				newCards = append(newCards, c)
-			} else if i == idx {
-				card = c
-			}
-		}
-
-		// set stack.cards to our new array
-		stack.cards = newCards
-
-		// update stack properties
-		stack.size--
-
-	}
-
-	return
-
-}
-
-func gostack_back_UpdatePosData(_data ...interface{}) (data interface{}) {
-	if len(_data) == 1 {
-		data = _data[0] // just so there is only one optional param
-	} else {
-		data = nil
-	}
-	return
-}
-
-func gostack_back_GetIdxFromData(stack *Stack, position POSITION, _data ...interface{}) (idx int) {
-	return gostack_back_GetIdxFromPosition(stack, position, gostack_back_UpdatePosData(_data)).(int)
-}
-
-// returns index of searched item if valid
-// else, returns -1
-func gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _data ...interface{}) (idx interface{}) {
-
-	data := gostack_back_UpdatePosData(_data...)
-
-	switch position {
+	switch positionType {
 
 	case POSITION_First:
-		idx = 0 // nil
-	case POSITION_Last:
-		idx = stack.size - 1 // nil
-	case POSITION_Card:
-		idx = -1
-		for i, c := range stack.cards {
-			if c == data { // key
-				idx = i
-				break
-			}
-		}
-	case POSITION_Idx:
-		idx = data // int
-	case POSITION_Key:
-		idx = -1
-		for i, c := range stack.cards {
-			if c.key == data { // key
-				idx = i
-				break
-			}
-		}
-	case POSITION_Val:
-		idx = -1
-		for i, c := range stack.cards {
-			if c.val == data { // card
-				idx = i
-				break
-			}
+		targets = append(targets, 0)
+
+	//... and so on
+
+	case POSITION_Lambda:
+		iterator(stack.Clone(), data.(func(*Card, ...interface{}) bool))
+		for i := range stack.Cards {
+			targets = append(targets, i)	
 		}
 
 	}
@@ -179,4 +88,40 @@ func gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _data ...i
 	return
 
 }
-*/
+
+/** Returns a new stack of fields from a stack of cards based on `returnType`
+ 
+ @param `stack` type{Stack}
+ @param `returnType` type{RETURN}
+ @returns the stack of the fetched values
+ @constructor creates a new Stack
+ @ensures
+  * SWITCH `returnType`
+	  case RETURN_Idx
+	    return Idx of first card in `stack`
+	  case RETURN_Idxs
+	    return stack of Idxs of each card in `stack`
+	  case RETURN_Key
+	    return Key of first card in `stack`
+	  case RETURN_Keys
+	    return stack of Keys of each card in `stack`
+	  case RETURN_Val
+	    return Val of first card in `stack`
+	  case RETURN_Vals
+	    return stack of Vals of each card in `stack`
+	  case RETURN_Card
+	    return first card in `stack`
+	  case RETURN_Cards
+	    return `stack`
+ */
+func getReturns(input *Stack, returnType RETURN) (ret interface{}) {
+
+	switch returnType {
+
+		// TODO: implement
+
+	}
+
+	return
+
+}

@@ -67,6 +67,8 @@
  >>>
  >>>> [stack.Empty()](#Empty)
  >>>
+ >>>> [{stack, card}.Clone()](#Clone)
+ >>>
  >>> [Generalized Functions](#generalizedFunctions)
  >>>> [stack.Add(...)](#Add)
  >>>
@@ -169,18 +171,13 @@
 
  > **RETURN**
  > * _RETURN_NotationSample *type that's returned*
- > * RETURN_Stack *input Stack*
  > * RETURN_Idx *int*
- > * RETURN_Idxs *Stack of ints*
  > * RETURN_Key *any*
- > * RETURN_Keys *Stack of any*
  > * RETURN_Val *any*
- > * RETURN_Vals *Stack of any*
  > * RETURN_Card *Card*
- > * RETURN_Cards *Stack of Cards*
 
  > **POSITION**
- > * _POSITION_NotationSample *POSITIONDATA argument type*
+ > * _POSITION_NotationSample *positionData argument type*
  > * POSITION_First *NONE*
  > * POSITION_Last *NONE*
  > * POSITION_Idx *int*
@@ -207,15 +204,19 @@
  * **gostack.MakeCard(...idx, ...key, ...val)**
  * **gostack.MakeStack(...input1, ...input2, ...repeats)**
  * **stack.Empty()**
+ * **{card, stack}.Clone()**
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
- * **stack.Add(insert, ...ORDER_\*, ...POSITION_\*, ...POSITIONDATA)**
- * **stack.Replace(insert, RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
- * **stack.Extract(RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
+ * **stack.Add(insert, ...ORDER_\*, ...POSITION_\*, ...positionData)**
+ * **stack.Replace(insert, RETURN_\*, POSITION_\*, ...positionData, ...MATCH_\*)**
+ * **stack.ReplaceMany(insert, RETURN_\*, POSITION_\*, ...positionData, ...MATCH_\*)**
+ * **stack.Extract(RETURN_\*, POSITION_\*, ...positionData, ...MATCH_\*)**
+ * **stack.ExtractMany(RETURN_\*, POSITION_\*, ...positionData, ...MATCH_\*)**
  * **stack.Unique(TYPE_\*)**
- * **stack.Get(RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
- * **stack.Has(RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
+ * **stack.Get(RETURN_\*, POSITION_\*, ...positionData, ...MATCH_\*)**
+ * **stack.GetMany(RETURN_\*, POSITION_\*, ...positionData, ...MATCH_\*)**
+ * **stack.Has(RETURN_\*, POSITION_\*, ...positionData, ...MATCH_\*)**
 
 <h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
 
@@ -261,32 +262,17 @@
  >>
  >>> *For instance, if you inputted RETURN_Key, you would get a single key interface{} (or nil if doesn't exist).  Alternatively, if you inputted RETURN_Keys, you would get a stack of keys.*
  >>
- >> RETURN_Stack
- >>> input Stack
- >>
  >> RETURN_Idx
  >>> int
- >>
- >> RETURN_Idxs
- >>> Stack of ints
  >>
  >> RETURN_Key
  >>> interface{}
  >>
- >> RETURN_Keys
- >>> Stack of interfaces{}
- >>
  >> RETURN_Val
  >>> interface{}
  >>
- >> RETURN_Vals
- >>> Stack of interfaces{}
- >>
  >> RETURN_Card
  >>> Card
- >>
- >> RETURN_Cards
- >>> Stack of Cards
 
 <h4 name = "POSITION">POSITION</h4>
 
@@ -299,8 +285,9 @@
  >>> *For instance, if you input `POSITION_Keys`, you would need to pass a Stack whose values are the keys you want to find to your `data` parameter*
  >>
  >> POSITION_First
- >>> *NONE*
  >>>> default
+ >>>
+ >>> *NONE*
  >>
  >> POSITION_Last
  >>> *NONE*
@@ -352,8 +339,9 @@
 
 > ***ORDER***
 >> ORDER_Before
->>> default
+>>
 >> ORDER_After
+>>> default
 
 <h4 name = "MATCH">MATCH</h4>
 
@@ -366,6 +354,7 @@
  > ***MATCH***
  >> MATCH_Object
  >>> default
+ >>
  >> MATCH_Reference
 
 <h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>
@@ -390,10 +379,10 @@
  ```
 Makes a stack of cards with inputted vals and keys
 
-@param optional `input1` type{[]any, map[any]any} default nil
-@param optional `input2` type{[]any} default nil
-@param optional `repeats` type{int} default 1
-@returns type{*Stack} the newly-constructed stack of ards
+ @param optional `input1` type{[]any, map[any]any} default nil
+ @param optional `input2` type{[]any} default nil
+ @param optional `repeats` type{int} default 1
+ @returns type{*Stack} the newly-constructed stack of ards
  @constructs type{*Stack} a newly-constructed stack of cards
  @requires
   * `input1` is map and nil `input2`
@@ -417,52 +406,55 @@ Makes a stack of cards with inputted vals and keys
  
 <h3 name = "Empty">Empty</h3>
  
- > `stack.Empty()`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >>> **stack**
- >
- >> SETTER: ***TRUE***
- >>> **stack**
- 
- > ***Pseudocode***
- >> remove all cards in the stack
- >
- >> returns the empty stack
- 
+ `stack.Empty()`
+ ```
+ Makes a card with inputted vals and keys
+
+ @receiver `stack` type{Stack}
+ @returns `stack`
+ @updates `stack.Cards` to be empty
+ ```
+
+<h3 name = "Clone">Clone</h3>
+
+ `stack.Clone()`
+ ```
+ Returns a clone of the given stack
+
+ @receiver `stack` type{Stack}
+ @returns type{*Stack} stack clone
+ @constructs type{*Stack} clone of `stack`
+ @ensures the stack clone has the same card pointers as `stack`
+ ```
+ `card.Clone()`
+ ```
+ Returns a clone of the given card
+
+ @receiver `card` type{Card}
+ @returns type{*Card} card clone
+ @constructs clone of `card`
+ ```
+
 <h2 name = "generalizedFunctions">Generalized Functions</h2>
  
 <h3 name = "Add">Add</h3>
  
- > `stack.Add(insert, ...ORDER_*, ...POSITION_*, ...POSITIONDATA)`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >>> **stack** *or* nil
- >
- >> SETTER: ***TRUE***
- >>> **stack**
+ `stack.Add(insert, ...ORDER_*, ...POSITION_*, ...positionData)`
+ ```
+ Adds to a stack of cards or a cards at (each) position(s) 
  
- > ***Special Parameters***
- >> **insert** *Card* or *Stack* is either a Card or a Stack of cards to insert at POSITION
-
- > ***Pseudocode***
- >> **IF VALID POSITION**
- >>> **IF beforeNotAfter**
- >>>> add **insert** before (each) POSITION in **stack**
- >>>
- >>> **ELSE**
- >>>> add **insert** after (each) POSITION in **stack**
- >>>
- >>> returns updated stack
- >>
- >> **ELSE**
- >>> return nil
+ @receiver `stack` type{Stack}
+ @param `insert` type{Card, Stack}
+ @param optional `orderType` type{ORDER} default ORDER_After
+ @param optional `positionType` type{POSITION} default POSITION_First
+ @param optional `positionData` type{interface{}} default nil
+ @returns `stack`
+ @updates `stack.Cards` to have new cards before/after each designated position
+ ```
  
 <h3 name = "Replace">Replace</h3>
  
- > `stack.Replace(insert, RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
+ > `stack.Replace(insert, RETURN_*, POSITION_*, ...positionData, ...MATCH_*)`
  >> CONSTRUCTOR: ***SOMETIMES***
  >>> Make Stack if RETURNing multiple types
  >
@@ -486,7 +478,7 @@ Makes a stack of cards with inputted vals and keys
  
 <h3 name = "Extract">Extract</h3>
  
- > `stack.Extract(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
+ > `stack.Extract(RETURN_*, POSITION_*, ...positionData, ...MATCH_*)`
  >> CONSTRUCTOR: ***SOMETIMES***
  >>> Make Stack if RETURNing multiple types
  >
@@ -523,25 +515,22 @@ Makes a stack of cards with inputted vals and keys
  
 <h3 name = "Get">Get</h3>
  
- > `stack.Get(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
- >> CONSTRUCTOR: ***SOMETIMES***
- >>> Make Stack if RETURNing multiple types
- >
- >> GETTER: ***TRUE***
- >>> RETURN objects that were gotten *or* nil
- >
- >> SETTER: ***FALSE***
-
- > ***Pseudocode***
- >> **IF VALID POSITION**
- >>> return the selected RETURNS
- >
- >> **ELSE**
- >>> return nil
+ `stack.Get(RETURN_*, POSITION_*, ...positionData, ...MATCH_*)`
+ ```
+ Gets a stack of specified values from specified card(s) at (each) position
+ 
+ @receiver `stack` type{Stack}
+ @param `returnType` type{RETURN}
+ @param `positionType` type{POSITION} default ORDER_After
+ @param optional `positionData` type{interface{}} default nil
+ @param optional `matchType` type{MATCH} default MATCH_Object
+ @returns type{*Stack} the new stack
+ @constructs type{*Stack} new stack of specified values from specified cards in `stack`
+ ```
  
 <h3 name = "Has">Has</h3>
  
- > `stack.Has(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
+ > `stack.Has(RETURN_*, POSITION_*, ...positionData, ...MATCH_*)`
  >> CONSTRUCTOR: ***FALSE***
  >
  >> GETTER: ***TRUE***
@@ -561,7 +550,7 @@ Makes a stack of cards with inputted vals and keys
  <h3>Generalized Functions</h3>
 
  * Add **Move** function
- * Add **Set(newData, TYPE_*, POSITION_*, ...POSITIONDATA)** function for more efficient replacement as opposed to replace... implement all search functions for individual cards, so card.set, card.replace, card.extract, etc
+ * Add **Set(newData, TYPE_*, POSITION_*, ...positionData)** function for more efficient replacement as opposed to replace... implement all search functions for individual cards, so card.set, card.replace, card.extract, etc
  * Add **Print** function
  * Add **CombineWith** function
 
@@ -569,7 +558,6 @@ Makes a stack of cards with inputted vals and keys
 
  * Add **Flip** function
  * Add **Shuffle** function
- * Add **Clone** function
  * Add **ToArray** function
  * Add **ToStack** function
 

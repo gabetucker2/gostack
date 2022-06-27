@@ -18,15 +18,10 @@ type ORDER int
 type MATCH int
 
 const (
-	RETURN_Stack RETURN = iota
-	RETURN_Idx
-	RETURN_Idxs
+	RETURN_Idx RETURN = iota
 	RETURN_Key
-	RETURN_Keys
 	RETURN_Val
-	RETURN_Vals
 	RETURN_Card
-	RETURN_Cards
 )
 
 const (
@@ -59,3 +54,27 @@ const (
 	MATCH_Object MATCH = iota
 	MATCH_Reference
 )
+
+func setRETURNDefaultIfNil(returnType interface{}) {
+	if returnType == nil {
+		returnType = RETURN_Cards
+	}
+}
+
+func setPOSITIONDefaultIfNil(positionType interface{}) {
+	if positionType == nil {
+		positionType = POSITION_First
+	}
+}
+
+func setORDERDefaultIfNil(orderType interface{}) {
+	if orderType == nil {
+		orderType = ORDER_After
+	}
+}
+
+func setMATCHDefaultIfNil(matchType interface{}) {
+	if matchType == nil {
+		matchType = MATCH_Object
+	}
+}

@@ -32,11 +32,14 @@ ANDY:
  - Add passing-by-object vs passing-by-address tutorial (just & before variable, our functions support that)
 
 ---------------------------------------------------------------
-IMPLEMENTED TESTED DOCUMENTED FUNCTIONS:
+IMPLEMENTED TESTED WORKING DOCUMENTED FUNCTIONS:
+/
+
+IMPLEMENTED TESTED BROKEN DOCUMENTED FUNCTIONS:
 MakeStack
 
 IMPLEMENTED UNTESTED DOCUMENTED FUNCTIONS:
-MakeCard, Empty
+Add, MakeCard, Empty, stack.Clone, card.Clone
 
 UNIMPLEMENTED DOCUMENTED FUNCTIONS:
-Add, Extract, Replace, Get, Has
+Extract, Replace, Get, Has
