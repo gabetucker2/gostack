@@ -265,9 +265,7 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
  @param `positionType` type{POSITION} default ORDER_After
  @param optional `positionData` type{interface{}} default nil
  @param optional `matchType` type{MATCH} default MATCH_Object
- @returns type{*Stack} the new stack
- @constructs type{*Stack} new stack of specified values from specified cards in `stack`
- @requires `stack.Clone()` has been implemented
+ @returns type{*Card} the found card
  */
 func (stack *Stack) Get(positionType POSITION, variadic ...interface{}) *Card {
 
@@ -283,18 +281,9 @@ func (stack *Stack) Get(positionType POSITION, variadic ...interface{}) *Card {
 
 	// get targeted cards
 	targets := getPositions(stack, positionType, positionData)
-	
-	// get whether to get first of or all of matching cards
-	getOne := isSingular(returnType)
 
 	// fill new stack with gotten cards
-	if getOne {
-		for _, i := range targets {
 	
-			gotCardsStack.Cards = append(gotCardsStack.Cards, stack.Cards[i])
-	
-		}
-	}
 
 	// return
 	return gotCardsStack

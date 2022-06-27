@@ -78,8 +78,9 @@ func getPositions(stack *Stack, positionType POSITION, data interface{}) (target
 	//... and so on
 
 	case POSITION_Lambda:
-		iterator(stack.Clone(), data.(func(*Card, ...interface{}) bool))
-		for i := range stack.Cards {
+		filterStack := stack.Clone()
+		iterator(filterStack, data.(func(*Card, ...interface{}) bool))
+		for i := range filterStack.Cards {
 			targets = append(targets, i)	
 		}
 
@@ -97,20 +98,12 @@ func getPositions(stack *Stack, positionType POSITION, data interface{}) (target
  @constructor creates a new Stack
  @ensures
   * SWITCH `returnType`
-	  case RETURN_Idx
-	    return Idx of first card in `stack`
 	  case RETURN_Idxs
 	    return stack of Idxs of each card in `stack`
-	  case RETURN_Key
-	    return Key of first card in `stack`
 	  case RETURN_Keys
 	    return stack of Keys of each card in `stack`
-	  case RETURN_Val
-	    return Val of first card in `stack`
 	  case RETURN_Vals
 	    return stack of Vals of each card in `stack`
-	  case RETURN_Card
-	    return first card in `stack`
 	  case RETURN_Cards
 	    return `stack`
  */
