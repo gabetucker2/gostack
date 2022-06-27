@@ -182,7 +182,7 @@ func (stack *Stack) Replace(toInsert *[]interface{}, position FINDBY, data ...in
 
 }
 
-func (stack *Stack) Get(returnType RETURN, positionType FINDBY, FINDBYDATA, matchType ...MATCHBY) interface{} {
+func (stack *Stack) Get(returnType RETURN, findByType FINDBY, FINDBYDATA, matchByType ...MATCHBY) interface{} {
 
 
 

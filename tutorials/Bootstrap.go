@@ -6,21 +6,21 @@ import (
 	. "github.com/gabetucker2/gostack"
 )
 
-func tutorials_bootstrap_pop() {
+func bootstrap_pop() {
 
 	// > `stack.Extract(RETURN_Card, FINDBY_First)`
 	// >> *removes and returns the first card in the stack*
 
 }
 
-func tutorials_bootstrap_push() {
+func bootstrap_push() {
 
 	// > `stack.Add(insert)`
 	// >> *adds a card to the beginning of the stack (see default enum types)*
 
 }
 
-func tutorials_bootstrap_indexOf(stack *Stack, val interface{}) int {
+func bootstrap_indexOf() int {
 
 	//return stack.Get(FINDBY_Val, val).Idx
 	// >> *returns the index of the first found matching card*
@@ -32,8 +32,8 @@ func Bootstrap() {
 
 	fmt.Println("tutorials.Bootstrap()")
 
-	tutorials_bootstrap_pop()
-	tutorials_bootstrap_push()
-	tutorials_bootstrap_indexOf()
+	bootstrap_pop()
+	bootstrap_push()
+	bootstrap_indexOf()
 
 }

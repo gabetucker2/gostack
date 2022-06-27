@@ -38,24 +38,24 @@ func iterator(stack *Stack, lambda func(*Card, ...interface{}) bool) {
  
  @param `getFirst` type{bool}
  @param `stack` type{Stack} no pass-by-reference
- @param `positionType` type{FINDBY}
- @param `positionData` type{interface{}}
+ @param `findByType` type{FINDBY}
+ @param `findByData` type{interface{}}
  @returns the []int of targeted positions
  @constructor creates a new []int
  @ensures
-   IF `positionType` is singular
-     return idx/idxs of cards whose field matches `positionData` field
-   ELSE IF `positionType` is plural
-	 return idx/idxs of cards whose field matches any of `positionData` fields
+   IF `findByType` is singular
+     return idx/idxs of cards whose field matches `findByData` field
+   ELSE IF `findByType` is plural
+	 return idx/idxs of cards whose field matches any of `findByData` fields
    
    IF `getFirst`
      return idx
    ELSE
      return idxs
  */
-func getPositions(getFirst bool, stack *Stack, positionType FINDBY, positionData interface{}, matchType MATCHBY) (targets []int) {
+func getPositions(getFirst bool, stack *Stack, findByType FINDBY, findByData interface{}, matchByType MATCHBY) (targets []int) {
 
-	switch positionType {
+	switch findByType {
 
 	case FINDBY_First:
 		targets = append(targets, 0)
@@ -63,11 +63,11 @@ func getPositions(getFirst bool, stack *Stack, positionType FINDBY, positionData
 		//... and so on
 
 	case FINDBY_Keys:
-		keyArr := positionData.([]interface{})
+		keyArr := findByData.([]interface{})
 		for i := 0; i < len(keyArr); i++ {
 			for j, c := range stack.Cards {
-				if (matchType == MATCHBY_Object    &&  keyArr[i] ==  c.Key) ||
-				   (matchType == MATCHBY_Reference && &keyArr[i] == &c.Key) {
+				if (matchByType == MATCHBY_Object    &&  keyArr[i] ==  c.Key) ||
+				   (matchByType == MATCHBY_Reference && &keyArr[i] == &c.Key) {
 					targets = append(targets, j)
 					if getFirst { break }
 				}
@@ -78,7 +78,7 @@ func getPositions(getFirst bool, stack *Stack, positionType FINDBY, positionData
 
 	case FINDBY_Lambda:
 		filterStack := stack.Clone()
-		iterator(filterStack, positionData.(func(*Card, ...interface{}) bool))
+		iterator(filterStack, findByData.(func(*Card, ...interface{}) bool))
 		for i := range filterStack.Cards {
 			targets = append(targets, i)	
 			if getFirst { break }
