@@ -1,7 +1,6 @@
 package tutorials
 
 import (
-<<<<<<< HEAD
 	. "github.com/gabetucker2/gostack"
 	"fmt"
 )
@@ -29,12 +28,9 @@ func bootstrap_push(card Card*, stack *Stack) bool {
 
 }
 
-<<<<<<< HEAD
 func bootstrap_indexOf(stack *Stack, val interface{}) int {
 
-=======
-func bootstrap_indexOf() {
->>>>>>> 49345842b396ff65dc60d24c4e7e492d97a10225
+
 
 	//return stack.Get(FINDBY_Val, val).Idx
 	// >> *returns the index of the first found matching card*
