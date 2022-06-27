@@ -44,6 +44,8 @@ pairsToInsert <"I" : "Am new", "To" : "This set">
 
 <h3 name = "classical">...classical go</h3>
 
+TODO: Update slightly buggy classical code
+
 ```
 // INIT
 start := map[interface{}]interface{} {"1_Key A" : 40, "Bad Key" : "Bad Value", "2_Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520} // can't have same key twice so need x_KEYNAME
@@ -87,14 +89,13 @@ for k, v := range start {
 // TASK C
 var taskC map[interface{}]interface{}
 for k, v := range taskB {
-    k2, v2 := taskB[k] // circumvent for loop cloning
-    if 1 < v && v < 4 {
+    if 1 < v.(int) && v.(int) < 4 {
         for k3 := range pairsToInsert {
             k4, v4 := pairsToInsert[k3] // circumvent for loop cloning
             taskC[k4] = v4
         }
     } else {
-        taskC[k2] = v2
+        taskC[k] = v
     }
 }
 ```
@@ -110,14 +111,14 @@ searchKeys := MakeStack([]interface{} {"Key A", 2.5, "Michael Keaton"})
 pairsToInsert := MakeStack(map[interface{}]interface{} {"I" : "Am new", "To" : "This set"})
 
 // TASK A
-taskA := start.Get(RETURN_Vals, POSITION_Keys, searchKeys).Unique(TYPE_Val)
+taskA := start.GetMany(POSITION_Keys, searchKeys, RETURN_Vals).Unique(TYPE_Val)
 
 // TASK B
-taskB := MakeStack(taskA, start.Get(RETURN_Idxs, POSITION_Vals, taskA).Unique(TYPE_Val))
+taskB := MakeStack(taskA, start.GetMany(POSITION_Vals, taskA, RETURN_Vals).Unique(TYPE_Val))
 
  // TASK C
-taskC := taskB.Clone().Replace(pairsToInsert, RETURN_Stack, POSITION_Lambda, func(stack *Stack, card *Card) {
-    v := card.val.(int)
+taskC := taskB.Clone().Replace(RETURN_Cards, pairsToInsert, POSITION_Lambda, func(stack *Stack, card *Card) {
+    v := card.Val
     return 1 < v && v < 3
 })
 ```
