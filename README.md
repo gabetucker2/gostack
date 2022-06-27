@@ -57,8 +57,6 @@
  >>>>> [ORDER](#ORDER)
  >>>>
  >>>>> [MATCH](#MATCH)
- >>>>
- >>>>> [STRUCTURE](#STRUCTURE)
  >>>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
  >>>> [MakeCard(...)](#MakeCard)
