@@ -593,7 +593,7 @@ Makes a stack of cards with inputted vals and keys
 
 This library was created by Gabe Tucker and Andy Chen.
 
-If there are any changes or comments you would like to have made in respect to this project, please email `tucker.854@osu.edu`.  I appreciate any feedback and will usually respond within 1-2 business days.
+If you have any suggestions, questions, or comments you would like to make in respect to this project, please email `tucker.854@osu.edu`.  I appreciate any feedback and will usually respond within 1-2 business days.
 
 Feel free to visit my personal pages at `https://gabetucker.com` or `https://www.linkedin.com/in/gabetucker2/`.
 
