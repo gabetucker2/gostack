@@ -18,10 +18,10 @@ type ORDER int
 type MATCH int
 
 const (
-	RETURN_Idx RETURN = iota
-	RETURN_Key
-	RETURN_Val
-	RETURN_Card
+	RETURN_Idxs RETURN = iota
+	RETURN_Keys
+	RETURN_Vals
+	RETURN_Cards
 )
 
 const (

@@ -1,5 +1,6 @@
 ---------------------------------------------------------------
 GABE:
+* Turn MakeStack into a more flexible function, intialize with keys (instead of values) option
 * Update documentation to reflect capitalization changes
 *  Replace function documentation with jdoc
 * Implement variadic error-catching function for bad argument conditions (fmt.Errorf())

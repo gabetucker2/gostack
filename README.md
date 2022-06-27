@@ -73,12 +73,18 @@
  >>>> [stack.Add(...)](#Add)
  >>>
  >>>> [stack.Replace(...)](#Replace)
+ >>>>
+ >>>> [stack.ReplaceMany(...)](#ReplaceMany)
  >>>
  >>>> [stack.Extract(...)](#Extract)
+ >>>>
+ >>>> [stack.ExtractMany(...)](#ExtractMany)
  >>>
  >>>> [stack.Unique(...)](#Unique)
  >>>
  >>>> [stack.Get(...)](#Get)
+ >>>>
+ >>>> [stack.GetMany(...)](#GetMany)
  >>>
  >>>> [stack.Has(...)](#Has)
  >
@@ -171,10 +177,10 @@
 
  > **RETURN**
  > * _RETURN_NotationSample *type that's returned*
- > * RETURN_Idx *int*
- > * RETURN_Key *any*
- > * RETURN_Val *any*
- > * RETURN_Card *Card*
+ > * RETURN_Idxs *stack of ints*
+ > * RETURN_Keys *stack of anys*
+ > * RETURN_Vals *stack of anys*
+ > * RETURN_Cards *stack of Cards*
 
  > **POSITION**
  > * _POSITION_NotationSample *positionData argument type*
@@ -209,13 +215,13 @@
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
  * **stack.Add(insert, ...ORDER_\*, ...POSITION_\*, ...positionData)**
- * **stack.Replace(insert, RETURN_\*, POSITION_\*, ...positionData, ...MATCH_\*)**
- * **stack.ReplaceMany(insert, RETURN_\*, POSITION_\*, ...positionData, ...MATCH_\*)**
- * **stack.Extract(RETURN_\*, POSITION_\*, ...positionData, ...MATCH_\*)**
- * **stack.ExtractMany(RETURN_\*, POSITION_\*, ...positionData, ...MATCH_\*)**
+ * **stack.Replace(insert, POSITION_\*, ...positionData, ...MATCH_\*)**
+ * **stack.ReplaceMany(insert, POSITION_\*, ...positionData, ...RETURN_\*, ...MATCH_\*)**
+ * **stack.Extract(POSITION_\*, ...positionData, ...MATCH_\*)**
+ * **stack.ExtractMany(POSITION_\*, ...positionData, ...RETURN_\*, ...MATCH_\*)**
  * **stack.Unique(TYPE_\*)**
- * **stack.Get(RETURN_\*, POSITION_\*, ...positionData, ...MATCH_\*)**
- * **stack.GetMany(RETURN_\*, POSITION_\*, ...positionData, ...MATCH_\*)**
+ * **stack.Get(POSITION_\*, ...positionData, ...MATCH_\*)**
+ * **stack.GetMany(POSITION_\*, ...positionData, ...RETURN_\*, ...MATCH_\*)**
  * **stack.Has(RETURN_\*, POSITION_\*, ...positionData, ...MATCH_\*)**
 
 <h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
@@ -262,17 +268,19 @@
  >>
  >>> *For instance, if you inputted RETURN_Key, you would get a single key interface{} (or nil if doesn't exist).  Alternatively, if you inputted RETURN_Keys, you would get a stack of keys.*
  >>
- >> RETURN_Idx
- >>> int
+ >> RETURN_Idxs
+ >>> stack of ints
  >>
- >> RETURN_Key
- >>> interface{}
+ >> RETURN_Keys
+ >>> stack of interface{}s
  >>
- >> RETURN_Val
- >>> interface{}
+ >> RETURN_Vals
+ >>> stack of interface{}s
  >>
- >> RETURN_Card
- >>> Card
+ >> RETURN_Cards
+ >>>> default
+ >>>
+ >>> stack of Cards
 
 <h4 name = "POSITION">POSITION</h4>
 
@@ -452,75 +460,13 @@ Makes a stack of cards with inputted vals and keys
  @updates `stack.Cards` to have new cards before/after each designated position
  ```
  
-<h3 name = "Replace">Replace</h3>
- 
- > `stack.Replace(insert, RETURN_*, POSITION_*, ...positionData, ...MATCH_*)`
- >> CONSTRUCTOR: ***SOMETIMES***
- >>> Make Stack if RETURNing multiple types
- >
- >> GETTER: ***TRUE***
- >>> RETURN objects that were removed *or* nil
- >
- >> SETTER: ***TRUE***
- >>> **stack**
- 
- > ***Special Parameters***
- >> **insert** *Card* or *Stack* is either a Card or a Stack of cards to insert at POSITION(S) as the replacement
-
- > ***Pseudocode***
- >> **IF VALID POSITION**
- >>> replace cards at each POSITION in **stack** with **insert**
- >>
- >>> returns the selected RETURNS
- >
- >> **ELSE**
- >>> return nil
- 
-<h3 name = "Extract">Extract</h3>
- 
- > `stack.Extract(RETURN_*, POSITION_*, ...positionData, ...MATCH_*)`
- >> CONSTRUCTOR: ***SOMETIMES***
- >>> Make Stack if RETURNing multiple types
- >
- >> GETTER: ***TRUE***
- >>> RETURN objects that were removed *or* nil
- >
- >> SETTER: ***TRUE***
- >>> **stack**
-
- > ***Pseudocode***
- >> **IF VALID POSITION**
- >>> remove cards from the stack based on provided POSITION data
- >>
- >>> return the RETURNS of the old cards
- >
- >> **ELSE**
- >>> return nil
- 
-<h3 name = "Unique">Unique</h3>
- 
- > `stack.Unique(TYPE_*)`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >>> **stack**
- >
- >> SETTER: ***TRUE***
- >>> **stack**
-
- > ***Pseudocode***
- >> removes cards from the stack whose TYPE are the same value as others in the stack's TYPE values
- >
- >> return **stack**
- 
 <h3 name = "Get">Get</h3>
  
- `stack.Get(RETURN_*, POSITION_*, ...positionData, ...MATCH_*)`
+ `stack.Get(POSITION_*, ...positionData, ...MATCH_*)`
  ```
  Gets a stack of specified values from specified card(s) at (each) position
  
  @receiver `stack` type{Stack}
- @param `returnType` type{RETURN}
  @param `positionType` type{POSITION} default ORDER_After
  @param optional `positionData` type{interface{}} default nil
  @param optional `matchType` type{MATCH} default MATCH_Object
@@ -528,22 +474,12 @@ Makes a stack of cards with inputted vals and keys
  @constructs type{*Stack} new stack of specified values from specified cards in `stack`
  ```
  
-<h3 name = "Has">Has</h3>
+<h3 name = "GetMany">GetMany</h3>
  
- > `stack.Has(RETURN_*, POSITION_*, ...positionData, ...MATCH_*)`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >>> bool
- >
- >> SETTER: ***FALSE***
+ `stack.Get(POSITION_*, ...positionData, ...RETURN_*, ...MATCH_*)`
+ ```
  
- > ***Pseudocode***
- >> **IF STACK HAS TARGETED DATA**
- >>> return true
- >
- >> **ELSE**
- >>> return false
+ ```
  
 <h2 name = "futureUpdates">Future Updates</h2>
 

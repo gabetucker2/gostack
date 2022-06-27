@@ -262,6 +262,48 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 /** Gets a stack of specified values from specified card(s) at (each) position
  
  @receiver `stack` type{Stack}
+ @param `positionType` type{POSITION} default ORDER_After
+ @param optional `positionData` type{interface{}} default nil
+ @param optional `matchType` type{MATCH} default MATCH_Object
+ @returns type{*Stack} the new stack
+ @constructs type{*Stack} new stack of specified values from specified cards in `stack`
+ @requires `stack.Clone()` has been implemented
+ */
+func (stack *Stack) Get(positionType POSITION, variadic ...interface{}) *Card {
+
+	// unpack variadic into optional parameters
+	var positionData, matchType interface{}
+	unpackVariadic(variadic, &positionData, &matchType)
+
+	// set types to default values
+	setMATCHDefaultIfNil(matchType)
+
+	// create new stack which returns the searched-for cards
+	gotCardsStack := MakeStack()
+
+	// get targeted cards
+	targets := getPositions(stack, positionType, positionData)
+	
+	// get whether to get first of or all of matching cards
+	getOne := isSingular(returnType)
+
+	// fill new stack with gotten cards
+	if getOne {
+		for _, i := range targets {
+	
+			gotCardsStack.Cards = append(gotCardsStack.Cards, stack.Cards[i])
+	
+		}
+	}
+
+	// return
+	return gotCardsStack
+
+}
+
+/** Gets a stack of specified values from specified card(s) at (each) position
+ 
+ @receiver `stack` type{Stack}
  @param `returnType` type{RETURN}
  @param `positionType` type{POSITION} default ORDER_After
  @param optional `positionData` type{interface{}} default nil
@@ -270,7 +312,7 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
  @constructs type{*Stack} new stack of specified values from specified cards in `stack`
  @requires `stack.Clone()` has been implemented
  */
-func (stack *Stack) Get(returnType RETURN, positionType POSITION, variadic ...interface{}) *Stack {
+func (stack *Stack) GetMany(returnType RETURN, positionType POSITION, variadic ...interface{}) *Stack {
 
 	// unpack variadic into optional parameters
 	var positionData, matchType interface{}
