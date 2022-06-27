@@ -12,7 +12,7 @@ func main() {
 	tutorials.RemoveImportedButNotUsedError()
 
 	// tests
-	casetests.Run(true)
+	//casetests.Run(true)
 
 	// tutorials
 	//tutorials.Bootstrap()
