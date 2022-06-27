@@ -163,7 +163,7 @@
 
  <h2>Design-By-Contract</h2>
 
- We use design-by-contract principles with JDoc annotations, as implemented by OSU's CSE department (http://web.cse.ohio-state.edu/software/2221/web-sw1/extras/slides/09.Design-by-Contract.pdf).
+ We use design-by-contract principles with JDoc annotations, as instructed by OSU's CSE department (http://web.cse.ohio-state.edu/software/2221/web-sw1/extras/slides/09.Design-by-Contract.pdf).
 
 <h1 name = "overview">OVERVIEW</h1>
 
@@ -206,6 +206,11 @@
  > * POSITION_Cards *Stack of Cards*
  > * POSITION_All *NONE*
  > * POSITION_Lambda *lambda function*
+
+ > **TYPE**
+ > * TYPE_Key
+ > * TYPE_Val
+ > * TYPE_Card
 
  > **ORDER**
  > * ORDER_Before
