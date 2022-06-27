@@ -278,11 +278,7 @@
 
  > ***RETURN***
  >> *_RETURN_NotationSample*
- >>> *The type of variable returned by the function you're calling*
- >>
- >>> *Although the type may say int or Card, the true return type will always be interface{} or nil*
- >>
- >>> *For instance, if you inputted RETURN_Key, you would get a single key interface{} (or nil if doesn't exist).  Alternatively, if you inputted RETURN_Keys, you would get a stack of keys.*
+ >>> *If you input RETURN_Keys to stack.GetMany(), then you will get a new stack of cards whose values are the keys of the initial stack.*
  >>
  >> RETURN_Idxs
  >>> stack of ints
