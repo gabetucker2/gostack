@@ -1,5 +1,6 @@
 ---------------------------------------------------------------
 GABE:
+* Update race.md and related documentation
 * Update card.idx whenever it's updated
 * Implement all documented functions
 * Turn MakeStack into a more flexible function, intialize with keys (instead of values) option
