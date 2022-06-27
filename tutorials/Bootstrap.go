@@ -3,7 +3,7 @@ package tutorials
 import (
 	"fmt"
 
-	. "github.com/gabetucker2/gostack"
+	//. "github.com/gabetucker2/gostack"
 )
 
 func bootstrap_pop() {
@@ -20,7 +20,7 @@ func bootstrap_push() {
 
 }
 
-func bootstrap_indexOf() int {
+func bootstrap_indexOf() {
 
 	//return stack.Get(FINDBY_Val, val).Idx
 	// >> *returns the index of the first found matching card*
