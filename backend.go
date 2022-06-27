@@ -36,52 +36,52 @@ func iterator(stack *Stack, lambda func(*Card, ...interface{}) bool) {
 
 /** Returns an []int of indices representing the targeted position(s) in a stack
  
+ @param `getFirst` type{bool}
  @param `stack` type{Stack} no pass-by-reference
  @param `positionType` type{POSITION}
- @param `data` type{interface{}}
+ @param `positionData` type{interface{}}
  @returns the []int of targeted positions
  @constructor creates a new []int
  @ensures
-  * SWITCH `positionType`
-	  case POSITION_First
-	    return 0
-	  case POSITION_Last
-	    return len(stack)
-	  case POSITION_Idx
-	    return first idx with card.Idx == data or any in data
-	  case POSITION_Idxs
-	    return all idxs with card.Idx == data or any in data
-	  case POSITION_Key
-	    return first idx with card.Key == data or any in data
-	  case POSITION_Keys
-	    return all idxs with card.Key == data or any in data
-	  case POSITION_Val
-	    return first idx with card.Val == data or any in data
-	  case POSITION_Vals
-	    return all idxs with card.Val == data or any in data
-	  case POSITION_Card
-	    return first idx with card == data or any in data
-	  case POSITION_Cards
-	    return all idxs with card == data or any in data
-	  case POSITION_All
-	    return all idxs
-	  case POSITION_Lambda
-	    return all idxs where lambda(card) == true
+   IF `positionType` is singular
+     return idx/idxs of cards whose field matches `positionData` field
+   ELSE IF `positionType` is plural
+	 return idx/idxs of cards whose field matches any of `positionData` fields
+   
+   IF `getFirst`
+     return idx
+   ELSE
+     return idxs
  */
-func getPositions(stack *Stack, positionType POSITION, data interface{}) (targets []int) {
+func getPositions(getFirst bool, stack *Stack, positionType POSITION, positionData interface{}, matchType MATCH) (targets []int) {
 
 	switch positionType {
 
 	case POSITION_First:
 		targets = append(targets, 0)
 
+		//... and so on
+
+	case POSITION_Keys:
+		keyArr := positionData.([]interface{})
+		for i := 0; i < len(keyArr); i++ {
+			for j, c := range stack.Cards {
+				if (matchType == MATCH_Object    &&  keyArr[i] ==  c.Key) ||
+				   (matchType == MATCH_Reference && &keyArr[i] == &c.Key) {
+					targets = append(targets, j)
+					if getFirst { break }
+				}
+			}
+		}
+
 	//... and so on
 
 	case POSITION_Lambda:
 		filterStack := stack.Clone()
-		iterator(filterStack, data.(func(*Card, ...interface{}) bool))
+		iterator(filterStack, positionData.(func(*Card, ...interface{}) bool))
 		for i := range filterStack.Cards {
 			targets = append(targets, i)	
+			if getFirst { break }
 		}
 
 	}
@@ -90,31 +90,29 @@ func getPositions(stack *Stack, positionType POSITION, data interface{}) (target
 
 }
 
-/** Returns a new stack of fields from a stack of cards based on `returnType`
+/** Returns a new card `newCard` whose value is the specified field of `oldCard` specified by `returnType`
  
- @param `stack` type{Stack}
+ @param `newCard` type{Card}
+ @param `oldCard` type{Card}
  @param `returnType` type{RETURN}
- @returns the stack of the fetched values
- @constructor creates a new Stack
- @ensures
-  * SWITCH `returnType`
-	  case RETURN_Idxs
-	    return stack of Idxs of each card in `stack`
-	  case RETURN_Keys
-	    return stack of Keys of each card in `stack`
-	  case RETURN_Vals
-	    return stack of Vals of each card in `stack`
-	  case RETURN_Cards
-	    return `stack`
+ @updates the `newCard` value to `oldCard` field defined by `returnType`
  */
-func getReturns(input *Stack, returnType RETURN) (ret interface{}) {
+func setCardVal(newCard *Card, oldCard *Card, returnType RETURN) {
 
 	switch returnType {
 
-		// TODO: implement
+	case RETURN_Idxs:
+		newCard.Val = oldCard.Idx
+
+	case RETURN_Keys:
+		newCard.Val = oldCard.Key
+
+	case RETURN_Vals:
+		newCard.Val = oldCard.Val
+
+	case RETURN_Cards:
+		newCard.Val = *oldCard
 
 	}
-
-	return
 
 }

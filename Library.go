@@ -119,8 +119,10 @@ func MakeStack(variadic ...interface{}) *Stack {
 		}
 	}
 
+	// set up stack size
 	stack.Size = len(stack.Cards)
 
+	// return
 	return stack
 
 }
@@ -129,7 +131,7 @@ func MakeStack(variadic ...interface{}) *Stack {
 
  @receiver `stack` type{Stack}
  @returns `stack`
- @updates `stack.Cards` to be empty
+ @updates `stack` to be empty
 */
 func (stack *Stack) Empty() *Stack {
 
@@ -187,18 +189,20 @@ func (card *Card) Clone() *Card {
  @param optional `orderType` type{ORDER} default ORDER_After
  @param optional `positionType` type{POSITION} default POSITION_First
  @param optional `positionData` type{interface{}} default nil
+ @param optional `matchType` type{MATCH} default MATCH_Object
  @returns `stack`
- @updates `stack.Cards` to have new cards before/after each designated position
+ @updates `stack` to have new cards before/after each designated position
  */
 func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 
 	// unpack variadic into optional parameters
-	var orderType, positionType, positionData interface{}
-	unpackVariadic(variadic, &orderType, &positionType, &positionData)
+	var orderType, positionType, positionData, matchType interface{}
+	unpackVariadic(variadic, &orderType, &positionType, &positionData, &matchType)
 
 	// set types to default values
 	setORDERDefaultIfNil(orderType)
 	setPOSITIONDefaultIfNil(positionType)
+	setMATCHDefaultIfNil(matchType)
 
 	// convert insert into slice of cards
 	var cardsIn []*Card
@@ -216,10 +220,10 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 	var cardsWithAdded []*Card
 
 	// get targeted cards
-	targets := getPositions(stack, positionType.(POSITION), positionData)
+	targets := getPositions(false, stack, positionType.(POSITION), positionData, matchType.(MATCH))
 
 	// fill the array
-	for i := 0; i < stack.Size; i++ {
+	for i := range stack.Cards {
 		for _, j := range targets {
 
 			existingCard := stack.Cards[i]
@@ -253,82 +257,161 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 
 	// set old cards array to new cards array with added element(s)
 	stack.Cards = cardsWithAdded
+	stack.Size = len(stack.Cards)
 
 	// return
 	return stack
 
 }
 
-/** Gets a stack of specified values from specified card(s) at (each) position
- 
+/** Removes all cards from `stack` which share the same field value as another card before
+
  @receiver `stack` type{Stack}
- @param `positionType` type{POSITION} default ORDER_After
- @param optional `positionData` type{interface{}} default nil
+ @param `typeType` type{TYPE}
  @param optional `matchType` type{MATCH} default MATCH_Object
- @returns type{*Card} the found card
+ @returns `stack`
+ @updates `stack` to have no repeating values between field `typeType`
  */
-func (stack *Stack) Get(positionType POSITION, variadic ...interface{}) *Card {
+func (stack *Stack) Unique(typeType TYPE, variadic ...interface{}) *Stack {
 
 	// unpack variadic into optional parameters
-	var positionData, matchType interface{}
-	unpackVariadic(variadic, &positionData, &matchType)
+	var matchType interface{}
+	unpackVariadic(variadic, &matchType)
 
-	// set types to default values
-	setMATCHDefaultIfNil(matchType)
+	// initialize array
+	var newCards []*Card
 
-	// create new stack which returns the searched-for cards
-	gotCardsStack := MakeStack()
-
-	// get targeted cards
-	targets := getPositions(stack, positionType, positionData)
-
-	// fill new stack with gotten cards
-	
-
-	// return
-	return gotCardsStack
-
-}
-
-/** Gets a stack of specified values from specified card(s) at (each) position
- 
- @receiver `stack` type{Stack}
- @param `returnType` type{RETURN}
- @param `positionType` type{POSITION} default ORDER_After
- @param optional `positionData` type{interface{}} default nil
- @param optional `matchType` type{MATCH} default MATCH_Object
- @returns type{*Stack} the new stack
- @constructs type{*Stack} new stack of specified values from specified cards in `stack`
- @requires `stack.Clone()` has been implemented
- */
-func (stack *Stack) GetMany(returnType RETURN, positionType POSITION, variadic ...interface{}) *Stack {
-
-	// unpack variadic into optional parameters
-	var positionData, matchType interface{}
-	unpackVariadic(variadic, &positionData, &matchType)
-
-	// set types to default values
-	setMATCHDefaultIfNil(matchType)
-
-	// create new stack which returns the searched-for cards
-	gotCardsStack := MakeStack()
-
-	// get targeted cards
-	targets := getPositions(stack, positionType, positionData)
-	
-	// get whether to get first of or all of matching cards
-	getOne := isSingular(returnType)
-
-	// fill new stack with gotten cards
-	if getOne {
-		for _, i := range targets {
-	
-			gotCardsStack.Cards = append(gotCardsStack.Cards, stack.Cards[i])
-	
+	// remove all repeats
+	for i := range stack.Cards {
+		oldCard := stack.Cards[i]
+		addToNewCards := true
+		for j := range newCards {
+			newCard := newCards[j]
+			if (matchType == MATCH_Object    &&  oldCard ==  newCard) ||
+			   (matchType == MATCH_Reference && &oldCard == &newCard) {
+				addToNewCards = false
+				break
+			}
+		}
+		if addToNewCards {
+			newCards = append(newCards, oldCard)
 		}
 	}
 
+	// update stack
+	stack.Cards = newCards
+	stack.Size = len(stack.Cards)
+	
 	// return
-	return gotCardsStack
+	return stack
+
+}
+
+/** Creates a new interface array from values of `stack`
+
+ @receiver `stack` type{Stack}
+ @returns type{[]interface{}} new array
+ @ensures new array values correspond to `stack` values
+ */
+func (stack *Stack) ToArray() (arr []interface{}) {
+
+	// add all card values in stack to arr
+	for i := range stack.Cards {
+		arr = append(arr, stack.Cards[i].Val)
+	}
+
+	// return
+	return
+
+}
+
+/** Creates a new interface-interface map from values of `stack`
+
+ @receiver `stack` type{Stack}
+ @returns type{map[interface{}]interface{}} new map
+ @ensures new map keys and values correspond to `stack` keys and values
+ */
+func (stack *Stack) ToMap() (m map[interface{}]interface{}) {
+
+	// add all card keys and values in stack to m
+	for i := range stack.Cards {
+		c := stack.Cards[i]
+		m[c.Key] = c.Val
+	}
+
+	// return
+	return
+
+}
+
+/** Gets a card from specified parameters in a stack, or nil if does not exist
+
+ @receiver `stack` type{Stack}
+ @param optional `positionType` type{POSITION} default POSITION_First
+ @param optional `positionData` type{interface{}} default nil
+ @param optional `matchType` type{MATCH} default MATCH_Object
+ @returns type{*Card} the found card OR nil
+ */
+func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
+
+	// unpack variadic into optional parameters
+	var positionType, positionData, matchType interface{}
+	unpackVariadic(variadic, &positionType, &positionData, &matchType)
+
+	// set types to default values
+	setPOSITIONDefaultIfNil(positionType)
+	setMATCHDefaultIfNil(matchType)
+
+	// get targeted card OR nil
+	positions := getPositions(true, stack, positionType.(POSITION), positionData, matchType.(MATCH))
+	if len(positions) > 0 {
+		ret = stack.Cards[positions[0]]
+	} else {
+		ret = nil
+	}
+	
+	// return
+	return
+
+}
+
+/** Gets a stack from specified parameters in a stack
+ 
+ @receiver `stack` type{Stack}
+ @param `positionType` type{POSITION}
+ @param optional `positionData` type{interface{}} default nil
+ @param optional `returnType` type{RETURN} default RETURN_Cards
+ @param optional `matchType` type{MATCH} default MATCH_Object
+ @returns type{*Stack} the new stack
+ @constructs type{*Stack} new stack of specified values from specified cards in `stack`
+ */
+func (stack *Stack) GetMany(positionType POSITION, variadic ...interface{}) *Stack {
+
+	// unpack variadic into optional parameters
+	var positionData, returnType, matchType interface{}
+	unpackVariadic(variadic, &positionData, &returnType, &matchType)
+
+	// set types to default values
+	setRETURNDefaultIfNil(returnType)
+	setMATCHDefaultIfNil(matchType)
+
+	// create new stack which returns the searched-for cards
+	newStack := MakeStack()
+
+	// get targeted cards
+	targets := getPositions(false, stack, positionType, positionData, matchType.(MATCH))
+
+	// fill new stack with targeted cards
+	for _, i := range targets {
+
+		newCard := new(Card)
+		setCardVal(newCard, stack.Cards[i], returnType.(RETURN))
+
+		newStack.Cards = append(newStack.Cards, newCard)
+
+	}
+
+	// return
+	return newStack
 
 }

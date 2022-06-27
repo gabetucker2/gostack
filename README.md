@@ -69,6 +69,12 @@
  >>>
  >>>> [{stack, card}.Clone()](#Clone)
  >>>
+ >>>> [stack.Unique()](#Unique)
+ >>>
+ >>>> [stack.ToArray()](#ToArray)
+ >>>
+ >>>> [stack.ToMap()](#ToMap)
+ >>>
  >>> [Generalized Functions](#generalizedFunctions)
  >>>> [stack.Add(...)](#Add)
  >>>
@@ -211,17 +217,19 @@
  * **gostack.MakeStack(...input1, ...input2, ...repeats)**
  * **stack.Empty()**
  * **{card, stack}.Clone()**
+ * **stack.Unique(typeType, ...matchType)**
+ * **stack.ToArray()**
+ * **stack.ToMap()**
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
- * **stack.Add(insert, ...ORDER_\*, ...POSITION_\*, ...positionData)**
+ * **stack.Add(insert, ...orderType, ...positionType, ...positionData, ...matchType)**
  * **stack.Replace(insert, POSITION_\*, ...positionData, ...MATCH_\*)**
  * **stack.ReplaceMany(insert, POSITION_\*, ...positionData, ...RETURN_\*, ...MATCH_\*)**
  * **stack.Extract(POSITION_\*, ...positionData, ...MATCH_\*)**
  * **stack.ExtractMany(POSITION_\*, ...positionData, ...RETURN_\*, ...MATCH_\*)**
- * **stack.Unique(TYPE_\*)**
- * **stack.Get(POSITION_\*, ...positionData, ...MATCH_\*)**
- * **stack.GetMany(POSITION_\*, ...positionData, ...RETURN_\*, ...MATCH_\*)**
+ * **stack.Get(...positionType, ...positionData, ...matchType)**
+ * **stack.GetMany(...positionType, ...positionData, ...returnType, ...matchType)**
  * **stack.Has(RETURN_\*, POSITION_\*, ...positionData, ...MATCH_\*)**
 
 <h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
@@ -447,7 +455,7 @@ Makes a stack of cards with inputted vals and keys
  
 <h3 name = "Add">Add</h3>
  
- `stack.Add(insert, ...ORDER_*, ...POSITION_*, ...positionData)`
+ `stack.Add(insert, ...orderType, ...positionType, ...positionData, ...matchType)`
  ```
  Adds to a stack of cards or a cards at (each) position(s) 
  
@@ -456,50 +464,90 @@ Makes a stack of cards with inputted vals and keys
  @param optional `orderType` type{ORDER} default ORDER_After
  @param optional `positionType` type{POSITION} default POSITION_First
  @param optional `positionData` type{interface{}} default nil
+ @param optional `matchType` type{MATCH} default MATCH_Object
  @returns `stack`
  @updates `stack.Cards` to have new cards before/after each designated position
  ```
  
+<h3 name = "Unique">Unique</h3>
+ 
+ `stack.Unique(typeType, ...matchType)`
+ ```
+ Removes all cards from `stack` which share the same field value as another card before
+
+ @receiver `stack` type{Stack}
+ @param `typeType` type{TYPE}
+ @param optional `matchType` type{MATCH} default MATCH_Object
+ @returns `stack`
+ @updates `stack` to have no repeating values between field `typeType`
+ ```
+ 
+<h3 name = "ToArray">ToArray</h3>
+ 
+ `stack.ToArray()`
+ ```
+ Creates a new interface array from values of `stack`
+
+ @receiver `stack` type{Stack}
+ @returns type{[]interface{}} new array
+ @ensures new array values correspond to `stack` values
+ ```
+ 
+<h3 name = "ToMap">ToMap</h3>
+ 
+ `stack.ToMap()`
+ ```
+ Creates a new interface-interface map from values of `stack`
+
+ @receiver `stack` type{Stack}
+ @returns type{map[interface{}]interface{}} new map
+ @ensures new map keys and values correspond to `stack` keys and values
+ ```
+ 
 <h3 name = "Get">Get</h3>
  
- `stack.Get(POSITION_*, ...positionData, ...MATCH_*)`
+ `stack.Get(...positionType, ...positionData, ...matchType)`
  ```
- Gets a stack of specified values from specified card(s) at (each) position
- 
+ Gets a card from specified parameters in a stack, or nil if does not exist
+
  @receiver `stack` type{Stack}
- @param `positionType` type{POSITION} default ORDER_After
+ @param optional `positionType` type{POSITION} default POSITION_First
  @param optional `positionData` type{interface{}} default nil
  @param optional `matchType` type{MATCH} default MATCH_Object
- @returns type{*Stack} the new stack
- @constructs type{*Stack} new stack of specified values from specified cards in `stack`
+ @returns type{*Card} the found card OR nil
  ```
  
 <h3 name = "GetMany">GetMany</h3>
  
- `stack.Get(POSITION_*, ...positionData, ...RETURN_*, ...MATCH_*)`
+ `stack.GetMany(positionType, ...positionData, ...returnType, ...matchType)`
  ```
+ Gets a stack from specified parameters in a stack
  
+ @receiver `stack` type{Stack}
+ @param `positionType` type{POSITION}
+ @param optional `positionData` type{interface{}} default nil
+ @param optional `returnType` type{RETURN} default RETURN_Cards
+ @param optional `matchType` type{MATCH} default MATCH_Object
+ @returns type{*Stack} the new stack
+ @constructs type{*Stack} new stack of specified values from specified cards in `stack`
  ```
  
 <h2 name = "futureUpdates">Future Updates</h2>
 
  <h3>Generalized Functions</h3>
 
- * Add **Move** function
- * Add **Set(newData, TYPE_*, POSITION_*, ...positionData)** function for more efficient replacement as opposed to replace... implement all search functions for individual cards, so card.set, card.replace, card.extract, etc
- * Add **Print** function
- * Add **CombineWith** function
+ * Add **stack.Move** function
+ * Add **{stack, card}.Print** function
 
  <h3>Non-Generalized Functions</h3>
 
  * Add **Flip** function
  * Add **Shuffle** function
- * Add **ToArray** function
- * Add **ToStack** function
+ * Add **stack.ToMap** function
 
 <h2 name = "footer">Footer</h1>
 
-This project was created by Gabe Tucker with contributions from Andy Chen.
+This library was created by Gabe Tucker and Andy Chen.
 
 If there are any changes or comments you would like to have made in respect to this project, please email `tucker.854@osu.edu`.  I appreciate any feedback and will usually respond within 1-2 business days.
 
