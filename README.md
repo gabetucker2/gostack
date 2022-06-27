@@ -8,12 +8,11 @@
 
  ***gostack***'s stacks...
  * ...replace maps and arrays, removing the need for pesky index-key-value fetching or translating data between maps and arrays, all the while supporting smooth conversion between stacks and your existing maps and arrays
- * ...remove the need for interfaces, meaning no more convoluted on-the-go frameworks for handling arbitrary argument types are necessary
  * ...offer the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity of 4 nested for-loops in a single line
  * ...allow the user to get and set based on reference or object with ease, preventing the user from having to worry about convoluted pointer/address management
  * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create sorting mechanisms of their own design
 
- Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish, ***gostack*** took roughly one fifth the amount of lines (merely 10)—[see for yourself!](tutorials/race.md)
+ Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish, ***gostack*** took roughly one fifth the amount of lines (merely 10)—[see for yourself!](/tutorials/race.md)
 
  To get a better feel of the library, feel free to take a look at some [examples](/tutorials/bootstrap.go) of how ***gostack*** can substitute commonly-used functions.
 
@@ -27,6 +26,8 @@
  >> [Glossary](#glossary)
  >
  >> [File Explanations](#fileExplanations)
+ >
+ >> [Conventions](#conventions)
 
  > [Overview](#overview)
  >> [Brief Documentation](#briefDocumentation)
@@ -42,11 +43,9 @@
  >> [Exhaustive Documentation](#exhaustiveDocumentation)
  >>> [Data Structures](#dataStructures)
  >>>> [structs](#structs)
- >>>>> [Card](#card)
- >>>>
- >>>>> [Cards](#cards)
- >>>>
  >>>>> [Stack](#stack)
+ >>>>
+ >>>>> [Card](#card)
  >>>>
  >>>> [enums](#enums)
  >>>>> [RETURN](#RETURN)
@@ -58,28 +57,44 @@
  >>>>> [ORDER](#ORDER)
  >>>>
  >>>>> [MATCH](#MATCH)
- >>>>
- >>>>> [STRUCTURE](#STRUCTURE)
  >>>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
- >>>> [MakeStack(...)](#MakeStack)
- >>>
  >>>> [MakeCard(...)](#MakeCard)
  >>>
- >>>> [MakeCards(...)](#MakeCards)
+ >>>> [MakeStack(...)](#MakeStack)
  >>>
  >>>> [stack.Empty()](#Empty)
+ >>>
+ >>>> [{card, stack}.Clone()](#Clone)
+ >>>
+ >>>> [stack.Unique()](#Unique)
+ >>>
+ >>>> [stack.ToArray()](#ToArray)
+ >>>
+ >>>> [stack.ToMap()](#ToMap)
+ >>>
+ >>>> [stack.Shuffle()](#Shuffle)
+ >>>
+ >>>> [stack.Flip()](#Flip)
+ >>>
+ >>>> [{card, stack}.Print()](#Print)
  >>>
  >>> [Generalized Functions](#generalizedFunctions)
  >>>> [stack.Add(...)](#Add)
  >>>
  >>>> [stack.Replace(...)](#Replace)
+ >>>>
+ >>>> [stack.ReplaceMany(...)](#ReplaceMany)
  >>>
  >>>> [stack.Extract(...)](#Extract)
+ >>>>
+ >>>> [stack.ExtractMany(...)](#ExtractMany)
  >>>
- >>>> [stack.Unique(...)](#Unique)
+ >>>> [stack.Move(...)](#Move)
  >>>
  >>>> [stack.Get(...)](#Get)
+ >>>>
+ >>>> [stack.GetMany(...)](#GetMany)
  >>>
  >>>> [stack.Has(...)](#Has)
  >
@@ -89,39 +104,66 @@
 
 <h1 name = "fileExplanations">File Explanations</h1>
 
- > [aorta](/aorta)
- >> [backend.go](/aorta/backend.go) contains the functions to implement **frontend.go** and **caseend.go** functions
- >
- >> [datastructures.go](/aorta/datastructures.go) initializes structs and enums
- >
- >> [frontend.go](/aorta/frontend.go) contains the functions that the user of this library will be calling
- >
- > [casetests](/casetests)
- >> [caseend.go](/casetests/caseend.go) contains case tests for **frontend.go** functions
- >
- >> [testend.go](/casetests/testend.go) contains functions to implement **caseend.go** functions
- >
- >> [unaddedcases.txt](/casetests/unaddedcases.txt) is where data to be added into future case tests is stored, intended only for the developers
- >
- > [images](/images)
- >> **gostack_Smaller.png** is the banner image for this project
- >
- > [tutorials](/tutorials)
- >> [bootstrap.go](tutorials/bootstrap.go) is a tutorial on how to implement some common functions using golang
- >
- >> [comparison.md](tutorials/comparison.md) showcases a race to complete the same set of tasks using ***classical go*** vs ***gostack***
- >
- >> [lambda.go](/tutorials/lambda.go) is a tutorial on how to implement lambda functions
- >
- >> [unaddedtutorials.txt](/tutorials/unaddedtutorials.txt) is where data to be added into future tutorials is stored, intended only for the developers
- >
- > [go.mod](/go.mod) is to initialize the directories
- >
- > [main.go](main.go) is to call functions in this project, either for the case of case testing or executing tutorials
- >
- > [README.md](/README.md) is this file
- >
- > [TODO.txt](/TODO.txt) is a task list, intended only for the developers
+ > [gostack](#Files) [**.../gostack** package] any .go files that are direct children of this folder will be built to the **.../gostack** package
+ >>
+ >> [casetests](/casetests) [**.../gostack/casetests** package]
+ >>> [CaseEnd.go](/casetests/CaseEnd.go) contains case tests for **library.go** functions
+ >>
+ >>> [Init.go](/casetests/Init.go) contains an empty function that prevents compiler errors when importing but not referencing this package
+ >>
+ >>> [testend.go](/casetests/testend.go) contains functions to implement **caseend.go** functions
+ >>
+ >>> [unaddedcases.txt](/casetests/unaddedcases.txt) is where obsolete data to be added into future case tests is stored, intended only for the developers
+ >>
+ >> [executive](/executive) [**main** package]
+ >>> [executive.go](/executive.go) exists to call functions in this project, either for case testing or executing tutorials
+ >>
+ >> [images](/images)
+ >>> **gostack_Smaller.png** is the banner image for this project
+ >>
+ >>> **packages.png** is a layout of the package dependencies/structure of this project
+ >>
+ >> [tutorials](/tutorials) [**.../gostack/tutorials** package]
+ >>> [Bootstrap.go](/tutorials/Bootstrap.go) is a tutorial on how to implement some common functions using golang
+ >>
+ >>> [Init.go](/tutorials/Init.go) contains an empty function that prevents compiler errors when importing but not referencing this package
+ >>
+ >>> [Lambda.go](/tutorials/Lambda.go) is a tutorial on how to implement lambda functions
+ >>
+ >>> [race.md](/tutorials/race.md) showcases a race to complete the same set of tasks using ***classical go*** vs ***gostack***
+ >>
+ >>> [unaddedtutorials.txt](/tutorials/unaddedtutorials.txt) is where obsolete data to be added into future tutorials is stored, intended only for the developers
+ >>
+ >> [backend.go](/backend/backend.go) contains private functions to implement **Library.go**
+ >>
+ >> [DataStructures.go](/DataStructures.go) initializes structs and enums, as well as methods for conversion
+ >>
+ >> [go.mod](/go.mod) is to initialize the directories
+ >>
+ >> [frontend.go](/frontend.go)  contains public functions that the user will be calling
+ >>
+ >> [README.md](/README.md) is this file
+ >>
+ >> [TODO.txt](/TODO.txt) is a task list, intended only for the developers
+ >>
+ >> [unaddedgostack.txt](/unaddedgostack.txt) is where obsolete data to be added back into backend.go and Library.go
+
+![Packages](images/packages.png)
+
+<h1 name = "conventions">CONVENTIONS</h1>
+
+ Executing `go run executive/executive.go` in a terminal in the main directory, or executing `go run .` in the executive directory, will run whichever file(s) are called by `executive.go`.
+
+ <h2>Naming</h2>
+
+ * "FunctionName" functions are public functions, accessible to the user
+ * "functionName" functions are private functions, hidden from the user
+ * "FileName" files contain at least one public function (ideally which calls all private functions within that file)/struct, accessible to the user
+ * "filename" files contain all private stuff, hidden from the user
+
+ <h2>Design-By-Contract</h2>
+
+ We use design-by-contract principles with JDoc annotations, as instructed by OSU's CSE department (http://web.cse.ohio-state.edu/software/2221/web-sw1/extras/slides/09.Design-by-Contract.pdf).
 
 <h1 name = "overview">OVERVIEW</h1>
 
@@ -132,43 +174,43 @@
 <h3 name = "structsBrief">Structs</h3>
 
  > **stack** *Stack*
- >> **cards** *[]\*Card*
+ >> **Cards** *[]\*Card*
  >
- >> **size** *int*
+ >> **Size** *int*
 
  > **card** *Card*
- >> **key** *any type*
+ >> **Key** *any*
  >
- >> **val** *any type*
+ >> **Val** *any*
 
 <h3 name = "enumsBrief">Enums</h3>
 
  > **RETURN**
  > * _RETURN_NotationSample *type that's returned*
- > * RETURN_Stack *input Stack*
- > * RETURN_Idx *int*
- > * RETURN_Idxs *Stack of ints*
- > * RETURN_Key *any type*
- > * RETURN_Keys *Stack of any type*
- > * RETURN_Val *any type*
- > * RETURN_Vals *Stack of any type*
- > * RETURN_Card *Card*
- > * RETURN_Cards *Stack of Cards*
+ > * RETURN_Idxs *stack of ints*
+ > * RETURN_Keys *stack of anys*
+ > * RETURN_Vals *stack of anys*
+ > * RETURN_Cards *stack of Cards*
 
  > **POSITION**
- > * _POSITION_NotationSample *POSITIONDATA argument type*
+ > * _POSITION_NotationSample *positionData argument type*
  > * POSITION_First *NONE*
  > * POSITION_Last *NONE*
  > * POSITION_Idx *int*
  > * POSITION_Idxs *Stack of ints*
- > * POSITION_Val *any type*
- > * POSITION_Vals *Stack of any type*
- > * POSITION_Key *any type*
- > * POSITION_Keys *Stack of any type*
+ > * POSITION_Val *any*
+ > * POSITION_Vals *Stack of any*
+ > * POSITION_Key *any*
+ > * POSITION_Keys *Stack of any*
  > * POSITION_Card *Card*
  > * POSITION_Cards *Stack of Cards*
  > * POSITION_All *NONE*
  > * POSITION_Lambda *lambda function*
+
+ > **TYPE**
+ > * TYPE_Key
+ > * TYPE_Val
+ > * TYPE_Card
 
  > **ORDER**
  > * ORDER_Before
@@ -180,19 +222,28 @@
 
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
- * **MakeCard(idx, ...key, ...val)**
- * **MakeCards(STRUCTURE_*, ...input1, ...input1)**
- * **MakeStack(...STRUCTURE_*, ...input1, ...input2)**
+ * **gostack.MakeCard(...idx, ...key, ...val)**
+ * **gostack.MakeStack(...input1, ...input2, ...repeats)**
  * **stack.Empty()**
+ * **{card, stack}.Clone()**
+ * **stack.Unique(typeType, ...matchType)**
+ * **stack.ToArray()**
+ * **stack.ToMap()**
+ * **stack.Shuffle()**
+ * **stack.Flip()**
+ * **{card, stack}.Print()**
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
- * **stack.Add(insert, ORDER_\*, POSITION_\*, ...POSITIONDATA)**
- * **stack.Replace(insert, RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
- * **stack.Extract(RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
- * **stack.Unique(TYPE_\*)**
- * **stack.Get(RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
- * **stack.Has(RETURN_\*, POSITION_\*, ...POSITIONDATA, ...MATCH_\*)**
+ * **stack.Add(insert, ...orderType, ...positionType, ...positionData, ...matchType)**
+ * **stack.Replace(insert, positionType, ...positionData, ...matchType)**
+ * **stack.ReplaceMany(insert, positionType, ...positionData, ...returnType, ...matchType)**
+ * **stack.Extract(positionType, ...positionData, ...matchType)**
+ * **stack.ExtractMany(positionType, ...positionData, ...returnType, ...matchType)**
+ * **stack.Move(positionType, ...positionData)**
+ * **stack.Get(...positionType, ...positionData, ...matchType)**
+ * **stack.GetMany(...positionType, ...positionData, ...returnType, ...matchType)**
+ * **stack.Has(returnType, positionType, ...positionData, ...matchType)**
 
 <h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
 
@@ -205,23 +256,23 @@
  This is the main struct in the project.
 
  > `stack` *Stack{}*
- >> `cards` *[]\*Card{}*
+ >> `Cards` *[]\*Card{}*
  >>> Returns an interface array to represent the elements in the Stack
- >> `size` *int*
+ >> `Size` *int*
  >>> Returns the cardinality (i.e., `len(stack.cards)`) of this Stack
 
 <h4 name = "card">Card</h4>
 
  This is a struct for our elements/maps within stacks.
 
- >> `card` *Card{}*
- >>> `card.idx` *int*
+ >> `Card` *Card{}*
+ >>> `card.Idx` *int*
  >>>> The index of this card
  >>>
- >>> `card.key` *any type (interface{})*
+ >>> `card.Key` *any (interface{})*
  >>>> The key of this card (or nil if doesn't exist)
  >>>
- >>> `card.val` *any type (interface{})*
+ >>> `card.Val` *any (interface{})*
  >>>> The val of this card (or nil if doesn't exist)
 
 <h3 name = "enums">enums</h3>
@@ -232,38 +283,21 @@
 
  > ***RETURN***
  >> *_RETURN_NotationSample*
- >>> *The type of variable returned by the function you're calling*
- >>
- >>> *Although the type may say int or Card, the true return type will always be interface{} or nil*
- >>
- >>> *For instance, if you inputted RETURN_Key, you would get a single key interface{} (or nil if doesn't exist).  Alternatively, if you inputted RETURN_Keys, you would get a stack of keys.*
- >>
- >> RETURN_Stack
- >>> input Stack
- >>
- >> RETURN_Idx
- >>> int
+ >>> *If you input RETURN_Keys to stack.GetMany(), then you will get a new stack of cards whose values are the keys of the initial stack.*
  >>
  >> RETURN_Idxs
- >>> Stack of ints
- >>
- >> RETURN_Key
- >>> interface{}
+ >>> stack of ints
  >>
  >> RETURN_Keys
- >>> Stack of interfaces{}
- >>
- >> RETURN_Val
- >>> interface{}
+ >>> stack of interface{}s
  >>
  >> RETURN_Vals
- >>> Stack of interfaces{}
- >>
- >> RETURN_Card
- >>> Card
+ >>> stack of interface{}s
  >>
  >> RETURN_Cards
- >>> Stack of Cards
+ >>>> default
+ >>>
+ >>> stack of Cards
 
 <h4 name = "POSITION">POSITION</h4>
 
@@ -276,8 +310,9 @@
  >>> *For instance, if you input `POSITION_Keys`, you would need to pass a Stack whose values are the keys you want to find to your `data` parameter*
  >>
  >> POSITION_First
- >>> *NONE*
  >>>> default
+ >>>
+ >>> *NONE*
  >>
  >> POSITION_Last
  >>> *NONE*
@@ -289,16 +324,16 @@
  >>> Stack of ints
  >>
  >> POSITION_Val
- >>>  any type (interface{})
+ >>>  any (interface{})
  >>
  >> POSITION_Vals
- >>> Stack of any type (interface{})
+ >>> Stack of any (interface{})
  >>
  >> POSITION_Key
- >>>  any type (interface{})
+ >>>  any (interface{})
  >>
  >> POSITION_Keys
- >>> Stack of  any type (interface{})
+ >>> Stack of  any (interface{})
  >>
  >> POSITION_Card
  >>> Card
@@ -329,8 +364,9 @@
 
 > ***ORDER***
 >> ORDER_Before
->>> default
+>>
 >> ORDER_After
+>>> default
 
 <h4 name = "MATCH">MATCH</h4>
 
@@ -343,265 +379,221 @@
  > ***MATCH***
  >> MATCH_Object
  >>> default
+ >>
  >> MATCH_Reference
-
-<h4 name = "STRUCTURE">STRUCTURE</h4>
-
- This is an enum intended to make it easy to target whether an array or a map is the intended data structure to create.
-
- > ***MATCH***
- >> STRUCTURE_Map
- >> STRUCTURE_Arr
 
 <h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>
 
 <h3 name = "MakeCard">MakeCard</h3>
 
- > `MakeCard(idx, ...val, ...key)`
- >> CONSTRUCTOR: ***TRUE***
- >>> Card
- >
- >> GETTER: ***TRUE***
- >>> Card
- >
- >> SETTER: ***FALSE***
- 
- > ***Special Parameters***
- >> **idx** *int* the index to which to set this card
- >
- >> **...val** *any type* representing the card's value (or nil if not passed)
- >
- >> **...key** *any type* representing the card's key (or nil if not passed)
- 
- > ***Pseudocode***
- >> returns a new Card whose val is val and key is key
+ > `gostack.MakeCard(...val, ...key, ...idx)`
+ ```
+ Makes a card with inputted vals and keys
 
-<h3 name = "MakeCards">MakeCards</h3>
-
- > `MakeCards(STRUCTURE_*, ...input1, ...input2)`
- >> CONSTRUCTOR: ***TRUE***
- >>> Stack, Cards
- >
- >> GETTER: ***TRUE***
- >>> Stack
- >
- >> SETTER: ***FALSE***
- 
- > ***Special Parameters***
- >> **input1** *[]interface{} OR map[interface{}]interface{}*
- >>> *see pseudocode for explanation*
- >
- >> **input2** *[]interface{}*
- >>> *see pseudocode for explanation*
- >>
- >> *len(input1) must equal len(input2)*
- 
- > ***Pseudocode***
- >> creates a new stack of cards with size == len(either input)
- >
- >> **IF STRUCTURE_Map**
- >>> **IF input1 IS AN INTERFACE ARRAY**
- >>>> for each card at index i, its key is input1[i] and its value is input2[i]
- >>
- >>> **ELSE IF input1 IS A MAP**
- >>>> for each card, its key and value are set to the input1's corresponding cards' keys and values (input 2 is ignored)
- >>
- >> **ELSE IF STRUCTURE_Arr**
- >>> for each card, its value is set to the input1's corresponding cards' values (input 2 is ignored)
- >
- >> returns the stack of cards
+ @param optional `val` type{any} default nil
+ @param optional `key` type{any} default nil
+ @param optional `idx` type{int} default -1 no pass-by-reference
+ @returns type{*Card} the newly-constructed card
+ @constructs type{*Card} a newly-constructed card
+ @ensures the new card will have val `val`, key `key`, and idx `idx`
+ ```
 
 <h3 name = "MakeStack">MakeStack</h3>
 
- > `MakeStack(...STRUCTURE_*, ...input1, ...input2)`
- >> CONSTRUCTOR: ***TRUE***
- >>> Stack
- >
- >> GETTER: ***TRUE***
- >>> \*Stack
- >
- >> SETTER: ***FALSE***
- 
- > ***Special Parameters***
- >> **input1** *[]interface{} OR map[interface{}]interface{}*
- >>> *see pseudocode for explanation*
- >
- >> **input2** *[]interface{}*
- >>> *see pseudocode for explanation*
- 
- > ***Pseudocode***
- >> makes a new Stack 
- >>
- >> **IF STRUCTURE_* IS DEFINED**
- >>> invokes MakeCards() passing this function's inputted parameters as arguments
- >>
- >>> fills the stack with the new cards
- >>
- >> returns the new Stack
+ `gostack.MakeStack(...input1, ...input2, ...repeats)`
+ ```
+Makes a stack of cards with inputted vals and keys
+
+ @param optional `input1` type{[]any, map[any]any} default nil
+ @param optional `input2` type{[]any} default nil
+ @param optional `repeats` type{int} default 1
+ @returns type{*Stack} the newly-constructed stack of ards
+ @constructs type{*Stack} a newly-constructed stack of cards
+ @requires
+  * `input1` is map and nil `input2`
+      OR `input1` is an array and nil `input2`
+	  OR `input1` is an array and `input2` is an array
+  * IF `input1` and `input2` are both passed as arguments
+      |`input1`| == |`input2`|
+  * MakeCard() has been implemented
+ @ensures
+  * `repeats` (or, if nil, 1) amount of times:
+      IF `input1` is passed
+	      IF `input1` is a map
+            unpack the map into new cards with corresponding keys and vals
+          ELSEIF `input1` is an array and `input2` is not passed
+            unpack values from `input1` into new cards
+          ELSEIF `input1` is an array and `input2` is an array
+		    unpack keys from `input1` and values from `input2` into new cards
+	  ELSE
+	    the stack is empty
+ ```
  
 <h3 name = "Empty">Empty</h3>
  
- > `stack.Empty()`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >>> **stack**
- >
- >> SETTER: ***TRUE***
- >>> **stack**
- 
- > ***Pseudocode***
- >> remove all cards in the stack
- >
- >> returns the empty stack
- 
+ `stack.Empty()`
+ ```
+ Makes a card with inputted vals and keys
+
+ @receiver `stack` type{Stack}
+ @returns `stack`
+ @updates `stack.Cards` to be empty
+ ```
+
+<h3 name = "Clone">Clone</h3>
+
+ `stack.Clone()`
+ ```
+ Returns a clone of the given stack
+
+ @receiver `stack` type{Stack}
+ @returns type{*Stack} stack clone
+ @constructs type{*Stack} clone of `stack`
+ @ensures the stack clone has the same card pointers as `stack`
+ ```
+
+ `card.Clone()`
+ ```
+ Returns a clone of the given card
+
+ @receiver `card` type{Card}
+ @returns type{*Card} card clone
+ @constructs clone of `card`
+ ```
+
 <h2 name = "generalizedFunctions">Generalized Functions</h2>
  
 <h3 name = "Add">Add</h3>
  
- > `stack.Add(insert, ...ORDER_*, ...POSITION_*, ...POSITIONDATA)`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >>> **stack** *or* nil
- >
- >> SETTER: ***TRUE***
- >>> **stack**
+ `stack.Add(insert, ...orderType, ...positionType, ...positionData, ...matchType)`
+ ```
+ Adds to a stack of cards or a cards at (each) position(s) 
  
- > ***Special Parameters***
- >> **insert** *Card* or *Stack* is either a Card or a Stack of cards to insert at POSITION
-
- > ***Pseudocode***
- >> **IF VALID POSITION**
- >>> **IF beforeNotAfter**
- >>>> add **insert** before (each) POSITION in **stack**
- >>>
- >>> **ELSE**
- >>>> add **insert** after (each) POSITION in **stack**
- >>>
- >>> returns updated stack
- >>
- >> **ELSE**
- >>> return nil
- 
-<h3 name = "Replace">Replace</h3>
- 
- > `stack.Replace(insert, RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
- >> CONSTRUCTOR: ***SOMETIMES***
- >>> Make Stack if RETURNing multiple types
- >
- >> GETTER: ***TRUE***
- >>> RETURN objects that were removed *or* nil
- >
- >> SETTER: ***TRUE***
- >>> **stack**
- 
- > ***Special Parameters***
- >> **insert** *Card* or *Stack* is either a Card or a Stack of cards to insert at POSITION(S) as the replacement
-
- > ***Pseudocode***
- >> **IF VALID POSITION**
- >>> replace cards at each POSITION in **stack** with **insert**
- >>
- >>> returns the selected RETURNS
- >
- >> **ELSE**
- >>> return nil
- 
-<h3 name = "Extract">Extract</h3>
- 
- > `stack.Extract(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
- >> CONSTRUCTOR: ***SOMETIMES***
- >>> Make Stack if RETURNing multiple types
- >
- >> GETTER: ***TRUE***
- >>> RETURN objects that were removed *or* nil
- >
- >> SETTER: ***TRUE***
- >>> **stack**
-
- > ***Pseudocode***
- >> **IF VALID POSITION**
- >>> remove cards from the stack based on provided POSITION data
- >>
- >>> return the RETURNS of the old cards
- >
- >> **ELSE**
- >>> return nil
+ @receiver `stack` type{Stack}
+ @param `insert` type{Card, Stack}
+ @param optional `orderType` type{ORDER} default ORDER_After
+ @param optional `positionType` type{POSITION} default POSITION_First
+ @param optional `positionData` type{interface{}} default nil
+ @param optional `matchType` type{MATCH} default MATCH_Object
+ @returns `stack`
+ @updates `stack.Cards` to have new cards before/after each designated position
+ ```
  
 <h3 name = "Unique">Unique</h3>
  
- > `stack.Unique(TYPE_*)`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >>> **stack**
- >
- >> SETTER: ***TRUE***
- >>> **stack**
+ `stack.Unique(typeType, ...matchType)`
+ ```
+ Removes all cards from `stack` which share the same field value as another card before
 
- > ***Pseudocode***
- >> removes cards from the stack whose TYPE are the same value as others in the stack's TYPE values
- >
- >> return **stack**
+ @receiver `stack` type{Stack}
+ @param `typeType` type{TYPE}
+ @param optional `matchType` type{MATCH} default MATCH_Object
+ @returns `stack`
+ @updates `stack` to have no repeating values between field `typeType`
+ ```
+ 
+<h3 name = "ToArray">ToArray</h3>
+ 
+ `stack.ToArray()`
+ ```
+ Creates a new interface array from values of `stack`
+
+ @receiver `stack` type{Stack}
+ @returns type{[]interface{}} new array
+ @ensures new array values correspond to `stack` values
+ ```
+ 
+<h3 name = "ToMap">ToMap</h3>
+ 
+ `stack.ToMap()`
+ ```
+ Creates a new interface-interface map from values of `stack`
+
+ @receiver `stack` type{Stack}
+ @returns type{map[interface{}]interface{}} new map
+ @ensures new map keys and values correspond to `stack` keys and values
+ ```
+ 
+<h3 name = "Shuffle">Shuffle</h3>
+ 
+ `stack.Shuffle()`
+ ```
+ Shuffles the order of `stack` cards
+
+ @receiver `stack` type{Stack}
+ @returns `stack`
+ @updates
+  * `stack` card ordering is randomized
+  * rand.Seed is updated to time.Now().UnixNano()
+ ```
+ 
+<h3 name = "Flip">Flip</h3>
+ 
+ `stack.Flip()`
+ ```
+ Flips the ordering of `stack.Cards`
+ 
+ @receiver `stack` type{Stack}
+ @returns `stack`
+ @updates `stack` to have its ordering reversed
+ ```
+ 
+<h3 name = "Print">Print</h3>
+ 
+ `card.Print()`
+ ```
+ Prints information regarding `card` to the console
+ 
+ @receiver `card` type{Card}
+ @updates terminal logs
+ ```
+ 
+ `stack.Print()`
+ ```
+ Prints information regarding `stack` to the console
+ 
+ @receiver `stack` type{Stack}
+ @updates terminal logs
+ @requires card.Print() has been implemented
+ ```
  
 <h3 name = "Get">Get</h3>
  
- > `stack.Get(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
- >> CONSTRUCTOR: ***SOMETIMES***
- >>> Make Stack if RETURNing multiple types
- >
- >> GETTER: ***TRUE***
- >>> RETURN objects that were gotten *or* nil
- >
- >> SETTER: ***FALSE***
+ `stack.Get(...positionType, ...positionData, ...matchType)`
+ ```
+ Gets a card from specified parameters in a stack, or nil if does not exist
 
- > ***Pseudocode***
- >> **IF VALID POSITION**
- >>> return the selected RETURNS
- >
- >> **ELSE**
- >>> return nil
+ @receiver `stack` type{Stack}
+ @param optional `positionType` type{POSITION} default POSITION_First
+ @param optional `positionData` type{interface{}} default nil
+ @param optional `matchType` type{MATCH} default MATCH_Object
+ @returns type{*Card} the found card OR nil
+ ```
  
-<h3 name = "Has">Has</h3>
+<h3 name = "GetMany">GetMany</h3>
  
- > `stack.Has(RETURN_*, POSITION_*, ...POSITIONDATA, ...MATCH_*)`
- >> CONSTRUCTOR: ***FALSE***
- >
- >> GETTER: ***TRUE***
- >>> bool
- >
- >> SETTER: ***FALSE***
+ `stack.GetMany(positionType, ...positionData, ...returnType, ...matchType)`
+ ```
+ Gets a stack from specified parameters in a stack
  
- > ***Pseudocode***
- >> **IF STACK HAS TARGETED DATA**
- >>> return true
- >
- >> **ELSE**
- >>> return false
+ @receiver `stack` type{Stack}
+ @param `positionType` type{POSITION}
+ @param optional `positionData` type{interface{}} default nil
+ @param optional `returnType` type{RETURN} default RETURN_Cards
+ @param optional `matchType` type{MATCH} default MATCH_Object
+ @returns type{*Stack} the new stack
+ @constructs type{*Stack} new stack of specified values from specified cards in `stack`
+ ```
  
 <h2 name = "futureUpdates">Future Updates</h2>
 
- <h3>Generalized Functions</h3>
-
- * Add **Move** function
- * Add **Set(newData, TYPE_*, POSITION_*, ...POSITIONDATA)** function for more efficient replacement as opposed to replace... implement all search functions for individual cards, so card.set, card.replace, card.extract, etc
- * Add **Print** function
- * Add **CombineWith** function
-
- <h3>Non-Generalized Functions</h3>
-
- * Add **Flip** function
- * Add **Shuffle** function
- * Add **Clone** function
- * Add **ToArray** function
- * Add **ToStack** function
+ *To be added later*
 
 <h2 name = "footer">Footer</h1>
 
-This project was created by Gabe Tucker with the help of Andy Chen.
+This library was created by Gabe Tucker and Andy Chen.
 
-If there are any changes or comments you would like to have made in respect to this project, please email `tucker.854@osu.edu`.  I appreciate any feedback and will usually respond within 1-2 business days.
+If you have any suggestions, questions, or comments you would like to make in respect to this project, please email `tucker.854@osu.edu`.  I appreciate any feedback and will usually respond within 1-2 business days.
 
 Feel free to visit my personal pages at `https://gabetucker.com` or `https://www.linkedin.com/in/gabetucker2/`.
 

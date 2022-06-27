@@ -1,32 +1,4 @@
-package aorta
-
-func GOSTACK_back_GetIndexFromMap(m []*map) {
-	
-}
-
-func GOSTACK_back_UnpackVariadic(variadic []*interface{}, into ...*interface{}) {
-	for i, v := range into {
-		*v = variadic[i]
-	}
-}
-
-func GOSTACK_back_MakeCard(idx int, variadic ...*interface{}) (card *Card) {
-
-	// unpack variadic into optional parameters
-	var val, key *interface{}
-	GOSTACK_back_UnpackVariadic(variadic, val, key)
-
-	// initialize and set new Card
-	card = new(Card)
-	card.idx = idx
-	card.key = key
-	card.val = val
-
-	// return
-	return
-
-}
-
+/*
 func gostack_back_AddCard(stack *Stack, card *Card, idx interface{}, beforeNotAfter bool) *Stack {
 
 	// insert card into new array slice to satisfy append function
@@ -171,13 +143,58 @@ func gostack_back_GetIdxFromPosition(stack *Stack, position POSITION, _data ...i
 	return
 
 }
+*/
 
-func (stack *Stack) gostack_back_iterator(lambda func(*Stack, *Card) bool) {
-	newStack := new(Stack)
-	for _, card := range stack.cards {
-		if lambda(stack, card) {
-			newStack.cards = append(newStack.cards, card)
+/*
+func (stack *Stack) Extract(position POSITION, data ...interface{}) *Card {
+
+	// get idx
+	idx := gostack_back_GetIdxFromData(stack, position, data)
+
+	// extract card if valid idx
+	var extract *Card = nil
+	if idx != -1 {
+		extract = gostack_back_ExtractCard(stack, idx)
+	}
+
+	// return
+	return extract
+
+}
+
+func (stack *Stack) Replace(toInsert *[]interface{}, position POSITION, data ...interface{}) (oldCards *Stack) {
+
+	// get idx
+	idx := gostack_back_GetIdxFromData(stack, position, data)
+
+	if idx != -1 {
+		// extract card
+		oldCard = gostack_back_ExtractCard(stack, idx)
+
+		// insert card at previous location if got out card
+		if oldCard != nil {
+			gostack_back_AddCard(stack, toInsert, idx, true)
 		}
 	}
-	stack.cards = newStack.cards
+
+	// return
+	return
+
 }
+
+func (stack *Stack) Get(returnType RETURN, positionType POSITION, POSITIONDATA, matchType ...MATCH) interface{} {
+
+
+
+}
+
+func (stack  *Stack) Has(lookFor interface{}, position POSITION, data ...interface{}) bool
+
+	// get id
+	idx := gostack_back_GetIdxFromData(stack, position, data)
+
+	// retur
+	return idx != -1
+
+}
+*/

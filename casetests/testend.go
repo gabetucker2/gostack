@@ -1,33 +1,38 @@
 package casetests
 
-import "strconv"
+import (
+	"strconv"
+	"fmt"
 
-// test variables
+	. "github.com/gabetucker2/gostack"
+)
 
-var testCardA = gostack_back_NewCard("Card A") // in sample stack
-var testCardB = gostack_back_NewCard("Card B") // in sample stack
-var testCardC = gostack_back_NewCard("Card C") // in sample stack
-var testCardD = gostack_back_NewCard("Card D") // out of sample stack
+// test variables (test with these variables only after MakeCard's test)
+
+var testCardA = MakeCard("Card A") // in sample stack
+var testCardB = MakeCard("Card B") // in sample stack
+var testCardC = MakeCard("Card C") // in sample stack
+var testCardD = MakeCard("Card D") // out of sample stack
 
 // test functions
 
-func gostack_test_LenAndSize(stack *Stack, size int) bool {
+func test_LenAndSize(stack *Stack, size int) bool {
 
 	// return whether len(cards) == cards.size
-	return len(stack.cards) == size && stack.size == size
+	return len(stack.Cards) == size && stack.Size == size
 
 }
 
-func gostack_test_Start(funcName string, showTestText bool) {
+func test_Start(funcName string, showTestText bool) {
 
 	// print TESTING line only if showTestText var set to true
 	if showTestText {
-		println("-   TESTING " + funcName + "()")
+		fmt.Println("-   TESTING " + funcName + "()")
 	}
 
 }
 
-func gostack_test_End(funcName string, conditions []bool) {
+func test_End(funcName string, conditions []bool) {
 
 	// set test to -1 (true) by default
 	test := -1
@@ -49,20 +54,20 @@ func gostack_test_End(funcName string, conditions []bool) {
 	}
 
 	// print all the data together
-	println(out + " " + funcName + "()")
+	fmt.Println(out + " " + funcName + "()")
 
 }
 
-func gostack_test_SampleStack() (stack *Stack) {
+func test_SampleStack() *Stack {
 
 	// make a sample stack of form <"Card A", "Card B", "Card C">
-	stack = MakeStack()
+	stack := MakeStack()
 
-	// create stack (don't use stack.Add because we can't assume it is working in case tests)
-	gostack_back_AddCard(stack, testCardA, gostack_back_GetIdxFromPosition(stack, POSITION_Last), false)
-	gostack_back_AddCard(stack, testCardB, gostack_back_GetIdxFromPosition(stack, POSITION_Last), false)
-	gostack_back_AddCard(stack, testCardC, gostack_back_GetIdxFromPosition(stack, POSITION_Last), false)
-
-	return
+	// create stack (don't use .Add() function, or else you'll have to case test)
+	stack.Cards = append(stack.Cards, testCardA)
+	stack.Cards = append(stack.Cards, testCardB)
+	stack.Cards = append(stack.Cards, testCardC)
+	
+	return stack
 
 }

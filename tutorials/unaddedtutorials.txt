@@ -110,3 +110,32 @@
  > `}`
  >
  > `oldCards := stack.Replace(cardsToInsert, RETURN_Keys, POSITION_Lambda, gostack_ValInRange)`
+
+
+
+
+
+***POINTER MAP EXAMPLE*** but implement with our functions
+
+func main() {
+	fmt.Println("------------------")
+	m := make(map[*string]*string)
+	key1 := "Cowboy"
+	val1 := "Cowgirl"
+	m[&key1] = &val1
+	fmt.Print("Key1: ")
+	fmt.Println(key1)
+	fmt.Print("Val1: ")
+	fmt.Println(val1)
+	for k := range m {
+		*k = "Cowthing"
+		*m[k] = "Cowtail"
+	}
+	fmt.Println("------------------")
+	for k := range m {
+		fmt.Print("Key1: ")
+		fmt.Println(*k)
+		fmt.Print("Val1: ")
+		fmt.Println(*m[k])
+	}
+}

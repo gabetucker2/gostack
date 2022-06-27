@@ -1,13 +1,11 @@
 ---------------------------------------------------------------
 GABE:
-* Create function annotation convention
-* Make ORDER_*, POSITION_* optional for add function (only if first value being inserted)
-* Function cleanup
- - Ensure public functions are capital whereas private functions are lowercase
- - Restructure functions to have receiver of type Stack AND Card
- - Restructure all functions
+* Update race.md and related documentation
+* Update card.idx whenever it's updated
 * Implement all documented functions
-* Implement rest of functions in ToAdd documentation
+* Turn MakeStack into a more flexible function, intialize with keys (instead of values) option
+* Implement getPositions
+* Implement variadic error-catching function for bad argument conditions (fmt.Errorf())
 * Update gostack banner to have code from a tutorial
 
 ---------------------------------------------------------------
@@ -16,20 +14,30 @@ ANDY:
  - See unaddedcases.txt for reference
 * Fix faulty classical go code in tutorials/race.md
  - I am avoiding for-loop cloning incorrectly since the for-loop is iterating over a map, see my StackOverflow post https://stackoverflow.com/questions/20185511/range-references-instead-values/72740187#72740187
+ - Remove comments saying "avoid for-loop cloning"
+ - Update percentage descriptions corresponding to amount of lines after update
  - The initial map cannot have two of the same key, meaning we have to implement x_KEYNAME for each key in the map and then decode this within the procedure
 * Lambda tutorial updates
  - Replace makeSampleStack() with MakeStack() from frontend.go
+ - Implement for values other than ints
  - Make some more lambda function examples which use workingMemory param
- - Remove mainFunc, replace mainFunc calls in Lambda() with Get()
+ - Remove MainFunc, replace MainFunc calls in Lambda() with Get() and other frontend functions
 * Implement bootstrap functions, take inspiration from common functions in other languages
 * Add some more tutorials using functions in the documentation even if they haven't been implemented yet
+ - Add passing-by-object vs passing-by-address tutorial (just & before variable, our functions support that)
 
 ---------------------------------------------------------------
-IMPLEMENTED TESTED DOCUMENTED FUNCTIONS:
-MakeCard
+IMPLEMENTED TESTED WORKING DOCUMENTED FUNCTIONS:
+/
+
+IMPLEMENTED TESTED BROKEN DOCUMENTED FUNCTIONS:
+/
 
 IMPLEMENTED UNTESTED DOCUMENTED FUNCTIONS:
-MakeCards, MakeStack, Empty
+stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print
 
-UNIMPLEMENTED DOCUMENTED FUNCTIONS:
-Add, Extract, Replace, Get, Has
+OUTDATED FUNCTIONS:
+MakeStack
+
+UNIMPLEMENTED PARTIALLY DOCUMENTED FUNCTIONS:
+stack.Extract, stack.Replace, stack.Has, stack.ExtractMany, stack.ReplaceMany, stack.Move
