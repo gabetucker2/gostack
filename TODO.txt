@@ -1,5 +1,6 @@
 ---------------------------------------------------------------
 GABE:
+* Update card.idx whenever it's updated
 * Implement all documented functions
 * Turn MakeStack into a more flexible function, intialize with keys (instead of values) option
 * Implement getPositions
@@ -32,13 +33,10 @@ IMPLEMENTED TESTED BROKEN DOCUMENTED FUNCTIONS:
 /
 
 IMPLEMENTED UNTESTED DOCUMENTED FUNCTIONS:
-stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap
+stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print
 
 OUTDATED FUNCTIONS:
 MakeStack
 
 UNIMPLEMENTED PARTIALLY DOCUMENTED FUNCTIONS:
-stack.Extract, stack.Replace, stack.Has, stack.ExtractMany, stack.ReplaceMany
-
-UNIMPLEMENTED UNDOCUMENTED FUNCTIONS:
-stack.Move, stack.Print, card.Print, stack.Flip, stack.Shuffle
+stack.Extract, stack.Replace, stack.Has, stack.ExtractMany, stack.ReplaceMany, stack.Move

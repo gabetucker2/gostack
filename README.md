@@ -67,13 +67,19 @@
  >>>
  >>>> [stack.Empty()](#Empty)
  >>>
- >>>> [{stack, card}.Clone()](#Clone)
+ >>>> [{card, stack}.Clone()](#Clone)
  >>>
  >>>> [stack.Unique()](#Unique)
  >>>
  >>>> [stack.ToArray()](#ToArray)
  >>>
  >>>> [stack.ToMap()](#ToMap)
+ >>>
+ >>>> [stack.Shuffle()](#Shuffle)
+ >>>
+ >>>> [stack.Flip()](#Flip)
+ >>>
+ >>>> [{card, stack}.Print()](#Print)
  >>>
  >>> [Generalized Functions](#generalizedFunctions)
  >>>> [stack.Add(...)](#Add)
@@ -86,7 +92,7 @@
  >>>>
  >>>> [stack.ExtractMany(...)](#ExtractMany)
  >>>
- >>>> [stack.Unique(...)](#Unique)
+ >>>> [stack.Move(...)](#Move)
  >>>
  >>>> [stack.Get(...)](#Get)
  >>>>
@@ -220,17 +226,21 @@
  * **stack.Unique(typeType, ...matchType)**
  * **stack.ToArray()**
  * **stack.ToMap()**
+ * **stack.Shuffle()**
+ * **stack.Flip()**
+ * **{card, stack}.Print()**
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
  * **stack.Add(insert, ...orderType, ...positionType, ...positionData, ...matchType)**
- * **stack.Replace(insert, POSITION_\*, ...positionData, ...MATCH_\*)**
- * **stack.ReplaceMany(insert, POSITION_\*, ...positionData, ...RETURN_\*, ...MATCH_\*)**
- * **stack.Extract(POSITION_\*, ...positionData, ...MATCH_\*)**
- * **stack.ExtractMany(POSITION_\*, ...positionData, ...RETURN_\*, ...MATCH_\*)**
+ * **stack.Replace(insert, positionType, ...positionData, ...matchType)**
+ * **stack.ReplaceMany(insert, positionType, ...positionData, ...returnType, ...matchType)**
+ * **stack.Extract(positionType, ...positionData, ...matchType)**
+ * **stack.ExtractMany(positionType, ...positionData, ...returnType, ...matchType)**
+ * **stack.Move(positionType, ...positionData)**
  * **stack.Get(...positionType, ...positionData, ...matchType)**
  * **stack.GetMany(...positionType, ...positionData, ...returnType, ...matchType)**
- * **stack.Has(RETURN_\*, POSITION_\*, ...positionData, ...MATCH_\*)**
+ * **stack.Has(returnType, positionType, ...positionData, ...matchType)**
 
 <h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
 
@@ -442,6 +452,7 @@ Makes a stack of cards with inputted vals and keys
  @constructs type{*Stack} clone of `stack`
  @ensures the stack clone has the same card pointers as `stack`
  ```
+
  `card.Clone()`
  ```
  Returns a clone of the given card
@@ -504,6 +515,49 @@ Makes a stack of cards with inputted vals and keys
  @ensures new map keys and values correspond to `stack` keys and values
  ```
  
+<h3 name = "Shuffle">Shuffle</h3>
+ 
+ `stack.Shuffle()`
+ ```
+ Shuffles the order of `stack` cards
+
+ @receiver `stack` type{Stack}
+ @returns `stack`
+ @updates
+  * `stack` card ordering is randomized
+  * rand.Seed is updated to time.Now().UnixNano()
+ ```
+ 
+<h3 name = "Flip">Flip</h3>
+ 
+ `stack.Flip()`
+ ```
+ Flips the ordering of `stack.Cards`
+ 
+ @receiver `stack` type{Stack}
+ @returns `stack`
+ @updates `stack` to have its ordering reversed
+ ```
+ 
+<h3 name = "Print">Print</h3>
+ 
+ `card.Print()`
+ ```
+ Prints information regarding `card` to the console
+ 
+ @receiver `card` type{Card}
+ @updates terminal logs
+ ```
+ 
+ `stack.Print()`
+ ```
+ Prints information regarding `stack` to the console
+ 
+ @receiver `stack` type{Stack}
+ @updates terminal logs
+ @requires card.Print() has been implemented
+ ```
+ 
 <h3 name = "Get">Get</h3>
  
  `stack.Get(...positionType, ...positionData, ...matchType)`
@@ -534,16 +588,7 @@ Makes a stack of cards with inputted vals and keys
  
 <h2 name = "futureUpdates">Future Updates</h2>
 
- <h3>Generalized Functions</h3>
-
- * Add **stack.Move** function
- * Add **{stack, card}.Print** function
-
- <h3>Non-Generalized Functions</h3>
-
- * Add **Flip** function
- * Add **Shuffle** function
- * Add **stack.ToMap** function
+ *To be added later*
 
 <h2 name = "footer">Footer</h1>
 

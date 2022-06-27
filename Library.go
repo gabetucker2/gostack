@@ -2,6 +2,9 @@ package gostack
 
 import (
 	"reflect"
+	"math/rand"
+	"time"
+	"fmt"
 )
 
 /** Makes a card with inputted vals and keys
@@ -341,6 +344,81 @@ func (stack *Stack) ToMap() (m map[interface{}]interface{}) {
 
 	// return
 	return
+
+}
+
+/** Shuffles the order of `stack` cards
+
+ @receiver `stack` type{Stack}
+ @returns `stack`
+ @updates
+  * `stack` card ordering is randomized
+  * rand.Seed is updated to time.Now().UnixNano()
+ */
+func (stack *Stack) Shuffle() *Stack {
+
+	// pseudo-randomize seed
+	rand.Seed(time.Now().UnixNano())
+
+	// shuffle
+	rand.Shuffle(stack.Size, func(i, j int) { stack.Cards[i], stack.Cards[j] = stack.Cards[j], stack.Cards[i] })
+
+	// return
+	return stack
+
+}
+
+/** Flips the ordering of `stack.Cards`
+ 
+ @receiver `stack` type{Stack}
+ @returns `stack`
+ @updates `stack` to have its ordering reversed
+ */
+func (stack *Stack) Flip() *Stack {
+
+	// new card stack
+	var newCards []*Card
+
+	// flip it
+	for i := range stack.Cards {
+		newCards = append(newCards, stack.Cards[i])
+	}
+
+	// update
+	stack.Cards = newCards
+
+	// return
+	return stack
+
+}
+
+/** Prints information regarding `card` to the console
+ 
+ @receiver `card` type{Card}
+ @updates terminal logs
+ */
+func (card *Card) Print() {
+
+	fmt.Println("gostack: PRINTING CARD")
+	fmt.Printf("- card.Idx: %v\n", card.Idx)
+	fmt.Printf("- card.Key: %v\n", card.Key)
+	fmt.Printf("- card.Val: %v\n", card.Idx)
+
+}
+
+/** Prints information regarding `stack` to the console
+ 
+ @receiver `stack` type{Stack}
+ @updates terminal logs
+ @requires card.Print() has been implemented
+ */
+func (stack *Stack) Print() {
+
+	fmt.Println("gostack: PRINTING STACK")
+	fmt.Printf("- stack.Size: %v\n", stack.Size)
+	for i := range stack.Cards {
+		stack.Cards[i].Print()
+	}
 
 }
 
