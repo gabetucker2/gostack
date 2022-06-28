@@ -2,62 +2,72 @@ package tutorials
 
 import (
 	"fmt"
-	
+
 	. "github.com/gabetucker2/gostack"
 )
 
+/** remove card from stack
 
-func bootstrap_pop() {
-
-	// > `stack.Extract(RETURN_Card, FINDBY_First)`
-	// >> *removes and returns the first card in the stack*
-	
-	//
-	stack.Extract(RETURN_Card, POSITION_First)
+ @param `stack` type{Stack}
+ @returns `card` type{Card}
+ @updates `stack` with designated card removed
+ */
+func bootstrap_pop(stack *Stack) *Card{
+	return stack.Extract(RETURN_Card, POSITION_First)
 }
 
 
-
-func bootstrap_push(card *Card, stack *Stack) bool {
-
-	// > `stack.Add(insert, ORDER_BEFORE, POSITION_First)`
-	// >> *adds a card to the beginning of the stack*
-
-
-	//
-	stack.Add(insert, ORDER_BEFORE, POSITION_First)
-
+/** Push a card to the top of the stack of cards
+ 
+ @param `stack` type{Stack}
+ @param `card` type Card 
+ @returns `stack` after adding, type{Stack}
+ @updates `stack` to have new card on top of stack
+ */
+func bootstrap_push(stack *Stack, card *Card) *Stack{
+	return stack.Add(card, ORDER_Before)
 }
 
-func bootstrap_indexOf(stack *Stack, val interface{}) int {
-
-
-
-	//return stack.Get(FINDBY_Val, val).Idx
-	// >> *returns the index of the first found matching card*
-	return stack.Get(POSITION_Card, val).Idx
+/** Get the smallindex of a card in the stack
+ 
+ @param `stack` type{Stack}
+ @param `card` type Card 
+ @returns `idx` type{int}
+ */
+func bootstrap_indexOf(stack *Stack, card *Card) int {
+	return stack.Get(FINDBY_First, card).Idx
 }
 
+/** Return list of all keys in the stack
+ @param `stack` type{Stack}
+ @returns `stack` type{Stack}
+ */
 func bootstrap_keyset(stack *Stack) *Stack{
-	/**
-	@Param: stack
-	@Return: stack
-	*/
-	return stack.GetMany(RETURN_Key, POSITION_All)
+	return stack.GetMany(FINDBY_Lambda, func(stack *Stack, card *Card)bool{
+		v := card.Key
+		return v != nil
+	})
 }
 
+/** Return list of all values in the stack
+ @param `stack` type{Stack}
+ @returns `stack` type{Stack}
+ */
 func bootstrap_valset(stack *Stack) *Stack{
-	return stack.GetMany(RETURN_VAL, POSITION_All)
+	return stack.GetMany(FINDBY_Lambda, func(stack *Stack, card *Card)bool{
+		v := card.Val
+		return v != nil
+	})
 }
 
 /** Executes the Bootstrap.go tutorial */
 func Bootstrap() {
-
-	_gostack_tutorials_pop()
-	_gostack_tutorials_push()
-	_gostack_tutorials_indexOf()
-	_gostack_tutorials_keyset()
-	_gostack_tutorials_valset()
+	myStack := makeSampleStack()
+	bootstrap_push(myStack, MakeCard(1,2,3))
+	bootstrap_indexOf(myStack, MakeCard(1,2,3))
+	bootstrap_keyset(myStack)
+	bootstrap_valset(myStack)
+	fmt.Println(bootstrap_pop(myStack))
 
 	return
 }

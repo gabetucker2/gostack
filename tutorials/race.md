@@ -117,7 +117,7 @@ taskA := start.GetMany(FINDBY_Keys, searchKeys, RETURN_Vals).Unique(TYPE_Val)
 taskB := MakeStack(taskA, start.GetMany(FINDBY_Vals, taskA, RETURN_Vals).Unique(TYPE_Val))
 
  // TASK C
-taskC := taskB.Clone().Replace(RETURN_Cards, pairsToInsert, FINDBY_Lambda, func(stack *Stack, card *Card) {
+taskC := taskB.Clone().Replace(RETURN_Cards, pairsToInsert, FINDBY_Lambda, func(stack *Stack, card *Card)bool {
     v := card.Val
     return 1 < v && v < 3
 })
