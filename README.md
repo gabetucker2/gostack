@@ -82,21 +82,21 @@
  >>> [Generalized Functions](#generalizedFunctions)
  >>>> [stack.Add(...)](#Add)
  >>>
- >>>> [stack.Replace(...)](#Replace)
- >>>>
- >>>> [stack.ReplaceMany(...)](#ReplaceMany)
- >>>
- >>>> [stack.Extract(...)](#Extract)
- >>>>
- >>>> [stack.ExtractMany(...)](#ExtractMany)
- >>>
  >>>> [stack.Move(...)](#Move)
+ >>>
+ >>>> [stack.Has(...)](#Has)
  >>>
  >>>> [stack.Get(...)](#Get)
  >>>>
  >>>> [stack.GetMany(...)](#GetMany)
  >>>
- >>>> [stack.Has(...)](#Has)
+ >>>> [stack.Extract(...)](#Extract)
+ >>>>
+ >>>> [stack.ExtractMany(...)](#ExtractMany)
+ >>>
+ >>>> [stack.Replace(...)](#Replace)
+ >>>>
+ >>>> [stack.ReplaceMany(...)](#ReplaceMany)
  >
  >> [Future Updates](#futureUpdates)
  >
@@ -238,14 +238,14 @@
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
  * **stack.Add(insert, ...orderType, ...findByType, ...findByData, ...matchByType)**
- * **stack.Replace(insert, findByType, ...findByData, ...matchByType)**
- * **stack.ReplaceMany(insert, findByType, ...findByData, ...returnType, ...matchByType)**
- * **stack.Extract(findByType, ...findByData, ...matchByType)**
- * **stack.ExtractMany(findByType, ...findByData, ...returnType, ...matchByType)**
  * **stack.Move(findByType, ...findByData)**
+ * **stack.Has(returnType, findByType, ...findByData, ...matchByType)**
  * **stack.Get(...findByType, ...findByData, ...matchByType)**
  * **stack.GetMany(...findByType, ...findByData, ...returnType, ...matchByType)**
- * **stack.Has(returnType, findByType, ...findByData, ...matchByType)**
+ * **stack.Extract(findByType, ...findByData, ...matchByType)**
+ * **stack.ExtractMany(findByType, ...findByData, ...returnType, ...matchByType)**
+ * **stack.Replace(insert, findByType, ...findByData, ...matchByType)**
+ * **stack.ReplaceMany(insert, findByType, ...findByData, ...returnType, ...matchByType)**
 
 <h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
 
@@ -585,6 +585,34 @@ Makes a stack of cards with inputted vals and keys
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns type{*Stack} the new stack
  @constructs type{*Stack} new stack of specified values from specified cards in `stack`
+ ```
+ 
+<h3 name = "Extract">Extract</h3>
+ 
+ `stack.Extract(findByType, ...findByData, ...matchByType)`
+ ```
+ Gets and removes a card from `stack`, or returns nil if it does not exist
+ 
+ @receiver `stack` type{Stack}
+ @param `findByType` type{FINDBY}
+ @param optional `findByData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @returns type{*Card} the extracted card OR nil if invalid FINDBY
+ @updates `stack` to no longer have found card
+ ```
+ 
+<h3 name = "Replace">Replace</h3>
+ 
+ `stack.Replace(findByType, ...findByData, ...matchByType)`
+ ```
+ Gets and removes a card from `stack`, or returns nil if it does not exist
+ 
+ @receiver `stack` type{Stack}
+ @param `findByType` type{FINDBY}
+ @param optional `findByData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @returns type{*Card} the extracted card OR nil if invalid FINDBY
+ @updates `stack` to no longer have found card
  ```
  
 <h2 name = "futureUpdates">Future Updates</h2>

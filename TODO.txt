@@ -1,5 +1,6 @@
 ---------------------------------------------------------------
 GABE:
+* Ensure that Add returns nil if invalid FINDBY type
 * Add POSITION_Slice
 * Update race.md and related documentation
  - Fix taskC.replace()

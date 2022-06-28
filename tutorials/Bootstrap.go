@@ -1,8 +1,9 @@
 package tutorials
 
 import (
-	. "github.com/gabetucker2/gostack"
 	"fmt"
+	
+	. "github.com/gabetucker2/gostack"
 )
 
 
@@ -17,7 +18,7 @@ func bootstrap_pop() {
 
 
 
-func bootstrap_push(card Card*, stack *Stack) bool {
+func bootstrap_push(card *Card, stack *Stack) bool {
 
 	// > `stack.Add(insert, ORDER_BEFORE, POSITION_First)`
 	// >> *adds a card to the beginning of the stack*
@@ -45,7 +46,7 @@ func bootstrap_keyset(stack *Stack) *Stack{
 	return stack.GetMany(RETURN_Key, POSITION_All)
 }
 
-func bootstrap_valset(stack Stack*) Stack*{
+func bootstrap_valset(stack *Stack) *Stack{
 	return stack.GetMany(RETURN_VAL, POSITION_All)
 }
 

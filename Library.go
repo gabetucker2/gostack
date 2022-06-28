@@ -185,88 +185,6 @@ func (card *Card) Clone() *Card {
 
 }
 
-/** Adds to a stack of cards or a cards at (each) position(s) 
- 
- @receiver `stack` type{Stack}
- @param `insert` type{Card, Stack}
- @param optional `orderType` type{ORDER} default ORDER_After
- @param optional `findByType` type{FINDBY} default FINDBY_First
- @param optional `findByData` type{interface{}} default nil
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
- @returns `stack`
- @updates `stack` to have new cards before/after each designated position
- */
-func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
-
-	// unpack variadic into optional parameters
-	var orderType, findByType, findByData, matchByType interface{}
-	unpackVariadic(variadic, &orderType, &findByType, &findByData, &matchByType)
-
-	// set types to default values
-	setORDERDefaultIfNil(orderType)
-	setFINDBYDefaultIfNil(findByType)
-	setMATCHBYDefaultIfNil(matchByType)
-
-	// convert insert into slice of cards
-	var cardsIn []*Card
-	switch insert.(type) {
-	case Card:
-		cardsIn = append(cardsIn, insert.(*Card))
-	case Stack:
-		for _, c := range insert.(*Stack).Cards {
-			cardsIn = append(cardsIn, c)
-		}
-
-	}
-
-	// create new array in which to insert `insert`
-	var cardsWithAdded []*Card
-
-	// get targeted cards
-	targets := getPositions(false, stack, findByType.(FINDBY), findByData, matchByType.(MATCHBY))
-
-	// fill the array
-	for i := range stack.Cards {
-		for _, j := range targets {
-
-			existingCard := stack.Cards[i]
-
-			if j == i { // we are on a target, add `insert`
-
-				if orderType == ORDER_Before {
-
-					for _, c := range cardsIn {
-						cardsWithAdded = append(cardsWithAdded, c)
-					}
-					cardsWithAdded = append(cardsWithAdded, existingCard)
-
-				} else if orderType == ORDER_After {
-
-					cardsWithAdded = append(cardsWithAdded, existingCard)
-					for _, c := range cardsIn {
-						cardsWithAdded = append(cardsWithAdded, c)
-					}
-
-				}
-
-			} else { // we are on a non-target, just add
-
-				cardsWithAdded = append(cardsWithAdded, existingCard)
-
-			}
-
-		}
-	}
-
-	// set old cards array to new cards array with added element(s)
-	stack.Cards = cardsWithAdded
-	stack.Size = len(stack.Cards)
-
-	// return
-	return stack
-
-}
-
 /** Removes all cards from `stack` which share the same field value as another card before
 
  @receiver `stack` type{Stack}
@@ -422,13 +340,95 @@ func (stack *Stack) Print() {
 
 }
 
+/** Adds to a stack of cards or a cards at (each) position(s) 
+ 
+ @receiver `stack` type{Stack}
+ @param `insert` type{Card, Stack}
+ @param optional `orderType` type{ORDER} default ORDER_After
+ @param optional `findByType` type{FINDBY} default FINDBY_First
+ @param optional `findByData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @returns `stack`
+ @updates `stack` to have new cards before/after each designated position
+ */
+func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
+
+	// unpack variadic into optional parameters
+	var orderType, findByType, findByData, matchByType interface{}
+	unpackVariadic(variadic, &orderType, &findByType, &findByData, &matchByType)
+
+	// set types to default values
+	setORDERDefaultIfNil(&orderType)
+	setFINDBYDefaultIfNil(&findByType)
+	setMATCHBYDefaultIfNil(&matchByType)
+
+	// convert insert into slice of cards
+	var cardsIn []*Card
+	switch insert.(type) {
+	case Card:
+		cardsIn = append(cardsIn, insert.(*Card))
+	case Stack:
+		for _, c := range insert.(*Stack).Cards {
+			cardsIn = append(cardsIn, c)
+		}
+
+	}
+
+	// create new array in which to insert `insert`
+	var cardsWithAdded []*Card
+
+	// get targeted cards
+	targets := getPositions(false, stack, findByType.(FINDBY), findByData, matchByType.(MATCHBY))
+
+	// fill the array
+	for i := range stack.Cards {
+		for _, j := range targets {
+
+			existingCard := stack.Cards[i]
+
+			if j == i { // we are on a target, add `insert`
+
+				if orderType == ORDER_Before {
+
+					for _, c := range cardsIn {
+						cardsWithAdded = append(cardsWithAdded, c)
+					}
+					cardsWithAdded = append(cardsWithAdded, existingCard)
+
+				} else if orderType == ORDER_After {
+
+					cardsWithAdded = append(cardsWithAdded, existingCard)
+					for _, c := range cardsIn {
+						cardsWithAdded = append(cardsWithAdded, c)
+					}
+
+				}
+
+			} else { // we are on a non-target, just add
+
+				cardsWithAdded = append(cardsWithAdded, existingCard)
+
+			}
+
+		}
+	}
+
+	// set old cards array to new cards array with added element(s)
+	stack.Cards = cardsWithAdded
+	stack.Size = len(stack.Cards)
+
+	// return
+	return stack
+
+}
+
 /** Gets a card from specified parameters in a stack, or nil if does not exist
 
  @receiver `stack` type{Stack}
  @param optional `findByType` type{FINDBY} default FINDBY_First
  @param optional `findByData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
- @returns type{*Card} the found card OR nil
+ @returns type{*Card} the found card OR nil if invalid FINDBY
  */
 func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
 
@@ -437,13 +437,13 @@ func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
 	unpackVariadic(variadic, &findByType, &findByData, &matchByType)
 
 	// set types to default values
-	setFINDBYDefaultIfNil(findByType)
-	setMATCHBYDefaultIfNil(matchByType)
+	setFINDBYDefaultIfNil(&findByType)
+	setMATCHBYDefaultIfNil(&matchByType)
 
 	// get targeted card OR nil
-	positions := getPositions(true, stack, findByType.(FINDBY), findByData, matchByType.(MATCHBY))
-	if len(positions) > 0 {
-		ret = stack.Cards[positions[0]]
+	targets := getPositions(true, stack, findByType.(FINDBY), findByData, matchByType.(MATCHBY))
+	if len(targets) > 0 {
+		ret = stack.Cards[targets[0]]
 	} else {
 		ret = nil
 	}
@@ -470,8 +470,8 @@ func (stack *Stack) GetMany(findByType FINDBY, variadic ...interface{}) *Stack {
 	unpackVariadic(variadic, &findByData, &returnType, &matchByType)
 
 	// set types to default values
-	setRETURNDefaultIfNil(returnType)
-	setMATCHBYDefaultIfNil(matchByType)
+	setRETURNDefaultIfNil(&returnType)
+	setMATCHBYDefaultIfNil(&matchByType)
 
 	// create new stack which returns the searched-for cards
 	newStack := MakeStack()
@@ -483,7 +483,7 @@ func (stack *Stack) GetMany(findByType FINDBY, variadic ...interface{}) *Stack {
 	for _, i := range targets {
 
 		newCard := new(Card)
-		setCardVal(newCard, stack.Cards[i], returnType.(RETURN))
+		setCardVal(&newCard, &stack.Cards[i], returnType.(RETURN))
 
 		newStack.Cards = append(newStack.Cards, newCard)
 
@@ -491,5 +491,73 @@ func (stack *Stack) GetMany(findByType FINDBY, variadic ...interface{}) *Stack {
 
 	// return
 	return newStack
+
+}
+
+/** Gets and removes a card from `stack`, or returns nil if it does not exist
+ 
+ @receiver `stack` type{Stack}
+ @param `findByType` type{FINDBY}
+ @param optional `findByData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @returns type{*Card} the extracted card OR nil if invalid FINDBY
+ @updates `stack` to no longer have found card
+ */
+func (stack *Stack) Extract(findByType FINDBY, variadic ...interface{}) (ret *Card) {
+
+	// unpack variadic into optional parameters
+	var findByData, matchByType interface{}
+	unpackVariadic(variadic, &findByData, &matchByType)
+
+	// set types to default values
+	setMATCHBYDefaultIfNil(&matchByType)
+
+	// new card set
+	var newCards []*Card
+
+	// get targeted card OR nil
+	ret = stack.Get(findByType, findByData, matchByType)
+
+	// remove targeted card if was found
+	if ret != nil {
+		for i := range stack.Cards {
+			c := stack.Cards[c]
+			if c != ret {
+				newCards = append(newCards, c)
+			}
+		}
+	}
+
+	// update
+	stack.Cards = newCards
+
+	// return
+	return
+
+}
+
+//
+func (stack *Stack) Replace(insert interface{}, findByType FINDBY, variadic ...interface{}) *Card {
+
+	// unpack variadic into optional parameters
+	var findByData, matchByType interface{}
+	unpackVariadic(variadic, &findByData, &matchByType)
+
+	// set types to default values
+	setMATCHBYDefaultIfNil(&matchByType)
+
+	// new card set
+	var newCards []*Card
+
+	// remove
+	removedCards := 
+
+	// add
+
+	// update
+	stack.Cards = newCards
+
+	// return
+	return removedCards
 
 }
