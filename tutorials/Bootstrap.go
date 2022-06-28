@@ -6,14 +6,14 @@ import (
 	. "github.com/gabetucker2/gostack"
 )
 
-/** remove card from stack
+/** Remove and return first card in stack
 
  @param `stack` type{Stack}
  @returns `card` type{Card}
  @updates `stack` with designated card removed
  */
 func bootstrap_pop(stack *Stack) *Card{
-	return stack.Extract(RETURN_Card, POSITION_First)
+	return stack.Extract(FINDBY_First)
 }
 
 
@@ -28,7 +28,7 @@ func bootstrap_push(stack *Stack, card *Card) *Stack{
 	return stack.Add(card, ORDER_Before)
 }
 
-/** Get the smallindex of a card in the stack
+/** Get the index of a card in the stack
  
  @param `stack` type{Stack}
  @param `card` type Card 
