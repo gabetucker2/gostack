@@ -1,5 +1,41 @@
 package gostack
 
+import "reflect"
+
+/** Returns a clone of this interface
+ 
+ @param `toClone` type{interface{}}
+ @returns type{interface{}}
+ */
+func cloneInterface(toClone interface{}) interface{} {
+	return reflect.New(reflect.ValueOf(toClone).Elem().Type()).Interface()
+}
+
+/** Returns out1 if test is true; else return out2
+ 
+ @param `test` type{bool}
+ @param `out1` type{interface{}}
+ @param `out2` type{interface{}}
+ @returns interface{} `out1` or `out2`
+ */
+func ifElse(test bool, out1, out2 interface{}) interface{} {
+	if test { return out1 } else { return out2 }
+}
+
+/** Returns stack if testIfEmpty is not empty; else returns nil
+ 
+ @receiver `stack` type{*Stack}
+ @param `testIfEmpty` type{[]*Card}
+ @returns `stack` or nil
+ */
+func (stack *Stack) returnNilIfEmpty(testIfEmpty []*Card) *Stack {
+	if len(testIfEmpty) == 0 {
+		return nil
+	} else {
+		return stack
+	}
+}
+
 /** Sets a set of variables to the variable set passed into a variadic parameter
 
 @param `variadic` type{...[]interface{}}
@@ -72,42 +108,182 @@ func sortIterator(stack *Stack, lambda func(*Card, *Stack, ...interface{}) (ORDE
  @param `findData` type{interface{}}
  @returns the []int of targeted positions
  @constructor creates a new []int
+ @requires
+  * `MakeStack()` and `MakeCard()` have been implemented
+  * Inputted `findData` is of expected type (see documentation on FIND) 
  @ensures
-   IF `findType` is singular
-     return idx/idxs of cards whose field matches `findData` field
-   ELSE IF `findType` is plural
-	 return idx/idxs of cards whose field matches any of `findData` fields
+   IF search finds no cards in `stack`
+     return []int {}
    
    IF `getFirst`
-     return idx
+     return an array of the first found element
    ELSE
-     return idxs
+     return an array of all found elements
  */
 func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface{}, matchByType MATCHBY) (targets []int) {
+
+	/** Returns a bool for whether the matchBy yields a true result */
+	matchByObjectOrReference := func(x1, x2 interface{}) bool {
+		return (matchByType == MATCHBY_Object    &&  x1 ==  x2) ||
+			   (matchByType == MATCHBY_Reference && &x1 == &x2)
+	}
 
 	switch findType {
 
 	case FIND_First:
-		targets = append(targets, 0)
+		if stack.Size > 0 {targets = append(targets, 0)}
 
-		//... and so on
+	case FIND_Last:
+		if stack.Size > 0 {targets = append(targets, stack.Size - 1)}
 
-	case FIND_Keys:
-		keyArr := findData.([]interface{})
-		for i := 0; i < len(keyArr); i++ {
-			for j, c := range stack.Cards {
-				if (matchByType == MATCHBY_Object    &&  keyArr[i] ==  c.Key) ||
-				   (matchByType == MATCHBY_Reference && &keyArr[i] == &c.Key) {
-					targets = append(targets, j)
+	case FIND_Idx:
+		thisIdx := findData.(int)
+		if stack.Size > thisIdx {targets = append(targets, thisIdx)}
+
+	case FIND_Idxs:
+		theseIdxs := findData.([]int)
+		for testI := range stack.Cards {
+			for _, targetI := range theseIdxs {
+				if testI == targetI {
+					targets = append(targets, testI)
 					if getFirst { break }
 				}
 			}
 		}
 
-	//... and so on
+	case FIND_IdxsStack:
+		if getFirst {
+			targets = append(targets, findData.(*Stack).Cards[0].Val.(int))
+		} else {
+			for _, c := range findData.(*Stack).Cards {
+				targets = append(targets, c.Val.(int))
+			}
+		}
+
+	case FIND_Key:
+		for i := range stack.Cards {
+			testKey := stack.Cards[i].Key
+			if matchByObjectOrReference(testKey, findData) {
+				targets = append(targets, i)
+				if getFirst { break }
+			}
+		}
+
+	case FIND_Keys:
+		keyArray := findData.([]interface{})
+		for i := range stack.Cards {
+			testKey := stack.Cards[i].Key
+			for j := range keyArray {
+				targetKey := keyArray[j]
+				if matchByObjectOrReference(testKey, targetKey) {
+					targets = append(targets, i)
+					if getFirst { break }
+				}
+			}
+		}
+
+	case FIND_KeysStack:
+		keyStack := findData.(*Stack)
+		for i := range stack.Cards {
+			testKey := stack.Cards[i].Key
+			for j := range keyStack.Cards {
+				targetKey := keyStack.Cards[j].Val
+				if matchByObjectOrReference(testKey, targetKey) {
+					targets = append(targets, i)
+					if getFirst { break }
+				}
+			}
+		}
+
+	case FIND_Val:
+		for i := range stack.Cards {
+			testVal := stack.Cards[i].Val
+			if matchByObjectOrReference(testVal, findData) {
+				targets = append(targets, i)
+				if getFirst { break }
+			}
+		}
+
+	case FIND_Vals:
+		valArray := findData.([]interface{})
+		for i := range stack.Cards {
+			testVal := stack.Cards[i].Val
+			for j := range valArray {
+				targetVal := valArray[j]
+				if matchByObjectOrReference(testVal, targetVal) {
+					targets = append(targets, i)
+					if getFirst { break }
+				}
+			}
+		}
+
+	case FIND_ValsStack:
+		valStack := findData.(*Stack)
+		for i := range stack.Cards {
+			testVal := stack.Cards[i].Val
+			for j := range valStack.Cards {
+				targetVal := valStack.Cards[j].Val
+				if matchByObjectOrReference(testVal, targetVal) {
+					targets = append(targets, i)
+					if getFirst { break }
+				}
+			}
+		}
+
+	case FIND_Card:
+		for i := range stack.Cards {
+			testCard := stack.Cards[i]
+			if matchByObjectOrReference(testCard, findData.(*Card)) {
+				targets = append(targets, i)
+				if getFirst { break }
+			}
+		}
+
+	case FIND_Cards:
+		cardStack := findData.(*Stack)
+		for i := range stack.Cards {
+			testCard := stack.Cards[i]
+			for j := range cardStack.Cards {
+				targetCard := cardStack.Cards[j]
+				if matchByObjectOrReference(testCard, targetCard) {
+					targets = append(targets, i)
+					if getFirst { break }
+				}
+			}
+		}
+
+	case FIND_CardsStack:
+		cardStack := findData.(*Stack)
+		for i := range stack.Cards {
+			testCard := stack.Cards[i]
+			for j := range cardStack.Cards {
+				targetCard := cardStack.Cards[j].Val
+				if matchByObjectOrReference(testCard, targetCard) {
+					targets = append(targets, i)
+					if getFirst { break }
+				}
+			}
+		}
+
+	case FIND_Slice:
+		slice := findData.([2]int)
+		if stack.Size > 0 && 0 <= slice[0] && 0 <= slice[1] && slice[0] < stack.Size && slice[1] < stack.Size {
+			targets = append(targets, slice[0])
+			if !getFirst {
+				for i := 0; i < slice[1] - slice[0]; {
+					targets = append(targets, i+slice[0])
+					i = ifElse(slice[1] > slice[0], i+1, i-1).(int)
+				}
+			}
+		}
+
+	case FIND_All:
+		for i := range stack.Cards {
+			targets = append(targets, i)
+		}
 
 	case FIND_Lambda:
-		filterStack := stack.Clone()
+		filterStack := stack.Clone() // so that no changes can be made to the original stack from FIND_Lambda functions
 		getIterator(filterStack, findData.(func(*Card, ...interface{}) bool))
 		for i := range filterStack.Cards {
 			targets = append(targets, i)	

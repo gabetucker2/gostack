@@ -10,7 +10,7 @@
  * ...replace maps and arrays, removing the need for pesky index-key-value fetching or translating data between maps and arrays, all the while supporting smooth conversion between stacks and your existing maps and arrays
  * ...offer the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity of 4 nested for-loops in a single line
  * ...allow the user to get and set based on reference or object with ease, preventing the user from having to worry about convoluted pointer/address management
- * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create sorting mechanisms of their own design
+ * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create novel stack mechanisms of their own design
 
  Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish, ***gostack*** took roughly one fifth the amount of lines (merely 10)—[see for yourself!](/tutorials/race.md)
 
@@ -168,9 +168,13 @@
 
 <h1 name = "conventions">CONVENTIONS</h1>
 
- Executing `go run executive/executive.go` in a terminal in the main directory, or executing `go run .` in the executive directory, will run whichever file(s) are called by `executive.go`.
+ <h2>General</h2>
+
+ Executing `go run executive/executive.go` in a terminal in the main directory, or executing `go run .` in the `executive` directory, will run whichever file(s) are being called by `executive.go`.
 
  **Generalized Functions** refer to functions that have a `findType` and `findData` parameter, meaning they perform a search through the stack for upon where to act.
+
+ In ***gostack***, creating an array of cards is considered atrocious and immoral.  There is no functional support for passing arrays of cards as an argument.  Please only create a []\*Card array if it is a temporary variable to which you are assigning `stack.Cards`.  For instance, if you wanted to make your own `stack.Move(...)` function, you would create a temporary []\*Card variable, iteratively append that variable such that it "moves" whatever card(s) you want to move, then assign `stack.Cards` to that variable, never referencing the variable again.
 
  <h2>Naming</h2>
 
@@ -217,13 +221,18 @@
  > * FIND_First *NONE*
  > * FIND_Last *NONE*
  > * FIND_Idx *int*
- > * FIND_Idxs *Stack of ints*
- > * FIND_Val *any*
- > * FIND_Vals *Stack of any*
+ > * FIND_Idxs *ints*
+ > * FIND_IdxsStack *stack whose vals are ints*
  > * FIND_Key *any*
- > * FIND_Keys *Stack of any*
+ > * FIND_Keys *anys*
+ > * FIND_KeysStack *stack whose vals are keys*
+ > * FIND_Val *any*
+ > * FIND_Vals *anys*
+ > * FIND_ValsStack *stack whose vals are vals*
  > * FIND_Card *Card*
- > * FIND_Cards *Stack of Cards*
+ > * FIND_Cards *Stack*
+ > * FIND_CardsStack *stack whose vals are cards*
+ > * FIND_Slice *[2]int*
  > * FIND_All *NONE*
  > * FIND_Lambda *lambda function*
 
@@ -355,31 +364,49 @@
  >>> int
  >>
  >> FIND_Idxs
- >>> Stack of ints
+ >>> []int
  >>
- >> FIND_Val
- >>>  any (interface{})
- >>
- >> FIND_Vals
- >>> Stack of any (interface{})
+ >> FIND_IdxsStack
+ >>> stack where type{stack.card.Val} == int
  >>
  >> FIND_Key
- >>>  any (interface{})
+ >>> any (interface{})
  >>
  >> FIND_Keys
- >>> Stack of  any (interface{})
+ >>> []any ([]interface{})
+ >>
+ >> FIND_KeysStack
+ >>> stack where type{stack.card.Val} == any (interface{})
+ >>
+ >> FIND_Val
+ >>> any (interface{})
+ >>
+ >> FIND_Vals
+ >>> []any ([]interface{})
+ >>
+ >> FIND_ValsStack
+ >>> stack where type{stack.card.Val} == any (interface{})
  >>
  >> FIND_Card
- >>> Card
+ >>> *Card
  >>
  >> FIND_Cards
- >>> Stack of Cards
+ >>> *Stack (input is the cards in this stack)
+ >>
+ >> FIND_CardsStack
+ >>> stack where type{stack.card.Val} == *Card
+ >>
+ >> FIND_Slice
+ >>> [2]int
+ >>>> [startIndex, endIndex]
+ >>>>
+ >>>> *(if endIndex is lower than startIndex, the find will transpire in reverse order)*
  >>
  >> FIND_All
  >>> *NONE*
  >>
  >> FIND_Lambda
- >>> interface{} *lambda function*
+ >>> *lambda function*
 
 <h4 name = "REPLACE">REPLACE</h4>
 

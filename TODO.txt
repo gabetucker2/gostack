@@ -1,18 +1,16 @@
 ---------------------------------------------------------------
 GABE:
-* Implement/abstract ensures if-then style in Move with all functions
-* Add Sort
+* Add show how pass by object can be used for cloning in replace/add/update in example
+* Make Matrix(x, y, z, ..., n) or Table() function
 * Update size trackers
-* Add FIND_Slice to functions and documentation
 * Implement new lambda examples
  - For REPLACE_Lambda
+ - For stack.Sort()
  - For stack.Lambda()
-* Ensure that Add returns nil if invalid FIND type
 * Update race.md and related documentation
  - Fix taskC.replace()
 * Update card.idx whenever it's updated
-* Implement getPositions
-* Implement variadic error-catching function for bad argument conditions (fmt.Errorf())
+* Implement variadic error-catching function for bad argument conditions (fmt.Errorf()) (like if-then style in Move with all functions)
 * Update gostack banner to have code from a tutorial
 
 ---------------------------------------------------------------
@@ -43,7 +41,7 @@ IMPLEMENTED TESTED BROKEN DOCUMENTED FUNCTIONS:
 /
 
 IMPLEMENTED UNTESTED DOCUMENTED FUNCTIONS:
-stack.Has, stack.Move, stack.Extract, stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print, stack.Replace, stack.ExtractMany, stack.ReplaceMany, stack.Remove, stack.RemoveMany, stack.Update, stack.UpdateMany, stack.Lambda, stack.Sort(lambda), MakeStack
+stack.Has, stack.Move, stack.Extract, stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print, stack.Replace, stack.ExtractMany, stack.ReplaceMany, stack.Remove, stack.RemoveMany, stack.Update, stack.UpdateMany, stack.Lambda, stack.Sort, MakeStack
 
 UNIMPLEMENTED PARTIALLY DOCUMENTED FUNCTIONS:
 /

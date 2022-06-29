@@ -1,7 +1,5 @@
 package gostack
 
-import "reflect"
-
 type Card struct {
 	Idx int
 	Key interface{}
@@ -33,12 +31,16 @@ const (
 	FIND_Last
 	FIND_Idx
 	FIND_Idxs
+	FIND_IdxsStack
 	FIND_Key
 	FIND_Keys
+	FIND_KeysStack
 	FIND_Val
 	FIND_Vals
+	FIND_ValsStack
 	FIND_Card
 	FIND_Cards
+	FIND_CardsStack
 	FIND_Slice
 	FIND_All
 	FIND_Lambda
@@ -101,8 +103,4 @@ func setCLONEDefaultIfNil(cloneType interface{}) {
 	if cloneType == nil {
 		cloneType = CLONE_False
 	}
-}
-
-func cloneInterface(toClone interface{}) interface{} {
-	return reflect.New(reflect.ValueOf(toClone).Elem().Type()).Interface()
 }

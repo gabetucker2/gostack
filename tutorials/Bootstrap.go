@@ -16,7 +16,6 @@ func bootstrap_pop(stack *Stack) *Card{
 	return stack.Extract(FIND_First)
 }
 
-
 /** Push a card to the top of the stack of cards
  
  @param `stack` type{Stack}
