@@ -9,12 +9,12 @@ import (
 
 /** Makes a card with inputted vals and keys
 
-@param optional `val` type{any} default nil
-@param optional `key` type{any} default nil
-@param optional `idx` type{int} default -1 no pass-by-reference
-@returns type{*Card} the newly-constructed card
-@constructs type{*Card} a newly-constructed card
-@ensures the new card will have val `val`, key `key`, and idx `idx`
+ @param optional `val` type{any} default nil
+ @param optional `key` type{any} default nil
+ @param optional `idx` type{int} default -1 no pass-by-reference
+ @returns type{*Card} the newly-constructed card
+ @constructs type{*Card} a newly-constructed card
+ @ensures the new card will have val `val`, key `key`, and idx `idx`
 */
 func MakeCard(variadic ...interface{}) *Card {
 
@@ -60,6 +60,8 @@ func MakeCard(variadic ...interface{}) *Card {
             unpack values from `input1` into new cards
           ELSEIF `input1` is an array and `input2` is an array
 		    unpack keys from `input1` and values from `input2` into new cards
+          ELSEIF `input1` is nil and `input2` is an array
+		    unpack keys from `input2`
 	  ELSE
 	    the stack is empty
  */
@@ -118,6 +120,16 @@ func MakeStack(variadic ...interface{}) *Stack {
 					}
 				}
 			}
+		} else {
+
+			// unpack values from `input2` into new card keys
+			for i := 0; i < len(input2.([]interface{})); i++ {
+				stack.Cards = append(
+					stack.Cards,
+					MakeCard(nil, &input2.([]interface{})[i], i),
+				)
+			}
+
 		}
 	}
 
