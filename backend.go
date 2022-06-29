@@ -108,23 +108,23 @@ func getPositions(getFirst bool, stack *Stack, findByType FINDBY, findByData int
 /**
  @param setStack type{*Stack}
  @param replaceType type{REPLACE}
- @param setData type{interface{}}
+ @param replaceData type{interface{}}
  @param target type{*Card}
  @updates `setStack` or `target`
- @ensures if `setData` is nil and `replaceType is REPLACE_Card`, the card will be removed from `stack`
+ @ensures if `replaceData` is nil and `replaceType is REPLACE_Card`, the card will be removed from `stack`
  */
-func updateRespectiveField(setStack *Stack, replaceType REPLACE, setData interface{}, target *Card) {
+func updateRespectiveField(setStack *Stack, replaceType REPLACE, replaceData interface{}, target *Card) {
 
 	switch replaceType {
 
 	case REPLACE_Key:
-		target.Key = setData
+		target.Key = replaceData
 
 	case REPLACE_Val:
-		target.Val = setData
+		target.Val = replaceData
 
 	case REPLACE_Card:
-		if setData == nil {
+		if replaceData == nil {
 			// remove
 			var newCards []*Card
 			for i := range setStack.Cards {
@@ -135,7 +135,7 @@ func updateRespectiveField(setStack *Stack, replaceType REPLACE, setData interfa
 			}
 			setStack.Cards = newCards
 		} else {
-			*target = setData.(Card)
+			*target = replaceData.(Card)
 		}
 
 	case REPLACE_Stack:
@@ -146,7 +146,7 @@ func updateRespectiveField(setStack *Stack, replaceType REPLACE, setData interfa
 			if c != target {
 				newCards = append(newCards, c)
 			} else {
-				cardsIn := setData.(*Stack).Cards
+				cardsIn := replaceData.(*Stack).Cards
 				for j := range cardsIn {
 					newCards = append(newCards, cardsIn[j])
 				}
@@ -155,7 +155,7 @@ func updateRespectiveField(setStack *Stack, replaceType REPLACE, setData interfa
 		setStack.Cards = newCards
 
 	case REPLACE_Lambda:
-		setIterator(setStack, setData.(func(*Card, ...interface{})))
+		setIterator(setStack, replaceData.(func(*Card, ...interface{})))
 
 	}
 

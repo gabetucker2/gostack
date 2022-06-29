@@ -41,10 +41,13 @@ IMPLEMENTED TESTED BROKEN DOCUMENTED FUNCTIONS:
 /
 
 IMPLEMENTED UNTESTED DOCUMENTED FUNCTIONS:
-stack.Extract, stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print, stack.Set, stack.SetMany
+stack.Extract, stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print, stack.Replace, stack.ExtractMany, stack.ReplaceMany, stack.Remove, stack.RemoveMany, stack.Update, stack.UpdateMany
 
 OUTDATED FUNCTIONS:
 MakeStack
 
 UNIMPLEMENTED PARTIALLY DOCUMENTED FUNCTIONS:
-stack.Has, stack.ExtractMany, stack.Move, stack.Update, stack.UpdateMany, stack.Lambda
+stack.Has, stack.Move, stack.Lambda
+
+UNIMPLEMENTED UNDOCUMENTED FUNCTIONS:
+/

@@ -94,17 +94,21 @@
  >>>>
  >>>> [stack.GetMany(...)](#GetMany)
  >>>
- >>>> [stack.Set(...)](#Set)
+ >>>> [stack.Replace(...)](#Replace)
  >>>>
- >>>> [stack.SetMany(...)](#SetMany)
+ >>>> [stack.ReplaceMany(...)](#ReplaceMany)
+ >>>
+ >>>> [stack.Update(...)](#Update)
+ >>>>
+ >>>> [stack.UpdateMany(...)](#UpdateMany)
  >>>
  >>>> [stack.Extract(...)](#Extract)
  >>>>
  >>>> [stack.ExtractMany(...)](#ExtractMany)
  >>>
- >>>> [stack.Replace(...)](#Replace)
+ >>>> [stack.Remove(...)](#Remove)
  >>>>
- >>>> [stack.ReplaceMany(...)](#ReplaceMany)
+ >>>> [stack.RemoveMany(...)](#RemoveMany)
  >>>>
  >>>> [stack.Lambda(...)](#Lambda)
  >
@@ -260,10 +264,14 @@
  * **stack.Has(returnType, findByType, ...findByData, ...matchByType)**
  * **stack.Get(...findByType, ...findByData, ...matchByType, ...clonesType_card, ...clonesType_keys, ...clonesType_vals)**
  * **stack.GetMany(findByType, ...findByData, ...matchByType, ...returnType, ...clonesType, ...clonesType_keys, ...clonesType_vals)**
- * **stack.Set(replaceType, setData, findByType, ...findByData, ...matchByType)**
- * **stack.SetMany(replaceType, setData, findByType, ...findByData, ...matchByType, ...returnType)**
+ * **stack.Replace(replaceType, replaceData, findByType, ...findByData, ...matchByType)**
+ * **stack.ReplaceMany(replaceType, replaceData, findByType, ...findByData, ...matchByType, ...returnType)**
+ * **stack.Update(findByType, ...findByData, ...matchByType)**
+ * **stack.UpdateMany(findByType, ...findByData, ...matchByType)**
  * **stack.Extract(findByType, ...findByData, ...matchByType)**
  * **stack.ExtractMany(findByType, ...findByData, ...matchByType, ...returnType)**
+ * **stack.Remove(findByType, ...findByData, ...matchByType)**
+ * **stack.RemoveMany(findByType, ...findByData, ...matchByType)**
 
 <h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
 
@@ -369,7 +377,7 @@
 
 <h4 name = "REPLACE">REPLACE</h4>
 
- This is an enum intended to make it easy to flexibly decide what to update.
+ This is an enum intended to make it easy to flexibly decide what part of an object to update.  For instance, you could replace a card with a card, replace a card's value with a value, etc, so you are not just limited to replacing cards.
 
  > ***REPLACE***
  >> *_REPLACE_NotationSample*
@@ -656,41 +664,71 @@ Makes a stack of cards with inputted vals and keys
   * CLONE_True for `clonesType_vals` means the cards in the returned stack vals are clones
  ```
  
-<h3 name = "Set">Set</h3>
+<h3 name = "Replace">Replace</h3>
  
- `stack.Set(replaceType, setData, findByType, ...findByData, ...matchByType)`
+ `stack.Replace(replaceType, replaceData, findByType, ...findByData, ...matchByType)`
  ```
- Returns a clone of a found card before its respective field is updated to `setData` (OR nil if not found)
+ Returns a clone of a found card before its respective field is updated to `replaceData` (OR nil if not found)
  
  @receiver `stack` type{Stack}
  @param `replaceType` type{REPLACE}
- @param `setData` type{interface{}}
+ @param `replaceData` type{interface{}}
  @param `findByType` type{FINDBY}
  @param optional `findByData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns type{*Card} a clone of extracted card OR nil if found no cards
- @updates first found card to `setData`
+ @updates first found card to `replaceData`
  @requires `stack.Get()` has been implemented
- @ensures if `setData` is nil and `replaceType is REPLACE_Card`, the card will be removed from `stack`
+ @ensures if `replaceData` is nil and `replaceType is REPLACE_Card`, the card will be removed from `stack`
  ```
  
-<h3 name = "SetMany">SetMany</h3>
+<h3 name = "ReplaceMany">ReplaceMany</h3>
  
- `stack.Set(replaceType, setData, findByType, ...findByData, ...matchByType)`
+ `stack.Replace(replaceType, replaceData, findByType, ...findByData, ...matchByType)`
  ```
-  Returns a stack whose values are clones of the original fields updated to `setData`
+  Returns a stack whose values are clones of the original fields updated to `replaceData`
  
  @receiver `stack` type{Stack}
  @param `replaceType` type{REPLACE}
- @param `setData` type{interface{}}
+ @param `replaceData` type{interface{}}
  @param `findByType` type{FINDBY}
  @param optional `findByData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `returnType` type{RETURN} default RETURN_Cards
  @returns type{*Stack} a stack whose values are the extracted cards pre-update
- @updates all found cards to `setData`
+ @updates all found cards to `replaceData`
  @requires `stack.GetMany()` has been implemented
- @ensures if `setData` is nil and `replaceType is REPLACE_Card`, the cards found will be removed from `stack`
+ @ensures if `replaceData` is nil and `replaceType is REPLACE_Card`, the cards found will be removed from `stack`
+ ```
+ 
+<h3 name = "Update">Extract</h3>
+ 
+ `stack.Update(findByType, ...findByData, ...matchByType)`
+ ```
+ Updates a card in and returns `stack`
+ 
+ @receiver `stack` type{Stack}
+ @param `findByType` type{FINDBY}
+ @param optional `findByData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @returns `stack`
+ @updates the found card in `stack`
+ @requires `stack.Replace()` has been implemented
+ ```
+ 
+<h3 name = "UpdateMany">UpdateMany</h3>
+ 
+ `stack.UpdateMany(findByType, ...findByData, ...matchByType)`
+ ```
+ Updates cards in and returns `stack`
+ 
+ @receiver `stack` type{Stack}
+ @param `findByType` type{FINDBY}
+ @param optional `findByData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @returns `stack`
+ @updates  the found cards in `stack`
+ @requires `stack.ReplaceMany()` has been implemented
  ```
  
 <h3 name = "Extract">Extract</h3>
@@ -705,6 +743,52 @@ Makes a stack of cards with inputted vals and keys
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns type{*Card} the extracted card OR nil if invalid FINDBY
  @updates `stack` to no longer have found card
+ ```
+ 
+<h3 name = "ExtractMany">ExtractMany</h3>
+ 
+ `stack.ExtractMany(findByType, ...findByData, ...matchByType, ...returnType)`
+ ```
+ Gets and removes a set of cards from `stack`
+ 
+ @receiver `stack` type{Stack}
+ @param `findByType` type{FINDBY}
+ @param optional `findByData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `returnType` type{RETURN} default RETURN_Cards
+ @returns type{*Stack} the extracted card OR nil if invalid FINDBY
+ @updates `stack` to no longer have found cards
+ @requires `stack.ReplaceMany()` has been implemented
+ ```
+ 
+<h3 name = "Remove">Remove</h3>
+ 
+ `stack.Remove(findByType, ...findByData, ...matchByType)`
+ ```
+ Removes a card from and returns `stack`
+ 
+ @receiver `stack` type{Stack}
+ @param `findByType` type{FINDBY}
+ @param optional `findByData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @returns `stack`
+ @updates `stack` to no longer have found card
+ @requires `stack.Replace()` has been implemented
+ ```
+ 
+<h3 name = "RemoveMany">RemoveMany</h3>
+ 
+ `stack.RemoveMany(findByType, ...findByData, ...matchByType)`
+ ```
+ Removes a set of cards from and returns `stack`
+ 
+ @receiver `stack` type{Stack}
+ @param `findByType` type{FINDBY}
+ @param optional `findByData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @returns `stack`
+ @updates `stack` to no longer have found cards
+ @requires `stack.ReplaceMany()` has been implemented
  ```
  
 <h2 name = "futureUpdates">Future Updates</h2>
