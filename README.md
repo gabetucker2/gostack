@@ -52,11 +52,15 @@
  >>>>
  >>>>> [FINDBY](#FINDBY)
  >>>>
+ >>>>> [REPLACE](#REPLACE)
+ >>>>
  >>>>> [TYPE](#TYPE)
  >>>>
  >>>>> [ORDER](#ORDER)
  >>>>
  >>>>> [MATCHBY](#MATCHBY)
+ >>>>
+ >>>>> [CLONE](#CLONE)
  >>>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
  >>>> [MakeCard(...)](#MakeCard)
@@ -90,6 +94,10 @@
  >>>>
  >>>> [stack.GetMany(...)](#GetMany)
  >>>
+ >>>> [stack.Set(...)](#Set)
+ >>>>
+ >>>> [stack.SetMany(...)](#SetMany)
+ >>>
  >>>> [stack.Extract(...)](#Extract)
  >>>>
  >>>> [stack.ExtractMany(...)](#ExtractMany)
@@ -97,6 +105,8 @@
  >>>> [stack.Replace(...)](#Replace)
  >>>>
  >>>> [stack.ReplaceMany(...)](#ReplaceMany)
+ >>>>
+ >>>> [stack.Lambda(...)](#Lambda)
  >
  >> [Future Updates](#futureUpdates)
  >
@@ -209,6 +219,14 @@
  > * FINDBY_All *NONE*
  > * FINDBY_Lambda *lambda function*
 
+ > **REPLACE**
+ > * _REPLACE_NotationSample *setByData argument type*
+ > * REPLACE_Key *interface{}*
+ > * REPLACE_Val *interface{}*
+ > * REPLACE_Card *Card*
+ > * REPLACE_Stack *Stack*
+ > * REPLACE_Lambda *lambda function*
+
  > **TYPE**
  > * TYPE_Key
  > * TYPE_Val
@@ -240,12 +258,12 @@
  * **stack.Add(insert, ...orderType, ...findByType, ...findByData, ...matchByType)**
  * **stack.Move(findByType, ...findByData)**
  * **stack.Has(returnType, findByType, ...findByData, ...matchByType)**
- * **stack.Get(...findByType, ...findByData, ...matchByType)**
- * **stack.GetMany(...findByType, ...findByData, ...returnType, ...matchByType)**
+ * **stack.Get(...findByType, ...findByData, ...matchByType, ...clonesType_card, ...clonesType_keys, ...clonesType_vals)**
+ * **stack.GetMany(findByType, ...findByData, ...matchByType, ...returnType, ...clonesType, ...clonesType_keys, ...clonesType_vals)**
+ * **stack.Set(replaceType, setData, findByType, ...findByData, ...matchByType)**
+ * **stack.SetMany(replaceType, setData, findByType, ...findByData, ...matchByType, ...returnType)**
  * **stack.Extract(findByType, ...findByData, ...matchByType)**
- * **stack.ExtractMany(findByType, ...findByData, ...returnType, ...matchByType)**
- * **stack.Replace(insert, findByType, ...findByData, ...matchByType)**
- * **stack.ReplaceMany(insert, findByType, ...findByData, ...returnType, ...matchByType)**
+ * **stack.ExtractMany(findByType, ...findByData, ...matchByType, ...returnType)**
 
 <h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
 
@@ -348,6 +366,30 @@
  >>
  >> FINDBY_Lambda
  >>> interface{} *lambda function*
+
+<h4 name = "REPLACE">REPLACE</h4>
+
+ This is an enum intended to make it easy to flexibly decide what to update.
+
+ > ***REPLACE***
+ >> *_REPLACE_NotationSample*
+ >>> *The type of the variable (called `data`) that needs to be passed into the function utilizing this constant*
+ >>
+ >> REPLACE_Key
+ >>> *interface{}*
+ >>
+ >> REPLACE_Val
+ >>> *interface{}*
+ >>
+ >> REPLACE_Card
+ >>> *Card*
+ >>
+ >> REPLACE_Stack
+ >>> *Stack*
+ >>>> replaces a card with each card in a stack of cards
+ >>
+ >> REPLACE_Lambda
+ >>> interface{} *lambda function*
  
 <h4 name = "TYPE">TYPE</h4>
 
@@ -383,6 +425,16 @@
  >>> default
  >>
  >> MATCHBY_Reference
+
+<h4 name = "CLONE">CLONE</h4>
+
+ This is an enum intended to make it possible to tell the function whether to return a clone of an object or a pointer of an object.
+
+ > ***MATCHBY***
+ >> CLONE_True
+ >>
+ >> CLONE_False
+ >>> default
 
 <h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>
 
@@ -561,7 +613,7 @@ Makes a stack of cards with inputted vals and keys
  
 <h3 name = "Get">Get</h3>
  
- `stack.Get(...findByType, ...findByData, ...matchByType)`
+ `stack.Get(...findByType, ...findByData, ...matchByType, ...clonesType_card, ...clonesType_keys, ...clonesType_vals)`
  ```
  Gets a card from specified parameters in a stack, or nil if does not exist
 
@@ -569,41 +621,81 @@ Makes a stack of cards with inputted vals and keys
  @param optional `findByType` type{FINDBY} default FINDBY_First
  @param optional `findByData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
- @returns type{*Card} the found card OR nil
+ @param optional `clonesType_card` type{CLONES} default CLONE_FALSE
+ @param optional `clonesType_keys` type{CLONES} default CLONE_FALSE
+ @param optional `clonesType_vals` type{CLONES} default CLONE_FALSE
+ @returns type{*Card} the found card OR nil if invalid FINDBY
+ @ensures
+  * CLONE_True for `clonesType_card` means the returned card object itself is a clone
+  * CLONE_True for `clonesType_key` means the returned card key is a clone
+  * CLONE_True for `clonesType_val` means the returned card val is a clone
  ```
  
 <h3 name = "GetMany">GetMany</h3>
  
- `stack.GetMany(findByType, ...findByData, ...returnType, ...matchByType)`
+ `stack.GetMany(findByType, ...findByData, ...matchByType, ...returnType, ...clonesType, ...clonesType_keys, ...clonesType_vals)`
  ```
  Gets a stack from specified parameters in a stack
  
  @receiver `stack` type{Stack}
  @param `findByType` type{FINDBY}
  @param optional `findByData` type{interface{}} default nil
- @param optional `returnType` type{RETURN} default RETURN_Cards
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `returnType` type{RETURN} default RETURN_Cards
+ @param optional `clonesType` type{CLONES} default CLONE_FALSE
+ @param optional `clonesType_keys` type{CLONES} default CLONE_FALSE
+ @param optional `clonesType_vals` type{CLONES} default CLONE_FALSE
  @returns type{*Stack} the new stack
  @constructs type{*Stack} new stack of specified values from specified cards in `stack`
+ @requires
+  * `MakeStack()` has been implemented
+  * `clonesType_keys` and `clonesType_vals` are only passed if `returnType` == RETURN_Cards
+ @ensures
+  * CLONE_True means the vals of cards in the returned stack are not the original object that was gotten
+  * CLONE_True for `clonesType_keys` means the cards in the returned stack keys are clones
+  * CLONE_True for `clonesType_vals` means the cards in the returned stack vals are clones
+ ```
+ 
+<h3 name = "Set">Set</h3>
+ 
+ `stack.Set(replaceType, setData, findByType, ...findByData, ...matchByType)`
+ ```
+ Returns a clone of a found card before its respective field is updated to `setData` (OR nil if not found)
+ 
+ @receiver `stack` type{Stack}
+ @param `replaceType` type{REPLACE}
+ @param `setData` type{interface{}}
+ @param `findByType` type{FINDBY}
+ @param optional `findByData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @returns type{*Card} a clone of extracted card OR nil if found no cards
+ @updates first found card to `setData`
+ @requires `stack.Get()` has been implemented
+ @ensures if `setData` is nil and `replaceType is REPLACE_Card`, the card will be removed from `stack`
+ ```
+ 
+<h3 name = "SetMany">SetMany</h3>
+ 
+ `stack.Set(replaceType, setData, findByType, ...findByData, ...matchByType)`
+ ```
+  Returns a stack whose values are clones of the original fields updated to `setData`
+ 
+ @receiver `stack` type{Stack}
+ @param `replaceType` type{REPLACE}
+ @param `setData` type{interface{}}
+ @param `findByType` type{FINDBY}
+ @param optional `findByData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `returnType` type{RETURN} default RETURN_Cards
+ @returns type{*Stack} a stack whose values are the extracted cards pre-update
+ @updates all found cards to `setData`
+ @requires `stack.GetMany()` has been implemented
+ @ensures if `setData` is nil and `replaceType is REPLACE_Card`, the cards found will be removed from `stack`
  ```
  
 <h3 name = "Extract">Extract</h3>
  
  `stack.Extract(findByType, ...findByData, ...matchByType)`
- ```
- Gets and removes a card from `stack`, or returns nil if it does not exist
- 
- @receiver `stack` type{Stack}
- @param `findByType` type{FINDBY}
- @param optional `findByData` type{interface{}} default nil
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
- @returns type{*Card} the extracted card OR nil if invalid FINDBY
- @updates `stack` to no longer have found card
- ```
- 
-<h3 name = "Replace">Replace</h3>
- 
- `stack.Replace(findByType, ...findByData, ...matchByType)`
  ```
  Gets and removes a card from `stack`, or returns nil if it does not exist
  

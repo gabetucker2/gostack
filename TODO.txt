@@ -1,5 +1,9 @@
 ---------------------------------------------------------------
 GABE:
+* Delete old replace and rename REPLACE stuff to Replace
+* Implement new lambda examples
+ - For REPLACE_Lambda
+ - For stack.Lambda()
 * Ensure that Add returns nil if invalid FINDBY type
 * Add POSITION_Slice
 * Update race.md and related documentation
@@ -37,10 +41,10 @@ IMPLEMENTED TESTED BROKEN DOCUMENTED FUNCTIONS:
 /
 
 IMPLEMENTED UNTESTED DOCUMENTED FUNCTIONS:
-stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print
+stack.Extract, stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print, stack.Set, stack.SetMany
 
 OUTDATED FUNCTIONS:
 MakeStack
 
 UNIMPLEMENTED PARTIALLY DOCUMENTED FUNCTIONS:
-stack.Extract, stack.Replace, stack.Has, stack.ExtractMany, stack.ReplaceMany, stack.Move
+stack.Has, stack.ExtractMany, stack.Move, stack.Update, stack.UpdateMany, stack.Lambda

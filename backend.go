@@ -23,15 +23,30 @@ func unpackVariadic(variadic []interface{}, into ...*interface{}) {
  @param `lambda` type{func(*Stack, *Card) bool}
  @returns `stack`
  @updates `stack.Cards` to a new set of Cards filtered using `lambda`
+ @ensures each card in `stack.Cards` will not be affected by lambda updates
  */
-func iterator(stack *Stack, lambda func(*Card, ...interface{}) bool) {
+func getIterator(stack *Stack, lambda func(*Card, ...interface{}) bool) {
 	var filteredCards []*Card
-	for _, card := range stack.Cards {
-		if lambda(card, stack) {
+	for i := range stack.Cards {
+		card := stack.Cards[i]
+		if lambda(card.Clone(), stack) {
 			filteredCards = append(filteredCards, card)
 		}
 	}
 	stack.Cards = filteredCards
+}
+
+/** Passes each card into the lambda function iteratively
+ 
+ @param `stack` type{Stack}
+ @param `lambda` type{func(*Stack, *Card)}
+ @updates `stack.Cards` to whatever the `lambda` function specifies
+ */
+func setIterator(stack *Stack, lambda func(*Card, ...interface{})) {
+	for i := range stack.Cards {
+		// use the original iterator so that card can be updated by the lambda expression
+		lambda(stack.Cards[i], stack)
+	}
 }
 
 /** Returns an []int of indices representing the targeted position(s) in a stack
@@ -78,7 +93,7 @@ func getPositions(getFirst bool, stack *Stack, findByType FINDBY, findByData int
 
 	case FINDBY_Lambda:
 		filterStack := stack.Clone()
-		iterator(filterStack, findByData.(func(*Card, ...interface{}) bool))
+		getIterator(filterStack, findByData.(func(*Card, ...interface{}) bool))
 		for i := range filterStack.Cards {
 			targets = append(targets, i)	
 			if getFirst { break }
@@ -90,28 +105,57 @@ func getPositions(getFirst bool, stack *Stack, findByType FINDBY, findByData int
 
 }
 
-/** Returns a new card `newCard` whose value is the specified field of `oldCard` specified by `returnType`
- 
- @param `newCard` type{Card}
- @param `oldCard` type{Card}
- @param `returnType` type{RETURN}
- @updates the `newCard` value to `oldCard` field defined by `returnType`
+/**
+ @param setStack type{*Stack}
+ @param replaceType type{REPLACE}
+ @param setData type{interface{}}
+ @param target type{*Card}
+ @updates `setStack` or `target`
+ @ensures if `setData` is nil and `replaceType is REPLACE_Card`, the card will be removed from `stack`
  */
-func setCardVal(newCard *Card, oldCard *Card, returnType RETURN) {
+func updateRespectiveField(setStack *Stack, replaceType REPLACE, setData interface{}, target *Card) {
 
-	switch returnType {
+	switch replaceType {
 
-	case RETURN_Idxs:
-		newCard.Val = oldCard.Idx
+	case REPLACE_Key:
+		target.Key = setData
 
-	case RETURN_Keys:
-		newCard.Val = oldCard.Key
+	case REPLACE_Val:
+		target.Val = setData
 
-	case RETURN_Vals:
-		newCard.Val = oldCard.Val
+	case REPLACE_Card:
+		if setData == nil {
+			// remove
+			var newCards []*Card
+			for i := range setStack.Cards {
+				c := setStack.Cards[i]
+				if c != target {
+					newCards = append(newCards, c)
+				}
+			}
+			setStack.Cards = newCards
+		} else {
+			*target = setData.(Card)
+		}
 
-	case RETURN_Cards:
-		newCard.Val = *oldCard
+	case REPLACE_Stack:
+		// replace with new set of cards
+		var newCards []*Card
+		for i := range setStack.Cards {
+			c := setStack.Cards[i]
+			if c != target {
+				newCards = append(newCards, c)
+			} else {
+				cardsIn := setData.(*Stack).Cards
+				for j := range cardsIn {
+					newCards = append(newCards, cardsIn[j])
+				}
+			}
+		}
+		setStack.Cards = newCards
+
+	case REPLACE_Lambda:
+		setIterator(setStack, setData.(func(*Card, ...interface{})))
 
 	}
 

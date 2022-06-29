@@ -22,8 +22,7 @@ func MakeCard(variadic ...interface{}) *Card {
 	var Val, Key, Idx interface{}
 	unpackVariadic(variadic, &Val, &Key, &Idx)
 
-	// TODO: Andy changes here
-
+	// set default Idx to -1
 	var newIdx int
 	if Idx == nil { newIdx = -1 } else { newIdx = Idx.(int) }
 
@@ -51,7 +50,7 @@ func MakeCard(variadic ...interface{}) *Card {
 	  OR `input1` is an array and `input2` is an array
   * IF `input1` and `input2` are both passed as arguments
       |`input1`| == |`input2`|
-  * MakeCard() has been implemented
+  * `MakeCard()` has been implemented
  @ensures
   * `repeats` (or, if nil or under 0, 1) amount of times
       IF `input1` is passed
@@ -328,7 +327,7 @@ func (card *Card) Print() {
  
  @receiver `stack` type{Stack}
  @updates terminal logs
- @requires card.Print() has been implemented
+ @requires `card.Print()` has been implemented
  */
 func (stack *Stack) Print() {
 
@@ -428,22 +427,42 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
  @param optional `findByType` type{FINDBY} default FINDBY_First
  @param optional `findByData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `clonesType_card` type{CLONES} default CLONE_False
+ @param optional `clonesType_keys` type{CLONES} default CLONE_False
+ @param optional `clonesType_vals` type{CLONES} default CLONE_False
  @returns type{*Card} the found card OR nil if invalid FINDBY
+ @ensures
+  * CLONE_True for `clonesType_card` means the returned card object itself is a clone
+  * CLONE_True for `clonesType_key` means the returned card key is a clone
+  * CLONE_True for `clonesType_val` means the returned card val is a clone
  */
 func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
 
 	// unpack variadic into optional parameters
-	var findByType, findByData, matchByType interface{}
+	var findByType, findByData, matchByType, clonesType_card, clonesType_key, clonesType_val interface{}
 	unpackVariadic(variadic, &findByType, &findByData, &matchByType)
 
 	// set types to default values
 	setFINDBYDefaultIfNil(&findByType)
 	setMATCHBYDefaultIfNil(&matchByType)
+	setCLONEDefaultIfNil(&clonesType_card)
+	setCLONEDefaultIfNil(&clonesType_key)
+	setCLONEDefaultIfNil(&clonesType_val)
 
 	// get targeted card OR nil
 	targets := getPositions(true, stack, findByType.(FINDBY), findByData, matchByType.(MATCHBY))
 	if len(targets) > 0 {
 		ret = stack.Cards[targets[0]]
+		// clone if necessary
+		if clonesType_card == CLONE_True {
+			ret = ret.Clone()
+		}
+		if clonesType_key == CLONE_True {
+			ret.Key = cloneInterface(ret.Key)
+		}
+		if clonesType_val == CLONE_True {
+			ret.Val = cloneInterface(ret.Val)
+		}
 	} else {
 		ret = nil
 	}
@@ -458,20 +477,33 @@ func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
  @receiver `stack` type{Stack}
  @param `findByType` type{FINDBY}
  @param optional `findByData` type{interface{}} default nil
- @param optional `returnType` type{RETURN} default RETURN_Cards
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `returnType` type{RETURN} default RETURN_Cards
+ @param optional `clonesType` type{CLONES} default CLONE_False
+ @param optional `clonesType_keys` type{CLONES} default CLONE_False
+ @param optional `clonesType_vals` type{CLONES} default CLONE_False
  @returns type{*Stack} the new stack
  @constructs type{*Stack} new stack of specified values from specified cards in `stack`
+ @requires
+  * `MakeStack()` has been implemented
+  * `clonesType_keys` and `clonesType_vals` are only passed if `returnType` == RETURN_Cards
+ @ensures
+  * CLONE_True means the vals of cards in the returned stack are not the original object that was gotten
+  * CLONE_True for `clonesType_keys` means the cards in the returned stack keys are clones
+  * CLONE_True for `clonesType_vals` means the cards in the returned stack vals are clones
  */
 func (stack *Stack) GetMany(findByType FINDBY, variadic ...interface{}) *Stack {
 
 	// unpack variadic into optional parameters
-	var findByData, returnType, matchByType interface{}
-	unpackVariadic(variadic, &findByData, &returnType, &matchByType)
+	var findByData, matchByType, returnType, clonesType, clonesType_keys, clonesType_vals interface{}
+	unpackVariadic(variadic, &findByData, &matchByType, &returnType, &clonesType, &clonesType_keys, &clonesType_vals)
 
 	// set types to default values
-	setRETURNDefaultIfNil(&returnType)
 	setMATCHBYDefaultIfNil(&matchByType)
+	setRETURNDefaultIfNil(&returnType)
+	setCLONEDefaultIfNil(&clonesType)
+	setCLONEDefaultIfNil(&clonesType_keys)
+	setCLONEDefaultIfNil(&clonesType_vals)
 
 	// create new stack which returns the searched-for cards
 	newStack := MakeStack()
@@ -483,7 +515,36 @@ func (stack *Stack) GetMany(findByType FINDBY, variadic ...interface{}) *Stack {
 	for _, i := range targets {
 
 		newCard := new(Card)
-		setCardVal(&newCard, &stack.Cards[i], returnType.(RETURN))
+		oldCard := stack.Cards[i]
+
+		switch returnType {
+	
+		case RETURN_Idxs:
+			newCard.Val = oldCard.Idx
+	
+		case RETURN_Keys:
+			newCard.Val = oldCard.Key
+	
+		case RETURN_Vals:
+			newCard.Val = oldCard.Val
+	
+		case RETURN_Cards:
+			newCard.Val = *oldCard
+	
+		}
+
+		// clone if necessary
+		if clonesType == CLONE_True {
+			newCard.Val = cloneInterface(newCard.Val)
+		}
+		if returnType == RETURN_Cards {
+			if clonesType_keys == CLONE_True {
+				newCard.Val.(*Card).Key = cloneInterface(newCard.Key)
+			}
+			if clonesType_vals == CLONE_True {
+				newCard.Val.(*Card).Val = cloneInterface(newCard.Val)
+			}
+		}
 
 		newStack.Cards = append(newStack.Cards, newCard)
 
@@ -494,7 +555,85 @@ func (stack *Stack) GetMany(findByType FINDBY, variadic ...interface{}) *Stack {
 
 }
 
-/** Gets and removes a card from `stack`, or returns nil if it does not exist
+/** Returns a clone of a found card before its respective field is updated to `setData` (OR nil if not found)
+ 
+ @receiver `stack` type{Stack}
+ @param `replaceType` type{REPLACE}
+ @param `setData` type{interface{}}
+ @param `findByType` type{FINDBY}
+ @param optional `findByData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @returns type{*Card} a clone of extracted card OR nil if found no cards
+ @updates first found card to `setData`
+ @requires `stack.Get()` has been implemented
+ @ensures if `setData` is nil and `replaceType is REPLACE_Card`, the card will be removed from `stack`
+ */
+func (stack *Stack) Set(replaceType REPLACE, setData interface{}, findByType FINDBY, variadic ...interface{}) (ret *Card) {
+
+	// unpack variadic into optional parameters
+	var findByData, matchByType interface{}
+	unpackVariadic(variadic, &findByData, &matchByType)
+
+	// set types to default values
+	setMATCHBYDefaultIfNil(&matchByType)
+
+	// get deep copy of targeted card OR nil
+	ret = stack.Get(findByType, findByData, matchByType, CLONE_True, CLONE_True, CLONE_True)
+	// target is reference to card OR nil
+	target := stack.Get(findByType, findByData, matchByType)
+
+	// set targeted card field to setData if was found (updateRespectiveField fulfills our ensures clause)
+	if target != nil {
+		updateRespectiveField(stack, replaceType, setData, target)
+	}
+
+	// return
+	return
+
+}
+
+/** Returns a stack whose values are clones of the original fields updated to `setData`
+ 
+ @receiver `stack` type{Stack}
+ @param `replaceType` type{REPLACE}
+ @param `setData` type{interface{}}
+ @param `findByType` type{FINDBY}
+ @param optional `findByData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `returnType` type{RETURN} default RETURN_Cards
+ @returns type{*Stack} a stack whose values are the extracted cards pre-update
+ @updates all found cards to `setData`
+ @requires `stack.GetMany()` has been implemented
+ @ensures if `setData` is nil and `replaceType is REPLACE_Card`, the cards found will be removed from `stack`
+ */
+func (stack *Stack) SetMany(replaceType REPLACE, setData interface{}, findByType FINDBY, variadic ...interface{}) (ret *Stack) {
+
+	// unpack variadic into optional parameters
+	var findByData, matchByType, returnType interface{}
+	unpackVariadic(variadic, &findByData, &matchByType, &returnType)
+
+	// set types to default values
+	setMATCHBYDefaultIfNil(&matchByType)
+	setRETURNDefaultIfNil(&returnType)
+
+	// get deep copy of targeted cards to return
+	ret = stack.GetMany(findByType, findByData, matchByType, returnType, CLONE_True, CLONE_True, CLONE_True)
+	// target is reference to cards OR nil
+	target := stack.GetMany(findByType, findByData, matchByType, returnType)
+
+	// set targeted cards' fields to setData if was found (updateRespectiveField fulfills our ensures clause)
+	if target != nil {
+		for i := range target.Cards {
+			updateRespectiveField(stack, replaceType, setData, target.Cards[i])
+		}
+	}
+
+	// return
+	return
+
+}
+
+/** Gets and removes a card from `stack`, or returns nil if does not exist
  
  @receiver `stack` type{Stack}
  @param `findByType` type{FINDBY}
@@ -502,6 +641,7 @@ func (stack *Stack) GetMany(findByType FINDBY, variadic ...interface{}) *Stack {
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns type{*Card} the extracted card OR nil if invalid FINDBY
  @updates `stack` to no longer have found card
+ @requires `stack.Set()` has been implemented
  */
 func (stack *Stack) Extract(findByType FINDBY, variadic ...interface{}) (ret *Card) {
 
@@ -509,55 +649,7 @@ func (stack *Stack) Extract(findByType FINDBY, variadic ...interface{}) (ret *Ca
 	var findByData, matchByType interface{}
 	unpackVariadic(variadic, &findByData, &matchByType)
 
-	// set types to default values
-	setMATCHBYDefaultIfNil(&matchByType)
-
-	// new card set
-	var newCards []*Card
-
-	// get targeted card OR nil
-	ret = stack.Get(findByType, findByData, matchByType)
-
-	// remove targeted card if was found
-	if ret != nil {
-		for i := range stack.Cards {
-			c := stack.Cards[c]
-			if c != ret {
-				newCards = append(newCards, c)
-			}
-		}
-	}
-
-	// update
-	stack.Cards = newCards
-
-	// return
-	return
-
-}
-
-//
-func (stack *Stack) Replace(insert interface{}, findByType FINDBY, variadic ...interface{}) *Card {
-
-	// unpack variadic into optional parameters
-	var findByData, matchByType interface{}
-	unpackVariadic(variadic, &findByData, &matchByType)
-
-	// set types to default values
-	setMATCHBYDefaultIfNil(&matchByType)
-
-	// new card set
-	var newCards []*Card
-
-	// remove
-	removedCards := 
-
-	// add
-
-	// update
-	stack.Cards = newCards
-
-	// return
-	return removedCards
+	// return the original value
+	return stack.Set(REPLACE_Card, nil, findByType, findByData, matchByType)
 
 }

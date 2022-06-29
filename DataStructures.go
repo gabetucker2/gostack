@@ -1,5 +1,7 @@
 package gostack
 
+import "reflect"
+
 type Card struct {
 	Idx int
 	Key interface{}
@@ -13,9 +15,11 @@ type Stack struct {
 
 type RETURN int
 type FINDBY int
+type REPLACE int
 type TYPE int
 type ORDER int
 type MATCHBY int
+type CLONE int
 
 const (
 	RETURN_Idxs RETURN = iota
@@ -40,6 +44,14 @@ const (
 )
 
 const (
+	REPLACE_Key REPLACE = iota
+	REPLACE_Val
+	REPLACE_Card
+	REPLACE_Stack
+	REPLACE_Lambda
+)
+
+const (
 	TYPE_Key TYPE = iota
 	TYPE_Val
 	TYPE_Card
@@ -53,6 +65,11 @@ const (
 const (
 	MATCHBY_Object MATCHBY = iota
 	MATCHBY_Reference
+)
+
+const (
+	CLONE_True CLONE = iota
+	CLONE_False
 )
 
 func setRETURNDefaultIfNil(returnType interface{}) {
@@ -77,4 +94,14 @@ func setMATCHBYDefaultIfNil(matchByType interface{}) {
 	if matchByType == nil {
 		matchByType = MATCHBY_Object
 	}
+}
+
+func setCLONEDefaultIfNil(cloneType interface{}) {
+	if cloneType == nil {
+		cloneType = CLONE_False
+	}
+}
+
+func cloneInterface(toClone interface{}) interface{} {
+	return reflect.New(reflect.ValueOf(toClone).Elem().Type()).Interface()
 }
