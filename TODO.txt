@@ -1,6 +1,8 @@
 ---------------------------------------------------------------
 GABE:
 * Implement/abstract ensures if-then style in Move with all functions
+* Add Sort
+* Update size trackers
 * Add FIND_Slice to functions and documentation
 * Implement new lambda examples
  - For REPLACE_Lambda
@@ -17,6 +19,7 @@ GABE:
 
 ---------------------------------------------------------------
 ANDY:
+* Add IsEmpty() function (just stack.Has()) to bootstrap, update push and pop in bootstrap (should just be the same as add and extract)
 * Create new Get/GetMany tutorial
 * Implement case tests for functions listed in IMPLEMENTED UNTESTED DOCUMENTED FUNCTIONS list below (make sure to implement them in order)
  - See unaddedcases.txt for reference
@@ -42,13 +45,13 @@ IMPLEMENTED TESTED BROKEN DOCUMENTED FUNCTIONS:
 /
 
 IMPLEMENTED UNTESTED DOCUMENTED FUNCTIONS:
-stack.Extract, stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print, stack.Replace, stack.ExtractMany, stack.ReplaceMany, stack.Remove, stack.RemoveMany, stack.Update, stack.UpdateMany
+stack.Has, stack.Move, stack.Extract, stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print, stack.Replace, stack.ExtractMany, stack.ReplaceMany, stack.Remove, stack.RemoveMany, stack.Update, stack.UpdateMany, stack.Lambda, stack.Sort(lambda)
 
 OUTDATED FUNCTIONS:
 MakeStack
 
 UNIMPLEMENTED PARTIALLY DOCUMENTED FUNCTIONS:
-stack.Has, stack.Move, stack.Lambda
+/
 
 UNIMPLEMENTED UNDOCUMENTED FUNCTIONS:
-stack.Sort(lambda)
+/

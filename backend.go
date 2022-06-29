@@ -20,7 +20,7 @@ func unpackVariadic(variadic []interface{}, into ...*interface{}) {
 /** Removes the cards from a stack for which lambda(card) is false
  
  @param `stack` type{Stack}
- @param `lambda` type{func(*Stack, *Card) bool}
+ @param `lambda` type{func(*Card, workingMemory) bool}
  @returns `stack`
  @updates `stack.Cards` to a new set of Cards filtered using `lambda`
  @ensures each card in `stack.Cards` will not be affected by lambda updates
@@ -29,7 +29,7 @@ func getIterator(stack *Stack, lambda func(*Card, ...interface{}) bool) {
 	var filteredCards []*Card
 	for i := range stack.Cards {
 		card := stack.Cards[i]
-		if lambda(card.Clone(), stack) {
+		if lambda(card.Clone(), stack) { // use a clone card
 			filteredCards = append(filteredCards, card)
 		}
 	}
@@ -39,13 +39,28 @@ func getIterator(stack *Stack, lambda func(*Card, ...interface{}) bool) {
 /** Passes each card into the lambda function iteratively
  
  @param `stack` type{Stack}
- @param `lambda` type{func(*Stack, *Card)}
+ @param `lambda` type{func(*Card, ...workingMemory)}
  @updates `stack.Cards` to whatever the `lambda` function specifies
  */
-func setIterator(stack *Stack, lambda func(*Card, ...interface{})) {
+func generalIterator(stack *Stack, lambda func(*Card, ...interface{})) {
 	for i := range stack.Cards {
-		// use the original iterator so that card can be updated by the lambda expression
+		// use the card object so that card can be updated by the lambda expression
 		lambda(stack.Cards[i], stack)
+	}
+}
+
+/** Passes each card into the lambda function iteratively
+ 
+ @param `stack` type{Stack}
+ @param `lambda` type{func(*Card, *Stack, ...workingMemory) (ORDER, int)}
+ @updates `stack.Cards` to whatever the `lambda` function specifies
+ */
+func sortIterator(stack *Stack, lambda func(*Card, *Stack, ...interface{}) (ORDER, int)) {
+	for i := range stack.Cards {
+		// iterate, get the new index from the sorter
+		newOrder, newIdx := lambda(stack.Cards[i], stack)
+		// move from the old position to the new position
+		stack.Move(FIND_Idx, newOrder, FIND_Idx, i, newIdx)
 	}
 }
 
@@ -155,7 +170,7 @@ func updateRespectiveField(setStack *Stack, replaceType REPLACE, replaceData int
 		setStack.Cards = newCards
 
 	case REPLACE_Lambda:
-		setIterator(setStack, replaceData.(func(*Card, ...interface{})))
+		generalIterator(setStack, replaceData.(func(*Card, ...interface{})))
 
 	}
 

@@ -339,6 +339,31 @@ func (stack *Stack) Print() {
 
 }
 
+/** Order the cards contingent on some attribute they contain
+ 
+ @receiver `stack` type{Stack}
+ @param `lambda` type{func(*Card, *Stack, ...interface{}) (ORDER, int)}
+ @requires
+  * `lambda` returns the order (before/after) and index to which to move your card in the stack
+  * `lambda` does not update `stack` itself
+ @ensures each card in `stack` is passed into your lambda function
+ */
+func (stack *Stack) Sort(lambda func(*Card, *Stack, ...interface{}) (ORDER, int)) {
+	sortIterator(stack, lambda)
+}
+
+/** Iterate through a stack calling your lambda function on each card
+ 
+ @receiver `stack` type{Stack}
+ @param `lambda` type{func(*Card, ...interface{})}
+ @ensures
+  * Each card in `stack` is passed into your lambda function
+  * `stack` is the first argument passed into your variadic parameter on the first call
+ */
+func (stack *Stack) Lambda(lambda func(*Card, ...interface{})) {
+	generalIterator(stack, lambda)
+}
+
 /** Adds to a stack of cards or a cards at (each) position(s) and returns `stack`
  
  @receiver `stack` type{Stack}
@@ -387,21 +412,12 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 
 			if j == i { // we are on a target, add `insert`
 
-				if orderType == ORDER_Before {
-
-					for _, c := range cardsIn {
-						cardsWithAdded = append(cardsWithAdded, c)
-					}
-					cardsWithAdded = append(cardsWithAdded, existingCard)
-
-				} else if orderType == ORDER_After {
-
-					cardsWithAdded = append(cardsWithAdded, existingCard)
-					for _, c := range cardsIn {
-						cardsWithAdded = append(cardsWithAdded, c)
-					}
-
+				// add cards to stack before or after existing element, based on orderType
+				if orderType == ORDER_After { cardsWithAdded = append(cardsWithAdded, existingCard) }
+				for _, c := range cardsIn {
+					cardsWithAdded = append(cardsWithAdded, c)
 				}
+				if orderType == ORDER_Before { cardsWithAdded = append(cardsWithAdded, existingCard) }
 
 			} else { // we are on a non-target, just add
 
@@ -421,8 +437,17 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 
 }
 
-/**
- @requires `stack.Add()` and `MakeStack()` have been implemented
+/** Moves one element or slice of cards to before or after another element or slice of cards
+ 
+ @receiver `stack` type{Stack}
+ @param `findType_from` type{FIND}
+ @param `orderType` type{ORDER}
+ @param `findType_to` type{FIND}
+ @param optional `findData_from` type{interface{}} default nil
+ @param optional `findData_to` type{interface{}} default nil
+ @param optional `matchByType_from` type{MATCHBY} default MATCHBY_Object
+ @param optional `matchByType_to` type{MATCHBY} default MATCHBY_Object
+ @returns `stack`
  @ensures IF `findType_to` or `findType_from` get over one position, method doesn't perform move and prints invalid argument (FIND_Slice is the sole exception to this rule)
  */
 func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, variadic ...interface{}) *Stack {
@@ -449,16 +474,30 @@ func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, 
 			to = toArr[1]
 		}
 
-		// fill addArr with cards to add
-		addArr := MakeStack()
-		for _, i := range fromArr {
-			addArr.Add(stack.Cards[i])
+		// initialize new cards
+		var newCards []*Card
+
+		// fill newCards with cards to add
+		var from []*Card
+		for i := range stack.Cards {
+			if i == fromArr[0] { // on from
+				for _, j := range fromArr {
+					// add to from, remove from stack
+					from = append(from, stack.Cards[j])
+				}
+			} else if i == to - len(from) { // on to
+				// add from to stack before or after existing element, based on orderType
+				if orderType == ORDER_After { newCards = append(newCards, stack.Cards[i]) }
+				for j := range from {
+					newCards = append(newCards, from[j])
+				}
+				if orderType == ORDER_Before { newCards = append(newCards, stack.Cards[i]) }
+			} else { // on regular
+				newCards = append(newCards, stack.Cards[i])
+			}
 		}
 
-		// insert addArr into our new stack at the new position
-		stack.Add(addArr, ORDER_After, FIND_Idx, to)
-
-		// TODO: implement remove
+		stack.Cards = newCards
 
 	} else {
 		fmt.Printf("ERROR - gostack: stack.Move(...) function argument does not fulfill ensures clause")
@@ -467,6 +506,25 @@ func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, 
 	// return
 	return stack
 
+}
+
+/** Returns a boolean representing whether a search exists in the stack
+
+ @receiver `stack` type{Stack}
+ @param optional `findType` type{FIND} default FIND_First
+ @param optional `findData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @returns true IF successful search, false IF unsuccessful search
+ @requires `stack.Get()` has been implemented
+ */
+func (stack *Stack) Has(variadic ...interface{}) bool {
+
+	// unpack variadic into optional parameters
+	var findType, findData, matchByType interface{}
+	unpackVariadic(variadic, &findType, &findData, &matchByType)
+
+	// return
+	return stack.Get(findType, findData, matchByType) != nil
 }
 
 /** Gets a card from specified parameters in a stack, or nil if does not exist
@@ -488,7 +546,7 @@ func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
 
 	// unpack variadic into optional parameters
 	var findType, findData, matchByType, clonesType_card, clonesType_key, clonesType_val interface{}
-	unpackVariadic(variadic, &findType, &findData, &matchByType)
+	unpackVariadic(variadic, &findType, &findData, &matchByType, &clonesType_card, &clonesType_key, &clonesType_val)
 
 	// set types to default values
 	setFINDDefaultIfNil(&findType)

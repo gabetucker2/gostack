@@ -71,7 +71,7 @@
  >>>
  >>>> [{card, stack}.Clone()](#Clone)
  >>>
- >>>> [stack.Unique()](#Unique)
+ >>>> [stack.Unique(...)](#Unique)
  >>>
  >>>> [stack.ToArray()](#ToArray)
  >>>
@@ -82,6 +82,10 @@
  >>>> [stack.Flip()](#Flip)
  >>>
  >>>> [{card, stack}.Print()](#Print)
+ >>>>
+ >>>> [stack.Sort(...)](#Sort)
+ >>>>
+ >>>> [stack.Lambda(...)](#Lambda)
  >>>
  >>> [Generalized Functions](#generalizedFunctions)
  >>>> [stack.Add(...)](#Add)
@@ -109,8 +113,6 @@
  >>>> [stack.Remove(...)](#Remove)
  >>>>
  >>>> [stack.RemoveMany(...)](#RemoveMany)
- >>>>
- >>>> [stack.Lambda(...)](#Lambda)
  >
  >> [Future Updates](#futureUpdates)
  >
@@ -258,6 +260,8 @@
  * **stack.Shuffle()**
  * **stack.Flip()**
  * **{card, stack}.Print()**
+ * **stack.Sort(lambda sort function)**
+ * **stack.Lambda(lambda function)**
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
@@ -543,13 +547,6 @@ Makes a stack of cards with inputted vals and keys
  @updates `stack.Cards` to have new cards before/after each designated position
  ```
  
-<h3 name = "Move">Move</h3>
- 
- `stack.Move(findType_from, orderType, findType_to, ...findData_from, ...findData_to, ...matchByType_from, ...matchByType_to)`
- ```
-
- ```
- 
 <h3 name = "Unique">Unique</h3>
  
  `stack.Unique(typeType, ...matchByType)`
@@ -626,6 +623,65 @@ Makes a stack of cards with inputted vals and keys
  @receiver `stack` type{Stack}
  @updates terminal logs
  @requires card.Print() has been implemented
+ ```
+ 
+<h3 name = "Sort">Sort</h3>
+ 
+ `stack.Sort(lambda sort function)`
+ ```
+ Order the cards contingent on some attribute they contain
+ 
+ @receiver `stack` type{Stack}
+ @param `lambda` type{func(*Card, *Stack, ...interface{}) (ORDER, int)}
+ @requires
+  * `lambda` returns the order (before/after) and index to which to move your card in the stack
+  * `lambda` does not update `stack` itself
+ @ensures each card in `stack` is passed into your lambda function
+ ```
+ 
+<h3 name = "Lambda">Lambda</h3>
+ 
+ `stack.Lambda(lambda function)`
+ ```
+ Iterate through a stack calling your lambda function on each card
+ 
+ @receiver `stack` type{Stack}
+ @param `lambda` type{func(*Card, ...interface{})}
+ @ensures
+  * Each card in `stack` is passed into your lambda function
+  * `stack` is the first argument passed into your variadic parameter on the first call
+ ```
+ 
+<h3 name = "Move">Move</h3>
+ 
+ `stack.Move(findType_from, orderType, findType_to, ...findData_from, ...findData_to, ...matchByType_from, ...matchByType_to)`
+ ```
+ Moves one element or slice of cards to before or after another element or slice of cards
+ 
+ @receiver `stack` type{Stack}
+ @param `findType_from` type{FIND}
+ @param `orderType` type{ORDER}
+ @param `findType_to` type{FIND}
+ @param optional `findData_from` type{interface{}} default nil
+ @param optional `findData_to` type{interface{}} default nil
+ @param optional `matchByType_from` type{MATCHBY} default MATCHBY_Object
+ @param optional `matchByType_to` type{MATCHBY} default MATCHBY_Object
+ @returns `stack`
+ @ensures IF `findType_to` or `findType_from` get over one position, method doesn't perform move and prints invalid argument (FIND_Slice is the sole exception to this rule)
+ ```
+ 
+<h3 name = "Has">Has</h3>
+ 
+ `stack.Has(...findType, ...findData, ...matchByType)`
+ ```
+ Returns a boolean representing whether a search exists in the stack
+
+ @receiver `stack` type{Stack}
+ @param optional `findType` type{FIND} default FIND_First
+ @param optional `findData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @returns true IF successful search, false IF unsuccessful search
+ @requires `stack.Get()` has been implemented
  ```
  
 <h3 name = "Get">Get</h3>
