@@ -710,7 +710,7 @@ Makes a stack of cards with inputted vals and keys
  @ensures if `replaceData` is nil and `replaceType is REPLACE_Card`, the cards found will be removed from `stack`
  ```
  
-<h3 name = "Update">Extract</h3>
+<h3 name = "Update">Update</h3>
  
  `stack.Update(findType, ...findData, ...matchByType)`
  ```
