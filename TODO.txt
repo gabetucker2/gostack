@@ -1,11 +1,11 @@
 ---------------------------------------------------------------
 GABE:
-* Delete old replace and rename REPLACE stuff to Replace
+* Implement/abstract ensures if-then style in Move with all functions
+* Add FIND_Slice to functions and documentation
 * Implement new lambda examples
  - For REPLACE_Lambda
  - For stack.Lambda()
-* Ensure that Add returns nil if invalid FINDBY type
-* Add POSITION_Slice
+* Ensure that Add returns nil if invalid FIND type
 * Update race.md and related documentation
  - Fix taskC.replace()
 * Update card.idx whenever it's updated
@@ -50,4 +50,4 @@ UNIMPLEMENTED PARTIALLY DOCUMENTED FUNCTIONS:
 stack.Has, stack.Move, stack.Lambda
 
 UNIMPLEMENTED UNDOCUMENTED FUNCTIONS:
-/
+stack.Sort(lambda)

@@ -8,12 +8,12 @@ import (
 
 /** Remove and return first card in stack
 
- @param `stack` type{Stack}
- @returns `card` type{Card}
- @updates `stack` with designated card removed
- */
+@param `stack` type{Stack}
+@returns `card` type{Card}
+@updates `stack` with designated card removed
+*/
 func bootstrap_pop(stack *Stack) *Card{
-	return stack.Extract(FINDBY_First)
+	return stack.Extract(FIND_First)
 }
 
 
@@ -35,7 +35,7 @@ func bootstrap_push(stack *Stack, card *Card) *Stack{
  @returns `idx` type{int}
  */
 func bootstrap_indexOf(stack *Stack, card *Card) int {
-	return stack.Get(FINDBY_First, card).Idx
+	return stack.Get(FIND_First, card).Idx
 }
 
 /** Return list of all keys in the stack
@@ -43,7 +43,7 @@ func bootstrap_indexOf(stack *Stack, card *Card) int {
  @returns `stack` type{Stack}
  */
 func bootstrap_keyset(stack *Stack) *Stack{
-	return stack.GetMany(FINDBY_Lambda, func(stack *Stack, card *Card)bool{
+	return stack.GetMany(FIND_Lambda, func(stack *Stack, card *Card)bool{
 		v := card.Key
 		return v != nil
 	})
@@ -54,7 +54,7 @@ func bootstrap_keyset(stack *Stack) *Stack{
  @returns `stack` type{Stack}
  */
 func bootstrap_valset(stack *Stack) *Stack{
-	return stack.GetMany(FINDBY_Lambda, func(stack *Stack, card *Card)bool{
+	return stack.GetMany(FIND_Lambda, func(stack *Stack, card *Card)bool{
 		v := card.Val
 		return v != nil
 	})

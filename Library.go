@@ -343,9 +343,9 @@ func (stack *Stack) Print() {
  
  @receiver `stack` type{Stack}
  @param `insert` type{Card, Stack}
- @param optional `orderType` type{ORDER} default ORDER_After
- @param optional `findByType` type{FINDBY} default FINDBY_First
- @param optional `findByData` type{interface{}} default nil
+ @param optional `orderType` type{ORDER} default ORDER_Before
+ @param optional `findType` type{FIND} default FIND_First
+ @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates `stack` to have new cards before/after each designated position
@@ -353,12 +353,12 @@ func (stack *Stack) Print() {
 func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 
 	// unpack variadic into optional parameters
-	var orderType, findByType, findByData, matchByType interface{}
-	unpackVariadic(variadic, &orderType, &findByType, &findByData, &matchByType)
+	var orderType, findType, findData, matchByType interface{}
+	unpackVariadic(variadic, &orderType, &findType, &findData, &matchByType)
 
 	// set types to default values
 	setORDERDefaultIfNil(&orderType)
-	setFINDBYDefaultIfNil(&findByType)
+	setFINDDefaultIfNil(&findType)
 	setMATCHBYDefaultIfNil(&matchByType)
 
 	// convert insert into slice of cards
@@ -377,7 +377,7 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 	var cardsWithAdded []*Card
 
 	// get targeted cards
-	targets := getPositions(false, stack, findByType.(FINDBY), findByData, matchByType.(MATCHBY))
+	targets := getPositions(false, stack, findType.(FIND), findData, matchByType.(MATCHBY))
 
 	// fill the array
 	for i := range stack.Cards {
@@ -421,16 +421,64 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 
 }
 
+/**
+ @requires `stack.Add()` and `MakeStack()` have been implemented
+ @ensures IF `findType_to` or `findType_from` get over one position, method doesn't perform move and prints invalid argument (FIND_Slice is the sole exception to this rule)
+ */
+func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, variadic ...interface{}) *Stack {
+
+	// unpack variadic into optional parameters
+	var findData_from, findData_to, matchByType_from, matchByType_to interface{}
+	unpackVariadic(variadic, &findData_from, &findData_to, &matchByType_from, &matchByType_to)
+
+	// set types to default values
+	setORDERDefaultIfNil(&orderType)
+	setMATCHBYDefaultIfNil(&matchByType_from)
+	setMATCHBYDefaultIfNil(&matchByType_to)
+
+	// initialize positions
+	fromArr := getPositions(false, stack, findType_from, findData_from, matchByType_from.(MATCHBY))
+	toArr := getPositions(false, stack, findType_to, findData_to, matchByType_to.(MATCHBY))
+
+	// do main function only if ensures clause is fulfilled
+	if (len(fromArr) == 1 || findType_from == FIND_Slice) && (len(toArr) == 1 || findType_to == FIND_Slice) {
+
+		// set up to
+		to := toArr[0]
+		if findType_to == FIND_Slice && orderType == ORDER_After {
+			to = toArr[1]
+		}
+
+		// fill addArr with cards to add
+		addArr := MakeStack()
+		for _, i := range fromArr {
+			addArr.Add(stack.Cards[i])
+		}
+
+		// insert addArr into our new stack at the new position
+		stack.Add(addArr, ORDER_After, FIND_Idx, to)
+
+		// TODO: implement remove
+
+	} else {
+		fmt.Printf("ERROR - gostack: stack.Move(...) function argument does not fulfill ensures clause")
+	}
+
+	// return
+	return stack
+
+}
+
 /** Gets a card from specified parameters in a stack, or nil if does not exist
 
  @receiver `stack` type{Stack}
- @param optional `findByType` type{FINDBY} default FINDBY_First
- @param optional `findByData` type{interface{}} default nil
+ @param optional `findType` type{FIND} default FIND_First
+ @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `clonesType_card` type{CLONES} default CLONE_False
  @param optional `clonesType_keys` type{CLONES} default CLONE_False
  @param optional `clonesType_vals` type{CLONES} default CLONE_False
- @returns type{*Card} the found card OR nil if invalid FINDBY
+ @returns type{*Card} the found card OR nil if invalid FIND
  @ensures
   * CLONE_True for `clonesType_card` means the returned card object itself is a clone
   * CLONE_True for `clonesType_key` means the returned card key is a clone
@@ -439,18 +487,18 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
 
 	// unpack variadic into optional parameters
-	var findByType, findByData, matchByType, clonesType_card, clonesType_key, clonesType_val interface{}
-	unpackVariadic(variadic, &findByType, &findByData, &matchByType)
+	var findType, findData, matchByType, clonesType_card, clonesType_key, clonesType_val interface{}
+	unpackVariadic(variadic, &findType, &findData, &matchByType)
 
 	// set types to default values
-	setFINDBYDefaultIfNil(&findByType)
+	setFINDDefaultIfNil(&findType)
 	setMATCHBYDefaultIfNil(&matchByType)
 	setCLONEDefaultIfNil(&clonesType_card)
 	setCLONEDefaultIfNil(&clonesType_key)
 	setCLONEDefaultIfNil(&clonesType_val)
 
 	// get targeted card OR nil
-	targets := getPositions(true, stack, findByType.(FINDBY), findByData, matchByType.(MATCHBY))
+	targets := getPositions(true, stack, findType.(FIND), findData, matchByType.(MATCHBY))
 	if len(targets) > 0 {
 		ret = stack.Cards[targets[0]]
 		// clone if necessary
@@ -475,8 +523,8 @@ func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
 /** Gets a stack from specified parameters in a stack
  
  @receiver `stack` type{Stack}
- @param `findByType` type{FINDBY}
- @param optional `findByData` type{interface{}} default nil
+ @param `findType` type{FIND}
+ @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `returnType` type{RETURN} default RETURN_Cards
  @param optional `clonesType` type{CLONES} default CLONE_False
@@ -492,11 +540,11 @@ func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
   * CLONE_True for `clonesType_keys` means the cards in the returned stack keys are clones
   * CLONE_True for `clonesType_vals` means the cards in the returned stack vals are clones
  */
-func (stack *Stack) GetMany(findByType FINDBY, variadic ...interface{}) *Stack {
+func (stack *Stack) GetMany(findType FIND, variadic ...interface{}) *Stack {
 
 	// unpack variadic into optional parameters
-	var findByData, matchByType, returnType, clonesType, clonesType_keys, clonesType_vals interface{}
-	unpackVariadic(variadic, &findByData, &matchByType, &returnType, &clonesType, &clonesType_keys, &clonesType_vals)
+	var findData, matchByType, returnType, clonesType, clonesType_keys, clonesType_vals interface{}
+	unpackVariadic(variadic, &findData, &matchByType, &returnType, &clonesType, &clonesType_keys, &clonesType_vals)
 
 	// set types to default values
 	setMATCHBYDefaultIfNil(&matchByType)
@@ -509,7 +557,7 @@ func (stack *Stack) GetMany(findByType FINDBY, variadic ...interface{}) *Stack {
 	newStack := MakeStack()
 
 	// get targeted cards
-	targets := getPositions(false, stack, findByType, findByData, matchByType.(MATCHBY))
+	targets := getPositions(false, stack, findType, findData, matchByType.(MATCHBY))
 
 	// fill new stack with targeted cards
 	for _, i := range targets {
@@ -560,27 +608,27 @@ func (stack *Stack) GetMany(findByType FINDBY, variadic ...interface{}) *Stack {
  @receiver `stack` type{Stack}
  @param `replaceType` type{REPLACE}
  @param `replaceData` type{interface{}}
- @param `findByType` type{FINDBY}
- @param optional `findByData` type{interface{}} default nil
+ @param `findType` type{FIND}
+ @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns type{*Card} a clone of extracted card OR nil if found no cards
  @updates first found card to `replaceData`
  @requires `stack.Get()` has been implemented
- @ensures if `replaceData` is nil and `replaceType is REPLACE_Card`, the card will be removed from `stack`
+ @ensures IF `replaceData` is nil and `replaceType is REPLACE_Card`, the card will be removed from `stack`
  */
-func (stack *Stack) Replace(replaceType REPLACE, replaceData interface{}, findByType FINDBY, variadic ...interface{}) (ret *Card) {
+func (stack *Stack) Replace(replaceType REPLACE, replaceData interface{}, findType FIND, variadic ...interface{}) (ret *Card) {
 
 	// unpack variadic into optional parameters
-	var findByData, matchByType interface{}
-	unpackVariadic(variadic, &findByData, &matchByType)
+	var findData, matchByType interface{}
+	unpackVariadic(variadic, &findData, &matchByType)
 
 	// set types to default values
 	setMATCHBYDefaultIfNil(&matchByType)
 
 	// get deep copy of targeted card OR nil
-	ret = stack.Get(findByType, findByData, matchByType, CLONE_True, CLONE_True, CLONE_True)
+	ret = stack.Get(findType, findData, matchByType, CLONE_True, CLONE_True, CLONE_True)
 	// target is reference to card OR nil
-	target := stack.Get(findByType, findByData, matchByType)
+	target := stack.Get(findType, findData, matchByType)
 
 	// set targeted card field to replaceData if was found (updateRespectiveField fulfills our ensures clause)
 	if target != nil {
@@ -597,8 +645,8 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceData interface{}, findBy
  @receiver `stack` type{Stack}
  @param `replaceType` type{REPLACE}
  @param `replaceData` type{interface{}}
- @param `findByType` type{FINDBY}
- @param optional `findByData` type{interface{}} default nil
+ @param `findType` type{FIND}
+ @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `returnType` type{RETURN} default RETURN_Cards
  @returns type{*Stack} a stack whose values are the extracted cards pre-update
@@ -606,20 +654,20 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceData interface{}, findBy
  @requires `stack.GetMany()` has been implemented
  @ensures if `replaceData` is nil and `replaceType is REPLACE_Card`, the cards found will be removed from `stack`
  */
-func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceData interface{}, findByType FINDBY, variadic ...interface{}) (ret *Stack) {
+func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceData interface{}, findType FIND, variadic ...interface{}) (ret *Stack) {
 
 	// unpack variadic into optional parameters
-	var findByData, matchByType, returnType interface{}
-	unpackVariadic(variadic, &findByData, &matchByType, &returnType)
+	var findData, matchByType, returnType interface{}
+	unpackVariadic(variadic, &findData, &matchByType, &returnType)
 
 	// set types to default values
 	setMATCHBYDefaultIfNil(&matchByType)
 	setRETURNDefaultIfNil(&returnType)
 
 	// get deep copy of targeted cards to return
-	ret = stack.GetMany(findByType, findByData, matchByType, returnType, CLONE_True, CLONE_True, CLONE_True)
+	ret = stack.GetMany(findType, findData, matchByType, returnType, CLONE_True, CLONE_True, CLONE_True)
 	// target is reference to cards OR nil
-	target := stack.GetMany(findByType, findByData, matchByType, returnType)
+	target := stack.GetMany(findType, findData, matchByType, returnType)
 
 	// set targeted cards' fields to replaceData if was found (updateRespectiveField fulfills our ensures clause)
 	if target != nil {
@@ -636,21 +684,21 @@ func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceData interface{}, fi
 /** Updates a card in and returns `stack`
  
  @receiver `stack` type{Stack}
- @param `findByType` type{FINDBY}
- @param optional `findByData` type{interface{}} default nil
+ @param `findType` type{FIND}
+ @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates the found card in `stack`
  @requires `stack.Replace()` has been implemented
  */
-func (stack *Stack) Update(findByType FINDBY, variadic ...interface{}) *Stack {
+func (stack *Stack) Update(findType FIND, variadic ...interface{}) *Stack {
 
 	// unpack variadic into optional parameters
-	var findByData, matchByType interface{}
-	unpackVariadic(variadic, &findByData, &matchByType)
+	var findData, matchByType interface{}
+	unpackVariadic(variadic, &findData, &matchByType)
 
 	// update stack
-	stack.Replace(REPLACE_Card, nil, findByType, findByData, matchByType)
+	stack.Replace(REPLACE_Card, nil, findType, findData, matchByType)
 
 	// return the original stack
 	return stack
@@ -660,21 +708,21 @@ func (stack *Stack) Update(findByType FINDBY, variadic ...interface{}) *Stack {
 /** Updates cards in and returns `stack`
  
  @receiver `stack` type{Stack}
- @param `findByType` type{FINDBY}
- @param optional `findByData` type{interface{}} default nil
+ @param `findType` type{FIND}
+ @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates  the found cards in `stack`
  @requires `stack.ReplaceMany()` has been implemented
  */
-func (stack *Stack) UpdateMany(findByType FINDBY, variadic ...interface{}) *Stack {
+func (stack *Stack) UpdateMany(findType FIND, variadic ...interface{}) *Stack {
 
 	// unpack variadic into optional parameters
-	var findByData, matchByType, returnType interface{}
-	unpackVariadic(variadic, &findByData, &matchByType, &returnType)
+	var findData, matchByType, returnType interface{}
+	unpackVariadic(variadic, &findData, &matchByType, &returnType)
 
 	// update stack
-	stack.ReplaceMany(REPLACE_Card, nil, findByType, findByData, matchByType, returnType)
+	stack.ReplaceMany(REPLACE_Card, nil, findType, findData, matchByType, returnType)
 
 	// return the original stack
 	return stack
@@ -684,64 +732,64 @@ func (stack *Stack) UpdateMany(findByType FINDBY, variadic ...interface{}) *Stac
 /** Gets and removes a card from `stack`, or returns nil if does not exist
  
  @receiver `stack` type{Stack}
- @param `findByType` type{FINDBY}
- @param optional `findByData` type{interface{}} default nil
+ @param `findType` type{FIND}
+ @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
- @returns type{*Card} the extracted card OR nil if invalid FINDBY
+ @returns type{*Card} the extracted card OR nil if invalid FIND
  @updates `stack` to no longer have found card
  @requires `stack.Replace()` has been implemented
  */
-func (stack *Stack) Extract(findByType FINDBY, variadic ...interface{}) *Card {
+func (stack *Stack) Extract(findType FIND, variadic ...interface{}) *Card {
 
 	// unpack variadic into optional parameters
-	var findByData, matchByType interface{}
-	unpackVariadic(variadic, &findByData, &matchByType)
+	var findData, matchByType interface{}
+	unpackVariadic(variadic, &findData, &matchByType)
 
 	// return the original value
-	return stack.Replace(REPLACE_Card, nil, findByType, findByData, matchByType)
+	return stack.Replace(REPLACE_Card, nil, findType, findData, matchByType)
 
 }
 
 /** Gets and removes a set of cards from `stack`
  
  @receiver `stack` type{Stack}
- @param `findByType` type{FINDBY}
- @param optional `findByData` type{interface{}} default nil
+ @param `findType` type{FIND}
+ @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `returnType` type{RETURN} default RETURN_Cards
- @returns type{*Stack} the extracted card OR nil if invalid FINDBY
+ @returns type{*Stack} the extracted card OR nil if invalid FIND
  @updates `stack` to no longer have found cards
  @requires `stack.ReplaceMany()` has been implemented
  */
-func (stack *Stack) ExtractMany(findByType FINDBY, variadic ...interface{}) *Stack {
+func (stack *Stack) ExtractMany(findType FIND, variadic ...interface{}) *Stack {
 
 	// unpack variadic into optional parameters
-	var findByData, matchByType, returnType interface{}
-	unpackVariadic(variadic, &findByData, &matchByType, &returnType)
+	var findData, matchByType, returnType interface{}
+	unpackVariadic(variadic, &findData, &matchByType, &returnType)
 
 	// return the original value
-	return stack.ReplaceMany(REPLACE_Card, nil, findByType, findByData, matchByType, returnType)
+	return stack.ReplaceMany(REPLACE_Card, nil, findType, findData, matchByType, returnType)
 
 }
 
 /** Removes a card from and returns `stack`
  
  @receiver `stack` type{Stack}
- @param `findByType` type{FINDBY}
- @param optional `findByData` type{interface{}} default nil
+ @param `findType` type{FIND}
+ @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates `stack` to no longer have found card
  @requires `stack.Replace()` has been implemented
  */
-func (stack *Stack) Remove(findByType FINDBY, variadic ...interface{}) *Stack {
+func (stack *Stack) Remove(findType FIND, variadic ...interface{}) *Stack {
 
 	// unpack variadic into optional parameters
-	var findByData, matchByType interface{}
-	unpackVariadic(variadic, &findByData, &matchByType)
+	var findData, matchByType interface{}
+	unpackVariadic(variadic, &findData, &matchByType)
 
 	// remove the card
-	stack.Replace(REPLACE_Card, nil, findByType, findByData, matchByType)
+	stack.Replace(REPLACE_Card, nil, findType, findData, matchByType)
 
 	// return stack
 	return stack
@@ -751,21 +799,21 @@ func (stack *Stack) Remove(findByType FINDBY, variadic ...interface{}) *Stack {
 /** Removes a set of cards from and returns `stack`
  
  @receiver `stack` type{Stack}
- @param `findByType` type{FINDBY}
- @param optional `findByData` type{interface{}} default nil
+ @param `findType` type{FIND}
+ @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates `stack` to no longer have found cards
  @requires `stack.ReplaceMany()` has been implemented
  */
-func (stack *Stack) RemoveMany(findByType FINDBY, variadic ...interface{}) *Stack {
+func (stack *Stack) RemoveMany(findType FIND, variadic ...interface{}) *Stack {
 
 	// unpack variadic into optional parameters
-	var findByData, matchByType interface{}
-	unpackVariadic(variadic, &findByData, &matchByType)
+	var findData, matchByType interface{}
+	unpackVariadic(variadic, &findData, &matchByType)
 
 	// remove the cards
-	stack.ReplaceMany(REPLACE_Card, nil, findByType, findByData, matchByType)
+	stack.ReplaceMany(REPLACE_Card, nil, findType, findData, matchByType)
 
 	// return stack
 	return stack

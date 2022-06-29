@@ -54,7 +54,7 @@ func lambda_Max(card *Card, workingMemory ...interface{}) bool {
 		//workingMemory[1].Add(MakeCard(workingMax))
 	}
 
-	return false//workingMemory[1].Get(RETURN_Card, FINDBY_First) == card
+	return false//workingMemory[1].Get(RETURN_Card, FIND_First) == card
 
 }
 
@@ -77,14 +77,14 @@ func Lambda() {
 
 	// SAME AS
 
-	makeSampleStack().GetMany(FINDBY_Lambda, lambda_ValInRange) // 10, 12
+	makeSampleStack().GetMany(FIND_Lambda, lambda_ValInRange) // 10, 12
 
 	//////////////////////////////////
 
-	makeSampleStack().GetMany(FINDBY_Lambda, lambda_KeyInRange) // 2, 10, 40
+	makeSampleStack().GetMany(FIND_Lambda, lambda_KeyInRange) // 2, 10, 40
 
-	makeSampleStack().GetMany(FINDBY_Lambda, lambda_BothInRange) // 10
+	makeSampleStack().GetMany(FIND_Lambda, lambda_BothInRange) // 10
 
-	makeSampleStack().GetMany(FINDBY_Lambda, lambda_Max) // 40
+	makeSampleStack().GetMany(FIND_Lambda, lambda_Max) // 40
 
 }

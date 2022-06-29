@@ -1,55 +1,55 @@
 <h3>...to Demonstrate Flexibility</h3>
 
- > `stack.Get(RETURN_Card, FINDBY_First)`
+ > `stack.Get(RETURN_Card, FIND_First)`
  >> *returns the first card in the Stack*
  >
- > `stack.Get(RETURN_Card, FINDBY_Val, "String Value", MATCHBY_Object)`
+ > `stack.Get(RETURN_Card, FIND_Val, "String Value", MATCHBY_Object)`
  >> *goes through the stack, finds the first card with val "String Value", and returns that card*
  >
- > `stack.Get(RETURN_Card, FINDBY_Key, "String Key", MATCHBY_Object)`
+ > `stack.Get(RETURN_Card, FIND_Key, "String Key", MATCHBY_Object)`
  >> *goes through the stack, finds the first card with key "String Key", and returns that card*
  >
- > `stack.Get(RETURN_Cards, FINDBY_Lambda, lambda function)` - update
+ > `stack.Get(RETURN_Cards, FIND_Lambda, lambda function)` - update
  >> *goes through the stack, finds each card for which the lambda expression is true, and return a stack of these cards*
  >
- > `stack.Get(RETURN_Cards, FINDBY_Val, "String Value", MATCHBY_Object)`
+ > `stack.Get(RETURN_Cards, FIND_Val, "String Value", MATCHBY_Object)`
  >> *goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
  >
- > `stack.Get(RETURN_Card, FINDBY_Val, stackOfValues, MATCHBY_Object)`
+ > `stack.Get(RETURN_Card, FIND_Val, stackOfValues, MATCHBY_Object)`
  >> *goes through the stack, finds the first card with one of the values in stackOfValues, and returns that card*
  >
- > `stack.Get(RETURN_Cards, FINDBY_Val, stackOfValues, MATCHBY_Object)`
+ > `stack.Get(RETURN_Cards, FIND_Val, stackOfValues, MATCHBY_Object)`
  >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
  >
- > `stack.Get(RETURN_Card, FINDBY_Val, stackOfValues, MATCHBY_Reference)`
+ > `stack.Get(RETURN_Card, FIND_Val, stackOfValues, MATCHBY_Reference)`
  >> *goes through the stack, finds the first card with the same memory address as one the values in stackOfValues, and returns that card*
  >
- > `stack.Get(RETURN_Cards, FINDBY_Val, stackOfValues, MATCHBY_Reference)`
+ > `stack.Get(RETURN_Cards, FIND_Val, stackOfValues, MATCHBY_Reference)`
  >> *goes through the stack, finds each card with a memory address matching one in stackOfValues, and returns a Stack of each of those cards*
 
 
  ***TYPE Example Uses***
  
- > `stack.Add(cardToAdd, ORDER_Before, FINDBY_Last)`
+ > `stack.Add(cardToAdd, ORDER_Before, FIND_Last)`
  >> *insert a card at the second-to-last index of the stack*
  >
- > `stack.Add(cardToAdd, ORDER_After, FINDBY_Last)`
+ > `stack.Add(cardToAdd, ORDER_After, FIND_Last)`
  >> *insert a card at the last index of the stack*
 
  ***ORDER Example Uses***
  
- > `stack.Add(cardToAdd, ORDER_Before, FINDBY_Last)`
+ > `stack.Add(cardToAdd, ORDER_Before, FIND_Last)`
  >> *insert a card at the second-to-last index of the stack*
  >
- > `stack.Add(cardToAdd, ORDER_After, FINDBY_Last)`
+ > `stack.Add(cardToAdd, ORDER_After, FIND_Last)`
  >> *insert a card at the last index of the stack*
 
  ***MATCHBY Example Uses***
  
- > `stack.Get(RETURN_Card, FINDBY_Card, cardStructureToFind, MATCHBY_Object)`
+ > `stack.Get(RETURN_Card, FIND_Card, cardStructureToFind, MATCHBY_Object)`
  >> *returns the first card that has the same structure (key and value) as cardStructureToFind*
  >
- > stack.Get(RETURN_Card, FINDBY_Card, exactCardToFind, MATCHBY_Reference)`
+ > stack.Get(RETURN_Card, FIND_Card, exactCardToFind, MATCHBY_Reference)`
  >> *returns the first card that IS exactCardToFind as stored in memory—not just that's the same structurally*
 
  ***Stack Example Uses***
@@ -59,30 +59,30 @@
 
  ***RETURN Example Uses***
  
- > `stack.Get(RETURN_Card, FINDBY_Val, "String Value", MATCHBY_Object)`
+ > `stack.Get(RETURN_Card, FIND_Val, "String Value", MATCHBY_Object)`
  >> *goes through the stack, finds the first card with val "String Value", and returns that card*
  >
- > `stack.Get(RETURN_Cards, FINDBY_Val, "String Value", MATCHBY_Object)`
+ > `stack.Get(RETURN_Cards, FIND_Val, "String Value", MATCHBY_Object)`
  >> *goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
  >
- > `stack.Get(RETURN_Card, FINDBY_Val, stackOfValues, MATCHBY_Object)`
+ > `stack.Get(RETURN_Card, FIND_Val, stackOfValues, MATCHBY_Object)`
  >> *goes through the stack, finds the first card with one of the values in stackOfValues, and returns that card*
  >
- > `stack.Get(RETURN_Cards, FINDBY_Val, stackOfValues, MATCHBY_Object)`
+ > `stack.Get(RETURN_Cards, FIND_Val, stackOfValues, MATCHBY_Object)`
  >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
 
- ***FINDBY Example Uses***
+ ***FIND Example Uses***
  
- > `stack.Get(RETURN_Card, FINDBY_First)`
+ > `stack.Get(RETURN_Card, FIND_First)`
  >> *returns the first card in the Stack*
  >
- > `stack.Get(RETURN_Card, FINDBY_Val, "String Value", MATCHBY_Object)`
+ > `stack.Get(RETURN_Card, FIND_Val, "String Value", MATCHBY_Object)`
  >> *goes through the stack, finds the first card with val "String Value", and returns that card*
  >
- > `stack.Get(RETURN_Card, FINDBY_Key, "String Key", MATCHBY_Object)`
+ > `stack.Get(RETURN_Card, FIND_Key, "String Key", MATCHBY_Object)`
  >> *goes through the stack, finds the first card with key "String Key", and returns that card*
  >
- > `stack.Get(RETURN_Cards, FINDBY_Lambda, lambda function)` - update
+ > `stack.Get(RETURN_Cards, FIND_Lambda, lambda function)` - update
  >> *goes through the stack, finds each card for which the lambda expression is true, and return a stack of these cards*
 
 
@@ -92,15 +92,15 @@
  Assuming `stack` is a predefined stack of cards:
 
  Want to remove the first card in a `stack` and get its key?
- > `key := stack.Extract(RETURN_Key, FINDBY_First)`
+ > `key := stack.Extract(RETURN_Key, FIND_First)`
  
  Want to get a unique stack of values of the cards in `stack` whose keys match the object address of Cards defined as UnitTypes unitType1 or unitType2 (where UnitType is your user-defined struct)?
- > `keys := MakeStack().Add(MakeCard(unitType1), ORDER_After, FINDBY_Last).Add(MakeCard(unitType2), ORDER_After, FINDBY_Last)`
+ > `keys := MakeStack().Add(MakeCard(unitType1), ORDER_After, FIND_Last).Add(MakeCard(unitType2), ORDER_After, FIND_Last)`
  >
- > `unitIndices := stack.Get(RETURN_Idxs, FINDBY_Keys, keys, MATCHBY_Reference).Unique(TYPE_Val)`
+ > `unitIndices := stack.Get(RETURN_Idxs, FIND_Keys, keys, MATCHBY_Reference).Unique(TYPE_Val)`
  
  Want to replace all cards in `stack` whose values are even ints between -5 and 3 with two new cards and get a stack representing keys of the cards that were replaced?
- > `cardsToInsert := MakeStack().Add(newCard1, ORDER_After, FINDBY_Last).Add(newCard2, ORDER_After, FINDBY_Last)`
+ > `cardsToInsert := MakeStack().Add(newCard1, ORDER_After, FIND_Last).Add(newCard2, ORDER_After, FIND_Last)`
  >
  > `func gostack_ValInRange(stack *Stack, card *Card, workingMemory ...*Stack) (ret bool) {`
  >> `v := card.val.(int)`
@@ -109,7 +109,7 @@
  >
  > `}`
  >
- > `oldCards := stack.Replace(cardsToInsert, RETURN_Keys, FINDBY_Lambda, gostack_ValInRange)`
+ > `oldCards := stack.Replace(cardsToInsert, RETURN_Keys, FIND_Lambda, gostack_ValInRange)`
 
 
 

@@ -53,32 +53,32 @@ func setIterator(stack *Stack, lambda func(*Card, ...interface{})) {
  
  @param `getFirst` type{bool}
  @param `stack` type{Stack} no pass-by-reference
- @param `findByType` type{FINDBY}
- @param `findByData` type{interface{}}
+ @param `findType` type{FIND}
+ @param `findData` type{interface{}}
  @returns the []int of targeted positions
  @constructor creates a new []int
  @ensures
-   IF `findByType` is singular
-     return idx/idxs of cards whose field matches `findByData` field
-   ELSE IF `findByType` is plural
-	 return idx/idxs of cards whose field matches any of `findByData` fields
+   IF `findType` is singular
+     return idx/idxs of cards whose field matches `findData` field
+   ELSE IF `findType` is plural
+	 return idx/idxs of cards whose field matches any of `findData` fields
    
    IF `getFirst`
      return idx
    ELSE
      return idxs
  */
-func getPositions(getFirst bool, stack *Stack, findByType FINDBY, findByData interface{}, matchByType MATCHBY) (targets []int) {
+func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface{}, matchByType MATCHBY) (targets []int) {
 
-	switch findByType {
+	switch findType {
 
-	case FINDBY_First:
+	case FIND_First:
 		targets = append(targets, 0)
 
 		//... and so on
 
-	case FINDBY_Keys:
-		keyArr := findByData.([]interface{})
+	case FIND_Keys:
+		keyArr := findData.([]interface{})
 		for i := 0; i < len(keyArr); i++ {
 			for j, c := range stack.Cards {
 				if (matchByType == MATCHBY_Object    &&  keyArr[i] ==  c.Key) ||
@@ -91,9 +91,9 @@ func getPositions(getFirst bool, stack *Stack, findByType FINDBY, findByData int
 
 	//... and so on
 
-	case FINDBY_Lambda:
+	case FIND_Lambda:
 		filterStack := stack.Clone()
-		getIterator(filterStack, findByData.(func(*Card, ...interface{}) bool))
+		getIterator(filterStack, findData.(func(*Card, ...interface{}) bool))
 		for i := range filterStack.Cards {
 			targets = append(targets, i)	
 			if getFirst { break }

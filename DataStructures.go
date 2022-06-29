@@ -14,7 +14,7 @@ type Stack struct {
 }
 
 type RETURN int
-type FINDBY int
+type FIND int
 type REPLACE int
 type TYPE int
 type ORDER int
@@ -29,18 +29,19 @@ const (
 )
 
 const (
-	FINDBY_First FINDBY = iota
-	FINDBY_Last
-	FINDBY_Idx
-	FINDBY_Idxs
-	FINDBY_Key
-	FINDBY_Keys
-	FINDBY_Val
-	FINDBY_Vals
-	FINDBY_Card
-	FINDBY_Cards
-	FINDBY_All
-	FINDBY_Lambda
+	FIND_First FIND = iota
+	FIND_Last
+	FIND_Idx
+	FIND_Idxs
+	FIND_Key
+	FIND_Keys
+	FIND_Val
+	FIND_Vals
+	FIND_Card
+	FIND_Cards
+	FIND_Slice
+	FIND_All
+	FIND_Lambda
 )
 
 const (
@@ -78,15 +79,15 @@ func setRETURNDefaultIfNil(returnType interface{}) {
 	}
 }
 
-func setFINDBYDefaultIfNil(findByType interface{}) {
-	if findByType == nil {
-		findByType = FINDBY_First
+func setFINDDefaultIfNil(findType interface{}) {
+	if findType == nil {
+		findType = FIND_First
 	}
 }
 
 func setORDERDefaultIfNil(orderType interface{}) {
 	if orderType == nil {
-		orderType = ORDER_After
+		orderType = ORDER_Before
 	}
 }
 
