@@ -58,12 +58,12 @@ func lambda_Max(card *Card, workingMemory ...interface{}) bool {
 
 }
 
+func makeSampleStack() *Stack { // very rough ugly outline
+	return MakeStack([]int{2, 10, 11, 12, 40}, []int{0, 90, 4, 2, 20})
+}
+
 /** Executes the Lambda.go tutorial */
 func Lambda() {
-
-	makeSampleStack := func() *Stack {
-		return MakeStack([]int{2, 10, 11, 12, 40}, []int{0, 90, 4, 2, 20})
-	}
 
 	fmt.Println("tutorials.Lambda()")
 

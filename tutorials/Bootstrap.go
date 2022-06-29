@@ -62,6 +62,11 @@ func bootstrap_valset(stack *Stack) *Stack{
 
 /** Executes the Bootstrap.go tutorial */
 func Bootstrap() {
+
+	makeSampleStack := func() *Stack {
+		return MakeStack([]int{2, 10, 11, 12, 40}, []int{0, 90, 4, 2, 20})
+	}
+	
 	myStack := makeSampleStack()
 	bootstrap_push(myStack, MakeCard(1,2,3))
 	bootstrap_indexOf(myStack, MakeCard(1,2,3))
