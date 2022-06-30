@@ -18,6 +18,7 @@ type TYPE int
 type ORDER int
 type MATCHBY int
 type CLONE int
+type DEEPSEARCH int
 
 const (
 	RETURN_Idxs RETURN = iota
@@ -75,6 +76,11 @@ const (
 	CLONE_False
 )
 
+const (
+	DEEPSEARCH_True DEEPSEARCH = iota
+	DEEPSEARCH_False
+)
+
 func setRETURNDefaultIfNil(returnType interface{}) {
 	if returnType == nil {
 		returnType = RETURN_Cards
@@ -102,5 +108,11 @@ func setMATCHBYDefaultIfNil(matchByType interface{}) {
 func setCLONEDefaultIfNil(cloneType interface{}) {
 	if cloneType == nil {
 		cloneType = CLONE_False
+	}
+}
+
+func setDEEPSEARCHDefaultIfNil(deepSearchType interface{}) {
+	if deepSearchType == nil {
+		deepSearchType = DEEPSEARCH_False
 	}
 }

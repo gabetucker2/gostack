@@ -1,8 +1,8 @@
 ---------------------------------------------------------------
 GABE:
-* Update JDoc documentation
+* Implement deepsearch and depth parameters for common functions
+* Update JDoc documentation to what the actual jcomments are for functions
 * Add show how pass by object can be used for cloning in replace/add/update in example
-* Make Matrix(x, y, z, ..., n) or Table() function
 * Update size trackers
 * Implement new lambda examples
  - For REPLACE_Lambda
@@ -42,10 +42,10 @@ IMPLEMENTED TESTED BROKEN DOCUMENTED FUNCTIONS:
 /
 
 IMPLEMENTED UNTESTED DOCUMENTED FUNCTIONS:
-stack.Has, stack.Move, stack.Extract, stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print, stack.Replace, stack.ExtractMany, stack.ReplaceMany, stack.Remove, stack.RemoveMany, stack.Update, stack.UpdateMany, stack.Lambda, stack.Sort, MakeStack
+stack.Has, stack.Move, stack.Extract, stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print, stack.Replace, stack.ExtractMany, stack.ReplaceMany, stack.Remove, stack.RemoveMany, stack.Update, stack.UpdateMany, stack.Lambda, stack.Sort, MakeStack, ToMatrix
 
 UNIMPLEMENTED PARTIALLY DOCUMENTED FUNCTIONS:
-/
+stack.StripStackMatrix, MakeStackMatrix
 
 UNIMPLEMENTED UNDOCUMENTED FUNCTIONS:
-stack.GetFromMatrix, MakeStackMatrix
+/

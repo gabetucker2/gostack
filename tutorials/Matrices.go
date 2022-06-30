@@ -3,12 +3,14 @@ package tutorials
 import (
 	"fmt"
 
-	. "github.com/gabetucker2/gostack"
+	//. "github.com/gabetucker2/gostack"
 )
 
 func Matrices() {
 
 	fmt.Println("tutorials/Matrics()")
+
+	/*
 
 	//////////////////////////////
 	// ORIGINAL METHOD
@@ -42,23 +44,50 @@ func Matrices() {
 	var keys []string {k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16, k17, k18}
 	var vals []int {e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18}
 
-	matrix := MakeStackMatrix([3]int {3, 3, 2}, keys, vals)
+	matrix := MakeStackMatrix([3]int {2, 3, 3}, keys, vals)
 
 	// returns
 	// - fast method
-	matrix                                                                            // matrix
+	matrix                                  // matrix
 
-	matrix.GetInMatrix(1)                                                             // y2
-	matrix.GetInMatrix(1, 0)                                                          // x4
-	matrix.GetInMatrix(1, 0, 1)                                                       // Card{k11, e11}
+	// (cx = card with Val ex and Key kx)
 
-	matrix.GetInMatrix([2]int {0, 1})                                                 // Stack.Cards{Card{y1}, Card{y2}}
-	matrix.GetInMatrix([2]int {0, 1}, 0)                                              // Stack.Cards{Card{x1}, Card{x4}}
-	matrix.GetInMatrix(0, [2]int {0, 1})                                              // Stack.Cards{Card{x1}, Card{x2}}
-	matrix.GetInMatrix(1, 0, [2]int {0, 2})                                           // Stack.Cards{c10, c11, c12} (cx = card with Val ex and Key kx)
+	matrix.StripStackMatrix(1)                   // y2
+	matrix.StripStackMatrix(1, 0)                // x4
+	matrix.StripStackMatrix(1, 0, 1)             // c11
+
+	matrix.StripStackMatrix([2]int {0, 1})       // Stack.Cards{Card{y1}, Card{y2}}
+	matrix.StripStackMatrix([2]int {0, 1}, 0)    // Stack.Cards{Card{x1}, Card{x4}}
+	matrix.StripStackMatrix(0, [2]int {0, 1})    // Stack.Cards{Card{x1}, Card{x2}}
+	matrix.StripStackMatrix(1, 0, [2]int {0, 2}) // Stack.Cards{c10, c11, c12}
 
 	// - slow method
-	matrix.Get(FIND_Key, k11, nil, nil, nil, nil, DEEPSEARCH_True)                    // Card{k11, e11}
-	matrix.Get(FIND_Keys, []string{} {k11, k17}, nil, nil, nil, nil, DEEPSEARCH_TRUE) // Stack.Cards{Card{k11, e11}, Card{k17, e17}}
+
+	// nil
+	matrix.Get(FIND_Key, k11)
+
+	// c11
+	matrix.Get(FIND_Key, k11, nil, nil, nil, nil, DEEPSEARCH_True)
+
+	// Stack.Cards{c11, c17}
+	matrix.GetMany(FIND_Keys, []string{} {k11, k17}, nil, RETURN_Cards, nil, nil, nil, DEEPSEARCH_TRUE)
+
+	// Stack.Cards{c11, c17}
+	matrix.GetMany(FIND_Keys, []string{} {k11, k17}, nil, RETURN_Cards, nil, nil, nil, DEEPSEARCH_TRUE, -1)
+
+	// Stack.Cards{}
+	matrix.GetMany(FIND_Keys, []string{} {k11, k17}, nil, RETURN_Cards, nil, nil, nil, DEEPSEARCH_TRUE, 1)
+
+	// (assuming x1, y1, etc are cards whose vals are stacks)
+
+	// matrix
+	matrix.GetMany(FIND_Cards, MakeStack(matrix, x1, y1), nil, RETURN_Cards, nil, nil, nil, DEEPSEARCH_TRUE, 0)
+
+	// y1
+	matrix.GetMany(FIND_Cards, MakeStack(matrix, x1, y1), nil, RETURN_Cards, nil, nil, nil, DEEPSEARCH_TRUE, 1)
+
+	// x1
+	matrix.GetMany(FIND_Cards, MakeStack(matrix, x1, y1), nil, RETURN_Cards, nil, nil, nil, DEEPSEARCH_TRUE, 2)
+	*/
 
 }

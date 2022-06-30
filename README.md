@@ -7,14 +7,14 @@
  Introducing **Stacks**—sets of **Card** elements (like a stack of cards)—***gostack*** serves as an all-in-one library for flexible, parsimonious, and elegant data management in *golang*.
 
  ***gostack***'s stacks...
- * ...replace maps and arrays, removing the need for pesky index-key-value fetching or translating data between maps and arrays, all the while supporting smooth conversion between stacks and your existing maps and arrays
- * ...offer the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity of 4 nested for-loops in a single line
+ * ...replace maps, arrays, and matrices, removing the need for pesky index-key-value fetching or translating data between varying data structure types, all the while supporting smooth conversion between stacks and your existing data structures
+ * ...offer the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity of 5 nested for-loops in a single line
  * ...allow the user to get and set based on reference or object with ease, preventing the user from having to worry about convoluted pointer/address management
  * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create novel stack mechanisms of their own design
 
  Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish, ***gostack*** took roughly one fifth the amount of lines (merely 10)—[see for yourself!](/tutorials/race.md)
 
- To get a better feel of the library, feel free to take a look at some [examples](/tutorials/bootstrap.go) of how ***gostack*** can substitute commonly-used functions.
+ To get a better feel of the library, feel free to take a look at some [examples](/tutorials/Bootstrap.go) of how ***gostack*** can substitute commonly-used functions.
 
 <h1 name = "glossary">Glossary</h1>
 
@@ -61,21 +61,29 @@
  >>>>> [MATCHBY](#MATCHBY)
  >>>>
  >>>>> [CLONE](#CLONE)
+ >>>>
+ >>>>> [DEEPSEARCH](#DEEPSEARCH)
  >>>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
  >>>> [MakeCard(...)](#MakeCard)
  >>>
  >>>> [MakeStack(...)](#MakeStack)
  >>>
+ >>>> [MakeStackMatrix(...)](#MakeStackMatrix)
+ >>>
+ >>>> [stack.StripStackMatrix(...)](#StripStackMatrix)
+ >>>
+ >>>> [stack.ToArray()](#ToArray)
+ >>>
+ >>>> [stack.ToMap()](#ToMap)
+ >>>
+ >>>> [stack.ToMatrix()](#ToMatrix)
+ >>>
  >>>> [stack.Empty()](#Empty)
  >>>
  >>>> [{card, stack}.Clone()](#Clone)
  >>>
  >>>> [stack.Unique(...)](#Unique)
- >>>
- >>>> [stack.ToArray()](#ToArray)
- >>>
- >>>> [stack.ToMap()](#ToMap)
  >>>
  >>>> [stack.Shuffle()](#Shuffle)
  >>>
@@ -261,15 +269,26 @@
  > * MATCHBY_Object
  > * MATCHBY_Reference
 
+ > **CLONE**
+ > * CLONE_True
+ > * CLONE_False
+
+ > **DEEPSEARCH**
+ > * DEEPSEARCH_True
+ > * DEEPSEARCH_False
+
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
- * **gostack.MakeCard(...idx, ...key, ...val)**
- * **gostack.MakeStack(...input1, ...input2, ...repeats)**
+ * **MakeCard(...idx, ...key, ...val)**
+ * **MakeStack(...input1, ...input2, ...repeats)**
+ * **MakeStackMatrix(matrixShape, ...input1, ...input2)**
+ * **stack.StripStackMatrix(target1, target2, ..., targetN)**
+ * **stack.ToArray()**
+ * **stack.ToMap()**
+ * **stack.ToMatrix(depth)**
  * **stack.Empty()**
  * **{card, stack}.Clone()**
  * **stack.Unique(typeType, ...matchByType)**
- * **stack.ToArray()**
- * **stack.ToMap()**
  * **stack.Shuffle()**
  * **stack.Flip()**
  * **{card, stack}.Print()**
@@ -481,6 +500,16 @@
  >> CLONE_False
  >>> default
 
+<h4 name = "DEEPSEARCH">DEEPSEARCH</h4>
+
+ This is an enum intended to make it easy to call functions to perform on certain elements in matrices.
+
+ > ***DEEPSEARCH***
+ >> DEEPSEARCH_True
+ >>
+ >> DEEPSEARCH_False
+ >>> default
+
 <h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>
 
 <h3 name = "MakeCard">MakeCard</h3>
@@ -527,6 +556,57 @@ Makes a stack of cards with inputted vals and keys
 	  ELSE
 	    the stack is empty
  ```
+
+<h3 name = "MakeStackMatrix">MakeStackMatrix</h3>
+
+ `MakeStackMatrix(matrixShape, ...input1, ...input2)`
+ ```
+ 
+ ```
+
+<h3 name = "MakeStack">MakeStack</h3>
+
+ `stack.StripStackMatrix(target1, target2, ..., targetN)`
+ ```
+
+ ```
+ 
+<h3 name = "ToArray">ToArray</h3>
+ 
+ `stack.ToArray()`
+ ```
+ Creates a new interface array from values of `stack`
+
+ @receiver `stack` type{Stack}
+ @returns type{[]interface{}} new array
+ @ensures new array values correspond to `stack` values
+ ```
+ 
+<h3 name = "ToMap">ToMap</h3>
+ 
+ `stack.ToMap()`
+ ```
+ Creates a new interface-interface map from values of `stack`
+
+ @receiver `stack` type{Stack}
+ @returns type{map[interface{}]interface{}} new map
+ @ensures new map keys and values correspond to `stack` keys and values
+ ```
+ 
+<h3 name = "ToMatrix">ToMatrix</h3>
+ 
+ `stack.ToMatrix(depth)`
+ ```
+ Creates a new matrix from a stack by depth.  For instance, if depth = 2, then returns the stacks inside stack as an [][]interface{}
+
+ @receiver `stack` type{Stack}
+ @param `depth` type{int}
+ @returns type{[]interface} new interface array (of arrays)
+ @ensures
+  * new map keys and values correspond to `stack` keys and values
+  * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} =>
+      []interface{}{[]interface{}{"Hi"}, []interface{}{"Hola", "Hello"}, "Hey"}
+ ```
  
 <h3 name = "Empty">Empty</h3>
  
@@ -559,24 +639,6 @@ Makes a stack of cards with inputted vals and keys
  @returns type{*Card} card clone
  @constructs clone of `card`
  ```
-
-<h2 name = "generalizedFunctions">Generalized Functions</h2>
- 
-<h3 name = "Add">Add</h3>
- 
- `stack.Add(insert, ...orderType, ...findType, ...findData, ...matchByType)`
- ```
- Adds to a stack of cards or a cards at (each) position(s) 
- 
- @receiver `stack` type{Stack}
- @param `insert` type{Card, Stack}
- @param optional `orderType` type{ORDER} default ORDER_Before
- @param optional `findType` type{FIND} default FIND_First
- @param optional `findData` type{interface{}} default nil
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
- @returns `stack`
- @updates `stack.Cards` to have new cards before/after each designated position
- ```
  
 <h3 name = "Unique">Unique</h3>
  
@@ -589,28 +651,6 @@ Makes a stack of cards with inputted vals and keys
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates `stack` to have no repeating values between field `typeType`
- ```
- 
-<h3 name = "ToArray">ToArray</h3>
- 
- `stack.ToArray()`
- ```
- Creates a new interface array from values of `stack`
-
- @receiver `stack` type{Stack}
- @returns type{[]interface{}} new array
- @ensures new array values correspond to `stack` values
- ```
- 
-<h3 name = "ToMap">ToMap</h3>
- 
- `stack.ToMap()`
- ```
- Creates a new interface-interface map from values of `stack`
-
- @receiver `stack` type{Stack}
- @returns type{map[interface{}]interface{}} new map
- @ensures new map keys and values correspond to `stack` keys and values
  ```
  
 <h3 name = "Shuffle">Shuffle</h3>
@@ -681,6 +721,24 @@ Makes a stack of cards with inputted vals and keys
  @ensures
   * Each card in `stack` is passed into your lambda function
   * `stack` is the first argument passed into your variadic parameter on the first call
+ ```
+
+<h2 name = "generalizedFunctions">Generalized Functions</h2>
+ 
+<h3 name = "Add">Add</h3>
+ 
+ `stack.Add(insert, ...orderType, ...findType, ...findData, ...matchByType)`
+ ```
+ Adds to a stack of cards or a cards at (each) position(s) 
+ 
+ @receiver `stack` type{Stack}
+ @param `insert` type{Card, Stack}
+ @param optional `orderType` type{ORDER} default ORDER_Before
+ @param optional `findType` type{FIND} default FIND_First
+ @param optional `findData` type{interface{}} default nil
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @returns `stack`
+ @updates `stack.Cards` to have new cards before/after each designated position
  ```
  
 <h3 name = "Move">Move</h3>

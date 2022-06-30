@@ -141,6 +141,90 @@ func MakeStack(variadic ...interface{}) *Stack {
 
 }
 
+/**
+
+ */
+func MakeStackMatrix(matrixShape []int, variadic ...interface{}) *Stack {
+
+	// unpack variadic into optional parameters
+	var input1, input2 interface{}
+	unpackVariadic(variadic, &input1, &input2)
+
+	// make new stack
+	stack := new(Stack)
+
+
+
+	// return
+	return stack
+	
+}
+
+/** Creates a new interface array from values of `stack`
+
+ @receiver `stack` type{Stack}
+ @returns type{[]interface{}} new array
+ @requires `stack.ToMatrix()` has been implemented
+ @ensures new array values correspond to `stack` values
+ */
+func (stack *Stack) ToArray() (arr []interface{}) {
+
+	// return
+	return stack.ToMatrix(1)
+
+}
+
+/** Creates a new interface-interface map from values of `stack`
+
+ @receiver `stack` type{Stack}
+ @returns type{map[interface{}]interface{}} new map
+ @ensures new map keys and values correspond to `stack` keys and values
+ */
+func (stack *Stack) ToMap() (m map[interface{}]interface{}) {
+
+	// add all card keys and values in stack to m
+	for i := range stack.Cards {
+		c := stack.Cards[i]
+		m[c.Key] = c.Val
+	}
+
+	// return
+	return
+
+}
+
+/** Creates a new matrix from a stack by depth.  For instance, if depth = 2, then returns the stacks inside stack as an [][]interface{}
+
+ @receiver `stack` type{Stack}
+ @param `depth` type{int}
+ @returns type{[]interface}
+ @ensures
+  * new map keys and values correspond to `stack` keys and values
+  * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} =>
+      []interface{}{[]interface{}{"Hi"}, []interface{}{"Hola", "Hello"}, "Hey"}
+ */
+func (stack *Stack) ToMatrix(depth int) (matrix []interface{}) {
+
+	// break recursion at depth == 0
+	if depth != 0 {
+		// add to return
+		for i := range stack.Cards {
+			c := stack.Cards[i]
+			// if this Card's val is a Stack
+			subStack, isStack := c.Val.(*Stack)
+			if isStack {
+				matrix = append(matrix, subStack.ToMatrix(depth - 1))
+			} else {
+				matrix = append(matrix, c.Val)
+			}
+		}
+	}
+
+	// return
+	return
+
+}
+
 /** Makes a card with inputted vals and keys
 
  @receiver `stack` type{Stack}
@@ -236,43 +320,6 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...interface{}) *Stack {
 	
 	// return
 	return stack
-
-}
-
-/** Creates a new interface array from values of `stack`
-
- @receiver `stack` type{Stack}
- @returns type{[]interface{}} new array
- @ensures new array values correspond to `stack` values
- */
-func (stack *Stack) ToArray() (arr []interface{}) {
-
-	// add all card values in stack to arr
-	for i := range stack.Cards {
-		arr = append(arr, stack.Cards[i].Val)
-	}
-
-	// return
-	return
-
-}
-
-/** Creates a new interface-interface map from values of `stack`
-
- @receiver `stack` type{Stack}
- @returns type{map[interface{}]interface{}} new map
- @ensures new map keys and values correspond to `stack` keys and values
- */
-func (stack *Stack) ToMap() (m map[interface{}]interface{}) {
-
-	// add all card keys and values in stack to m
-	for i := range stack.Cards {
-		c := stack.Cards[i]
-		m[c.Key] = c.Val
-	}
-
-	// return
-	return
 
 }
 
