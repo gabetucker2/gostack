@@ -146,6 +146,10 @@
  >>
  >>> [Lambda.go](/tutorials/Lambda.go) is a tutorial on how to implement lambda functions
  >>
+ >>> [Matrices.go](/tutorials/Matrices.go) is a tutorial on how to implement matrices in ***gostack***
+ >>
+ >>> [ObjectReference.go](/tutorials/ObjectReference.go) is a tutorial on how to use passing-by-object and -by-reference with respect to ***gostack*** functions
+ >>
  >>> [race.md](/tutorials/race.md) showcases a race to complete the same set of tasks using ***classical go*** vs ***gostack***
  >>
  >>> [unaddedtutorials.txt](/tutorials/unaddedtutorials.txt) is where obsolete data to be added into future tutorials is stored, intended only for the developers

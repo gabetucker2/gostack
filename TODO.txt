@@ -1,5 +1,6 @@
 ---------------------------------------------------------------
 GABE:
+* Update JDoc documentation
 * Add show how pass by object can be used for cloning in replace/add/update in example
 * Make Matrix(x, y, z, ..., n) or Table() function
 * Update size trackers
@@ -47,4 +48,4 @@ UNIMPLEMENTED PARTIALLY DOCUMENTED FUNCTIONS:
 /
 
 UNIMPLEMENTED UNDOCUMENTED FUNCTIONS:
-/
+stack.GetFromMatrix, MakeStackMatrix
