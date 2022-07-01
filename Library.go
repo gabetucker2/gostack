@@ -7,14 +7,14 @@ import (
 	"time"
 )
 
-/** Makes a card with inputted vals and keys
+/** Creates a card with inputted val, key, and idx
 
- @param optional `val` type{any} default nil
- @param optional `key` type{any} default nil
- @param optional `idx` type{int} default -1 no pass-by-reference
- @returns type{*Card} the newly-constructed card
- @constructs type{*Card} a newly-constructed card
- @ensures the new card will have val `val`, key `key`, and idx `idx`
+@param optional `val` type{any} default nil
+@param optional `key` type{any} default nil
+@param optional `idx` type{int} default -1 no pass-by-reference
+@returns type{*Card} the newly-constructed card
+@constructs type{*Card} a newly-constructed card
+@ensures the new card will have val `val`, key `key`, and idx `idx`
 */
 func MakeCard(variadic ...interface{}) *Card {
 
@@ -37,7 +37,7 @@ func MakeCard(variadic ...interface{}) *Card {
 
 }
 
-/** Makes a stack of cards with optional starting cards
+/** Creates a stack of cards with optional starting cards
  
  @param optional `input1` type{[]any, map[any]any} default nil
  @param optional `input2` type{[]any} default nil
@@ -48,22 +48,23 @@ func MakeCard(variadic ...interface{}) *Card {
   * `input1` is map and nil `input2`
       OR `input1` is an array and nil `input2`
 	  OR `input1` is an array and `input2` is an array
+	  OR `input1` is nil and `input2` is an array
   * IF `input1` and `input2` are both passed as arguments
       |`input1`| == |`input2`|
-  * `MakeCard()` has been implemented
+  * `MakeStackMatrix()` has been implemented
  @ensures
-  * `repeats` (or, if nil or under 0, 1) amount of times
-      IF `input1` is passed
-	      IF `input1` is a map
-            unpack the map into new cards with corresponding keys and vals
-          ELSEIF `input1` is an array and `input2` is not passed
-            unpack values from `input1` into new cards
-          ELSEIF `input1` is an array and `input2` is an array
-		    unpack keys from `input1` and values from `input2` into new cards
-          ELSEIF `input1` is nil and `input2` is an array
-		    unpack keys from `input2`
-	  ELSE
-	    the stack is empty
+  * repeats the function's filling `repeats` (or, if nil or under 0, 1) amount of times
+  * IF `input1` is passed
+      IF `input1` is a map
+        unpack the map into new cards with corresponding keys and vals
+      ELSEIF `input1` is an array and `input2` is not passed/nil
+        unpack values from `input1` into new cards
+      ELSEIF `input1` is an array and `input2` is an array
+        unpack keys from `input1` and values from `input2` into new cards
+      ELSEIF `input1` is nil and `input2` is an array
+        unpack keys from `input2` into new cards
+    ELSE
+      the stack is empty
  */
 func MakeStack(variadic ...interface{}) *Stack {
 
@@ -71,14 +72,78 @@ func MakeStack(variadic ...interface{}) *Stack {
 	var input1, input2, repeats interface{}
 	unpackVariadic(variadic, &input1, &input2, &repeats)
 
-	// initialize stack
+	// set default
+	if repeats == nil {
+		repeats = 1
+	}
+
+	// new stack
 	stack := new(Stack)
 
-	// `repeats` (or, if nil or under 0, 1) amount of times
-	if repeats == nil || repeats.(int) < 0 { repeats = 1 }
+	// run MakeStackMatrix to 1D array and add to our stack `repeats` times
 	for i := 0; i < repeats.(int); i++ {
+		ls := MakeStackMatrix(input1, input2, []int{1})
+		for i := range ls.Cards {
+			stack.Cards = append(stack.Cards, ls.Cards[i])
+		}
+	}
 
-		// IF `input1` is passed
+	// return
+	return stack
+
+}
+
+/** Creates a new stack-within-stack-structured stack
+ 
+ @param optional `input1` type{interface{}} default nil
+ @param optional `input2` type{interface{}} default nil
+ @param optional `matrixShape` type{[]int} default nil
+  * an int array representing the shape of the matrix
+  * the first int is the largest container
+  * the last int is the container directly containing the inputted cards
+ @requires
+  * `MakeCard()` has been implemented
+  * IF `input1` and `input2` are both passed as arguments
+      |`input1`| == |`input2`|
+ @ensures
+  * IF no `matrixShape` is passed
+      treating `input1`/`input2` as matrices/a map of matrices:
+      IF `input1` is passed
+        IF `input1` is a map
+          unpack the map into new matrix with corresponding keys and vals
+        ELSEIF `input1` is an array and `input2` is not passed/nil
+          unpack values from `input1` into new matrix
+        ELSEIF `input1` is an array and `input2` is an array
+          unpack keys from `input1` and values from `input2` into new matrix
+        ELSEIF `input1` is nil and `input2` is an array
+          unpack keys from `input2` into new matrix
+      ELSEIF `input1` is not passed
+        the stack is empty
+	ELSEIF `matrixShape` is passed
+	  treating `input1`/`input2` as 1D arrays:
+	  IF `input1` is passed
+        IF `input1` is a map
+          unpack the map into new matrix with corresponding keys and vals
+        ELSEIF `input1` is an array and `input2` is not passed/nil
+          unpack values from `input1` into new matrix
+        ELSEIF `input1` is an array and `input2` is an array
+          unpack keys from `input1` and values from `input2` into new matrix
+        ELSEIF `input1` is nil and `input2` is an array
+          unpack keys from `input2` into new matrix
+	  ELSEIF `input1` is not passed
+	    create a StackMatrix of shape `matrixShape` whose deepest card vals are nil
+ */
+func MakeStackMatrix(variadic ...interface{}) *Stack {
+
+	// unpack variadic into optional parameters
+	var input1, input2, matrixShape interface{}
+	unpackVariadic(variadic, &input1, &input2, &matrixShape)
+
+	stack := new(Stack)
+
+	// IF `input1` is passed
+	if !(input1 == nil && input2 == nil) {
+
 		if input1 != nil {
 
 			input1Type := reflect.ValueOf(input1).Kind()
@@ -87,73 +152,90 @@ func MakeStack(variadic ...interface{}) *Stack {
 			// IF `input1` is a map
 			case reflect.Map:
 				// unpack the map into new cards with corresponding keys and vals
-				i := 0
-				for k, v := range input1.(map[interface{}]interface{}) {
-					stack.Cards = append(
-						stack.Cards,
-						MakeCard(&v, &k, i),
-					)
-					i++
-				}
-			
-			case reflect.Array:
-				input1Len := len(input1.([]interface{}))
-
-				// ELSEIF `input1` is an array and `input2` is not passed
-				if input2 != nil {
-					// unpack values from `input1` into new cards
-					for i := 0; i < input1Len; i++ {
+				if matrixShape == nil {
+					var keys, vals []interface{}
+					for k, v := range input1.(map[interface{}]interface{}) {
+						keys = append(keys, k)
+						vals = append(vals, v)
+					}
+					stack.makeStackMatrixFrom1D(matrixShape.([]int), keys, vals, new(int))
+				} else {
+					// TODO: Implement
+					/*i := 0
+					for k, v := range input1.(map[interface{}]interface{}) {
 						stack.Cards = append(
 							stack.Cards,
-							MakeCard(&input1.([]interface{})[i], nil, i),
+							MakeCard(&v, &k, i),
 						)
+						i++
+					}*/
+				}
+			
+			// ELSEIF `input1` is an array...
+			case reflect.Array:
+
+				input1Len := len(input1.([]interface{}))
+
+				// ...and `input2` is not passed
+				if input2 == nil {
+					
+					// unpack values from `input1` into new cards
+					if matrixShape == nil {
+						stack.makeStackMatrixFrom1D(matrixShape.([]int), nil, input1.([]interface{}), new(int))
+					} else {
+						// TODO: Implement
+						/*for i := 0; i < input1Len; i++ {
+							stack.Cards = append(
+								stack.Cards,
+								MakeCard(&input1.([]interface{})[i], nil, i),
+							)
+						}*/
 					}
 
-				// ELSEIF `input1` is an array and `input2` is an array
+				// ...and `input2` is an array
 				} else {
+
 					// unpack keys from `input1` and values from `input2` into new cards
-					for i := 0; i < input1Len; i++ {
+					/*for i := 0; i < input1Len; i++ {
 						stack.Cards = append(
 							stack.Cards,
 							MakeCard(&input1.([]interface{})[i], &input2.([]interface{})[i], i),
 						)
-					}
+					}*/
 				}
+
 			}
+
+		// ELSEIF `input1` is nil and `input2` is an array
 		} else {
 
 			// unpack values from `input2` into new card keys
-			for i := 0; i < len(input2.([]interface{})); i++ {
+			/*for i := 0; i < len(input2.([]interface{})); i++ {
 				stack.Cards = append(
 					stack.Cards,
 					MakeCard(nil, &input2.([]interface{})[i], i),
 				)
-			}
+			}*/
+		}
+
+	// ELSEIF `input1` is not passed
+	} else {
+
+		// IF no `matrixShape` is passed
+		if matrixShape == nil {
+			// the stack is empty
+
+		// ELSEIF `matrixShape` is passed
+		} else {
+			// create a StackMatrix of shape `matrixShape` whose deepest card vals are nil
+			stack.makeStackMatrixFrom1D(matrixShape.([]int), nil, nil, new(int))
 
 		}
+
 	}
 
 	// set up stack size
 	stack.Size = len(stack.Cards)
-
-	// return
-	return stack
-
-}
-
-/**
-
- */
-func MakeStackMatrix(matrixShape []int, variadic ...interface{}) *Stack {
-
-	// unpack variadic into optional parameters
-	var input1, input2 interface{}
-	unpackVariadic(variadic, &input1, &input2)
-
-	// make new stack
-	stack := new(Stack)
-
-
 
 	// return
 	return stack
@@ -162,7 +244,7 @@ func MakeStackMatrix(matrixShape []int, variadic ...interface{}) *Stack {
 
 /** Creates a new interface array from values of `stack`
 
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @returns type{[]interface{}} new array
  @requires `stack.ToMatrix()` has been implemented
  @ensures new array values correspond to `stack` values
@@ -176,7 +258,7 @@ func (stack *Stack) ToArray() (arr []interface{}) {
 
 /** Creates a new interface-interface map from values of `stack`
 
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @returns type{map[interface{}]interface{}} new map
  @ensures new map keys and values correspond to `stack` keys and values
  */
@@ -195,25 +277,35 @@ func (stack *Stack) ToMap() (m map[interface{}]interface{}) {
 
 /** Creates a new matrix from a stack by depth.  For instance, if depth = 2, then returns the stacks inside stack as an [][]interface{}
 
- @receiver `stack` type{Stack}
- @param `depth` type{int}
+ @receiver `stack` type{*Stack}
+ @param optional `depth` type{int} default -1
  @returns type{[]interface}
  @ensures
+  * -1 depth means it will go as deep as it can
   * new map keys and values correspond to `stack` keys and values
   * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} =>
       []interface{}{[]interface{}{"Hi"}, []interface{}{"Hola", "Hello"}, "Hey"}
  */
-func (stack *Stack) ToMatrix(depth int) (matrix []interface{}) {
+func (stack *Stack) ToMatrix(variadic ...interface{}) (matrix []interface{}) {
+
+	// unpack variadic into optional parameters
+	var depth interface{}
+	unpackVariadic(variadic, &depth)
+
+	// update depth
+	if depth == nil {
+		depth = -1
+	}
 
 	// break recursion at depth == 0
-	if depth != 0 {
+	if depth.(int) != 0 {
 		// add to return
 		for i := range stack.Cards {
 			c := stack.Cards[i]
 			// if this Card's val is a Stack
 			subStack, isStack := c.Val.(*Stack)
 			if isStack {
-				matrix = append(matrix, subStack.ToMatrix(depth - 1))
+				matrix = append(matrix, subStack.ToMatrix(depth.(int) - 1))
 			} else {
 				matrix = append(matrix, c.Val)
 			}
@@ -227,7 +319,7 @@ func (stack *Stack) ToMatrix(depth int) (matrix []interface{}) {
 
 /** Makes a card with inputted vals and keys
 
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @returns `stack`
  @updates `stack` to be empty
 */
@@ -244,7 +336,7 @@ func (stack *Stack) Empty() *Stack {
 
 /** Returns a clone of the given stack
 
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @returns type{*Stack} stack clone
  @constructs type{*Stack} clone of `stack`
  @ensures the stack clone has the same card pointers as `stack`
@@ -263,7 +355,7 @@ func (stack *Stack) Clone() *Stack {
 
 /** Returns a clone of the given card
 
- @receiver `card` type{Card}
+ @receiver `card` type{*Card}
  @returns type{*Card} card clone
  @constructs type{*Card} clone of `card`
 */
@@ -282,7 +374,7 @@ func (card *Card) Clone() *Card {
 
 /** Removes all cards from `stack` which share the same field value as another card before
 
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `typeType` type{TYPE}
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
@@ -325,7 +417,7 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...interface{}) *Stack {
 
 /** Shuffles the order of `stack` cards
 
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @returns `stack`
  @updates
   * `stack` card ordering is randomized
@@ -346,7 +438,7 @@ func (stack *Stack) Shuffle() *Stack {
 
 /** Flips the ordering of `stack.Cards`
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @returns `stack`
  @updates `stack` to have its ordering reversed
  */
@@ -370,7 +462,7 @@ func (stack *Stack) Flip() *Stack {
 
 /** Prints information regarding `card` to the console
  
- @receiver `card` type{Card}
+ @receiver `card` type{*Card}
  @updates terminal logs
  */
 func (card *Card) Print() {
@@ -384,7 +476,7 @@ func (card *Card) Print() {
 
 /** Prints information regarding `stack` to the console
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @updates terminal logs
  @requires `card.Print()` has been implemented
  */
@@ -400,7 +492,7 @@ func (stack *Stack) Print() {
 
 /** Order the cards contingent on some attribute they contain
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `lambda` type{func(*Card, *Stack, ...interface{}) (ORDER, int)}
  @requires
   * `lambda` returns the order (before/after) and index to which to move your card in the stack
@@ -413,7 +505,7 @@ func (stack *Stack) Sort(lambda func(*Card, *Stack, ...interface{}) (ORDER, int)
 
 /** Iterate through a stack calling your lambda function on each card
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `lambda` type{func(*Card, ...interface{})}
  @ensures
   * Each card in `stack` is passed into your lambda function
@@ -425,7 +517,7 @@ func (stack *Stack) Lambda(lambda func(*Card, ...interface{})) {
 
 /** Adds to a stack of cards or a cards at (each) position(s) and returns `stack`
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `insert` type{Card, Stack}
  @param optional `orderType` type{ORDER} default ORDER_Before
  @param optional `findType` type{FIND} default FIND_First
@@ -498,7 +590,7 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 
 /** Moves one element or slice of cards to before or after another element or slice of cards
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `findType_from` type{FIND}
  @param `orderType` type{ORDER}
  @param `findType_to` type{FIND}
@@ -569,7 +661,7 @@ func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, 
 
 /** Returns a boolean representing whether a search exists in the stack
 
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param optional `findType` type{FIND} default FIND_First
  @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
@@ -588,7 +680,7 @@ func (stack *Stack) Has(variadic ...interface{}) bool {
 
 /** Gets a card from specified parameters in a stack, or nil if does not exist
 
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param optional `findType` type{FIND} default FIND_First
  @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
@@ -639,7 +731,7 @@ func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
 
 /** Gets a stack from specified parameters in a stack
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
@@ -722,7 +814,7 @@ func (stack *Stack) GetMany(findType FIND, variadic ...interface{}) *Stack {
 
 /** Returns a clone of a found card before its respective field is updated to `replaceData` (OR nil if not found)
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `replaceType` type{REPLACE}
  @param `replaceData` type{interface{}}
  @param `findType` type{FIND}
@@ -759,7 +851,7 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceData interface{}, findTy
 
 /** Returns a stack whose values are clones of the original fields updated to `replaceData`
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `replaceType` type{REPLACE}
  @param `replaceData` type{interface{}}
  @param `findType` type{FIND}
@@ -800,7 +892,7 @@ func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceData interface{}, fi
 
 /** Updates a card in and returns `stack`
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `replaceType` type{REPLACE}
  @param `replaceData` type{interface{}}
  @param `findType` type{FIND}
@@ -826,7 +918,7 @@ func (stack *Stack) Update(replaceType REPLACE, replaceData interface{}, findTyp
 
 /** Updates cards in and returns `stack`
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `replaceType` type{REPLACE}
  @param `replaceData` type{interface{}}
  @param `findType` type{FIND}
@@ -852,7 +944,7 @@ func (stack *Stack) UpdateMany(replaceType REPLACE, replaceData interface{}, fin
 
 /** Gets and removes a card from `stack`, or returns nil if does not exist
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
@@ -873,7 +965,7 @@ func (stack *Stack) Extract(findType FIND, variadic ...interface{}) *Card {
 
 /** Gets and removes a set of cards from `stack`
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
@@ -895,7 +987,7 @@ func (stack *Stack) ExtractMany(findType FIND, variadic ...interface{}) *Stack {
 
 /** Removes a card from and returns `stack`
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
@@ -919,7 +1011,7 @@ func (stack *Stack) Remove(findType FIND, variadic ...interface{}) *Stack {
 
 /** Removes a set of cards from and returns `stack`
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object

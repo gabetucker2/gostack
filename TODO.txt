@@ -1,7 +1,7 @@
 ---------------------------------------------------------------
 GABE:
+* Double-check pass-by-reference is implemented correctly for interface types... see test.go
 * Implement deepsearch and depth parameters for common functions
-* Update JDoc documentation to what the actual jcomments are for functions
 * Add show how pass by object can be used for cloning in replace/add/update in example
 * Update size trackers
 * Implement new lambda examples
@@ -12,12 +12,14 @@ GABE:
  - Fix taskC.replace()
 * Update card.idx whenever it's updated
 * Implement variadic error-catching function for bad argument conditions (fmt.Errorf()) (like if-then style in Move with all functions)
-* Update gostack banner to have code from a tutorial
+* Add "How to Import" to README
+* Merge wip to main
 
 ---------------------------------------------------------------
 ANDY:
+* Update JDoc documentation to what the actual jcomments are for functions (just copy+paste)
 * Add IsEmpty() function (just stack.Has()) to bootstrap, update push and pop in bootstrap (should just be the same as add and extract)
-* Create new Get/GetMany tutorial
+* Replace unnecessary for loops with slices when there's no efficiency loss
 * Implement case tests for functions listed in IMPLEMENTED UNTESTED DOCUMENTED FUNCTIONS list below (make sure to implement them in order)
  - See unaddedcases.txt for reference
 * Fix faulty classical go code in tutorials/race.md

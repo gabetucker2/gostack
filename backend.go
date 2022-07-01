@@ -3,10 +3,10 @@ package gostack
 import "reflect"
 
 /** Returns a clone of this interface
- 
- @param `toClone` type{interface{}}
- @returns type{interface{}}
- */
+
+@param `toClone` type{interface{}}
+@returns type{interface{}}
+*/
 func cloneInterface(toClone interface{}) interface{} {
 	return reflect.New(reflect.ValueOf(toClone).Elem().Type()).Interface()
 }
@@ -17,6 +17,7 @@ func cloneInterface(toClone interface{}) interface{} {
  @param `out1` type{interface{}}
  @param `out2` type{interface{}}
  @returns interface{} `out1` or `out2`
+ @requires neither param yields a syntax error
  */
 func ifElse(test bool, out1, out2 interface{}) interface{} {
 	if test { return out1 } else { return out2 }
@@ -55,7 +56,7 @@ func unpackVariadic(variadic []interface{}, into ...*interface{}) {
 
 /** Removes the cards from a stack for which lambda(card) is false
  
- @param `stack` type{Stack}
+ @param `stack` type{*Stack}
  @param `lambda` type{func(*Card, workingMemory) bool}
  @returns `stack`
  @updates `stack.Cards` to a new set of Cards filtered using `lambda`
@@ -74,7 +75,7 @@ func getIterator(stack *Stack, lambda func(*Card, ...interface{}) bool) {
 
 /** Passes each card into the lambda function iteratively
  
- @param `stack` type{Stack}
+ @param `stack` type{*Stack}
  @param `lambda` type{func(*Card, ...workingMemory)}
  @updates `stack.Cards` to whatever the `lambda` function specifies
  */
@@ -87,7 +88,7 @@ func generalIterator(stack *Stack, lambda func(*Card, ...interface{})) {
 
 /** Passes each card into the lambda function iteratively
  
- @param `stack` type{Stack}
+ @param `stack` type{*Stack}
  @param `lambda` type{func(*Card, *Stack, ...workingMemory) (ORDER, int)}
  @updates `stack.Cards` to whatever the `lambda` function specifies
  */
@@ -103,7 +104,7 @@ func sortIterator(stack *Stack, lambda func(*Card, *Stack, ...interface{}) (ORDE
 /** Returns an []int of indices representing the targeted position(s) in a stack
  
  @param `getFirst` type{bool}
- @param `stack` type{Stack} no pass-by-reference
+ @param `stack` type{*Stack} no pass-by-reference
  @param `findType` type{FIND}
  @param `findData` type{interface{}}
  @returns the []int of targeted positions
@@ -296,7 +297,8 @@ func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface
 
 }
 
-/**
+/** Updates a target's field or value to new values based on replaceType
+
  @param setStack type{*Stack}
  @param replaceType type{REPLACE}
  @param replaceData type{interface{}}
@@ -349,5 +351,54 @@ func updateRespectiveField(setStack *Stack, replaceType REPLACE, replaceData int
 		generalIterator(setStack, replaceData.(func(*Card, ...interface{})))
 
 	}
+
+}
+
+/** Recursively add nil elements of matrix size to stack
+ 
+ @receiver stack type{*Stack}
+ @param matrixShape type{[]int}
+ @param keys type{interface{}}
+ @param vals type{interface{}}
+ @param globalI type{*int}
+ @returns type{*Stack}
+ @requires
+  * `MakeStack()` and `MakeCard()` have been implemented
+  * |keys| == |vals| if neither are nil
+  * |keys| or |vals| == product of ints in matrixShape
+*/
+func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys interface{}, vals interface{}, globalI *int) (ret *Stack) {
+
+	// make stack
+	if len(matrixShape) > 1 {
+
+		for i := 0; i < matrixShape[0]; i++ {
+			// return new stack of stack ... of stack whose vals are nil
+			ret := MakeStack().makeStackMatrixFrom1D(matrixShape[1:], keys, vals, globalI)
+			// insert this return value into a card of our current stack
+			stack.Cards = append(stack.Cards, MakeCard(nil, ret, i))
+		}
+
+	// no more stacks to make, insert nils into and return current stack
+	} else {
+		
+		for i := 0; i < matrixShape[0]; i++ {
+			c := MakeCard()
+			if keys != nil {
+				c.Key = keys.([]interface{})[*globalI]
+			}
+			if vals != nil {
+				c.Val = vals.([]interface{})[*globalI]
+			}
+			if keys != nil || vals != nil {
+				*globalI++
+			}
+			stack.Cards = append(stack.Cards, c)
+		}
+		ret = stack
+
+	}
+
+	return
 
 }

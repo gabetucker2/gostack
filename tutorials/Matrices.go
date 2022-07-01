@@ -2,7 +2,6 @@ package tutorials
 
 import (
 	"fmt"
-
 	//. "github.com/gabetucker2/gostack"
 )
 
@@ -44,7 +43,10 @@ func Matrices() {
 	var keys []string {k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16, k17, k18}
 	var vals []int {e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18}
 
+	// IF keys/vals are just 1D arrays
 	matrix := MakeStackMatrix([3]int {2, 3, 3}, keys, vals)
+	// OR, if keys/vals are [][][]string/[][][]vals, i.e. already matrices
+	matrix := MatrixToStackMatrix(keys, vals)
 
 	// returns
 	// - fast method

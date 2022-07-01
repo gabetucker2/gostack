@@ -7,7 +7,7 @@
  Introducing **Stacks**—sets of **Card** elements (like a stack of cards)—***gostack*** serves as an all-in-one library for flexible, parsimonious, and elegant data management in *golang*.
 
  ***gostack***'s stacks...
- * ...replace maps, arrays, and matrices, removing the need for pesky index-key-value fetching or translating data between varying data structure types, all the while supporting smooth conversion between stacks and your existing data structures
+ * ...replace maps, arrays, and matrices, expelling with the need for fetching or translating data between varying data structure types, all the while supporting smooth conversion between stacks and your existing data structures
  * ...offer the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity of 5 nested for-loops in a single line
  * ...allow the user to get and set based on reference or object with ease, preventing the user from having to worry about convoluted pointer/address management
  * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create novel stack mechanisms of their own design
@@ -281,11 +281,11 @@
 
  * **MakeCard(...idx, ...key, ...val)**
  * **MakeStack(...input1, ...input2, ...repeats)**
- * **MakeStackMatrix(matrixShape, ...input1, ...input2)**
+ * **MakeStackMatrix(...input1, ...input2, ...matrixShape)**
  * **stack.StripStackMatrix(target1, target2, ..., targetN)**
  * **stack.ToArray()**
  * **stack.ToMap()**
- * **stack.ToMatrix(depth)**
+ * **stack.ToMatrix(...depth)**
  * **stack.Empty()**
  * **{card, stack}.Clone()**
  * **stack.Unique(typeType, ...matchByType)**
@@ -530,43 +530,39 @@
 
  `gostack.MakeStack(...input1, ...input2, ...repeats)`
  ```
-Makes a stack of cards with inputted vals and keys
-
+ Creates a stack of cards with optional starting cards
+ 
  @param optional `input1` type{[]any, map[any]any} default nil
  @param optional `input2` type{[]any} default nil
  @param optional `repeats` type{int} default 1
- @returns type{*Stack} the newly-constructed stack of ards
- @constructs type{*Stack} a newly-constructed stack of cards
+ @returns type{*Stack} the newly-constructed stack of newly-constructed cards
+ @constructs type{*Stack} a newly-constructed stack of newly-constructed cards
  @requires
   * `input1` is map and nil `input2`
       OR `input1` is an array and nil `input2`
 	  OR `input1` is an array and `input2` is an array
+	  OR `input1` is nil and `input2` is an array
   * IF `input1` and `input2` are both passed as arguments
       |`input1`| == |`input2`|
-  * MakeCard() has been implemented
+  * `MakeCard()` has been implemented
  @ensures
-  * `repeats` (or, if nil, 1) amount of times:
-      IF `input1` is passed
-	      IF `input1` is a map
-            unpack the map into new cards with corresponding keys and vals
-          ELSEIF `input1` is an array and `input2` is not passed
-            unpack values from `input1` into new cards
-          ELSEIF `input1` is an array and `input2` is an array
-		    unpack keys from `input1` and values from `input2` into new cards
+  * repeats the function's filling `repeats` (or, if nil or under 0, 1) amount of times
+  * IF `input1` is passed
+	    IF `input1` is a map
+        unpack the map into new cards with corresponding keys and vals
+      ELSEIF `input1` is an array and `input2` is not passed/nil
+        unpack values from `input1` into new cards
+      ELSEIF `input1` is an array and `input2` is an array
+	      unpack keys from `input1` and values from `input2` into new cards
+      ELSEIF `input1` is nil and `input2` is an array
+	      unpack keys from `input2` into new cards
 	  ELSE
 	    the stack is empty
  ```
 
 <h3 name = "MakeStackMatrix">MakeStackMatrix</h3>
 
- `MakeStackMatrix(matrixShape, ...input1, ...input2)`
- ```
- 
- ```
-
-<h3 name = "MakeStack">MakeStack</h3>
-
- `stack.StripStackMatrix(target1, target2, ..., targetN)`
+ `MakeStackMatrix(...input1, ...input2, ...matrixShape)`
  ```
 
  ```
@@ -577,7 +573,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Creates a new interface array from values of `stack`
 
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @returns type{[]interface{}} new array
  @ensures new array values correspond to `stack` values
  ```
@@ -588,21 +584,22 @@ Makes a stack of cards with inputted vals and keys
  ```
  Creates a new interface-interface map from values of `stack`
 
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @returns type{map[interface{}]interface{}} new map
  @ensures new map keys and values correspond to `stack` keys and values
  ```
  
 <h3 name = "ToMatrix">ToMatrix</h3>
  
- `stack.ToMatrix(depth)`
+ `stack.ToMatrix(...depth)`
  ```
  Creates a new matrix from a stack by depth.  For instance, if depth = 2, then returns the stacks inside stack as an [][]interface{}
 
- @receiver `stack` type{Stack}
- @param `depth` type{int}
- @returns type{[]interface} new interface array (of arrays)
+ @receiver `stack` type{*Stack}
+ @param optional `depth` type{int} default -1
+ @returns type{[]interface}
  @ensures
+  * -1 depth means it will go as deep as it can
   * new map keys and values correspond to `stack` keys and values
   * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} =>
       []interface{}{[]interface{}{"Hi"}, []interface{}{"Hola", "Hello"}, "Hey"}
@@ -614,7 +611,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Makes a card with inputted vals and keys
 
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @returns `stack`
  @updates `stack.Cards` to be empty
  ```
@@ -625,7 +622,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Returns a clone of the given stack
 
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @returns type{*Stack} stack clone
  @constructs type{*Stack} clone of `stack`
  @ensures the stack clone has the same card pointers as `stack`
@@ -635,7 +632,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Returns a clone of the given card
 
- @receiver `card` type{Card}
+ @receiver `card` type{*Card}
  @returns type{*Card} card clone
  @constructs clone of `card`
  ```
@@ -646,7 +643,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Removes all cards from `stack` which share the same field value as another card before
 
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `typeType` type{TYPE}
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
@@ -659,7 +656,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Shuffles the order of `stack` cards
 
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @returns `stack`
  @updates
   * `stack` card ordering is randomized
@@ -672,7 +669,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Flips the ordering of `stack.Cards`
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @returns `stack`
  @updates `stack` to have its ordering reversed
  ```
@@ -683,7 +680,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Prints information regarding `card` to the console
  
- @receiver `card` type{Card}
+ @receiver `card` type{*Card}
  @updates terminal logs
  ```
  
@@ -691,7 +688,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Prints information regarding `stack` to the console
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @updates terminal logs
  @requires card.Print() has been implemented
  ```
@@ -702,7 +699,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Order the cards contingent on some attribute they contain
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `lambda` type{func(*Card, *Stack, ...interface{}) (ORDER, int)}
  @requires
   * `lambda` returns the order (before/after) and index to which to move your card in the stack
@@ -716,7 +713,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Iterate through a stack calling your lambda function on each card
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `lambda` type{func(*Card, ...interface{})}
  @ensures
   * Each card in `stack` is passed into your lambda function
@@ -731,7 +728,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Adds to a stack of cards or a cards at (each) position(s) 
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `insert` type{Card, Stack}
  @param optional `orderType` type{ORDER} default ORDER_Before
  @param optional `findType` type{FIND} default FIND_First
@@ -747,7 +744,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Moves one element or slice of cards to before or after another element or slice of cards
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `findType_from` type{FIND}
  @param `orderType` type{ORDER}
  @param `findType_to` type{FIND}
@@ -765,7 +762,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Returns a boolean representing whether a search exists in the stack
 
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param optional `findType` type{FIND} default FIND_First
  @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
@@ -779,7 +776,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Gets a card from specified parameters in a stack, or nil if does not exist
 
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param optional `findType` type{FIND} default FIND_First
  @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
@@ -799,7 +796,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Gets a stack from specified parameters in a stack
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
@@ -824,7 +821,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Returns a clone of a found card before its respective field is updated to `replaceData` (OR nil if not found)
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `replaceType` type{REPLACE}
  @param `replaceData` type{interface{}}
  @param `findType` type{FIND}
@@ -842,7 +839,7 @@ Makes a stack of cards with inputted vals and keys
  ```
   Returns a stack whose values are clones of the original fields updated to `replaceData`
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `replaceType` type{REPLACE}
  @param `replaceData` type{interface{}}
  @param `findType` type{FIND}
@@ -861,7 +858,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Updates a card in and returns `stack`
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
@@ -876,7 +873,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Updates cards in and returns `stack`
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
@@ -891,7 +888,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Gets and removes a card from `stack`, or returns nil if it does not exist
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
@@ -905,7 +902,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Gets and removes a set of cards from `stack`
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
@@ -921,7 +918,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Removes a card from and returns `stack`
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
@@ -936,7 +933,7 @@ Makes a stack of cards with inputted vals and keys
  ```
  Removes a set of cards from and returns `stack`
  
- @receiver `stack` type{Stack}
+ @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{interface{}} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
