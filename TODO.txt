@@ -1,6 +1,6 @@
 ---------------------------------------------------------------
 GABE:
-* Double-check pass-by-reference is implemented correctly for interface types... see test.go
+* Implement casting interfaces as respective pointer type when assigning... see test.go
 * Implement deepsearch and depth parameters for common functions
 * Add show how pass by object can be used for cloning in replace/add/update in example
 * Update size trackers

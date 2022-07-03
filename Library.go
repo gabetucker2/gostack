@@ -9,12 +9,12 @@ import (
 
 /** Creates a card with inputted val, key, and idx
 
-@param optional `val` type{any} default nil
-@param optional `key` type{any} default nil
-@param optional `idx` type{int} default -1 no pass-by-reference
-@returns type{*Card} the newly-constructed card
-@constructs type{*Card} a newly-constructed card
-@ensures the new card will have val `val`, key `key`, and idx `idx`
+ @param optional `val` type{any} default nil
+ @param optional `key` type{any} default nil
+ @param optional `idx` type{int} default -1 no pass-by-reference
+ @returns type{*Card} the newly-constructed card
+ @constructs type{*Card} a newly-constructed card
+ @ensures the new card will have val `val`, key `key`, and idx `idx`
 */
 func MakeCard(variadic ...interface{}) *Card {
 
@@ -53,7 +53,7 @@ func MakeCard(variadic ...interface{}) *Card {
       |`input1`| == |`input2`|
   * `MakeStackMatrix()` has been implemented
  @ensures
-  * repeats the function's filling `repeats` (or, if nil or under 0, 1) amount of times
+  * repeats the function filling `repeats` (or, if nil or under 0, 1) amount of times
   * IF `input1` is passed
       IF `input1` is a map
         unpack the map into new cards with corresponding keys and vals
@@ -110,26 +110,26 @@ func MakeStack(variadic ...interface{}) *Stack {
       treating `input1`/`input2` as matrices/a map of matrices:
       IF `input1` is passed
         IF `input1` is a map
-          unpack the map into new matrix with corresponding keys and vals
+          unpack the map into matrix of shape `inputx` with corresponding keys and vals
         ELSEIF `input1` is an array and `input2` is not passed/nil
-          unpack values from `input1` into new matrix
+          unpack values from `input1` into matrix of shape `inputx`
         ELSEIF `input1` is an array and `input2` is an array
-          unpack keys from `input1` and values from `input2` into new matrix
+          unpack keys from `input1` and values from `input2` into matrix of shape `inputx`
         ELSEIF `input1` is nil and `input2` is an array
-          unpack keys from `input2` into new matrix
+          unpack keys from `input2` into matrix of shape `inputx` 
       ELSEIF `input1` is not passed
         the stack is empty
 	ELSEIF `matrixShape` is passed
 	  treating `input1`/`input2` as 1D arrays:
 	  IF `input1` is passed
         IF `input1` is a map
-          unpack the map into new matrix with corresponding keys and vals
+          unpack the map into matrix of shape `matrixShape` with corresponding keys and vals
         ELSEIF `input1` is an array and `input2` is not passed/nil
-          unpack values from `input1` into new matrix
+          unpack values from `input1` into matrix of shape `matrixShape`
         ELSEIF `input1` is an array and `input2` is an array
-          unpack keys from `input1` and values from `input2` into new matrix
+          unpack keys from `input1` and values from `input2` into matrix of shape `matrixShape`
         ELSEIF `input1` is nil and `input2` is an array
-          unpack keys from `input2` into new matrix
+          unpack keys from `input2` into matrix of shape `matrixShape`
 	  ELSEIF `input1` is not passed
 	    create a StackMatrix of shape `matrixShape` whose deepest card vals are nil
  */
@@ -151,71 +151,76 @@ func MakeStackMatrix(variadic ...interface{}) *Stack {
 			
 			// IF `input1` is a map
 			case reflect.Map:
-				// unpack the map into new cards with corresponding keys and vals
+				
+				// get keys and vals from the input1 map
+				var keys, vals []interface{}
+				for k, v := range input1.(map[interface{}]interface{}) {
+					keys = append(keys, k)
+					vals = append(vals, v)
+				}
+
+				// IF no `matrixShape`` is passed
 				if matrixShape == nil {
-					var keys, vals []interface{}
-					for k, v := range input1.(map[interface{}]interface{}) {
-						keys = append(keys, k)
-						vals = append(vals, v)
-					}
-					stack.makeStackMatrixFrom1D(matrixShape.([]int), keys, vals, new(int))
+					// unpack the map into matrix of shape `inputx` with corresponding keys and vals
+					stack.makeStackMatrixFromND(keys, vals)
+
+				// ELSEIF `matrixShape`` is passed
 				} else {
-					// TODO: Implement
-					/*i := 0
-					for k, v := range input1.(map[interface{}]interface{}) {
-						stack.Cards = append(
-							stack.Cards,
-							MakeCard(&v, &k, i),
-						)
-						i++
-					}*/
+					// unpack the map into matrix of shape `matrixShape` with corresponding keys and vals
+					stack.makeStackMatrixFrom1D(matrixShape.([]int), keys, vals, new(int))
 				}
 			
 			// ELSEIF `input1` is an array...
 			case reflect.Array:
 
-				input1Len := len(input1.([]interface{}))
+				///input1Len := len(input1.([]interface{}))
 
 				// ...and `input2` is not passed
 				if input2 == nil {
-					
-					// unpack values from `input1` into new cards
+
+					// IF no `matrixShape` is passed
 					if matrixShape == nil {
-						stack.makeStackMatrixFrom1D(matrixShape.([]int), nil, input1.([]interface{}), new(int))
+						// unpack values from `input1` into matrix of shape `inputx`
+						stack.makeStackMatrixFromND(nil, input1)
+					
+					// ELSEIF `matrixShape` is passed
 					} else {
-						// TODO: Implement
-						/*for i := 0; i < input1Len; i++ {
-							stack.Cards = append(
-								stack.Cards,
-								MakeCard(&input1.([]interface{})[i], nil, i),
-							)
-						}*/
+						// unpack values from `input1` into matrix of shape `matrixShape`
+						stack.makeStackMatrixFrom1D(matrixShape.([]int), nil, input1, new(int))
 					}
 
 				// ...and `input2` is an array
 				} else {
+					
+					// IF no `matrixShape` is passed
+					if matrixShape == nil {
+						// unpack keys from `input1` and values from `input2` into matrix of shape `inputx`
+						stack.makeStackMatrixFromND(input1, input2)
+						
+					// ELSEIF `matrixShape` is passed
+					} else {
+						// unpack keys from `input1` and values from `input2` into matrix of shape `matrixShape`
+						stack.makeStackMatrixFrom1D(matrixShape.([]int), input1, input2, new(int))
+					}
 
-					// unpack keys from `input1` and values from `input2` into new cards
-					/*for i := 0; i < input1Len; i++ {
-						stack.Cards = append(
-							stack.Cards,
-							MakeCard(&input1.([]interface{})[i], &input2.([]interface{})[i], i),
-						)
-					}*/
 				}
 
 			}
 
 		// ELSEIF `input1` is nil and `input2` is an array
 		} else {
+			
+			// IF no `matrixShape` is passed
+			if matrixShape == nil {
+				// unpack keys from `input2` into matrix of shape `inputx`
+				stack.makeStackMatrixFromND(input2, nil)
 
-			// unpack values from `input2` into new card keys
-			/*for i := 0; i < len(input2.([]interface{})); i++ {
-				stack.Cards = append(
-					stack.Cards,
-					MakeCard(nil, &input2.([]interface{})[i], i),
-				)
-			}*/
+			// ELSEIF `matrixShape` is passed
+			} else {
+				// unpack keys from `input2` into matrix of shape `matrixShape`
+				stack.makeStackMatrixFrom1D(matrixShape.([]int), input2, nil, new(int))
+			}
+
 		}
 
 	// ELSEIF `input1` is not passed

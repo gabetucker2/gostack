@@ -564,7 +564,45 @@
 
  `MakeStackMatrix(...input1, ...input2, ...matrixShape)`
  ```
-
+ Creates a new stack-within-stack-structured stack
+ 
+ @param optional `input1` type{interface{}} default nil
+ @param optional `input2` type{interface{}} default nil
+ @param optional `matrixShape` type{[]int} default nil
+  * an int array representing the shape of the matrix
+  * the first int is the largest container
+  * the last int is the container directly containing the inputted cards
+ @requires
+  * `MakeCard()` has been implemented
+  * IF `input1` and `input2` are both passed as arguments
+      |`input1`| == |`input2`|
+ @ensures
+  * IF no `matrixShape` is passed
+      treating `input1`/`input2` as matrices/a map of matrices:
+      IF `input1` is passed
+        IF `input1` is a map
+          unpack the map into matrix of shape `inputx` with corresponding keys and vals
+        ELSEIF `input1` is an array and `input2` is not passed/nil
+          unpack values from `input1` into matrix of shape `inputx`
+        ELSEIF `input1` is an array and `input2` is an array
+          unpack keys from `input1` and values from `input2` into matrix of shape `inputx`
+        ELSEIF `input1` is nil and `input2` is an array
+          unpack keys from `input2` into matrix of shape `inputx` 
+      ELSEIF `input1` is not passed
+        the stack is empty
+	ELSEIF `matrixShape` is passed
+	  treating `input1`/`input2` as 1D arrays:
+	  IF `input1` is passed
+        IF `input1` is a map
+          unpack the map into matrix of shape `matrixShape` with corresponding keys and vals
+        ELSEIF `input1` is an array and `input2` is not passed/nil
+          unpack values from `input1` into matrix of shape `matrixShape`
+        ELSEIF `input1` is an array and `input2` is an array
+          unpack keys from `input1` and values from `input2` into matrix of shape `matrixShape`
+        ELSEIF `input1` is nil and `input2` is an array
+          unpack keys from `input2` into matrix of shape `matrixShape`
+	  ELSEIF `input1` is not passed
+	    create a StackMatrix of shape `matrixShape` whose deepest card vals are nil
  ```
  
 <h3 name = "ToArray">ToArray</h3>

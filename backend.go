@@ -354,13 +354,13 @@ func updateRespectiveField(setStack *Stack, replaceType REPLACE, replaceData int
 
 }
 
-/** Recursively add nil elements of matrix size to stack
+/** Recursively add elements from 1D array to stack of matrix shape resembling `matrixShape`
  
  @receiver stack type{*Stack}
  @param matrixShape type{[]int}
  @param keys type{interface{}}
  @param vals type{interface{}}
- @param globalI type{*int}
+ @param globalI type{*int} used because: extracting from 1-D arrays into N-D matrix, so need to track our position in the 1-D arrays between different recursive calls
  @returns type{*Stack}
  @requires
   * `MakeStack()` and `MakeCard()` have been implemented
@@ -376,10 +376,10 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys interface{}, v
 			// return new stack of stack ... of stack whose vals are nil
 			ret := MakeStack().makeStackMatrixFrom1D(matrixShape[1:], keys, vals, globalI)
 			// insert this return value into a card of our current stack
-			stack.Cards = append(stack.Cards, MakeCard(nil, ret, i))
+			stack.Cards = append(stack.Cards, MakeCard(ret, nil, i))
 		}
 
-	// no more stacks to make, insert nils into and return current stack
+	// no more stacks to make, insert elements into and return current stack
 	} else {
 		
 		for i := 0; i < matrixShape[0]; i++ {
@@ -399,6 +399,62 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys interface{}, v
 
 	}
 
+	// return
 	return
+
+}
+
+/** Recursively add elements to stack of matrix shape resembling the inputs
+ 
+ @receiver stack type{*Stack}
+ @param keys type{interface{}}
+ @param vals type{interface{}}
+ @returns type{*Stack}
+ @requires
+  * `MakeStack()` and `MakeCard()` have been implemented
+  * |keys| == |vals| if neither are nil
+  * at least one of `keys` or `vals` are not nil
+*/
+func (stack *Stack) makeStackMatrixFromND(keys interface{}, vals interface{}) (ret *Stack) {
+
+	// initialize variable to use as reference for the matrix shape
+	// just because we don't know which input is not nil
+	var referenceArr []interface{}
+	// one of these conditions are guaranteed to be true per the ensures clause
+	if keys != nil {
+		referenceArr = keys.([]interface{})
+	} else if vals != nil {
+		referenceArr = vals.([]interface{})
+	}
+	
+	// main loop
+	for i := range referenceArr {
+		c := MakeCard()
+		switch referenceArr[i].(type) {
+
+		// add substack to stack
+		case []interface{}:
+			stack.Cards = append(
+				stack.Cards,
+				MakeCard(MakeStack().makeStackMatrixFromND(
+					ifElse(keys != nil, keys, nil).([]interface{}),
+					ifElse(vals != nil, vals, nil).([]interface{}),
+				)),
+			)
+
+		// add element to stack
+		default:
+			if keys != nil {
+				c.Key = keys.([]interface{})[i]
+			}
+			if vals != nil {
+				c.Val = vals.([]interface{})[i]
+			}
+			stack.Cards = append(stack.Cards, c)
+		}
+	}
+
+	// return
+	return stack
 
 }
