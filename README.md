@@ -605,6 +605,19 @@
 	    create a StackMatrix of shape `matrixShape` whose deepest card vals are nil
  ```
  
+<h3 name = "StripStackMatrix">StripStackMatrix</h3>
+ 
+ `stack.StripStackMatrix()`
+ ```
+ Returns a stack representing a selection within a stack matrix
+ 
+ @receiver `stack` type{*Stack}
+ @param variadic `selections` type{int, []int} a set of args representing the indices being selected within an array
+ @returns type{*Stack} a new Stack representing the selection
+ @constructs type{*Stack} a new Stack representing the selection
+ @requires `idx` arguments get valid index positions from the stack
+ ```
+ 
 <h3 name = "ToArray">ToArray</h3>
  
  `stack.ToArray()`

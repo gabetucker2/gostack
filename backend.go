@@ -429,7 +429,6 @@ func (stack *Stack) makeStackMatrixFromND(keys interface{}, vals interface{}) (r
 	
 	// main loop
 	for i := range referenceArr {
-		c := MakeCard()
 		switch referenceArr[i].(type) {
 
 		// add substack to stack
@@ -444,6 +443,7 @@ func (stack *Stack) makeStackMatrixFromND(keys interface{}, vals interface{}) (r
 
 		// add element to stack
 		default:
+			c := MakeCard()
 			if keys != nil {
 				c.Key = keys.([]interface{})[i]
 			}

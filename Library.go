@@ -43,7 +43,7 @@ func MakeCard(variadic ...interface{}) *Card {
  @param optional `input2` type{[]any} default nil
  @param optional `repeats` type{int} default 1
  @returns type{*Stack} the newly-constructed stack of newly-constructed cards
- @constructs type{*Stack} a newly-constructed stack of newly-constructed cards
+ @constructs type{*Stack} a newly-constructed stack of newly-constructed type{*Card} cards
  @requires
   * `input1` is map and nil `input2`
       OR `input1` is an array and nil `input2`
@@ -93,7 +93,7 @@ func MakeStack(variadic ...interface{}) *Stack {
 
 }
 
-/** Creates a new stack-within-stack-structured stack
+/** Returns a new stack-within-stack-structured stack
  
  @param optional `input1` type{interface{}} default nil
  @param optional `input2` type{interface{}} default nil
@@ -101,6 +101,8 @@ func MakeStack(variadic ...interface{}) *Stack {
   * an int array representing the shape of the matrix
   * the first int is the largest container
   * the last int is the container directly containing the inputted cards
+ @returns type{*Stack} a new stack
+ @constructs type{*Stack} a new stack with type{*Card} new cards
  @requires
   * `MakeCard()` has been implemented
   * IF `input1` and `input2` are both passed as arguments
@@ -245,6 +247,53 @@ func MakeStackMatrix(variadic ...interface{}) *Stack {
 	// return
 	return stack
 	
+}
+
+/** Returns a stack representing a selection within a stack matrix
+ 
+ @receiver `stack` type{*Stack}
+ @param variadic `selections` type{int, []int} a set of args representing the indices being selected within an array
+ @returns type{*Stack} a new Stack representing the selection
+ @constructs type{*Stack} a new Stack representing the selection
+ @requires `idx` arguments get valid index positions from the stack
+ */
+func (stack *Stack) StripStackMatrix(variadic ...interface{}) *Stack {
+
+	// unpack variadic into optional parameters
+	var firstSelection interface{}
+	unpackVariadic(variadic, &firstSelection)
+
+	// init
+	newStack := MakeStack()
+	var selections []int
+
+	// put firstSelection type{int, []int} into array selections type{[]int}
+	switch firstSelection.(type) {
+	case int:
+		selections = append(selections, firstSelection.(int))
+	case []int:
+		for _, idx := range firstSelection.([]int) {
+			selections = append(selections, idx)
+		}
+	}
+
+	// iterate through each selection and add them to our new stack
+	for _, idx := range selections {
+		c := stack.Cards[idx]
+		switch c.Val.(type) {
+		case Stack:
+			stripped := newStack.StripStackMatrix(variadic)
+			for _, idx := range firstSelection.([]int) {
+				newStack.Cards = append(newStack.Cards, stripped.Cards[idx])
+			}
+		case Card:
+			newStack.Cards = append(newStack.Cards, c.Val.(*Card))
+		}
+	}
+
+	// return
+	return newStack
+
 }
 
 /** Creates a new interface array from values of `stack`

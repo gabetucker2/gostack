@@ -1,8 +1,7 @@
 ---------------------------------------------------------------
 GABE:
-* Implement casting interfaces as respective pointer type when assigning... see test.go
 * Implement deepsearch and depth parameters for common functions
-* Add show how pass by object can be used for cloning in replace/add/update in example
+* Implement casting interfaces as respective pointer type when assigning... see test.go
 * Update size trackers
 * Implement new lambda examples
  - For REPLACE_Lambda
@@ -33,7 +32,7 @@ ANDY:
  - Make some more lambda function examples which use workingMemory param
  - Remove MainFunc, replace MainFunc calls in Lambda() with Get() and other frontend functions
 * Implement bootstrap functions, take inspiration from common functions in other languages
-* Add some more tutorials using functions in the documentation even if they haven't been implemented yet
+* Implement ObjectReference tutorial
  - Add passing-by-object vs passing-by-address tutorial (just & before variable, our functions support that)
 
 ---------------------------------------------------------------
@@ -44,10 +43,10 @@ IMPLEMENTED TESTED BROKEN DOCUMENTED FUNCTIONS:
 /
 
 IMPLEMENTED UNTESTED DOCUMENTED FUNCTIONS:
-stack.Has, stack.Move, stack.Extract, stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print, stack.Replace, stack.ExtractMany, stack.ReplaceMany, stack.Remove, stack.RemoveMany, stack.Update, stack.UpdateMany, stack.Lambda, stack.Sort, MakeStack, ToMatrix
+stack.Has, stack.Move, stack.Extract, stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print, stack.Replace, stack.ExtractMany, stack.ReplaceMany, stack.Remove, stack.RemoveMany, stack.Update, stack.UpdateMany, stack.Lambda, stack.Sort, MakeStack, ToMatrix, stack.StripStackMatrix, MakeStackMatrix
 
 UNIMPLEMENTED PARTIALLY DOCUMENTED FUNCTIONS:
-stack.StripStackMatrix, MakeStackMatrix
+/
 
 UNIMPLEMENTED UNDOCUMENTED FUNCTIONS:
 /
