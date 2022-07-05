@@ -9,7 +9,7 @@ func Matrices() {
 
 	fmt.Println("tutorials/Matrics()")
 
-	/*
+	///*
 
 	//////////////////////////////
 	// ORIGINAL METHOD
@@ -21,20 +21,20 @@ func Matrices() {
 	x1 := MakeStack([]*string {k1, k2, k3}, []*int {e1, e2, e3})
 	x2 := MakeStack([]*string {k4, k5, k6}, []*int {e4, e5, e6})
 	x3 := MakeStack([]*string {k7, k8, k9}, []*int {e7, e8, e9})
-	y1 := MakeStack(*[]Stack {x1, x2, x3})
+	y1 := MakeStack([]*Stack {x1, x2, x3})
 
 	x4 := MakeStack([]*string {k10, k11, k12}, []*int {e10, e11, e12})
 	x5 := MakeStack([]*string {k13, k14, k15}, []*int {e13, e14, e15})
 	x6 := MakeStack([]*string {k16, k17, k18}, []*int {e16, e17, e18})
-	y2 := MakeStack(*[]Stack {x4, x5, x6})
+	y2 := MakeStack([]*Stack {x4, x5, x6})
 
-	matrix := MakeStack(*[]Stack {y1, y2})
+	matrix := MakeStack([]*Stack {y1, y2})
 
 	// returns
 	matrix                                                    // matrix
 	matrix.Get(FIND_Idx, 1)                                   // y2
 	matrix.Get(FIND_Idx, 1).Get(FIND_Idx, 0)                  // x4
-	matrix.Get(FIND_Idx, 1).Get(FIND_Idx, 0).Get(FIND_Idx, 2) // Card{k11, e11}
+	matrix.Get(FIND_Idx, 1).Get(FIND_Idx, 0).Get(FIND_Idx, 1) // Card{k11, e11}
 
 	//////////////////////////////
 	// NOVEL METHOD
@@ -43,10 +43,12 @@ func Matrices() {
 	var keys []string {k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16, k17, k18}
 	var vals []int {e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18}
 
+	var ma [][][]string {[][]int{{k1, k2, k3},{k4:e4, k5:e5, k6:e6},{}}}
+
 	// IF keys/vals are just 1D arrays
-	matrix := MakeStackMatrix([3]int {2, 3, 3}, keys, vals)
+	matrix := MakeStackMatrix(keys, vals, [3]int {2, 3, 3})
 	// OR, if keys/vals are [][][]string/[][][]vals, i.e. already matrices
-	matrix := MatrixToStackMatrix(keys, vals)
+	matrix := MakeStackMatrix(ma)
 
 	// returns
 	// - fast method
@@ -90,6 +92,6 @@ func Matrices() {
 
 	// x1
 	matrix.GetMany(FIND_Cards, MakeStack(matrix, x1, y1), nil, RETURN_Cards, nil, nil, nil, DEEPSEARCH_TRUE, 2)
-	*/
+	//*/
 
 }

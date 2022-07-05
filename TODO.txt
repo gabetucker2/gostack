@@ -1,5 +1,6 @@
 ---------------------------------------------------------------
 GABE:
+* Add lambda deepsearch support
 * Implement deepsearch and depth parameters for common functions
 * Implement casting interfaces as respective pointer type when assigning... see test.go
 * Update size trackers

@@ -297,19 +297,19 @@
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
- * **stack.Add(insert, ...orderType, ...findType, ...findData, ...matchByType)**
- * **stack.Move(findType_from, orderType, findType_to, ...findData_from, ...findData_to, ...matchByType_from, ...matchByType_to)**
- * **stack.Has(returnType, findType, ...findData, ...matchByType)**
- * **stack.Get(...findType, ...findData, ...matchByType, ...clonesType_card, ...clonesType_keys, ...clonesType_vals)**
- * **stack.GetMany(findType, ...findData, ...matchByType, ...returnType, ...clonesType, ...clonesType_keys, ...clonesType_vals)**
- * **stack.Replace(replaceType, replaceData, findType, ...findData, ...matchByType)**
- * **stack.ReplaceMany(replaceType, replaceData, findType, ...findData, ...matchByType, ...returnType)**
- * **stack.Update(findType, ...findData, ...matchByType)**
- * **stack.UpdateMany(findType, ...findData, ...matchByType)**
- * **stack.Extract(findType, ...findData, ...matchByType)**
- * **stack.ExtractMany(findType, ...findData, ...matchByType, ...returnType)**
- * **stack.Remove(findType, ...findData, ...matchByType)**
- * **stack.RemoveMany(findType, ...findData, ...matchByType)**
+ * **stack.Add(insert, ...orderType, ...findType, ...findData, ...matchByType, ...DEEPSEARCH, ...depth)**
+ * **stack.Move(findType_from, orderType, findType_to, ...findData_from, ...findData_to, ...matchByType_from, ...matchByType_to, ...DEEPSEARCH, ...depth)**
+ * **stack.Has(returnType, findType, ...findData, ...matchByType, ...DEEPSEARCH, ...depth)**
+ * **stack.Get(...findType, ...findData, ...matchByType, ...clonesType_card, ...clonesType_keys, ...clonesType_vals, ...DEEPSEARCH, ...depth)**
+ * **stack.GetMany(findType, ...findData, ...matchByType, ...returnType, ...clonesType, ...clonesType_keys, ...clonesType_vals, ...DEEPSEARCH, ...depth)**
+ * **stack.Replace(replaceType, replaceData, findType, ...findData, ...matchByType, ...DEEPSEARCH, ...depth)**
+ * **stack.ReplaceMany(replaceType, replaceData, findType, ...findData, ...matchByType, ...returnType, ...DEEPSEARCH, ...depth)**
+ * **stack.Update(findType, ...findData, ...matchByType, ...DEEPSEARCH, ...depth)**
+ * **stack.UpdateMany(findType, ...findData, ...matchByType, ...DEEPSEARCH, ...depth)**
+ * **stack.Extract(findType, ...findData, ...matchByType, ...DEEPSEARCH, ...depth)**
+ * **stack.ExtractMany(findType, ...findData, ...matchByType, ...returnType, ...DEEPSEARCH, ...depth)**
+ * **stack.Remove(findType, ...findData, ...matchByType, ...DEEPSEARCH, ...depth)**
+ * **stack.RemoveMany(findType, ...findData, ...matchByType, ...DEEPSEARCH, ...depth)**
 
 <h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
 
