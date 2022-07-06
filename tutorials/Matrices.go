@@ -9,7 +9,7 @@ func Matrices() {
 
 	fmt.Println("tutorials/Matrics()")
 
-	///*
+	/*
 
 	//////////////////////////////
 	// ORIGINAL METHOD
@@ -70,7 +70,7 @@ func Matrices() {
 	// nil
 	matrix.Get(FIND_Key, k11)
 
-	// c11
+	// k11
 	matrix.Get(FIND_Key, k11, nil, nil, nil, nil, DEEPSEARCH_True)
 
 	// Stack.Cards{c11, c17}
@@ -92,6 +92,6 @@ func Matrices() {
 
 	// x1
 	matrix.GetMany(FIND_Cards, MakeStack(matrix, x1, y1), nil, RETURN_Cards, nil, nil, nil, DEEPSEARCH_TRUE, 2)
-	//*/
+	*/
 
 }

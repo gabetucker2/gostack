@@ -62,7 +62,7 @@ func unpackVariadic(variadic []interface{}, into ...*interface{}) {
  @updates `stack.Cards` to a new set of Cards filtered using `lambda`
  @ensures each card in `stack.Cards` will not be affected by lambda updates
  */
-func getIterator(stack *Stack, lambda func(*Card, ...interface{}) bool) {
+func getIterator(stack *Stack, lambda func(*Card, ...interface{}) bool, deepSearchType DEEPSEARCH, depth int) {
 	var filteredCards []*Card
 	for i := range stack.Cards {
 		card := stack.Cards[i]
@@ -79,7 +79,7 @@ func getIterator(stack *Stack, lambda func(*Card, ...interface{}) bool) {
  @param `lambda` type{func(*Card, ...workingMemory)}
  @updates `stack.Cards` to whatever the `lambda` function specifies
  */
-func generalIterator(stack *Stack, lambda func(*Card, ...interface{})) {
+func generalIterator(stack *Stack, lambda func(*Card, ...interface{}), deepSearchType DEEPSEARCH, depth int) {
 	for i := range stack.Cards {
 		// use the card object so that card can be updated by the lambda expression
 		lambda(stack.Cards[i], stack)
@@ -92,7 +92,7 @@ func generalIterator(stack *Stack, lambda func(*Card, ...interface{})) {
  @param `lambda` type{func(*Card, *Stack, ...workingMemory) (ORDER, int)}
  @updates `stack.Cards` to whatever the `lambda` function specifies
  */
-func sortIterator(stack *Stack, lambda func(*Card, *Stack, ...interface{}) (ORDER, int)) {
+func sortIterator(stack *Stack, lambda func(*Card, *Stack, ...interface{}) (ORDER, int), deepSearchType DEEPSEARCH, depth int) {
 	for i := range stack.Cards {
 		// iterate, get the new index from the sorter
 		newOrder, newIdx := lambda(stack.Cards[i], stack)
@@ -101,27 +101,27 @@ func sortIterator(stack *Stack, lambda func(*Card, *Stack, ...interface{}) (ORDE
 	}
 }
 
-/** Returns an []int of indices representing the targeted position(s) in a stack
+/** Returns an [][]int of index vertices representing the order of indices needed to access targeted position(s) in `stack`
  
  @param `getFirst` type{bool}
  @param `stack` type{*Stack} no pass-by-reference
  @param `findType` type{FIND}
  @param `findData` type{interface{}}
- @returns the []int of targeted positions
+ @returns [][]int of []int sequences representing index sequences to arrive at targeted positions
  @constructor creates a new []int
  @requires
   * `MakeStack()` and `MakeCard()` have been implemented
   * Inputted `findData` is of expected type (see documentation on FIND) 
  @ensures
    IF search finds no cards in `stack`
-     return []int {}
+     return [][]int {}
    
    IF `getFirst`
      return an array of the first found element
    ELSE
      return an array of all found elements
  */
-func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface{}, matchByType MATCHBY, deepSearchType DEEPSEARCH, depth int) (targets [][]int) {
+func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface{}, matchByType MATCHBY, deepSearchType DEEPSEARCH, depth int) (targetIdxs [][]int, targetCards []*Card) {
 
 	/** Returns a bool for whether the matchBy yields a true result */
 	matchByObjectOrReference := func(x1, x2 interface{}) bool {
@@ -131,8 +131,6 @@ func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface
 
 	// setup main by deepening iteratively
 	if deepSearchType == DEEPSEARCH_False { depth = 1 }
-	var workingInts []interface{}
-	var currentInts []interface{}
 	workingCards := []*Card {}
 	currentCards := []*Card {}
 	for i := 0; i < depth; i++ {
@@ -142,56 +140,48 @@ func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface
 			// fill first layer with ints representing indices
 			for j := range stack.Cards {
 				currentCards = stack.Cards
-				currentInts = append(currentInts, j)
+				targets = append(targets, []int{j})
 			}
 
-		// middle iterations
-		} else if i < depth - 1 {
-			// replace initial ints with new int arrays within arrays within... etc to represent nested inside of stacks within stacks within... etc
-			for j := range currentCards {
-				switch currentCards[j].Val.(type) {
+		// next iterations
+		} else {
+			for j, indexList := range targets {
+				c := currentCards[indexList[i]]
+				// if there is another stack within this stack, deepen
+				switch c.Val.(type) {
 				case *Stack:
-					// add all subcards of current card, assuming it's a stack, to workingCards
-					for k := range currentCards[j].Val.(*Stack).Cards {
-						workingCards = append(workingCards, currentCards[j].Val.(*Stack).Cards[k])
-						workingInts = append(workingInts, k)
-					}
+					workingCards = append(workingCards, c)
+					targets[j] = append(targets[j], j)
 				}
 			}
-			currentInts = workingInts
 			currentCards = workingCards
-			
-		// final iteration
-		} else {
-			// just shallow copy the remaining elements
-
 		}
 	}
 
 	// main
-	for i := 0; i < depth; i++ {
-		subArr := []int{}
+	for i := range targets {
+		filteredList := []int{}
 		//subStack
-		targets = append(targets, subArr)
+		targets = append(targets, filteredList)
 
 		switch findType {
 
 		case FIND_First:
-			if stack.Size > 0 {subArr = append(subArr, 0)}
+			if stack.Size > 0 {filteredList = append(filteredList, 0)}
 	
 		case FIND_Last:
-			if stack.Size > 0 {subArr = append(subArr, stack.Size - 1)}
+			if stack.Size > 0 {filteredList = append(filteredList, stack.Size - 1)}
 	
 		case FIND_Idx:
 			thisIdx := findData.(int)
-			if stack.Size > thisIdx {subArr = append(subArr, thisIdx)}
+			if stack.Size > thisIdx {filteredList = append(filteredList, thisIdx)}
 	
 		case FIND_Idxs:
 			theseIdxs := findData.([]int)
 			for testI := range stack.Cards {
 				for _, targetI := range theseIdxs {
 					if testI == targetI {
-						subArr = append(subArr, testI)
+						filteredList = append(filteredList, testI)
 						if getFirst { break }
 					}
 				}
@@ -199,10 +189,10 @@ func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface
 	
 		case FIND_IdxsStack:
 			if getFirst {
-				subArr = append(subArr, findData.(*Stack).Cards[0].Val.(int))
+				filteredList = append(filteredList, findData.(*Stack).Cards[0].Val.(int))
 			} else {
 				for _, c := range findData.(*Stack).Cards {
-					subArr = append(subArr, c.Val.(int))
+					filteredList = append(filteredList, c.Val.(int))
 				}
 			}
 	
@@ -210,7 +200,7 @@ func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface
 			for i := range stack.Cards {
 				testKey := stack.Cards[i].Key
 				if matchByObjectOrReference(testKey, findData) {
-					subArr = append(subArr, i)
+					filteredList = append(filteredList, i)
 					if getFirst { break }
 				}
 			}
@@ -222,7 +212,7 @@ func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface
 				for j := range keyArray {
 					targetKey := keyArray[j]
 					if matchByObjectOrReference(testKey, targetKey) {
-						subArr = append(subArr, i)
+						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}
 				}
@@ -235,7 +225,7 @@ func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface
 				for j := range keyStack.Cards {
 					targetKey := keyStack.Cards[j].Val
 					if matchByObjectOrReference(testKey, targetKey) {
-						subArr = append(subArr, i)
+						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}
 				}
@@ -245,7 +235,7 @@ func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface
 			for i := range stack.Cards {
 				testVal := stack.Cards[i].Val
 				if matchByObjectOrReference(testVal, findData) {
-					subArr = append(subArr, i)
+					filteredList = append(filteredList, i)
 					if getFirst { break }
 				}
 			}
@@ -257,7 +247,7 @@ func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface
 				for j := range valArray {
 					targetVal := valArray[j]
 					if matchByObjectOrReference(testVal, targetVal) {
-						subArr = append(subArr, i)
+						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}
 				}
@@ -270,7 +260,7 @@ func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface
 				for j := range valStack.Cards {
 					targetVal := valStack.Cards[j].Val
 					if matchByObjectOrReference(testVal, targetVal) {
-						subArr = append(subArr, i)
+						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}
 				}
@@ -280,7 +270,7 @@ func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface
 			for i := range stack.Cards {
 				testCard := stack.Cards[i]
 				if matchByObjectOrReference(testCard, findData.(*Card)) {
-					subArr = append(subArr, i)
+					filteredList = append(filteredList, i)
 					if getFirst { break }
 				}
 			}
@@ -292,7 +282,7 @@ func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface
 				for j := range cardStack.Cards {
 					targetCard := cardStack.Cards[j]
 					if matchByObjectOrReference(testCard, targetCard) {
-						subArr = append(subArr, i)
+						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}
 				}
@@ -305,7 +295,7 @@ func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface
 				for j := range cardStack.Cards {
 					targetCard := cardStack.Cards[j].Val
 					if matchByObjectOrReference(testCard, targetCard) {
-						subArr = append(subArr, i)
+						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}
 				}
@@ -314,10 +304,10 @@ func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface
 		case FIND_Slice:
 			slice := findData.([2]int)
 			if stack.Size > 0 && 0 <= slice[0] && 0 <= slice[1] && slice[0] < stack.Size && slice[1] < stack.Size {
-				subArr = append(subArr, slice[0])
+				filteredList = append(filteredList, slice[0])
 				if !getFirst {
 					for i := 0; i < slice[1] - slice[0]; {
-						subArr = append(subArr, i+slice[0])
+						filteredList = append(filteredList, i+slice[0])
 						i = ifElse(slice[1] > slice[0], i+1, i-1).(int)
 					}
 				}
@@ -325,18 +315,21 @@ func getPositions(getFirst bool, stack *Stack, findType FIND, findData interface
 	
 		case FIND_All:
 			for i := range stack.Cards {
-				subArr = append(subArr, i)
+				filteredList = append(filteredList, i)
 			}
 	
 		case FIND_Lambda:
 			filterStack := stack.Clone() // so that no changes can be made to the original stack from FIND_Lambda functions
 			getIterator(filterStack, findData.(func(*Card, ...interface{}) bool))
 			for i := range filterStack.Cards {
-				subArr = append(subArr, i)	
+				filteredList = append(filteredList, i)	
 				if getFirst { break }
 			}
 	
 		}
+
+		targets[i] = filteredList
+
 	}
 
 	return

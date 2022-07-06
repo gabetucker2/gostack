@@ -288,28 +288,28 @@
  * **stack.ToMatrix(...depth)**
  * **stack.Empty()**
  * **{card, stack}.Clone()**
- * **stack.Unique(typeType, ...matchByType)**
+ * **stack.Unique(typeType, ...matchByType, ...deepSearchType, ...depth)**
  * **stack.Shuffle()**
  * **stack.Flip()**
  * **{card, stack}.Print()**
- * **stack.Sort(lambda sort function)**
- * **stack.Lambda(lambda function)**
+ * **stack.Sort(lambda sort function, ...deepSearchType, ...depth)**
+ * **stack.Lambda(lambda function, ...deepSearchType, ...depth)**
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
- * **stack.Add(insert, ...orderType, ...findType, ...findData, ...matchByType, ...DEEPSEARCH, ...depth)**
- * **stack.Move(findType_from, orderType, findType_to, ...findData_from, ...findData_to, ...matchByType_from, ...matchByType_to, ...DEEPSEARCH, ...depth)**
- * **stack.Has(returnType, findType, ...findData, ...matchByType, ...DEEPSEARCH, ...depth)**
- * **stack.Get(...findType, ...findData, ...matchByType, ...clonesType_card, ...clonesType_keys, ...clonesType_vals, ...DEEPSEARCH, ...depth)**
- * **stack.GetMany(findType, ...findData, ...matchByType, ...returnType, ...clonesType, ...clonesType_keys, ...clonesType_vals, ...DEEPSEARCH, ...depth)**
- * **stack.Replace(replaceType, replaceData, findType, ...findData, ...matchByType, ...DEEPSEARCH, ...depth)**
- * **stack.ReplaceMany(replaceType, replaceData, findType, ...findData, ...matchByType, ...returnType, ...DEEPSEARCH, ...depth)**
- * **stack.Update(findType, ...findData, ...matchByType, ...DEEPSEARCH, ...depth)**
- * **stack.UpdateMany(findType, ...findData, ...matchByType, ...DEEPSEARCH, ...depth)**
- * **stack.Extract(findType, ...findData, ...matchByType, ...DEEPSEARCH, ...depth)**
- * **stack.ExtractMany(findType, ...findData, ...matchByType, ...returnType, ...DEEPSEARCH, ...depth)**
- * **stack.Remove(findType, ...findData, ...matchByType, ...DEEPSEARCH, ...depth)**
- * **stack.RemoveMany(findType, ...findData, ...matchByType, ...DEEPSEARCH, ...depth)**
+ * **stack.Add(insert, ...orderType, ...findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
+ * **stack.Move(findType_from, orderType, findType_to, ...findData_from, ...findData_to, ...matchByType_from, ...matchByType_to, ...deepSearchType, ...depth)**
+ * **stack.Has(returnType, findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
+ * **stack.Get(...findType, ...findData, ...matchByType, ...clonesType_card, ...clonesType_keys, ...clonesType_vals, ...deepSearchType, ...depth)**
+ * **stack.GetMany(findType, ...findData, ...matchByType, ...returnType, ...clonesType, ...clonesType_keys, ...clonesType_vals, ...deepSearchType, ...depth)**
+ * **stack.Replace(replaceType, replaceData, findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
+ * **stack.ReplaceMany(replaceType, replaceData, findType, ...findData, ...matchByType, ...returnType, ...deepSearchType, ...depth)**
+ * **stack.Update(findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
+ * **stack.UpdateMany(findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
+ * **stack.Extract(findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
+ * **stack.ExtractMany(findType, ...findData, ...matchByType, ...returnType, ...deepSearchType, ...depth)**
+ * **stack.Remove(findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
+ * **stack.RemoveMany(findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
 
 <h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
 
@@ -690,7 +690,7 @@
  
 <h3 name = "Unique">Unique</h3>
  
- `stack.Unique(typeType, ...matchByType)`
+ `stack.Unique(typeType, ...matchByType, ...deepSearchType, ...depth)`
  ```
  Removes all cards from `stack` which share the same field value as another card before
 
@@ -746,7 +746,7 @@
  
 <h3 name = "Sort">Sort</h3>
  
- `stack.Sort(lambda sort function)`
+ `stack.Sort(lambda sort function, ...deepSearchType, ...depth)`
  ```
  Order the cards contingent on some attribute they contain
  
@@ -760,7 +760,7 @@
  
 <h3 name = "Lambda">Lambda</h3>
  
- `stack.Lambda(lambda function)`
+ `stack.Lambda(lambda function, ...deepSearchType, ...depth)`
  ```
  Iterate through a stack calling your lambda function on each card
  

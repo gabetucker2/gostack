@@ -1,6 +1,8 @@
 ---------------------------------------------------------------
 GABE:
-* Add lambda deepsearch support
+* Shift getPositions to return cards instead of indices
+* Update backend iterator functions to support depth search
+* Make findType default first for all generalizable function
 * Implement deepsearch and depth parameters for common functions
 * Implement casting interfaces as respective pointer type when assigning... see test.go
 * Update size trackers
@@ -45,6 +47,9 @@ IMPLEMENTED TESTED BROKEN DOCUMENTED FUNCTIONS:
 
 IMPLEMENTED UNTESTED DOCUMENTED FUNCTIONS:
 stack.Has, stack.Move, stack.Extract, stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print, stack.Replace, stack.ExtractMany, stack.ReplaceMany, stack.Remove, stack.RemoveMany, stack.Update, stack.UpdateMany, stack.Lambda, stack.Sort, MakeStack, ToMatrix, stack.StripStackMatrix, MakeStackMatrix
+
+OUTDATED FUNCTIONS:
+All generalizable, unique
 
 UNIMPLEMENTED PARTIALLY DOCUMENTED FUNCTIONS:
 /
