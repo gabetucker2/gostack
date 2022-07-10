@@ -116,3 +116,9 @@ func setDEEPSEARCHDefaultIfNil(deepSearchType interface{}) {
 		deepSearchType = DEEPSEARCH_False
 	}
 }
+
+func setDepthDefaultIfNil(depth interface{}) {
+	if depth == nil {
+		depth = 1
+	}
+}

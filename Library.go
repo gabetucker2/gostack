@@ -426,7 +426,9 @@ func (card *Card) Clone() *Card {
 
 }
 
-/** Removes all cards from `stack` which share the same field value as another card before
+/** Removes all cards from `stack` which share the same field value as another card in that stack
+ Assuming elements represent the values of cards in the pre-existing stack,
+ Stack{"Hi", "Hey", "Hello", "Hi", "Hey", "Howdy"}.Unique(TYPE_Val) => Stack{"Hi", "Hey", "Hello", "Howdy"}
 
  @receiver `stack` type{*Stack}
  @param `typeType` type{TYPE}
@@ -435,54 +437,22 @@ func (card *Card) Clone() *Card {
  @param optional `depth` type{int} default -1 (deepest)
  @returns `stack`
  @updates `stack` to have no repeating values between field `typeType`
+ @requires `stack.Clone()` has been implemented
+ @ensures
+  * IF no deepSearch
+      removes repeat cards from stack
+    ELSE
+	  removes cards matching other cards within the scope of each substack
+	    For instance, Stack{Stack{1, 2, 1}, Stack{1, 2}}.Unique => Stack{Stack{1, 2}, Stack{1, 2}}
  */
 func (stack *Stack) Unique(typeType TYPE, variadic ...interface{}) *Stack {
 
 	// unpack variadic into optional parameters
-	var matchByType, deepSearchType, depth interface{}
-	unpackVariadic(variadic, &matchByType, &deepSearchType, &depth)
-	if depth == nil { depth = 1 }
+	var matchByType, deepSearchType, depth, uniqueType interface{}
+	unpackVariadic(variadic, &matchByType, &deepSearchType, &depth, &uniqueType)
 
-	// get position idxs
-	targets := getPositions(false, stack, FIND_All, nil, MATCHBY_Object, deepSearchType.(DEEPSEARCH), depth.(int))
-
-	// initialize array
-	var newCards []*Card
-
-	// remove all repeats
-	var targetCards []*Card
-	for i := range stack.Cards {
-		target := stack.Cards[i]
-		for j := 1; j < depth.(int); j++ {
-			switch target.Val.(type) {
-			case *Stack:
-				remove existing from target
-				targetCards = append(targetCards, target.Val.(*Stack).Cards[j])
-			}
-		}
-	}
-	for i := range stack.Cards {
-		oldCard := stack.Cards[i]
-		addToNewCards := true
-		for j := range newCards {
-			newCard := newCards[j]
-			if (matchByType == MATCHBY_Object    &&  oldCard ==  newCard) ||
-			   (matchByType == MATCHBY_Reference && &oldCard == &newCard) {
-				addToNewCards = false
-				break
-			}
-		}
-		if addToNewCards {
-			newCards = append(newCards, oldCard)
-		}
-	}
-
-	// update stack
-	stack.Cards = newCards
-	stack.Size = len(stack.Cards)
-	
-	// return
-	return stack
+	// allow deepsearch to take care of function
+	return stack.deepSearchHandler("Unique", false, FIND_All, nil, matchByType, deepSearchType, depth, typeType, uniqueType, nil, nil, nil, nil, nil)
 
 }
 
@@ -614,6 +584,7 @@ func (stack *Stack) Lambda(lambda func(*Card, ...interface{}), variadic ...inter
  @param optional `depth` type{int} default -1 (deepest)
  @returns `stack` if cards were added OR nil if no cards were added (due to invalid find)
  @updates `stack` to have new cards before/after each designated position
+ @requires `stack.Clone()` has been implemented
  */
 func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 
@@ -621,60 +592,8 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 	var orderType, findType, findData, matchByType, deepSearchType, depth interface{}
 	unpackVariadic(variadic, &orderType, &findType, &findData, &matchByType, &deepSearchType, &depth)
 
-	// set types to default values
-	setORDERDefaultIfNil(&orderType)
-	setFINDDefaultIfNil(&findType)
-	setMATCHBYDefaultIfNil(&matchByType)
-	setDEEPSEARCHDefaultIfNil(&deepSearchType)
-
-	// convert insert into slice of cards
-	var cardsIn []*Card
-	switch insert.(type) {
-	case Card:
-		cardsIn = append(cardsIn, insert.(*Card))
-	case Stack:
-		for _, c := range insert.(*Stack).Cards {
-			cardsIn = append(cardsIn, c)
-		}
-
-	}
-
-	// create new array in which to insert `insert`
-	var cardsWithAdded []*Card
-
-	// get targeted cards
-	targets := getPositions(false, stack, findType.(FIND), findData, matchByType.(MATCHBY))
-
-	// fill the array
-	for i := range stack.Cards {
-		for _, j := range targets {
-
-			existingCard := stack.Cards[i]
-
-			if j == i { // we are on a target, add `insert`
-
-				// add cards to stack before or after existing element, based on orderType
-				if orderType == ORDER_After { cardsWithAdded = append(cardsWithAdded, existingCard) }
-				for _, c := range cardsIn {
-					cardsWithAdded = append(cardsWithAdded, c)
-				}
-				if orderType == ORDER_Before { cardsWithAdded = append(cardsWithAdded, existingCard) }
-
-			} else { // we are on a non-target, just add
-
-				cardsWithAdded = append(cardsWithAdded, existingCard)
-
-			}
-
-		}
-	}
-
-	// set old cards array to new cards array with added element(s)
-	stack.Cards = cardsWithAdded
-	stack.Size = len(stack.Cards)
-
-	// return
-	return stack.returnNilIfEmpty(cardsWithAdded)
+	// allow deepSearchHandler to take care of function
+	return stack.deepSearchHandler("Add", true, findType, findData, matchByType, deepSearchType, depth, nil, nil, insert, orderType, nil, nil, nil)
 
 }
 
@@ -705,50 +624,8 @@ func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, 
 	setMATCHBYDefaultIfNil(&matchByType_to)
 	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 
-	// initialize positions
-	fromArr := getPositions(false, stack, findType_from, findData_from, matchByType_from.(MATCHBY))
-	toArr := getPositions(false, stack, findType_to, findData_to, matchByType_to.(MATCHBY))
-
-	// initialize new cards
-	var newCards []*Card
-
-	// do main function only if ensures clause is fulfilled
-	if (len(fromArr) == 1 || findType_from == FIND_Slice) && (len(toArr) == 1 || findType_to == FIND_Slice) {
-
-		// set up to
-		to := toArr[0]
-		if findType_to == FIND_Slice && orderType == ORDER_After {
-			to = toArr[1]
-		}
-
-		// fill newCards with cards to add
-		var from []*Card
-		for i := range stack.Cards {
-			if i == fromArr[0] { // on from
-				for _, j := range fromArr {
-					// add to from, remove from stack
-					from = append(from, stack.Cards[j])
-				}
-			} else if i == to - len(from) { // on to
-				// add from to stack before or after existing element, based on orderType
-				if orderType == ORDER_After { newCards = append(newCards, stack.Cards[i]) }
-				for j := range from {
-					newCards = append(newCards, from[j])
-				}
-				if orderType == ORDER_Before { newCards = append(newCards, stack.Cards[i]) }
-			} else { // on regular
-				newCards = append(newCards, stack.Cards[i])
-			}
-		}
-
-		stack.Cards = newCards
-
-	} else {
-		fmt.Printf("ERROR - gostack: stack.Move(...) function argument does not fulfill ensures clause")
-	}
-
-	// return
-	return stack.returnNilIfEmpty(newCards)
+	// allow deepSearchHandler to take care of function
+	return stack.deepSearchHandler("Add", true, findType_from, findData_from, matchByType_from, deepSearchType, depth, nil, nil, nil, nil, findData_to, findType_to, matchByType_to)
 
 }
 

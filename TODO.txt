@@ -1,6 +1,7 @@
 ---------------------------------------------------------------
 GABE:
-* Shift getPositions to return cards instead of indices
+* Document matrix transpose function
+* Implement removeIdx in Library functions
 * Update backend iterator functions to support depth search
 * Make findType default first for all generalizable function
 * Implement deepsearch and depth parameters for common functions
@@ -13,6 +14,7 @@ GABE:
 * Update race.md and related documentation
  - Fix taskC.replace()
 * Update card.idx whenever it's updated
+* Ensure for-loops are consistently formatted (considering cloning)
 * Implement variadic error-catching function for bad argument conditions (fmt.Errorf()) (like if-then style in Move with all functions)
 * Add "How to Import" to README
 * Merge wip to main
@@ -49,7 +51,7 @@ IMPLEMENTED UNTESTED DOCUMENTED FUNCTIONS:
 stack.Has, stack.Move, stack.Extract, stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print, stack.Replace, stack.ExtractMany, stack.ReplaceMany, stack.Remove, stack.RemoveMany, stack.Update, stack.UpdateMany, stack.Lambda, stack.Sort, MakeStack, ToMatrix, stack.StripStackMatrix, MakeStackMatrix
 
 OUTDATED FUNCTIONS:
-All generalizable, unique
+Move, Has, Get, GetMany, Replace, ReplaceMany, Update, UpdateMany, Extract, ExtractMany, Remove, RemoveMany
 
 UNIMPLEMENTED PARTIALLY DOCUMENTED FUNCTIONS:
 /
