@@ -1,24 +1,26 @@
 ---------------------------------------------------------------
 GABE:
-* Ensure replace functions don't clone cards extracted- or maybe ensure they do? Just ensure card pointers are cloned, or else pointer reassignment could mess up card pointers elsewhere
+Central:
 * Document matrix transpose function
 * Document stack.Equals(stack2, deepSearchType, depth) and card.Equals(card2) functions
-* Implement removeIdx in Library functions
 * Update backend iterator functions to support depth search
-* Make findType default first for all generalizable function
-* Implement deepsearch and depth parameters for common functions
+Subcentral:
+* Update Size and Idx dynamically
+* Make findType default first for all generalizable functions
+* Ensure wherever a card is gotten that a new pointer variable is returned
 * Implement casting interfaces as respective pointer type when assigning... see test.go
-* Update size trackers
+Peripheral:
 * Implement new lambda examples
  - For REPLACE_Lambda
  - For stack.Sort()
  - For stack.Lambda()
 * Update race.md and related documentation
  - Fix taskC.replace()
-* Update card.idx whenever it's updated
-* Ensure for-loops are consistently formatted (considering cloning)
-* Implement variadic error-catching function for bad argument conditions (fmt.Errorf()) (like if-then style in Move with all functions)
+* Implement variadic error-catching function for:
+ - bad argument conditions (fmt.Errorf()) (like if-then style in Move with all functions)
+ - when requires clause was not fulfilled
 * Add "How to Import" to README
+* Add "Introduction" README with 1. first thing you can do, 2. second you can do, etc
 * Merge wip to main
 
 ---------------------------------------------------------------

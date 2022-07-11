@@ -11,9 +11,7 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 	// 0) set defaults
 	setORDERDefaultIfNil(&orderType)
 	setFINDDefaultIfNil(&findType)
-	setFINDDefaultIfNil(&findType_to)
 	setMATCHBYDefaultIfNil(&matchByType)
-	setMATCHBYDefaultIfNil(&matchByType_to)
 	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	setDepthDefaultIfNil(&depth)
 	setCLONEDefaultIfNil(&cloneType1)
@@ -30,13 +28,6 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 
 	// 2) get position data from clone
 	targetIndices, targetCards, targetStacks := stackClone.getPositions(getFirst, findType.(FIND), findData, matchByType.(MATCHBY), deepSearchType.(DEEPSEARCH), depth.(int))
-	// (if move is callFrom, then get second set of targets here instead of inside each iteration to save efficiency)
-	var targetIndices_to [][]int
-	var targetCards_to []*Card
-	var targetStacks_to []*Stack
-	if callFrom == "Move" {
-		targetIndices_to, targetCards_to, targetStacks_to = stackClone.getPositions(getFirst, findType_to.(FIND), findData_to, matchByType_to.(MATCHBY), deepSearchType.(DEEPSEARCH), depth.(int))
-	}
 	
 	// 3) iterate through each card in targetCards
 	if !(getFirst && len(targetCards) == 0) {
@@ -105,69 +96,6 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 				for j := targetLocalIdx+1; j < len(targetStack.Cards); j++ {
 					newCards = append(newCards, targetStack.Cards[j])
 				}
-
-				// set the local stack to the new stack after setting newCards
-				targetStack.Cards = newCards
-
-			case "Move":
-
-				currentIdxSet_to := targetIndices_to[i] // current set of indices to get to target from stackClone
-				targetLocalIdx_to := currentIdxSet_to[len(currentIdxSet_to)-1]
-				targetCard_to := targetStack.Cards[targetLocalIdx_to]
-
-				// ugh... implement later
-				// ensure that this is all optimized for within-stack movement, do not allow between-stack movement
-
-				/*
-				
-				
-				// initialize positions
-				fromArr := stack.getPositions(false, findType_from, findData_from, matchByType_from.(MATCHBY))
-				toArr := stack.getPositions(false, findType_to, findData_to, matchByType_to.(MATCHBY))
-
-				// initialize new cards
-				var newCards []*Card
-
-				// do main function only if ensures clause is fulfilled
-				if (len(fromArr) == 1 || findType_from == FIND_Slice) && (len(toArr) == 1 || findType_to == FIND_Slice) {
-
-					// set up to
-					to := toArr[0]
-					if findType_to == FIND_Slice && orderType == ORDER_After {
-						to = toArr[1]
-					}
-
-					// fill newCards with cards to add
-					var from []*Card
-					for i := range stack.Cards {
-						if i == fromArr[0] { // on from
-							for _, j := range fromArr {
-								// add to from, remove from stack
-								from = append(from, stack.Cards[j])
-							}
-						} else if i == to - len(from) { // on to
-							// add from to stack before or after existing element, based on orderType
-							if orderType == ORDER_After { newCards = append(newCards, stack.Cards[i]) }
-							for j := range from {
-								newCards = append(newCards, from[j])
-							}
-							if orderType == ORDER_Before { newCards = append(newCards, stack.Cards[i]) }
-						} else { // on regular
-							newCards = append(newCards, stack.Cards[i])
-						}
-					}
-
-					stack.Cards = newCards
-
-				} else {
-					fmt.Printf("ERROR - gostack: stack.Move(...) function argument does not fulfill ensures clause")
-				}
-
-				// return
-				return stack.returnNilIfEmpty(newCards)
-				
-				
-				*/
 
 				// set the local stack to the new stack after setting newCards
 				targetStack.Cards = newCards
@@ -613,7 +541,7 @@ func (setStack *Stack) updateRespectiveField(replaceType REPLACE, replaceData in
 		setStack.Cards = newCards
 
 	case REPLACE_Lambda:
-		generalIterator(setStack, replaceData.(func(*Card, ...interface{})), )
+		generalIterator(setStack, replaceData.(func(*Card, ...interface{})), DEEPSEARCHSTUFFHERE)
 
 	}
 

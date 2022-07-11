@@ -611,20 +611,30 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
  @param optional `findData_to` type{interface{}} default nil
  @param optional `matchByType_from` type{MATCHBY} default MATCHBY_Object
  @param optional `matchByType_to` type{MATCHBY} default MATCHBY_Object
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int} default -1 (deepest)
+ @param optional `deepSearchType_from` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType_to` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `depth_from` type{int} default -1 (deepest)
+ @param optional `depth_to` type{int} default -1 (deepest)
  @returns `stack` if moved OR nil if no move occurred (due to bad find)
- @ensures IF `findType_to` or `findType_from` get over one position, method doesn't perform move and prints invalid argument (FIND_Slice is the sole exception to this rule)
+ @requires you are not moving a stack to a location within that own stack
+ @ensures
+  * `findType_to` gets a set of elements
+  * the first element gotten from `findType_from` is selected as the element to add before or after
  */
 func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, variadic ...interface{}) *Stack {
 
 	// unpack variadic into optional parameters
-	var findData_from, findData_to, matchByType_from, matchByType_to, deepSearchType, depth interface{}
-	unpackVariadic(variadic, &findData_from, &findData_to, &matchByType_from, &matchByType_to, &deepSearchType, &depth)
+	var findData_from, findData_to, matchByType_from, matchByType_to, deepSearchType_from, deepSearchType_to, depth_from, depth_to interface{}
+	unpackVariadic(variadic, &findData_from, &findData_to, &matchByType_from, &matchByType_to, &deepSearchType_from, &deepSearchType_to, &depth_from, &depth_to)
 
-	*stack = *stack.deepSearchHandler("Add", true, findType_from, findData_from, matchByType_from, deepSearchType, depth, nil, nil, nil, nil, findData_to, findType_to, matchByType_to, nil, nil, nil)
+	// 1) Get the card to put them before/after
+	to := stack.Get(findType_to, findData_to, matchByType_to, CLONE_False, CLONE_False, CLONE_False, deepSearchType_to, depth_to)
+	// 2) Get the ones to move
+	from := stack.ExtractMany(findType_from, findData_from, matchByType_from, RETURN_Cards, deepSearchType_from, depth_from)
+	// 3) Move 2 to 1
+	stack.Add(from, orderType, FIND_Idx, to.Idx, matchByType_to, deepSearchType_to, depth_to)
 
-	// allow deepSearchHandler to take care of function
+	// return
 	return stack
 
 }
