@@ -1,6 +1,7 @@
 ---------------------------------------------------------------
 GABE:
 * Document matrix transpose function
+* Document stack.Equals(stack2) and card.Equals(card2) functions
 * Implement removeIdx in Library functions
 * Update backend iterator functions to support depth search
 * Make findType default first for all generalizable function
@@ -51,7 +52,7 @@ IMPLEMENTED UNTESTED DOCUMENTED FUNCTIONS:
 stack.Has, stack.Move, stack.Extract, stack.Get, stack.GetMany, stack.Add, MakeCard, stack.Empty, stack.Clone, card.Clone, stack.Unique, stack.ToArray, stack.ToMap, stack.Shuffle, stack.Flip, stack.Print, card.Print, stack.Replace, stack.ExtractMany, stack.ReplaceMany, stack.Remove, stack.RemoveMany, stack.Update, stack.UpdateMany, stack.Lambda, stack.Sort, MakeStack, ToMatrix, stack.StripStackMatrix, MakeStackMatrix
 
 OUTDATED FUNCTIONS:
-Move, Has, Get, GetMany, Replace, ReplaceMany, Update, UpdateMany, Extract, ExtractMany, Remove, RemoveMany
+Move, Get, GetMany, Replace, ReplaceMany, Update, UpdateMany, Extract, ExtractMany, Remove, RemoveMany
 
 UNIMPLEMENTED PARTIALLY DOCUMENTED FUNCTIONS:
 /

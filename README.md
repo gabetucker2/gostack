@@ -7,9 +7,10 @@
  Introducing **Stacks**—sets of **Card** elements (like a stack of cards)—***gostack*** serves as an all-in-one library for flexible, parsimonious, and elegant data management in *golang*.
 
  ***gostack***'s stacks...
- * ...replace maps, arrays, and matrices, expelling with the need for fetching or translating data between varying data structure types, all the while supporting smooth conversion between stacks and your existing data structures
- * ...offer the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity of 5 nested for-loops in a single line
+ * ...replace arrays, maps, and matrices, eliminating the need for translating data between varying data types while supporting smooth conversion between stacks and your existing data structures
+ * ...offer the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity of 5 nested for-loops in a single yet concise line
  * ...allow the user to get and set based on reference or object with ease, preventing the user from having to worry about convoluted pointer/address management
+ * ...support the treatment of stacks as matrices, allowing the user to easily manage data tables, perform linear algebra, and control deep-versus-shallow matrix operations
  * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create novel stack mechanisms of their own design
 
  Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish, ***gostack*** took roughly one fifth the amount of lines (merely 10)—[see for yourself!](/tutorials/race.md)

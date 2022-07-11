@@ -452,7 +452,7 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...interface{}) *Stack {
 	unpackVariadic(variadic, &matchByType, &deepSearchType, &depth, &uniqueType)
 
 	// allow deepsearch to take care of function
-	return stack.deepSearchHandler("Unique", false, FIND_All, nil, matchByType, deepSearchType, depth, typeType, uniqueType, nil, nil, nil, nil, nil)
+	return stack.deepSearchHandler("Unique", false, FIND_All, nil, matchByType, deepSearchType, depth, typeType, uniqueType, nil, nil, nil, nil, nil, nil, nil, nil)
 
 }
 
@@ -593,7 +593,7 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 	unpackVariadic(variadic, &orderType, &findType, &findData, &matchByType, &deepSearchType, &depth)
 
 	// allow deepSearchHandler to take care of function
-	return stack.deepSearchHandler("Add", true, findType, findData, matchByType, deepSearchType, depth, nil, nil, insert, orderType, nil, nil, nil)
+	return stack.deepSearchHandler("Add", true, findType, findData, matchByType, deepSearchType, depth, nil, nil, insert, orderType, nil, nil, nil, nil, nil, nil)
 
 }
 
@@ -625,7 +625,7 @@ func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, 
 	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 
 	// allow deepSearchHandler to take care of function
-	return stack.deepSearchHandler("Add", true, findType_from, findData_from, matchByType_from, deepSearchType, depth, nil, nil, nil, nil, findData_to, findType_to, matchByType_to)
+	return stack.deepSearchHandler("Add", true, findType_from, findData_from, matchByType_from, deepSearchType, depth, nil, nil, nil, nil, findData_to, findType_to, matchByType_to, nil, nil, nil)
 
 }
 
@@ -647,7 +647,7 @@ func (stack *Stack) Has(variadic ...interface{}) bool {
 	unpackVariadic(variadic, &findType, &findData, &matchByType, &deepSearchType, &depth)
 
 	// return
-	return stack.Get(findType, findData, matchByType) != nil
+	return stack.Get(findType, findData, matchByType, nil, nil, nil, deepSearchType, depth) != nil
 }
 
 /** Gets a card from specified parameters in a stack, or nil if does not exist
@@ -673,34 +673,8 @@ func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
 	var findType, findData, matchByType, clonesType_card, clonesType_key, clonesType_val, deepSearchType, depth interface{}
 	unpackVariadic(variadic, &findType, &findData, &matchByType, &clonesType_card, &clonesType_key, &clonesType_val, &deepSearchType, &depth)
 
-	// set types to default values
-	setFINDDefaultIfNil(&findType)
-	setMATCHBYDefaultIfNil(&matchByType)
-	setCLONEDefaultIfNil(&clonesType_card)
-	setCLONEDefaultIfNil(&clonesType_key)
-	setCLONEDefaultIfNil(&clonesType_val)
-	setDEEPSEARCHDefaultIfNil(&deepSearchType)
-
-	// get targeted card OR nil
-	targets := getPositions(true, stack, findType.(FIND), findData, matchByType.(MATCHBY))
-	if len(targets) > 0 {
-		ret = stack.Cards[targets[0]]
-		// clone if necessary
-		if clonesType_card == CLONE_True {
-			ret = ret.Clone()
-		}
-		if clonesType_key == CLONE_True {
-			ret.Key = cloneInterface(ret.Key)
-		}
-		if clonesType_val == CLONE_True {
-			ret.Val = cloneInterface(ret.Val)
-		}
-	} else {
-		ret = nil
-	}
-	
-	// return
-	return
+	// allow deepSearchHandler to take care of function
+	return stack.deepSearchHandler("Get", true, findType, findData, matchByType, deepSearchType, depth, nil, nil, nil, nil, nil, nil, nil, clonesType_card, clonesType_key, clonesType_val).Cards[0]
 
 }
 
@@ -732,61 +706,8 @@ func (stack *Stack) GetMany(findType FIND, variadic ...interface{}) *Stack {
 	var findData, matchByType, returnType, clonesType, clonesType_keys, clonesType_vals, deepSearchType, depth interface{}
 	unpackVariadic(variadic, &findData, &matchByType, &returnType, &clonesType, &clonesType_keys, &clonesType_vals, &deepSearchType, &depth)
 
-	// set types to default values
-	setMATCHBYDefaultIfNil(&matchByType)
-	setRETURNDefaultIfNil(&returnType)
-	setCLONEDefaultIfNil(&clonesType)
-	setCLONEDefaultIfNil(&clonesType_keys)
-	setCLONEDefaultIfNil(&clonesType_vals)
-	setDEEPSEARCHDefaultIfNil(&deepSearchType)
-
-	// create new stack which returns the searched-for cards
-	newStack := MakeStack()
-
-	// get targeted cards
-	targets := getPositions(false, stack, findType, findData, matchByType.(MATCHBY))
-
-	// fill new stack with targeted cards
-	for _, i := range targets {
-
-		newCard := new(Card)
-		oldCard := stack.Cards[i]
-
-		switch returnType {
-	
-		case RETURN_Idxs:
-			newCard.Val = oldCard.Idx
-	
-		case RETURN_Keys:
-			newCard.Val = oldCard.Key
-	
-		case RETURN_Vals:
-			newCard.Val = oldCard.Val
-	
-		case RETURN_Cards:
-			newCard.Val = *oldCard
-	
-		}
-
-		// clone if necessary
-		if clonesType == CLONE_True {
-			newCard.Val = cloneInterface(newCard.Val)
-		}
-		if returnType == RETURN_Cards {
-			if clonesType_keys == CLONE_True {
-				newCard.Val.(*Card).Key = cloneInterface(newCard.Key)
-			}
-			if clonesType_vals == CLONE_True {
-				newCard.Val.(*Card).Val = cloneInterface(newCard.Val)
-			}
-		}
-
-		newStack.Cards = append(newStack.Cards, newCard)
-
-	}
-
-	// return
-	return newStack
+	// allow deepSearchHandler to take care of function
+	return stack.deepSearchHandler("GetMany", true, findType, findData, matchByType, deepSearchType, depth, nil, nil, nil, nil, nil, nil, nil, clonesType, clonesType_keys, clonesType_vals)
 
 }
 
@@ -811,18 +732,8 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceData interface{}, findTy
 	var findData, matchByType, deepSearchType, depth interface{}
 	unpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
 
-	// get deep copy of targeted card OR nil
-	ret = stack.Get(findType, findData, matchByType, CLONE_True, CLONE_True, CLONE_True)
-	// target is reference to card OR nil
-	target := stack.Get(findType, findData, matchByType)
-
-	// set targeted card field to replaceData if was found (updateRespectiveField fulfills our ensures clause)
-	if target != nil {
-		updateRespectiveField(stack, replaceType, replaceData, target)
-	}
-
-	// return
-	return
+	// allow deepSearchHandler to take care of function
+	return stack.deepSearchHandler("Replace", true, findType, findData, matchByType, deepSearchType, depth, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, replaceType, replaceData).Cards[0]
 
 }
 

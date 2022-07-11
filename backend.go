@@ -2,7 +2,11 @@ package gostack
 
 import "reflect"
 
-func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, findData, matchByType, deepSearchType, depth, typeType, uniqueType, insert, orderType, findData_to, findType_to, matchByType_to interface{}) (ret *Stack) {
+/** Performs the function using a uniform framework for performing deepSearches
+ 
+ @shorthand Just pass the proper variables (or nil) into this function from Library.go, and this function will handle the rest
+ */
+func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, findData, matchByType, deepSearchType, depth, typeType, uniqueType, insert, orderType, findData_to, findType_to, matchByType_to, cloneType1, cloneType2, cloneType3, replaceType, replaceData interface{}) (ret *Stack) {
 
 	// 0) set defaults
 	setORDERDefaultIfNil(&orderType)
@@ -12,10 +16,13 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 	setMATCHBYDefaultIfNil(&matchByType_to)
 	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	setDepthDefaultIfNil(&depth)
+	setCLONEDefaultIfNil(&cloneType1)
+	setCLONEDefaultIfNil(&cloneType2)
+	setCLONEDefaultIfNil(&cloneType3)
 
 	// 1) get position data
 	targetIndices, targetCards := stack.getPositions(getFirst, findType.(FIND), findData, matchByType.(MATCHBY), deepSearchType.(DEEPSEARCH), depth.(int))
-	// (only for move)
+	// (if move is callFrom, then get second set of targets here instead of inside each iteration to save efficiency)
 	var targetIndices_to [][]int
 	var targetCards_to []*Card
 	if callFrom == "Move" {
@@ -151,6 +158,136 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 			
 			
 			*/
+
+		case "Get":
+
+			// TODO: implement, return stack with one element
+
+			/*
+
+			// set types to default values
+			setFINDDefaultIfNil(&findType)
+			setMATCHBYDefaultIfNil(&matchByType)
+			setCLONEDefaultIfNil(&clonesType_card)
+			setCLONEDefaultIfNil(&clonesType_key)
+			setCLONEDefaultIfNil(&clonesType_val)
+			setDEEPSEARCHDefaultIfNil(&deepSearchType)
+
+			// get targeted card OR nil
+			targets := getPositions(true, stack, findType.(FIND), findData, matchByType.(MATCHBY))
+			if len(targets) > 0 {
+				ret = stack.Cards[targets[0]]
+				// clone if necessary
+				if clonesType_card == CLONE_True {
+					ret = ret.Clone()
+				}
+				if clonesType_key == CLONE_True {
+					ret.Key = cloneInterface(ret.Key)
+				}
+				if clonesType_val == CLONE_True {
+					ret.Val = cloneInterface(ret.Val)
+				}
+			} else {
+				ret = nil
+			}
+
+			*/
+
+		case "GetMany":
+
+			/*
+			
+			// set types to default values
+			setMATCHBYDefaultIfNil(&matchByType)
+			setRETURNDefaultIfNil(&returnType)
+			setCLONEDefaultIfNil(&clonesType)
+			setCLONEDefaultIfNil(&clonesType_keys)
+			setCLONEDefaultIfNil(&clonesType_vals)
+			setDEEPSEARCHDefaultIfNil(&deepSearchType)
+
+			// create new stack which returns the searched-for cards
+			newStack := MakeStack()
+
+			// get targeted cards
+			targets := getPositions(false, stack, findType, findData, matchByType.(MATCHBY))
+
+			// fill new stack with targeted cards
+			for _, i := range targets {
+
+				newCard := new(Card)
+				oldCard := stack.Cards[i]
+
+				switch returnType {
+			
+				case RETURN_Idxs:
+					newCard.Val = oldCard.Idx
+			
+				case RETURN_Keys:
+					newCard.Val = oldCard.Key
+			
+				case RETURN_Vals:
+					newCard.Val = oldCard.Val
+			
+				case RETURN_Cards:
+					newCard.Val = *oldCard
+			
+				}
+
+				// clone if necessary
+				if clonesType == CLONE_True {
+					newCard.Val = cloneInterface(newCard.Val)
+				}
+				if returnType == RETURN_Cards {
+					if clonesType_keys == CLONE_True {
+						newCard.Val.(*Card).Key = cloneInterface(newCard.Key)
+					}
+					if clonesType_vals == CLONE_True {
+						newCard.Val.(*Card).Val = cloneInterface(newCard.Val)
+					}
+				}
+
+				newStack.Cards = append(newStack.Cards, newCard)
+
+			}
+
+			// return
+			return newStack
+			
+			*/
+
+		case "Replace":
+
+			/*
+			
+			// get deep copy of targeted card OR nil
+			ret = stack.Get(findType, findData, matchByType, CLONE_True, CLONE_True, CLONE_True)
+			// target is reference to card OR nil
+			target := stack.Get(findType, findData, matchByType)
+
+			// set targeted card field to replaceData if was found (updateRespectiveField fulfills our ensures clause)
+			if target != nil {
+				updateRespectiveField(stack, replaceType, replaceData, target)
+			}
+
+			// return
+			return
+			
+			*/
+
+		case "ReplaceMany":
+
+		case "Update":
+
+		case "UpdateMany":
+
+		case "Extract":
+
+		case "ExtractMany":
+
+		case "Remove":
+
+		case "RemoveMany":
+
 			
 		}
 
