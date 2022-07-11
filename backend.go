@@ -6,7 +6,7 @@ import "reflect"
  
  @shorthand Just pass the proper variables (or nil) into this function from Library.go, and this function will handle the rest
  */
-func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, findData, matchByType, deepSearchType, depth, typeType, uniqueType, insert, orderType, findData_to, findType_to, matchByType_to, cloneType1, cloneType2, cloneType3, replaceType, replaceData interface{}) (ret *Stack) {
+func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, findData, matchByType, deepSearchType, depth, typeType, uniqueType, insert, orderType, findData_to, findType_to, matchByType_to, cloneType1, cloneType2, cloneType3 interface{}) (ret *Stack) {
 
 	// 0) set defaults
 	setORDERDefaultIfNil(&orderType)
@@ -20,292 +20,190 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 	setCLONEDefaultIfNil(&cloneType2)
 	setCLONEDefaultIfNil(&cloneType3)
 
-	// 1) get position data
-	targetIndices, targetCards := stack.getPositions(getFirst, findType.(FIND), findData, matchByType.(MATCHBY), deepSearchType.(DEEPSEARCH), depth.(int))
+	// 1) clone the stack
+	var stackClone *Stack
+	if callFrom == "Get" || callFrom == "GetMany" {
+		stackClone = new(Stack)
+	} else {
+		stackClone = stack.Clone()
+	}
+
+	// 2) get position data from clone
+	targetIndices, targetCards, targetStacks := stackClone.getPositions(getFirst, findType.(FIND), findData, matchByType.(MATCHBY), deepSearchType.(DEEPSEARCH), depth.(int))
 	// (if move is callFrom, then get second set of targets here instead of inside each iteration to save efficiency)
 	var targetIndices_to [][]int
 	var targetCards_to []*Card
+	var targetStacks_to []*Stack
 	if callFrom == "Move" {
-		targetIndices_to, targetCards_to = stack.getPositions(getFirst, findType_to.(FIND), findData_to, matchByType_to.(MATCHBY), deepSearchType.(DEEPSEARCH), depth.(int))
+		targetIndices_to, targetCards_to, targetStacks_to = stackClone.getPositions(getFirst, findType_to.(FIND), findData_to, matchByType_to.(MATCHBY), deepSearchType.(DEEPSEARCH), depth.(int))
 	}
-
-	// 2) clone the stack
-	stackClone := stack.Clone()
 	
 	// 3) iterate through each card in targetCards
-	for i := range targetCards {
-		// 4) perform function on found card contingent on the caller function type, treating stackClone or targetStack (within stackClone) as the output in this function
+	if !(getFirst && len(targetCards) == 0) {
+		for i := range targetCards {
+			// 4) perform function on found card contingent on the caller function type, treating stackClone or targetStack (within stackClone) as the output in this function
 
-		currentIdxSet := targetIndices[i] // current set of indices to get to target from stackClone
-		var newCards []*Card // set of cards with which to replace targetStack.Cards (original stack)
-		targetStack := stackClone // the substack on which to perform the function
-		for j := 0; j < len(currentIdxSet)-1; j++ {
-			targetStack = targetStack.Cards[currentIdxSet[j]].Val.(*Stack)
-		}
-		targetLocalIdx := currentIdxSet[len(currentIdxSet)-1]
-		targetCard := targetStack.Cards[targetLocalIdx]
+			currentIdxSet := targetIndices[i] // current set of indices to get to target from stackClone
+			targetStack := targetStacks[i] // parent stacks of each target
+			var newCards []*Card // set of cards with which to replace targetStack.Cards (original stack)
+			targetLocalIdx := currentIdxSet[len(currentIdxSet)-1]
+			targetCard := targetStack.Cards[targetLocalIdx]
 
-		switch callFrom {
-		case "Unique":
+			switch callFrom {
+			case "Unique":
 
-			// where newCards is uniqueCards
-			newCards = targetStack.Cards
-			for i, newCard := range newCards {
-				if (typeType == TYPE_Card &&
-					  (matchByType == MATCHBY_Object && targetCard == newCard) ||
-					  (matchByType == MATCHBY_Reference && &targetCard == &newCard) ) || 
-				    (typeType == TYPE_Key &&
-					  (matchByType == MATCHBY_Object && targetCard.Key == newCard.Key) ||
-					  (matchByType == MATCHBY_Reference && &targetCard.Key == &newCard.Key) ) ||
-				    (typeType == TYPE_Val &&
-					  (matchByType == MATCHBY_Object && targetCard.Val == newCard.Val) ||
-					  (matchByType == MATCHBY_Reference && &targetCard.Val == &newCard.Val) ) {
-						
-						// target already exists in the card array, so remove it from the output card array
-						removeIdx(newCards, i)
-						break
+				// where newCards is uniqueCards
+				newCards = targetStack.Cards
+				for i, newCard := range newCards {
+					if (typeType == TYPE_Card &&
+						(matchByType == MATCHBY_Object && targetCard == newCard) ||
+						(matchByType == MATCHBY_Reference && &targetCard == &newCard) ) || 
+						(typeType == TYPE_Key &&
+						(matchByType == MATCHBY_Object && targetCard.Key == newCard.Key) ||
+						(matchByType == MATCHBY_Reference && &targetCard.Key == &newCard.Key) ) ||
+						(typeType == TYPE_Val &&
+						(matchByType == MATCHBY_Object && targetCard.Val == newCard.Val) ||
+						(matchByType == MATCHBY_Reference && &targetCard.Val == &newCard.Val) ) {
+							
+							// target already exists in the card array, so remove it from the output card array
+							removeIdx(newCards, i)
+							break
 
-				}
-			}
-
-		case "Add":
-
-			//// CARDS < targetLocalIdx
-			// add the cards before targetCard
-			for j := 0; j < targetLocalIdx; j++ {
-				newCards = append(newCards, targetStack.Cards[j])
-			}
-
-			//// CARDS == targetLocalIdx
-			// add the targetCard before insert if insert is Order_AFTER (insert ordered after targetCard)
-			if orderType == ORDER_After { newCards = append(newCards, targetCard) }
-
-			// add insert Card(s) before/after targetCard
-			switch insert.(type) {
-			case Card:
-				newCards = append(newCards, insert.(*Card))
-			case Stack:
-				for _, c := range insert.(*Stack).Cards {
-					newCards = append(newCards, c)
-				}
-			}
-
-			// add the targetCard after insert if insert is Order_BEFORE (insert ordered before targetCard)
-			if orderType == ORDER_Before { newCards = append(newCards, targetCard) }
-
-			//// CARDS > targetLocalIdx
-			// add the cards after targetCard
-			for j := targetLocalIdx+1; j < len(targetStack.Cards); j++ {
-				newCards = append(newCards, targetStack.Cards[j])
-			}
-
-		case "Move":
-
-			currentIdxSet_to := targetIndices_to[i] // current set of indices to get to target from stackClone
-			targetLocalIdx_to := currentIdxSet_to[len(currentIdxSet_to)-1]
-			targetCard_to := targetStack.Cards[targetLocalIdx_to]
-
-			// ugh... implement later
-			// ensure that this is all optimized for within-stack movement, do not allow between-stack movement
-
-			/*
-			
-			
-			// initialize positions
-			fromArr := stack.getPositions(false, findType_from, findData_from, matchByType_from.(MATCHBY))
-			toArr := stack.getPositions(false, findType_to, findData_to, matchByType_to.(MATCHBY))
-
-			// initialize new cards
-			var newCards []*Card
-
-			// do main function only if ensures clause is fulfilled
-			if (len(fromArr) == 1 || findType_from == FIND_Slice) && (len(toArr) == 1 || findType_to == FIND_Slice) {
-
-				// set up to
-				to := toArr[0]
-				if findType_to == FIND_Slice && orderType == ORDER_After {
-					to = toArr[1]
-				}
-
-				// fill newCards with cards to add
-				var from []*Card
-				for i := range stack.Cards {
-					if i == fromArr[0] { // on from
-						for _, j := range fromArr {
-							// add to from, remove from stack
-							from = append(from, stack.Cards[j])
-						}
-					} else if i == to - len(from) { // on to
-						// add from to stack before or after existing element, based on orderType
-						if orderType == ORDER_After { newCards = append(newCards, stack.Cards[i]) }
-						for j := range from {
-							newCards = append(newCards, from[j])
-						}
-						if orderType == ORDER_Before { newCards = append(newCards, stack.Cards[i]) }
-					} else { // on regular
-						newCards = append(newCards, stack.Cards[i])
 					}
 				}
 
-				stack.Cards = newCards
+				// set the local stack to the new stack after setting newCards
+				targetStack.Cards = newCards
 
-			} else {
-				fmt.Printf("ERROR - gostack: stack.Move(...) function argument does not fulfill ensures clause")
-			}
+			case "Add":
 
-			// return
-			return stack.returnNilIfEmpty(newCards)
-			
-			
-			*/
-
-		case "Get":
-
-			// TODO: implement, return stack with one element
-
-			/*
-
-			// set types to default values
-			setFINDDefaultIfNil(&findType)
-			setMATCHBYDefaultIfNil(&matchByType)
-			setCLONEDefaultIfNil(&clonesType_card)
-			setCLONEDefaultIfNil(&clonesType_key)
-			setCLONEDefaultIfNil(&clonesType_val)
-			setDEEPSEARCHDefaultIfNil(&deepSearchType)
-
-			// get targeted card OR nil
-			targets := getPositions(true, stack, findType.(FIND), findData, matchByType.(MATCHBY))
-			if len(targets) > 0 {
-				ret = stack.Cards[targets[0]]
-				// clone if necessary
-				if clonesType_card == CLONE_True {
-					ret = ret.Clone()
+				//// CARDS < targetLocalIdx
+				// add the cards before targetCard
+				for j := 0; j < targetLocalIdx; j++ {
+					newCards = append(newCards, targetStack.Cards[j])
 				}
-				if clonesType_key == CLONE_True {
-					ret.Key = cloneInterface(ret.Key)
+
+				//// CARDS == targetLocalIdx
+				// add the targetCard before insert if insert is Order_AFTER (insert ordered after targetCard)
+				if orderType == ORDER_After { newCards = append(newCards, targetCard) }
+
+				// add insert Card(s) before/after targetCard
+				switch insert.(type) {
+				case Card:
+					newCards = append(newCards, insert.(*Card))
+				case Stack:
+					for _, c := range insert.(*Stack).Cards {
+						newCards = append(newCards, c)
+					}
 				}
-				if clonesType_val == CLONE_True {
-					ret.Val = cloneInterface(ret.Val)
+
+				// add the targetCard after insert if insert is Order_BEFORE (insert ordered before targetCard)
+				if orderType == ORDER_Before { newCards = append(newCards, targetCard) }
+
+				//// CARDS > targetLocalIdx
+				// add the cards after targetCard
+				for j := targetLocalIdx+1; j < len(targetStack.Cards); j++ {
+					newCards = append(newCards, targetStack.Cards[j])
 				}
-			} else {
-				ret = nil
-			}
 
-			*/
+				// set the local stack to the new stack after setting newCards
+				targetStack.Cards = newCards
 
-		case "GetMany":
+			case "Move":
 
-			/*
-			
-			// set types to default values
-			setMATCHBYDefaultIfNil(&matchByType)
-			setRETURNDefaultIfNil(&returnType)
-			setCLONEDefaultIfNil(&clonesType)
-			setCLONEDefaultIfNil(&clonesType_keys)
-			setCLONEDefaultIfNil(&clonesType_vals)
-			setDEEPSEARCHDefaultIfNil(&deepSearchType)
+				currentIdxSet_to := targetIndices_to[i] // current set of indices to get to target from stackClone
+				targetLocalIdx_to := currentIdxSet_to[len(currentIdxSet_to)-1]
+				targetCard_to := targetStack.Cards[targetLocalIdx_to]
 
-			// create new stack which returns the searched-for cards
-			newStack := MakeStack()
+				// ugh... implement later
+				// ensure that this is all optimized for within-stack movement, do not allow between-stack movement
 
-			// get targeted cards
-			targets := getPositions(false, stack, findType, findData, matchByType.(MATCHBY))
+				/*
+				
+				
+				// initialize positions
+				fromArr := stack.getPositions(false, findType_from, findData_from, matchByType_from.(MATCHBY))
+				toArr := stack.getPositions(false, findType_to, findData_to, matchByType_to.(MATCHBY))
 
-			// fill new stack with targeted cards
-			for _, i := range targets {
+				// initialize new cards
+				var newCards []*Card
 
-				newCard := new(Card)
-				oldCard := stack.Cards[i]
+				// do main function only if ensures clause is fulfilled
+				if (len(fromArr) == 1 || findType_from == FIND_Slice) && (len(toArr) == 1 || findType_to == FIND_Slice) {
 
-				switch returnType {
-			
-				case RETURN_Idxs:
-					newCard.Val = oldCard.Idx
-			
-				case RETURN_Keys:
-					newCard.Val = oldCard.Key
-			
-				case RETURN_Vals:
-					newCard.Val = oldCard.Val
-			
-				case RETURN_Cards:
-					newCard.Val = *oldCard
-			
+					// set up to
+					to := toArr[0]
+					if findType_to == FIND_Slice && orderType == ORDER_After {
+						to = toArr[1]
+					}
+
+					// fill newCards with cards to add
+					var from []*Card
+					for i := range stack.Cards {
+						if i == fromArr[0] { // on from
+							for _, j := range fromArr {
+								// add to from, remove from stack
+								from = append(from, stack.Cards[j])
+							}
+						} else if i == to - len(from) { // on to
+							// add from to stack before or after existing element, based on orderType
+							if orderType == ORDER_After { newCards = append(newCards, stack.Cards[i]) }
+							for j := range from {
+								newCards = append(newCards, from[j])
+							}
+							if orderType == ORDER_Before { newCards = append(newCards, stack.Cards[i]) }
+						} else { // on regular
+							newCards = append(newCards, stack.Cards[i])
+						}
+					}
+
+					stack.Cards = newCards
+
+				} else {
+					fmt.Printf("ERROR - gostack: stack.Move(...) function argument does not fulfill ensures clause")
 				}
+
+				// return
+				return stack.returnNilIfEmpty(newCards)
+				
+				
+				*/
+
+				// set the local stack to the new stack after setting newCards
+				targetStack.Cards = newCards
+
+			case "Get":
+
+				// card which we will transform (if necessary) to insert
+				insertCard := targetCard
 
 				// clone if necessary
-				if clonesType == CLONE_True {
-					newCard.Val = cloneInterface(newCard.Val)
+				if cloneType1 == CLONE_True {
+					insertCard = insertCard.Clone()
 				}
-				if returnType == RETURN_Cards {
-					if clonesType_keys == CLONE_True {
-						newCard.Val.(*Card).Key = cloneInterface(newCard.Key)
-					}
-					if clonesType_vals == CLONE_True {
-						newCard.Val.(*Card).Val = cloneInterface(newCard.Val)
-					}
+				if cloneType2 == CLONE_True {
+					insertCard.Key = cloneInterface(insertCard.Key)
+				}
+				if cloneType3 == CLONE_True {
+					insertCard.Val = cloneInterface(insertCard.Val)
 				}
 
-				newStack.Cards = append(newStack.Cards, newCard)
-
+				// get targeted card OR nil
+				stackClone.Cards = append(stackClone.Cards, insertCard)
+				
 			}
 
-			// return
-			return newStack
-			
-			*/
-
-		case "Replace":
-
-			/*
-			
-			// get deep copy of targeted card OR nil
-			ret = stack.Get(findType, findData, matchByType, CLONE_True, CLONE_True, CLONE_True)
-			// target is reference to card OR nil
-			target := stack.Get(findType, findData, matchByType)
-
-			// set targeted card field to replaceData if was found (updateRespectiveField fulfills our ensures clause)
-			if target != nil {
-				updateRespectiveField(stack, replaceType, replaceData, target)
-			}
-
-			// return
-			return
-			
-			*/
-
-		case "ReplaceMany":
-
-		case "Update":
-
-		case "UpdateMany":
-
-		case "Extract":
-
-		case "ExtractMany":
-
-		case "Remove":
-
-		case "RemoveMany":
-
-			
 		}
+		
+		// finalize stackClone in preparation for return
+		stackClone.Size = len(stackClone.Cards)
+		ret = stackClone
 
-		// set the local stack to the new stack after setting newCards
-		targetStack.Cards = newCards
-
-	}
-
-	// 5) set original stack cards to stack clone cards
-	stack.Cards = stackClone.Cards
-	stack.Size = len(stack.Cards)
-	
-	// 6) return nil if performing function on one card and failed to find any targets on which to perform that function
-	if getFirst && len(targetCards) == 0 {
-		ret = nil
 	} else {
-		ret = stack
+		ret = nil
 	}
+	
+	// 5) return nil if performing function on one card and failed to find any targets on which to perform that function, else return stackClone
 	return
 
 }
@@ -418,7 +316,13 @@ func sortIterator(stack *Stack, lambda func(*Card, *Stack, ...interface{}) (ORDE
  @param `stack` type{*Stack} no pass-by-reference
  @param `findType` type{FIND}
  @param `findData` type{interface{}}
- @returns [][]int of []int sequences representing index sequences to arrive at targeted positions
+ @param `matchByType` type{MATCHBY} no pass-by-reference
+ @param `deepSearchType` type{DEEPSEARCH}
+ @param `depth` type{int}
+ @returns 3 arrays of data pertaining to the found cards:
+  * type{[][]int} int array representing path to card from root stack
+  * type{[]*Card} the card pointer itself
+  * type{[]*Stack} the stack which is the direct parent of that card
  @constructor creates a new []int
  @requires
   * `MakeStack()` and `MakeCard()` have been implemented
@@ -432,7 +336,7 @@ func sortIterator(stack *Stack, lambda func(*Card, *Stack, ...interface{}) (ORDE
    ELSE
      return an array of all found elements
  */
-func (stack *Stack) getPositions(getFirst bool, findType FIND, findData interface{}, matchByType MATCHBY, deepSearchType DEEPSEARCH, depth int) (targetIdxs [][]int, targetCards []*Card) {
+func (stack *Stack) getPositions(getFirst bool, findType FIND, findData interface{}, matchByType MATCHBY, deepSearchType DEEPSEARCH, depth int) (targetIdxs [][]int, targetCards []*Card, targetStacks []*Stack) {
 
 	/** Returns a bool for whether the matchBy yields a true result */
 	matchByObjectOrReference := func(x1, x2 interface{}) bool {
@@ -642,11 +546,14 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData interfac
 		targetIdxs[i] = filteredList
 
 		for _, indexList := range targetIdxs {
-			target := stack.Cards[indexList[0]]
+			substack := stack
+			target := substack.Cards[indexList[0]]
 			for j := 1; j < len(indexList); j++ {
-				target = target.Val.(*Stack).Cards[j]
+				substack = target.Val.(*Stack)
+				target = substack.Cards[j]
 			}
 			targetCards = append(targetCards, target)
+			targetStacks = append(targetStacks, substack)
 		}
 
 	}
@@ -664,7 +571,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData interfac
  @updates `setStack` or `target`
  @ensures if `replaceData` is nil and `replaceType is REPLACE_Card`, the card will be removed from `stack`
  */
-func updateRespectiveField(setStack *Stack, replaceType REPLACE, replaceData interface{}, target *Card) {
+func (setStack *Stack) updateRespectiveField(replaceType REPLACE, replaceData interface{}, target *Card) {
 
 	switch replaceType {
 

@@ -325,6 +325,7 @@
  > `stack` *Stack{}*
  >> `Cards` *[]\*Card{}*
  >>> Returns an interface array to represent the elements in the Stack
+ >>
  >> `Size` *int*
  >>> Returns the cardinality (i.e., `len(stack.cards)`) of this Stack
 
@@ -1000,7 +1001,7 @@
 
 <h2 name = "footer">Footer</h1>
 
-This library was created by Gabe Tucker and Andy Chen.
+This library was created by Gabe Tucker.
 
 If you have any suggestions, questions, or comments you would like to make in respect to this project, please email `tucker.854@osu.edu`.  I appreciate any feedback and will usually respond within 1-2 business days.
 
