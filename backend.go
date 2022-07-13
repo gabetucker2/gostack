@@ -212,6 +212,7 @@ func getIterator(stack *Stack, lambda func(*Card, ...interface{}) bool, deepSear
 		}
 	}
 	stack.Cards = filteredCards
+	stack.Size = len(stack.Cards)
 }
 
 /** Passes each card into the lambda function iteratively
@@ -229,6 +230,7 @@ func generalIterator(stack *Stack, lambda func(*Card, ...interface{}), deepSearc
 		// use the card object so that card can be updated by the lambda expression
 		lambda(subStack.Cards[i], subStack)
 	}
+	subStack.Size = len(subStack.Cards)
 }
 
 /** Passes each card into the lambda function iteratively, updating to a new 1D stack
@@ -248,6 +250,7 @@ func sortIterator(stack *Stack, lambda func(*Card, *Stack, ...interface{}) (ORDE
 		subStack.Move(FIND_Idx, newOrder, FIND_Idx, i, newIdx)
 	}
 	stack.Cards = subStack.Cards
+	stack.Size = len(stack.Cards)
 }
 
 /** Returns an [][]int of index vertices representing the order of indices needed to access targeted position(s) in `stack`, with []*Card for pure card values

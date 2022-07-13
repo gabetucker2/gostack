@@ -291,6 +291,9 @@ func (stack *Stack) StripStackMatrix(variadic ...interface{}) *Stack {
 		}
 	}
 
+	// set size
+	newStack.Size = len(newStack.Cards)
+
 	// return
 	return newStack
 
@@ -453,7 +456,8 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...interface{}) *Stack {
 
 	*stack = *stack.deepSearchHandler("Unique", false, FIND_All, nil, matchByType, deepSearchType, depth, typeType, uniqueType, nil, nil, nil, nil, nil, nil, nil, nil)
 
-	// allow deepsearch to take care of function
+	stack.Size = len(stack.Cards)
+
 	return stack
 
 }
@@ -756,6 +760,8 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceData interface{}, findTy
 		targetStacks[0].updateRespectiveField(replaceType, replaceData, targetCards[0])
 	}
 
+	stack.Size = len(stack.Cards)
+
 	// return
 	return
 
@@ -775,7 +781,7 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceData interface{}, findTy
  @returns type{*Stack} a stack whose values are the extracted cards pre-update (if find fails, then an empty stack)
  @updates all found cards to `replaceData`
  @requires `stack.GetMany()` has been implemented
- @ensures if `replaceData` is nil and `replaceType is REPLACE_Card`, the cards found will be removed from `stack`
+ @ensures IF `replaceData` is nil and `replaceType is REPLACE_Card`, the cards found will be removed from `stack`
  */
 func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceData interface{}, findType FIND, variadic ...interface{}) (ret *Stack) {
 
@@ -795,6 +801,8 @@ func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceData interface{}, fi
 		}
 	}
 
+	stack.Size = len(stack.Cards)
+
 	// return
 	return
 
@@ -813,6 +821,7 @@ func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceData interface{}, fi
  @returns `stack`
  @updates the found card in `stack`
  @requires `stack.Replace()` has been implemented
+ @ensures IF `replaceData` is nil and `replaceType is REPLACE_Card`, the card will be removed from `stack`
  */
 func (stack *Stack) Update(replaceType REPLACE, replaceData interface{}, findType FIND, variadic ...interface{}) *Stack {
 
@@ -841,6 +850,7 @@ func (stack *Stack) Update(replaceType REPLACE, replaceData interface{}, findTyp
  @returns `stack`
  @updates  the found cards in `stack`
  @requires `stack.ReplaceMany()` has been implemented
+ @ensures IF `replaceData` is nil and `replaceType is REPLACE_Card`, the cards found will be removed from `stack`
  */
 func (stack *Stack) UpdateMany(replaceType REPLACE, replaceData interface{}, findType FIND, variadic ...interface{}) *Stack {
 
