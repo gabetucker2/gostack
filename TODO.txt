@@ -1,14 +1,15 @@
 ---------------------------------------------------------------
 GABE:
 Central:
-* Document matrix transpose function
-* Document stack.Equals(stack2, deepSearchType, depth) and card.Equals(card2) functions
-* Update backend iterator functions to support depth search
-Subcentral:
 * Update Size and Idx dynamically
 * Make findType default first for all generalizable functions
 * Ensure wherever a card is gotten that a new pointer variable is returned
 * Implement casting interfaces as respective pointer type when assigning... see test.go
+* Document gostack linear algebra functions - could they all just be multi-dimensional lambda functions??
+ - transpose
+ - dot
+ - matrix multi
+ - etc
 Peripheral:
 * Implement new lambda examples
  - For REPLACE_Lambda

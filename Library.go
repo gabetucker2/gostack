@@ -570,6 +570,8 @@ func (stack *Stack) Lambda(lambda func(*Card, ...interface{}), variadic ...inter
 	var deepSearchType, depth interface{}
 	unpackVariadic(variadic, &deepSearchType, &depth)
 
+	// TODO: pass variadic into generaliterator??
+
 	// main
 	generalIterator(stack, lambda, deepSearchType.(DEEPSEARCH), depth.(int))
 }

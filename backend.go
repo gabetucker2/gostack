@@ -191,19 +191,23 @@ func unpackVariadic(variadic []interface{}, into ...*interface{}) {
 	}
 }
 
-/** Removes the cards from a stack for which lambda(card) is false
+/** Removes the cards from a stack for which lambda(card) is false, updating to a new 1D stack
  
  @param `stack` type{*Stack}
  @param `lambda` type{func(*Card, workingMemory) bool}
+ @param `deepSearchType` type{DEEPSEARCH}
+ @param `depth` type{int}
  @returns `stack`
  @updates `stack.Cards` to a new set of Cards filtered using `lambda`
  @ensures each card in `stack.Cards` will not be affected by lambda updates
+ @requires `stack.GetMany()` is implemented
  */
 func getIterator(stack *Stack, lambda func(*Card, ...interface{}) bool, deepSearchType DEEPSEARCH, depth int) {
+	subStack := stack.GetMany(FIND_All, nil, nil, nil, nil, nil, nil, deepSearchType, depth)
 	var filteredCards []*Card
-	for i := range stack.Cards {
-		card := stack.Cards[i]
-		if lambda(card.Clone(), stack) { // use a clone card
+	for i := range subStack.Cards {
+		card := subStack.Cards[i]
+		if lambda(card.Clone(), subStack) { // use a clone card
 			filteredCards = append(filteredCards, card)
 		}
 	}
@@ -214,28 +218,36 @@ func getIterator(stack *Stack, lambda func(*Card, ...interface{}) bool, deepSear
  
  @param `stack` type{*Stack}
  @param `lambda` type{func(*Card, ...workingMemory)}
+ @param `deepSearchType` type{DEEPSEARCH}
+ @param `depth` type{int}
  @updates `stack.Cards` to whatever the `lambda` function specifies
+ @requires `stack.GetMany()` is implemented
  */
-func generalIterator(stack *Stack, lambda func(*Card, ...interface{}), deepSearchType DEEPSEARCH, depth int) {
-	for i := range stack.Cards {
+func generalIterator(stack *Stack, lambda func(*Card, ...interface{}), deepSearchType DEEPSEARCH, depth int, otherStacks ...*Stack) {
+	subStack := stack.GetMany(FIND_All, nil, nil, nil, nil, nil, nil, deepSearchType, depth)
+	for i := range subStack.Cards {
 		// use the card object so that card can be updated by the lambda expression
-		lambda(stack.Cards[i], stack)
+		lambda(subStack.Cards[i], subStack)
 	}
 }
 
-/** Passes each card into the lambda function iteratively
+/** Passes each card into the lambda function iteratively, updating to a new 1D stack
  
  @param `stack` type{*Stack}
  @param `lambda` type{func(*Card, *Stack, ...workingMemory) (ORDER, int)}
+ @param `deepSearchType` type{DEEPSEARCH}
+ @param `depth` type{int}
  @updates `stack.Cards` to whatever the `lambda` function specifies
  */
 func sortIterator(stack *Stack, lambda func(*Card, *Stack, ...interface{}) (ORDER, int), deepSearchType DEEPSEARCH, depth int) {
-	for i := range stack.Cards {
+	subStack := stack.GetMany(FIND_All, nil, nil, nil, nil, nil, nil, deepSearchType, depth)
+	for i := range subStack.Cards {
 		// iterate, get the new index from the sorter
-		newOrder, newIdx := lambda(stack.Cards[i], stack)
+		newOrder, newIdx := lambda(subStack.Cards[i], subStack)
 		// move from the old position to the new position
-		stack.Move(FIND_Idx, newOrder, FIND_Idx, i, newIdx)
+		subStack.Move(FIND_Idx, newOrder, FIND_Idx, i, newIdx)
 	}
+	stack.Cards = subStack.Cards
 }
 
 /** Returns an [][]int of index vertices representing the order of indices needed to access targeted position(s) in `stack`, with []*Card for pure card values
@@ -541,7 +553,8 @@ func (setStack *Stack) updateRespectiveField(replaceType REPLACE, replaceData in
 		setStack.Cards = newCards
 
 	case REPLACE_Lambda:
-		generalIterator(setStack, replaceData.(func(*Card, ...interface{})), DEEPSEARCHSTUFFHERE)
+		 // DEEPSEARCH_False since targeting cards that have already been filtered using Get()
+		generalIterator(setStack, replaceData.(func(*Card, ...interface{})), DEEPSEARCH_False, -1)
 
 	}
 
