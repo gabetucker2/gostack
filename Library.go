@@ -241,8 +241,9 @@ func MakeStackMatrix(variadic ...interface{}) *Stack {
 
 	}
 
-	// set up stack size
+	// set properties
 	stack.Size = len(stack.Cards)
+	setIndices(stack.Cards)
 
 	// return
 	return stack
@@ -291,8 +292,9 @@ func (stack *Stack) StripStackMatrix(variadic ...interface{}) *Stack {
 		}
 	}
 
-	// set size
+	// set properties
 	newStack.Size = len(newStack.Cards)
+	setIndices(newStack.Cards)
 
 	// return
 	return newStack
@@ -391,38 +393,63 @@ func (stack *Stack) Empty() *Stack {
 
 }
 
-/** Returns a clone of the given stack
+/** Returns a clone of the given card
 
- @receiver `stack` type{*Stack}
- @returns type{*Stack} stack clone
- @constructs type{*Stack} clone of `stack`
- @ensures the stack clone has the same card pointers as `stack`
+ @receiver `card` type{*Card}
+ @param `cloneKey` type{bool}
+ @param `cloneVal` type{bool}
+ @returns type{*Card} card clone
+ @constructs type{*Card} clone of `card`
 */
-func (stack *Stack) Clone() *Stack {
+func (card *Card) Clone(variadic ...interface{}) *Card {
+
+	// unpack variadic into optional parameters
+	var cloneKey, cloneVal interface{}
+	unpackVariadic(variadic, &cloneKey, &cloneVal)
 
 	// init
-	clone := new(Stack)
-	clone.Size = stack.Size
-	clone.Cards = stack.Cards
+	clone := new(Card)
+	clone.Idx = card.Idx
+	clone.Key = ifElse(cloneKey.(bool), cloneInterface(card.Key), card.Key)
+	clone.Val = ifElse(cloneVal.(bool), cloneInterface(card.Val), card.Val)
 
 	// return
 	return clone
 
 }
 
-/** Returns a clone of the given card
+/** Returns a clone of the given stack
 
- @receiver `card` type{*Card}
- @returns type{*Card} card clone
- @constructs type{*Card} clone of `card`
+ @receiver `stack` type{*Stack}
+ @param `cloneCards` type{bool}
+ @param `cloneKeys` type{bool}
+ @param `cloneVals` type{bool}
+ @returns type{*Stack} stack clone
+ @constructs type{*Stack} clone of `stack`
+ @ensures
+  * the stack clone has the same card pointers as `stack`
+  * `cloneCards` => each Card in the stack clone is cloned
+  * `cloneKeys` => each Card in the stack's Key is cloned
+  * `cloneVals` => each Card in the stack's Val is cloned
 */
-func (card *Card) Clone() *Card {
+func (stack *Stack) Clone(variadic ...interface{}) *Stack {
+
+	// unpack variadic into optional parameters
+	var cloneCards, cloneKeys, cloneVals interface{}
+	unpackVariadic(variadic, &cloneCards, &cloneKeys, &cloneVals)
+	_cloneKeys := cloneKeys.(bool)
+	_cloneVals := cloneVals.(bool)
 
 	// init
-	clone := new(Card)
-	clone.Idx = card.Idx
-	clone.Key = card.Key
-	clone.Val = card.Val
+	clone := new(Stack)
+	clone.Size = stack.Size
+	if cloneCards.(bool) {
+		for i := range stack.Cards {
+			clone.Cards = append(clone.Cards, stack.Cards[i].Clone(_cloneKeys, _cloneVals))
+		}
+	} else {
+		clone.Cards = stack.Cards
+	}
 
 	// return
 	return clone

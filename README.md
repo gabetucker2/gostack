@@ -82,7 +82,7 @@
  >>>
  >>>> [stack.Empty()](#Empty)
  >>>
- >>>> [{card, stack}.Clone()](#Clone)
+ >>>> [{card, stack}.Clone(...)](#Clone)
  >>>
  >>>> [stack.Unique(...)](#Unique)
  >>>
@@ -288,11 +288,13 @@
  * **stack.ToMap()**
  * **stack.ToMatrix(...depth)**
  * **stack.Empty()**
- * **{card, stack}.Clone()**
+ * **card.Clone(...cloneKey, ...cloneVal)**
+ * **stack.Clone(...cloneCards, ...cloneKeys, ...cloneVals)**
  * **stack.Unique(typeType, ...matchByType, ...deepSearchType, ...depth)**
  * **stack.Shuffle()**
  * **stack.Flip()**
- * **{card, stack}.Print()**
+ * **card.Print()**
+ * **stack.Print()**
  * **stack.Sort(lambda sort function, ...deepSearchType, ...depth)**
  * **stack.Lambda(lambda function, ...deepSearchType, ...depth)**
 
@@ -671,7 +673,16 @@
 
 <h3 name = "Clone">Clone</h3>
 
- `stack.Clone()`
+ `card.Clone(...cloneKey, ...cloneVal)`
+ ```
+ Returns a clone of the given card
+
+ @receiver `card` type{*Card}
+ @returns type{*Card} card clone
+ @constructs clone of `card`
+ ```
+
+ `stack.Clone(...cloneCards, ...cloneKeys, ...cloneVals)`
  ```
  Returns a clone of the given stack
 
@@ -679,15 +690,6 @@
  @returns type{*Stack} stack clone
  @constructs type{*Stack} clone of `stack`
  @ensures the stack clone has the same card pointers as `stack`
- ```
-
- `card.Clone()`
- ```
- Returns a clone of the given card
-
- @receiver `card` type{*Card}
- @returns type{*Card} card clone
- @constructs clone of `card`
  ```
  
 <h3 name = "Unique">Unique</h3>

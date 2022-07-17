@@ -136,6 +136,17 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 
 }
 
+/** Sets every card's index in an array to a new index
+
+ @param `cards` type{[]*Card}
+ @updates `cards`
+ */
+func setIndices(cards []*Card) {
+	for i := range cards {
+		cards[i].Idx = i
+	}
+}
+
 /** Returns a clone of this interface
 
 @param `toClone` type{interface{}}
