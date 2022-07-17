@@ -16,10 +16,24 @@ var testCardD = MakeCard("Card D") // out of sample stack
 
 // test functions
 
+/** return whether len(cards) == cards.size */
 func test_LenAndSize(stack *Stack, size int) bool {
 
-	// return whether len(cards) == cards.size
 	return len(stack.Cards) == size && stack.Size == size
+
+}
+
+/** Return whether the indices correspond to their position in a stack */
+func test_IdxsAreGood(stack *Stack) bool {
+
+	good := true
+	for i := range stack.Cards {
+		if stack.Cards[i].Idx == i {
+			good = false
+			break
+		}
+	}
+	return good
 
 }
 

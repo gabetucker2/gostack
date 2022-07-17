@@ -1,7 +1,6 @@
 ---------------------------------------------------------------
 GABE:
 Central:
-* Update Idx dynamically
 * Make findType default first for all generalizable functions
 * Ensure wherever a card is gotten that a new pointer variable is returned
 * Implement casting interfaces as respective pointer type when assigning... see test.go

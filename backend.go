@@ -125,6 +125,7 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 		
 		// finalize stackClone in preparation for return
 		stackClone.Size = len(stackClone.Cards)
+		setIndices(stackClone.Cards)
 		ret = stackClone
 
 	} else {
@@ -240,6 +241,7 @@ func generalIterator(stack *Stack, lambda func(*Card, ...interface{}), deepSearc
 	for i := range subStack.Cards {
 		// use the card object so that card can be updated by the lambda expression
 		lambda(subStack.Cards[i], subStack)
+		setIndices(subStack.Cards) // procedurally update indices on backend
 	}
 	subStack.Size = len(subStack.Cards)
 }

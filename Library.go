@@ -437,6 +437,7 @@ func (stack *Stack) Clone(variadic ...interface{}) *Stack {
 	// unpack variadic into optional parameters
 	var cloneCards, cloneKeys, cloneVals interface{}
 	unpackVariadic(variadic, &cloneCards, &cloneKeys, &cloneVals)
+	// cast them to bools once so we don't have to do it every iteration
 	_cloneKeys := cloneKeys.(bool)
 	_cloneVals := cloneVals.(bool)
 
@@ -481,9 +482,12 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...interface{}) *Stack {
 	var matchByType, deepSearchType, depth, uniqueType interface{}
 	unpackVariadic(variadic, &matchByType, &deepSearchType, &depth, &uniqueType)
 
+	// allow deepSearchHandler to handle Unique
 	*stack = *stack.deepSearchHandler("Unique", false, FIND_All, nil, matchByType, deepSearchType, depth, typeType, uniqueType, nil, nil, nil, nil, nil, nil, nil, nil)
 
+	// set properties
 	stack.Size = len(stack.Cards)
+	setIndices(stack.Cards)
 
 	return stack
 
@@ -504,6 +508,9 @@ func (stack *Stack) Shuffle() *Stack {
 
 	// shuffle
 	rand.Shuffle(stack.Size, func(i, j int) { stack.Cards[i], stack.Cards[j] = stack.Cards[j], stack.Cards[i] })
+	
+	// set indices
+	setIndices(stack.Cards)
 
 	// return
 	return stack
@@ -528,6 +535,7 @@ func (stack *Stack) Flip() *Stack {
 
 	// update
 	stack.Cards = newCards
+	setIndices(stack.Cards)
 
 	// return
 	return stack
@@ -601,8 +609,6 @@ func (stack *Stack) Lambda(lambda func(*Card, ...interface{}), variadic ...inter
 	var deepSearchType, depth interface{}
 	unpackVariadic(variadic, &deepSearchType, &depth)
 
-	// TODO: pass variadic into generaliterator??
-
 	// main
 	generalIterator(stack, lambda, deepSearchType.(DEEPSEARCH), depth.(int))
 }
@@ -627,6 +633,7 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
 	var orderType, findType, findData, matchByType, deepSearchType, depth interface{}
 	unpackVariadic(variadic, &orderType, &findType, &findData, &matchByType, &deepSearchType, &depth)
 
+	// allow deepSearchHandler to handle function
 	*stack = *stack.deepSearchHandler("Add", true, findType, findData, matchByType, deepSearchType, depth, nil, nil, insert, orderType, nil, nil, nil, nil, nil, nil)
 
 	// allow deepSearchHandler to take care of function
@@ -787,7 +794,9 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceData interface{}, findTy
 		targetStacks[0].updateRespectiveField(replaceType, replaceData, targetCards[0])
 	}
 
+	// update properties
 	stack.Size = len(stack.Cards)
+	setIndices(stack.Cards)
 
 	// return
 	return
@@ -828,7 +837,9 @@ func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceData interface{}, fi
 		}
 	}
 
+	// update properties
 	stack.Size = len(stack.Cards)
+	setIndices(stack.Cards)
 
 	// return
 	return
