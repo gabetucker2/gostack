@@ -225,6 +225,7 @@ func getIterator(stack *Stack, lambda func(*Card, ...interface{}) bool, deepSear
 	}
 	stack.Cards = filteredCards
 	stack.Size = len(stack.Cards)
+	setIndices(stack.Cards)
 }
 
 /** Passes each card into the lambda function iteratively
