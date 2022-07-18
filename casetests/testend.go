@@ -26,7 +26,7 @@ func test_Setup() {
 }
 
 /** Test whether stack equals array */
-func test_stackEqualArray(stack *Stack, arr []interface) bool {
+func test_StackEqualArray(stack *Stack, arr []interface) bool {
 	for i := range stack.Cards {
 		if stack.Cards[i] != arr[i] {
 			return false
