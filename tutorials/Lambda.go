@@ -8,7 +8,7 @@ import (
 
 // TEMPLATE:
 /*
-func gostack_tutorials_lambda_NameHere(card *Card, workingMemory interface{}) (ret bool) {
+func gostack_tutorials_lambda_NameHere(card *Card, workingMemory any) (ret bool) {
 
 	if workingMemory == nil { // first run setup
 		workingMemory[0] = MakeStack()
@@ -25,22 +25,22 @@ func gostack_tutorials_lambda_NameHere(card *Card, workingMemory interface{}) (r
 }
 */
 
-func lambda_ValInRange(card *Card, workingMemory ...interface{}) bool {
+func lambda_ValInRange(card *Card, workingMemory ...any) bool {
 	v := card.Val.(int)
 	return 5 < v && v < 14 && v%2 == 0
 }
 
-func lambda_KeyInRange(card *Card, workingMemory ...interface{}) bool {
+func lambda_KeyInRange(card *Card, workingMemory ...any) bool {
 	k := card.Key.(int)
 	return k%5 == 0
 }
 
-func lambda_BothInRange(card *Card, workingMemory ...interface{}) bool {
+func lambda_BothInRange(card *Card, workingMemory ...any) bool {
 	return lambda_ValInRange(card) && lambda_KeyInRange(card)
 }
 
 // (card, wm[0] = stack, wm[1] = workingMemory)
-func lambda_Max(card *Card, workingMemory ...interface{}) bool {
+func lambda_Max(card *Card, workingMemory ...any) bool {
 
 	if workingMemory[1] == nil { // first run setup
 		var workingMax int

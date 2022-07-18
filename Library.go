@@ -16,10 +16,10 @@ import (
 @constructs type{*Card} a newly-constructed card
 @ensures the new card will have val `val`, key `key`, and idx `idx`
 */
-func MakeCard(variadic ...interface{}) *Card {
+func MakeCard(variadic ...any) *Card {
 
 	// unpack variadic into optional parameters
-	var val, key, idx interface{}
+	var val, key, idx any
 	unpackVariadic(variadic, &val, &key, &idx)
 
 	// initialize and set new Card
@@ -62,10 +62,10 @@ func MakeCard(variadic ...interface{}) *Card {
     ELSE
       the stack is empty
  */
-func MakeStack(variadic ...interface{}) *Stack {
+func MakeStack(variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var input1, input2, repeats interface{}
+	var input1, input2, repeats any
 	unpackVariadic(variadic, &input1, &input2, &repeats)
 
 	// set default
@@ -91,8 +91,8 @@ func MakeStack(variadic ...interface{}) *Stack {
 
 /** Returns a new stack-within-stack-structured stack
  
- @param optional `input1` type{interface{}} default nil
- @param optional `input2` type{interface{}} default nil
+ @param optional `input1` type{any} default nil
+ @param optional `input2` type{any} default nil
  @param optional `matrixShape` type{[]int} default nil
   * an int array representing the shape of the matrix
   * the first int is the largest container
@@ -101,6 +101,7 @@ func MakeStack(variadic ...interface{}) *Stack {
  @constructs type{*Stack} a new stack with type{*Card} new cards
  @requires
   * `MakeCard()` has been implemented
+  * IF `input1` is a map, then it is passed as map type map[any]any
   * IF `input1` and `input2` are both passed as arguments
       |`input1`| == |`input2`|
  @ensures
@@ -131,10 +132,10 @@ func MakeStack(variadic ...interface{}) *Stack {
 	  ELSEIF `input1` is not passed
 	    create a StackMatrix of shape `matrixShape` whose deepest card vals are nil
  */
-func MakeStackMatrix(variadic ...interface{}) *Stack {
+func MakeStackMatrix(variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var input1, input2, matrixShape interface{}
+	var input1, input2, matrixShape any
 	unpackVariadic(variadic, &input1, &input2, &matrixShape)
 
 	stack := new(Stack)
@@ -151,7 +152,8 @@ func MakeStackMatrix(variadic ...interface{}) *Stack {
 			case reflect.Map:
 				
 				// get keys and vals from the input1 map
-				var keys, vals []interface{}
+				var keys, vals []any
+
 				for k, v := range input1.(map[any]any) {
 					keys = append(keys, k)
 					vals = append(vals, v)
@@ -171,7 +173,7 @@ func MakeStackMatrix(variadic ...interface{}) *Stack {
 			// ELSEIF `input1` is an array...
 			case reflect.Array:
 
-				///input1Len := len(input1.([]interface{}))
+				///input1Len := len(input1.([]any))
 
 				// ...and `input2` is not passed
 				if input2 == nil {
@@ -254,10 +256,10 @@ func MakeStackMatrix(variadic ...interface{}) *Stack {
  @constructs type{*Stack} a new Stack representing the selection
  @requires `idx` arguments get valid index positions from the stack
  */
-func (stack *Stack) StripStackMatrix(variadic ...interface{}) *Stack {
+func (stack *Stack) StripStackMatrix(variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var firstSelection interface{}
+	var firstSelection any
 	unpackVariadic(variadic, &firstSelection)
 
 	// init
@@ -300,11 +302,11 @@ func (stack *Stack) StripStackMatrix(variadic ...interface{}) *Stack {
 /** Creates a new interface array from values of `stack`
 
  @receiver `stack` type{*Stack}
- @returns type{[]interface{}} new array
+ @returns type{[]any} new array
  @requires `stack.ToMatrix()` has been implemented
  @ensures new array values correspond to `stack` values
  */
-func (stack *Stack) ToArray() (arr []interface{}) {
+func (stack *Stack) ToArray() (arr []any) {
 
 	// return
 	return stack.ToMatrix(1)
@@ -314,10 +316,10 @@ func (stack *Stack) ToArray() (arr []interface{}) {
 /** Creates a new interface-interface map from values of `stack`
 
  @receiver `stack` type{*Stack}
- @returns type{map[interface{}]interface{}} new map
+ @returns type{map[any]any} new map
  @ensures new map keys and values correspond to `stack` keys and values
  */
-func (stack *Stack) ToMap() (m map[interface{}]interface{}) {
+func (stack *Stack) ToMap() (m map[any]any) {
 
 	// add all card keys and values in stack to m
 	for i := range stack.Cards {
@@ -330,7 +332,7 @@ func (stack *Stack) ToMap() (m map[interface{}]interface{}) {
 
 }
 
-/** Creates a new matrix from a stack by depth.  For instance, if depth = 2, then returns the stacks inside stack as an [][]interface{}
+/** Creates a new matrix from a stack by depth.  For instance, if depth = 2, then returns the stacks inside stack as an [][]any
 
  @receiver `stack` type{*Stack}
  @param optional `depth` type{int} default -1 (deepest)
@@ -339,12 +341,12 @@ func (stack *Stack) ToMap() (m map[interface{}]interface{}) {
   * -1 depth means it will go as deep as it can
   * new map keys and values correspond to `stack` keys and values
   * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} =>
-      []interface{}{[]interface{}{"Hi"}, []interface{}{"Hola", "Hello"}, "Hey"}
+      []any{[]any{"Hi"}, []any{"Hola", "Hello"}, "Hey"}
  */
-func (stack *Stack) ToMatrix(variadic ...interface{}) (matrix []interface{}) {
+func (stack *Stack) ToMatrix(variadic ...any) (matrix []any) {
 
 	// unpack variadic into optional parameters
-	var depth interface{}
+	var depth any
 	unpackVariadic(variadic, &depth)
 
 	// update depth
@@ -397,10 +399,10 @@ func (stack *Stack) Empty() *Stack {
  @returns type{*Card} card clone
  @constructs type{*Card} clone of `card`
 */
-func (card *Card) Clone(variadic ...interface{}) *Card {
+func (card *Card) Clone(variadic ...any) *Card {
 
 	// unpack variadic into optional parameters
-	var cloneKey, cloneVal interface{}
+	var cloneKey, cloneVal any
 	unpackVariadic(variadic, &cloneKey, &cloneVal)
 
 	// init
@@ -428,10 +430,10 @@ func (card *Card) Clone(variadic ...interface{}) *Card {
   * `cloneKeys` => each Card in the stack's Key is cloned
   * `cloneVals` => each Card in the stack's Val is cloned
 */
-func (stack *Stack) Clone(variadic ...interface{}) *Stack {
+func (stack *Stack) Clone(variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var cloneCards, cloneKeys, cloneVals interface{}
+	var cloneCards, cloneKeys, cloneVals any
 	unpackVariadic(variadic, &cloneCards, &cloneKeys, &cloneVals)
 	// cast them to bools once so we don't have to do it every iteration
 	_cloneKeys := cloneKeys.(bool)
@@ -472,10 +474,10 @@ func (stack *Stack) Clone(variadic ...interface{}) *Stack {
 	  removes cards matching other cards within the scope of each substack
 	    For instance, Stack{Stack{1, 2, 1}, Stack{1, 2}}.Unique => Stack{Stack{1, 2}, Stack{1, 2}}
  */
-func (stack *Stack) Unique(typeType TYPE, variadic ...interface{}) *Stack {
+func (stack *Stack) Unique(typeType TYPE, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var matchByType, deepSearchType, depth, uniqueType interface{}
+	var matchByType, deepSearchType, depth, uniqueType any
 	unpackVariadic(variadic, &matchByType, &deepSearchType, &depth, &uniqueType)
 
 	// allow deepSearchHandler to handle Unique
@@ -571,7 +573,7 @@ func (stack *Stack) Print() {
 /** Order the cards contingent on some attribute they contain
  
  @receiver `stack` type{*Stack}
- @param `lambda` type{func(*Card, *Stack, ...interface{}) (ORDER, int)}
+ @param `lambda` type{func(*Card, *Stack, ...any) (ORDER, int)}
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
  @requires
@@ -579,10 +581,10 @@ func (stack *Stack) Print() {
   * `lambda` does not update `stack` itself
  @ensures each card in `stack` is passed into your lambda function
  */
-func (stack *Stack) Sort(lambda func(*Card, *Stack, ...interface{}) (ORDER, int), variadic ...interface{}) {
+func (stack *Stack) Sort(lambda func(*Card, *Stack, ...any) (ORDER, int), variadic ...any) {
 
 	// unpack variadic into optional parameters
-	var deepSearchType, depth interface{}
+	var deepSearchType, depth any
 	unpackVariadic(variadic, &deepSearchType, &depth)
 
 	// main
@@ -592,17 +594,17 @@ func (stack *Stack) Sort(lambda func(*Card, *Stack, ...interface{}) (ORDER, int)
 /** Iterate through a stack calling your lambda function on each card
  
  @receiver `stack` type{*Stack}
- @param `lambda` type{func(*Card, ...interface{})}
+ @param `lambda` type{func(*Card, ...any)}
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
  @ensures
   * Each card in `stack` is passed into your lambda function
   * `stack` is the first argument passed into your variadic parameter on the first call
  */
-func (stack *Stack) Lambda(lambda func(*Card, ...interface{}), variadic ...interface{}) {
+func (stack *Stack) Lambda(lambda func(*Card, ...any), variadic ...any) {
 
 	// unpack variadic into optional parameters
-	var deepSearchType, depth interface{}
+	var deepSearchType, depth any
 	unpackVariadic(variadic, &deepSearchType, &depth)
 
 	// main
@@ -615,7 +617,7 @@ func (stack *Stack) Lambda(lambda func(*Card, ...interface{}), variadic ...inter
  @param `insert` type{Card, Stack}
  @param optional `orderType` type{ORDER} default ORDER_Before
  @param optional `findType` type{FIND} default FIND_First
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
@@ -623,10 +625,10 @@ func (stack *Stack) Lambda(lambda func(*Card, ...interface{}), variadic ...inter
  @updates `stack` to have new cards before/after each designated position
  @requires `stack.Clone()` has been implemented
  */
-func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
+func (stack *Stack) Add(insert any, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var orderType, findType, findData, matchByType, deepSearchType, depth interface{}
+	var orderType, findType, findData, matchByType, deepSearchType, depth any
 	unpackVariadic(variadic, &orderType, &findType, &findData, &matchByType, &deepSearchType, &depth)
 
 	// allow deepSearchHandler to handle function
@@ -643,8 +645,8 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
  @param `findType_from` type{FIND}
  @param `orderType` type{ORDER}
  @param `findType_to` type{FIND}
- @param optional `findData_from` type{interface{}} default nil
- @param optional `findData_to` type{interface{}} default nil
+ @param optional `findData_from` type{any} default nil
+ @param optional `findData_to` type{any} default nil
  @param optional `matchByType_from` type{MATCHBY} default MATCHBY_Object
  @param optional `matchByType_to` type{MATCHBY} default MATCHBY_Object
  @param optional `deepSearchType_from` type{DEEPSEARCH} default DEEPSEARCH_False
@@ -657,10 +659,10 @@ func (stack *Stack) Add(insert interface{}, variadic ...interface{}) *Stack {
   * `findType_to` gets a set of elements
   * the first element gotten from `findType_from` is selected as the element to add before or after
  */
-func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, variadic ...interface{}) *Stack {
+func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var findData_from, findData_to, matchByType_from, matchByType_to, deepSearchType_from, deepSearchType_to, depth_from, depth_to interface{}
+	var findData_from, findData_to, matchByType_from, matchByType_to, deepSearchType_from, deepSearchType_to, depth_from, depth_to any
 	unpackVariadic(variadic, &findData_from, &findData_to, &matchByType_from, &matchByType_to, &deepSearchType_from, &deepSearchType_to, &depth_from, &depth_to)
 
 	// 1) Get the card to put them before/after
@@ -679,17 +681,17 @@ func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, 
 
  @receiver `stack` type{*Stack}
  @param optional `findType` type{FIND} default FIND_First
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
  @returns true IF successful search, false IF unsuccessful search
  @requires `stack.Get()` has been implemented
  */
-func (stack *Stack) Has(variadic ...interface{}) bool {
+func (stack *Stack) Has(variadic ...any) bool {
 
 	// unpack variadic into optional parameters
-	var findType, findData, matchByType, deepSearchType, depth interface{}
+	var findType, findData, matchByType, deepSearchType, depth any
 	unpackVariadic(variadic, &findType, &findData, &matchByType, &deepSearchType, &depth)
 
 	// return
@@ -700,7 +702,7 @@ func (stack *Stack) Has(variadic ...interface{}) bool {
 
  @receiver `stack` type{*Stack}
  @param optional `findType` type{FIND} default FIND_First
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `clonesType_card` type{CLONES} default CLONE_False
  @param optional `clonesType_keys` type{CLONES} default CLONE_False
@@ -713,10 +715,10 @@ func (stack *Stack) Has(variadic ...interface{}) bool {
   * CLONE_True for `clonesType_key` means the returned card key is a clone
   * CLONE_True for `clonesType_val` means the returned card val is a clone
  */
-func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
+func (stack *Stack) Get(variadic ...any) (ret *Card) {
 
 	// unpack variadic into optional parameters
-	var findType, findData, matchByType, clonesType_card, clonesType_key, clonesType_val, deepSearchType, depth interface{}
+	var findType, findData, matchByType, clonesType_card, clonesType_key, clonesType_val, deepSearchType, depth any
 	unpackVariadic(variadic, &findType, &findData, &matchByType, &clonesType_card, &clonesType_key, &clonesType_val, &deepSearchType, &depth)
 
 	// allow deepSearchHandler to take care of function
@@ -728,7 +730,7 @@ func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `returnType` type{RETURN} default RETURN_Cards
  @param optional `clonesType` type{CLONES} default CLONE_False
@@ -746,10 +748,10 @@ func (stack *Stack) Get(variadic ...interface{}) (ret *Card) {
   * CLONE_True for `clonesType_keys` means the cards in the returned stack keys are clones
   * CLONE_True for `clonesType_vals` means the cards in the returned stack vals are clones
  */
-func (stack *Stack) GetMany(findType FIND, variadic ...interface{}) *Stack {
+func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var findData, matchByType, returnType, clonesType, clonesType_keys, clonesType_vals, deepSearchType, depth interface{}
+	var findData, matchByType, returnType, clonesType, clonesType_keys, clonesType_vals, deepSearchType, depth any
 	unpackVariadic(variadic, &findData, &matchByType, &returnType, &clonesType, &clonesType_keys, &clonesType_vals, &deepSearchType, &depth)
 
 	// allow deepSearchHandler to take care of function
@@ -761,9 +763,9 @@ func (stack *Stack) GetMany(findType FIND, variadic ...interface{}) *Stack {
  
  @receiver `stack` type{*Stack}
  @param `replaceType` type{REPLACE}
- @param `replaceData` type{interface{}}
+ @param `replaceData` type{any}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
@@ -772,10 +774,10 @@ func (stack *Stack) GetMany(findType FIND, variadic ...interface{}) *Stack {
  @requires `stack.Get()` has been implemented
  @ensures IF `replaceData` is nil and `replaceType is REPLACE_Card`, the card will be removed from `stack`
  */
-func (stack *Stack) Replace(replaceType REPLACE, replaceData interface{}, findType FIND, variadic ...interface{}) (ret *Card) {
+func (stack *Stack) Replace(replaceType REPLACE, replaceData any, findType FIND, variadic ...any) (ret *Card) {
 
 	// unpack variadic into optional parameters
-	var findData, matchByType, deepSearchType, depth interface{}
+	var findData, matchByType, deepSearchType, depth any
 	unpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
 	
 	// get deep copy of targeted card OR nil
@@ -803,9 +805,9 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceData interface{}, findTy
  
  @receiver `stack` type{*Stack}
  @param `replaceType` type{REPLACE}
- @param `replaceData` type{interface{}}
+ @param `replaceData` type{any}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `returnType` type{RETURN} default RETURN_Cards
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
@@ -815,10 +817,10 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceData interface{}, findTy
  @requires `stack.GetMany()` has been implemented
  @ensures IF `replaceData` is nil and `replaceType is REPLACE_Card`, the cards found will be removed from `stack`
  */
-func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceData interface{}, findType FIND, variadic ...interface{}) (ret *Stack) {
+func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceData any, findType FIND, variadic ...any) (ret *Stack) {
 
 	// unpack variadic into optional parameters
-	var findData, matchByType, returnType, deepSearchType, depth interface{}
+	var findData, matchByType, returnType, deepSearchType, depth any
 	unpackVariadic(variadic, &findData, &matchByType, &returnType, &deepSearchType, &depth)
 
 	// get deep copy of targeted cards to return
@@ -846,9 +848,9 @@ func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceData interface{}, fi
  
  @receiver `stack` type{*Stack}
  @param `replaceType` type{REPLACE}
- @param `replaceData` type{interface{}}
+ @param `replaceData` type{any}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
@@ -857,10 +859,10 @@ func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceData interface{}, fi
  @requires `stack.Replace()` has been implemented
  @ensures IF `replaceData` is nil and `replaceType is REPLACE_Card`, the card will be removed from `stack`
  */
-func (stack *Stack) Update(replaceType REPLACE, replaceData interface{}, findType FIND, variadic ...interface{}) *Stack {
+func (stack *Stack) Update(replaceType REPLACE, replaceData any, findType FIND, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var findData, matchByType, deepSearchType, depth interface{}
+	var findData, matchByType, deepSearchType, depth any
 	unpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
 
 	// update stack
@@ -875,9 +877,9 @@ func (stack *Stack) Update(replaceType REPLACE, replaceData interface{}, findTyp
  
  @receiver `stack` type{*Stack}
  @param `replaceType` type{REPLACE}
- @param `replaceData` type{interface{}}
+ @param `replaceData` type{any}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
@@ -886,10 +888,10 @@ func (stack *Stack) Update(replaceType REPLACE, replaceData interface{}, findTyp
  @requires `stack.ReplaceMany()` has been implemented
  @ensures IF `replaceData` is nil and `replaceType is REPLACE_Card`, the cards found will be removed from `stack`
  */
-func (stack *Stack) UpdateMany(replaceType REPLACE, replaceData interface{}, findType FIND, variadic ...interface{}) *Stack {
+func (stack *Stack) UpdateMany(replaceType REPLACE, replaceData any, findType FIND, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var findData, matchByType, deepSearchType, depth interface{}
+	var findData, matchByType, deepSearchType, depth any
 	unpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
 
 	// update stack
@@ -904,7 +906,7 @@ func (stack *Stack) UpdateMany(replaceType REPLACE, replaceData interface{}, fin
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
@@ -912,10 +914,10 @@ func (stack *Stack) UpdateMany(replaceType REPLACE, replaceData interface{}, fin
  @updates `stack` to no longer have found card
  @requires `stack.Replace()` has been implemented
  */
-func (stack *Stack) Extract(findType FIND, variadic ...interface{}) *Card {
+func (stack *Stack) Extract(findType FIND, variadic ...any) *Card {
 
 	// unpack variadic into optional parameters
-	var findData, matchByType, deepSearchType, depth interface{}
+	var findData, matchByType, deepSearchType, depth any
 	unpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
 
 	// return the original value
@@ -927,7 +929,7 @@ func (stack *Stack) Extract(findType FIND, variadic ...interface{}) *Card {
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `returnType` type{RETURN} default RETURN_Cards
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
@@ -936,10 +938,10 @@ func (stack *Stack) Extract(findType FIND, variadic ...interface{}) *Card {
  @updates `stack` to no longer have found cards
  @requires `stack.ReplaceMany()` has been implemented
  */
-func (stack *Stack) ExtractMany(findType FIND, variadic ...interface{}) *Stack {
+func (stack *Stack) ExtractMany(findType FIND, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var findData, matchByType, returnType, deepSearchType, depth interface{}
+	var findData, matchByType, returnType, deepSearchType, depth any
 	unpackVariadic(variadic, &findData, &matchByType, &returnType, &deepSearchType, &depth)
 
 	// return the original value
@@ -951,7 +953,7 @@ func (stack *Stack) ExtractMany(findType FIND, variadic ...interface{}) *Stack {
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
@@ -959,10 +961,10 @@ func (stack *Stack) ExtractMany(findType FIND, variadic ...interface{}) *Stack {
  @updates `stack` to no longer have found card
  @requires `stack.Replace()` has been implemented
  */
-func (stack *Stack) Remove(findType FIND, variadic ...interface{}) *Stack {
+func (stack *Stack) Remove(findType FIND, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var findData, matchByType, deepSearchType, depth interface{}
+	var findData, matchByType, deepSearchType, depth any
 	unpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
 
 	// remove the card
@@ -977,7 +979,7 @@ func (stack *Stack) Remove(findType FIND, variadic ...interface{}) *Stack {
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
@@ -985,10 +987,10 @@ func (stack *Stack) Remove(findType FIND, variadic ...interface{}) *Stack {
  @updates `stack` to no longer have found cards
  @requires `stack.ReplaceMany()` has been implemented
  */
-func (stack *Stack) RemoveMany(findType FIND, variadic ...interface{}) *Stack {
+func (stack *Stack) RemoveMany(findType FIND, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var findData, matchByType, deepSearchType, depth interface{}
+	var findData, matchByType, deepSearchType, depth any
 	unpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
 
 	// remove the cards

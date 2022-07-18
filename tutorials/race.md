@@ -48,12 +48,12 @@ TODO: Update slightly buggy classical code
 
 ```
 // INIT
-start := map[interface{}]interface{} {"1_Key A" : 40, "Bad Key" : "Bad Value", "2_Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520} // can't have same key twice so need x_KEYNAME
-searchKeys := []interface{} {"Key A", 2.5, "Michael Keaton"}
-pairsToInsert := map[interface{}]interface{} {"I" : "Am new", "To" : "This set"}
+start := map[any]any {"1_Key A" : 40, "Bad Key" : "Bad Value", "2_Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520} // can't have same key twice so need x_KEYNAME
+searchKeys := []any {"Key A", 2.5, "Michael Keaton"}
+pairsToInsert := map[any]any {"I" : "Am new", "To" : "This set"}
  
 // TASK A
-var taskA []interface{}
+var taskA []any
 for i := range len(start) {
     k := start[i] // circumvent for loop cloning of k
     for _, search := range searchKeys {
@@ -74,7 +74,7 @@ for i := range len(start) {
 }
  
 // TASK B
-var taskB map[interface{}]interface{}
+var taskB map[any]any
 i = 0
 for k, v := range start {
     for j := range len(taskA) {
@@ -87,7 +87,7 @@ for k, v := range start {
 }
 
 // TASK C
-var taskC map[interface{}]interface{}
+var taskC map[any]any
 for k, v := range taskB {
     if 1 < v.(int) && v.(int) < 4 {
         for k3 := range pairsToInsert {
@@ -106,9 +106,9 @@ for k, v := range taskB {
 
 ```
 // INIT
-start := MakeStack(map[interface{}]interface{} {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520})
-searchKeys := MakeStack([]interface{} {"Key A", 2.5, "Michael Keaton"})
-pairsToInsert := MakeStack(map[interface{}]interface{} {"I" : "Am new", "To" : "This set"})
+start := MakeStack(map[any]any {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520})
+searchKeys := MakeStack([]any {"Key A", 2.5, "Michael Keaton"})
+pairsToInsert := MakeStack(map[any]any {"I" : "Am new", "To" : "This set"})
 
 // TASK A
 taskA := start.GetMany(FIND_Keys, searchKeys, RETURN_Vals).Unique(TYPE_Val)

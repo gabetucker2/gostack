@@ -25,11 +25,11 @@ func test_Setup() {
 }
 
 /** Test whether stack equals array */
-func test_StackEqualArray(stack *Stack, _vals, _keys, _ma interface{}) bool {
-	vals := _vals.([]interface{})
-	keys := _keys.([]interface{})
-	ma := _ma.(map[interface{}]interface{})
-	maKeys := make([]interface{}, len(ma))
+func test_StackEqualArray(stack *Stack, _vals, _keys, _ma any) bool {
+	vals := _vals.([]any)
+	keys := _keys.([]any)
+	ma := _ma.(map[any]any)
+	maKeys := make([]any, len(ma))
 	for i := range stack.Cards {
 		c := stack.Cards[i]
 		if (_vals != nil && vals[i] != c.Val) || (_keys != nil && keys[i] != c.Key) || (_ma != nil && (maKeys[i] != c.Key || ma[maKeys[i]] != c.Val)) {

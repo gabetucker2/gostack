@@ -1,12 +1,14 @@
 package gostack
 
-import "reflect"
+import(
+	"reflect"
+)
 
 /** Performs the function using a uniform framework for performing deepSearches
- 
- @shorthand Just pass the proper variables (or nil) into this function from Library.go, and this function will handle the rest
- */
-func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, findData, matchByType, deepSearchType, depth, typeType, uniqueType, insert, orderType, findData_to, findType_to, matchByType_to, cloneType1, cloneType2, cloneType3 interface{}) (ret *Stack) {
+
+@shorthand Just pass the proper variables (or nil) into this function from Library.go, and this function will handle the rest
+*/
+func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, findData, matchByType, deepSearchType, depth, typeType, uniqueType, insert, orderType, findData_to, findType_to, matchByType_to, cloneType1, cloneType2, cloneType3 any) (ret *Stack) {
 
 	// 0) set defaults
 	setORDERDefaultIfNil(&orderType)
@@ -150,10 +152,10 @@ func setIndices(cards []*Card) {
 
 /** Returns a clone of this interface
 
-@param `toClone` type{interface{}}
-@returns type{interface{}}
+@param `toClone` type{any}
+@returns type{any}
 */
-func cloneInterface(toClone interface{}) interface{} {
+func cloneInterface(toClone any) any {
 	return reflect.New(reflect.ValueOf(toClone).Elem().Type()).Interface()
 }
 
@@ -177,22 +179,22 @@ func removeIdx(arr []*Card, idx int) []*Card {
 /** Returns out1 if test is true; else return out2
  
  @param `test` type{bool}
- @param `out1` type{interface{}}
- @param `out2` type{interface{}}
- @returns interface{} `out1` or `out2`
+ @param `out1` type{any}
+ @param `out2` type{any}
+ @returns any `out1` or `out2`
  @requires neither param yields a syntax error
  */
-func ifElse(test bool, out1, out2 interface{}) interface{} {
+func ifElse(test bool, out1, out2 any) any {
 	if test { return out1 } else { return out2 }
 }
 
 /** Sets a set of variables to the variable set passed into a variadic parameter
 
- @param `variadic` type{...[]interface{}}
+ @param `variadic` type{...[]any}
  @param `var1, var2, ..., varN` type{any}
  @updates `var1, var2, ..., varN` are set to each of the values in the variadic array, or nil if undefined, respectively
  */
-func unpackVariadic(variadic []interface{}, into ...*interface{}) {
+func unpackVariadic(variadic []any, into ...*any) {
 	vLen := len(variadic)
 	for i, v := range into {
 		if i < vLen {
@@ -214,7 +216,7 @@ func unpackVariadic(variadic []interface{}, into ...*interface{}) {
  @ensures each card in `stack.Cards` will not be affected by lambda updates
  @requires `stack.GetMany()` is implemented
  */
-func getIterator(stack *Stack, lambda func(*Card, ...interface{}) bool, deepSearchType DEEPSEARCH, depth int) {
+func getIterator(stack *Stack, lambda func(*Card, ...any) bool, deepSearchType DEEPSEARCH, depth int) {
 	subStack := stack.GetMany(FIND_All, nil, nil, nil, nil, nil, nil, deepSearchType, depth)
 	var filteredCards []*Card
 	for i := range subStack.Cards {
@@ -237,7 +239,7 @@ func getIterator(stack *Stack, lambda func(*Card, ...interface{}) bool, deepSear
  @updates `stack.Cards` to whatever the `lambda` function specifies
  @requires `stack.GetMany()` is implemented
  */
-func generalIterator(stack *Stack, lambda func(*Card, ...interface{}), deepSearchType DEEPSEARCH, depth int, otherStacks ...*Stack) {
+func generalIterator(stack *Stack, lambda func(*Card, ...any), deepSearchType DEEPSEARCH, depth int, otherStacks ...*Stack) {
 	subStack := stack.GetMany(FIND_All, nil, nil, nil, nil, nil, nil, deepSearchType, depth)
 	for i := range subStack.Cards {
 		// use the card object so that card can be updated by the lambda expression
@@ -255,7 +257,7 @@ func generalIterator(stack *Stack, lambda func(*Card, ...interface{}), deepSearc
  @param `depth` type{int}
  @updates `stack.Cards` to whatever the `lambda` function specifies
  */
-func sortIterator(stack *Stack, lambda func(*Card, *Stack, ...interface{}) (ORDER, int), deepSearchType DEEPSEARCH, depth int) {
+func sortIterator(stack *Stack, lambda func(*Card, *Stack, ...any) (ORDER, int), deepSearchType DEEPSEARCH, depth int) {
 	subStack := stack.GetMany(FIND_All, nil, nil, nil, nil, nil, nil, deepSearchType, depth)
 	for i := range subStack.Cards {
 		// iterate, get the new index from the sorter
@@ -272,7 +274,7 @@ func sortIterator(stack *Stack, lambda func(*Card, *Stack, ...interface{}) (ORDE
  @param `getFirst` type{bool}
  @param `stack` type{*Stack} no pass-by-reference
  @param `findType` type{FIND}
- @param `findData` type{interface{}}
+ @param `findData` type{any}
  @param `matchByType` type{MATCHBY} no pass-by-reference
  @param `deepSearchType` type{DEEPSEARCH}
  @param `depth` type{int}
@@ -293,10 +295,10 @@ func sortIterator(stack *Stack, lambda func(*Card, *Stack, ...interface{}) (ORDE
    ELSE
      return an array of all found elements
  */
-func (stack *Stack) getPositions(getFirst bool, findType FIND, findData interface{}, matchByType MATCHBY, deepSearchType DEEPSEARCH, depth int) (targetIdxs [][]int, targetCards []*Card, targetStacks []*Stack) {
+func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, matchByType MATCHBY, deepSearchType DEEPSEARCH, depth int) (targetIdxs [][]int, targetCards []*Card, targetStacks []*Stack) {
 
 	/** Returns a bool for whether the matchBy yields a true result */
-	matchByObjectOrReference := func(x1, x2 interface{}) bool {
+	matchByObjectOrReference := func(x1, x2 any) bool {
 		return (matchByType == MATCHBY_Object    &&  x1 ==  x2) ||
 			   (matchByType == MATCHBY_Reference && &x1 == &x2)
 	}
@@ -378,7 +380,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData interfac
 			}
 	
 		case FIND_Keys:
-			keyArray := findData.([]interface{})
+			keyArray := findData.([]any)
 			for i := range stack.Cards {
 				testKey := stack.Cards[i].Key
 				for j := range keyArray {
@@ -413,7 +415,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData interfac
 			}
 	
 		case FIND_Vals:
-			valArray := findData.([]interface{})
+			valArray := findData.([]any)
 			for i := range stack.Cards {
 				testVal := stack.Cards[i].Val
 				for j := range valArray {
@@ -492,7 +494,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData interfac
 	
 		case FIND_Lambda:
 			filterStack := stack.Clone() // so that no changes can be made to the original stack from FIND_Lambda functions
-			getIterator(filterStack, findData.(func(*Card, ...interface{}) bool), deepSearchType, depth)
+			getIterator(filterStack, findData.(func(*Card, ...any) bool), deepSearchType, depth)
 			for i := range filterStack.Cards {
 				filteredList = append(filteredList, i)	
 				if getFirst { break }
@@ -523,12 +525,12 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData interfac
 
  @param setStack type{*Stack}
  @param replaceType type{REPLACE}
- @param replaceData type{interface{}}
+ @param replaceData type{any}
  @param target type{*Card}
  @updates `setStack` or `target`
  @ensures if `replaceData` is nil and `replaceType is REPLACE_Card`, the card will be removed from `stack`
  */
-func (setStack *Stack) updateRespectiveField(replaceType REPLACE, replaceData interface{}, target *Card) {
+func (setStack *Stack) updateRespectiveField(replaceType REPLACE, replaceData any, target *Card) {
 
 	switch replaceType {
 
@@ -571,7 +573,7 @@ func (setStack *Stack) updateRespectiveField(replaceType REPLACE, replaceData in
 
 	case REPLACE_Lambda:
 		 // DEEPSEARCH_False since targeting cards that have already been filtered using Get()
-		generalIterator(setStack, replaceData.(func(*Card, ...interface{})), DEEPSEARCH_False, -1)
+		generalIterator(setStack, replaceData.(func(*Card, ...any)), DEEPSEARCH_False, -1)
 
 	}
 
@@ -581,8 +583,8 @@ func (setStack *Stack) updateRespectiveField(replaceType REPLACE, replaceData in
  
  @receiver stack type{*Stack}
  @param matrixShape type{[]int}
- @param keys type{interface{}}
- @param vals type{interface{}}
+ @param keys type{any}
+ @param vals type{any}
  @param globalI type{*int} used because: extracting from 1-D arrays into N-D matrix, so need to track our position in the 1-D arrays between different recursive calls
  @returns type{*Stack}
  @requires
@@ -590,7 +592,7 @@ func (setStack *Stack) updateRespectiveField(replaceType REPLACE, replaceData in
   * |keys| == |vals| if neither are nil
   * |keys| or |vals| == product of ints in matrixShape
 */
-func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys interface{}, vals interface{}, globalI *int) (ret *Stack) {
+func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys any, vals any, globalI *int) (ret *Stack) {
 
 	// make stack
 	if len(matrixShape) > 1 {
@@ -607,13 +609,16 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys interface{}, v
 		
 		for i := 0; i < matrixShape[0]; i++ {
 			c := MakeCard()
-			if keys != nil {
-				c.Key = keys.([]interface{})[*globalI]
+			updated := false
+			if keys != nil && len(keys.([]any)) > 0 {
+				updated = true
+				c.Key = keys.([]any)[*globalI]
 			}
-			if vals != nil {
-				c.Val = vals.([]interface{})[*globalI]
+			if vals != nil && len(vals.([]any)) > 0 {
+				updated = true
+				c.Val = vals.([]any)[*globalI]
 			}
-			if keys != nil || vals != nil {
+			if updated {
 				*globalI++
 			}
 			stack.Cards = append(stack.Cards, c)
@@ -630,24 +635,24 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys interface{}, v
 /** Recursively add elements to stack of matrix shape resembling the inputs
  
  @receiver stack type{*Stack}
- @param keys type{interface{}}
- @param vals type{interface{}}
+ @param keys type{any}
+ @param vals type{any}
  @returns type{*Stack}
  @requires
   * `MakeStack()` and `MakeCard()` have been implemented
   * |keys| == |vals| if neither are nil
   * at least one of `keys` or `vals` are not nil
 */
-func (stack *Stack) makeStackMatrixFromND(keys interface{}, vals interface{}) (ret *Stack) {
+func (stack *Stack) makeStackMatrixFromND(keys any, vals any) (ret *Stack) {
 
 	// initialize variable to use as reference for the matrix shape
 	// just because we don't know which input is not nil
-	var referenceArr []interface{}
+	var referenceArr []any
 	// one of these conditions are guaranteed to be true per the ensures clause
 	if keys != nil {
-		referenceArr = keys.([]interface{})
+		referenceArr = keys.([]any)
 	} else if vals != nil {
-		referenceArr = vals.([]interface{})
+		referenceArr = vals.([]any)
 	}
 	
 	// main loop
@@ -655,12 +660,12 @@ func (stack *Stack) makeStackMatrixFromND(keys interface{}, vals interface{}) (r
 		switch referenceArr[i].(type) {
 
 		// add substack to stack
-		case []interface{}:
+		case []any:
 			stack.Cards = append(
 				stack.Cards,
 				MakeCard(MakeStack().makeStackMatrixFromND(
-					ifElse(keys != nil, keys, nil).([]interface{}),
-					ifElse(vals != nil, vals, nil).([]interface{}),
+					ifElse(keys != nil, keys, nil).([]any),
+					ifElse(vals != nil, vals, nil).([]any),
 				)),
 			)
 
@@ -668,10 +673,10 @@ func (stack *Stack) makeStackMatrixFromND(keys interface{}, vals interface{}) (r
 		default:
 			c := MakeCard()
 			if keys != nil {
-				c.Key = keys.([]interface{})[i]
+				c.Key = keys.([]any)[i]
 			}
 			if vals != nil {
-				c.Val = vals.([]interface{})[i]
+				c.Val = vals.([]any)[i]
 			}
 			stack.Cards = append(stack.Cards, c)
 		}

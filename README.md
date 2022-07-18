@@ -251,8 +251,8 @@
 
  > **REPLACE**
  > * _REPLACE_NotationSample *setByData argument type*
- > * REPLACE_Key *interface{}*
- > * REPLACE_Val *interface{}*
+ > * REPLACE_Key *any*
+ > * REPLACE_Val *any*
  > * REPLACE_Card *Card*
  > * REPLACE_Stack *Stack*
  > * REPLACE_Lambda *lambda function*
@@ -339,10 +339,10 @@
  >>> `card.Idx` *int*
  >>>> The index of this card
  >>>
- >>> `card.Key` *any (interface{})*
+ >>> `card.Key` *any (any)*
  >>>> The key of this card (or nil if doesn't exist)
  >>>
- >>> `card.Val` *any (interface{})*
+ >>> `card.Val` *any (any)*
  >>>> The val of this card (or nil if doesn't exist)
 
 <h3 name = "enums">enums</h3>
@@ -359,10 +359,10 @@
  >>> stack of ints
  >>
  >> RETURN_Keys
- >>> stack of interface{}s
+ >>> stack of anys
  >>
  >> RETURN_Vals
- >>> stack of interface{}s
+ >>> stack of anys
  >>
  >> RETURN_Cards
  >>>> default
@@ -397,22 +397,22 @@
  >>> stack where type{stack.card.Val} == int
  >>
  >> FIND_Key
- >>> any (interface{})
+ >>> any (any)
  >>
  >> FIND_Keys
- >>> []any ([]interface{})
+ >>> []any ([]any)
  >>
  >> FIND_KeysStack
- >>> stack where type{stack.card.Val} == any (interface{})
+ >>> stack where type{stack.card.Val} == any (any)
  >>
  >> FIND_Val
- >>> any (interface{})
+ >>> any (any)
  >>
  >> FIND_Vals
- >>> []any ([]interface{})
+ >>> []any ([]any)
  >>
  >> FIND_ValsStack
- >>> stack where type{stack.card.Val} == any (interface{})
+ >>> stack where type{stack.card.Val} == any (any)
  >>
  >> FIND_Card
  >>> *Card
@@ -444,10 +444,10 @@
  >>> *The type of the variable (called `data`) that needs to be passed into the function utilizing this constant*
  >>
  >> REPLACE_Key
- >>> *interface{}*
+ >>> *any*
  >>
  >> REPLACE_Val
- >>> *interface{}*
+ >>> *any*
  >>
  >> REPLACE_Card
  >>> *Card*
@@ -457,7 +457,7 @@
  >>>> replaces a card with each card in a stack of cards
  >>
  >> REPLACE_Lambda
- >>> interface{} *lambda function*
+ >>> any *lambda function*
  
 <h4 name = "TYPE">TYPE</h4>
 
@@ -570,8 +570,8 @@
  ```
  Creates a new stack-within-stack-structured stack
  
- @param optional `input1` type{interface{}} default nil
- @param optional `input2` type{interface{}} default nil
+ @param optional `input1` type{any} default nil
+ @param optional `input2` type{any} default nil
  @param optional `matrixShape` type{[]int} default nil
   * an int array representing the shape of the matrix
   * the first int is the largest container
@@ -629,7 +629,7 @@
  Creates a new interface array from values of `stack`
 
  @receiver `stack` type{*Stack}
- @returns type{[]interface{}} new array
+ @returns type{[]any} new array
  @ensures new array values correspond to `stack` values
  ```
  
@@ -640,7 +640,7 @@
  Creates a new interface-interface map from values of `stack`
 
  @receiver `stack` type{*Stack}
- @returns type{map[interface{}]interface{}} new map
+ @returns type{map[any]any} new map
  @ensures new map keys and values correspond to `stack` keys and values
  ```
  
@@ -648,7 +648,7 @@
  
  `stack.ToMatrix(...depth)`
  ```
- Creates a new matrix from a stack by depth.  For instance, if depth = 2, then returns the stacks inside stack as an [][]interface{}
+ Creates a new matrix from a stack by depth.  For instance, if depth = 2, then returns the stacks inside stack as an [][]any
 
  @receiver `stack` type{*Stack}
  @param optional `depth` type{int} default -1
@@ -657,7 +657,7 @@
   * -1 depth means it will go as deep as it can
   * new map keys and values correspond to `stack` keys and values
   * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} =>
-      []interface{}{[]interface{}{"Hi"}, []interface{}{"Hola", "Hello"}, "Hey"}
+      []any{[]any{"Hi"}, []any{"Hola", "Hello"}, "Hey"}
  ```
  
 <h3 name = "Empty">Empty</h3>
@@ -755,7 +755,7 @@
  Order the cards contingent on some attribute they contain
  
  @receiver `stack` type{*Stack}
- @param `lambda` type{func(*Card, *Stack, ...interface{}) (ORDER, int)}
+ @param `lambda` type{func(*Card, *Stack, ...any) (ORDER, int)}
  @requires
   * `lambda` returns the order (before/after) and index to which to move your card in the stack
   * `lambda` does not update `stack` itself
@@ -769,7 +769,7 @@
  Iterate through a stack calling your lambda function on each card
  
  @receiver `stack` type{*Stack}
- @param `lambda` type{func(*Card, ...interface{})}
+ @param `lambda` type{func(*Card, ...any)}
  @ensures
   * Each card in `stack` is passed into your lambda function
   * `stack` is the first argument passed into your variadic parameter on the first call
@@ -787,7 +787,7 @@
  @param `insert` type{Card, Stack}
  @param optional `orderType` type{ORDER} default ORDER_Before
  @param optional `findType` type{FIND} default FIND_First
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates `stack.Cards` to have new cards before/after each designated position
@@ -803,8 +803,8 @@
  @param `findType_from` type{FIND}
  @param `orderType` type{ORDER}
  @param `findType_to` type{FIND}
- @param optional `findData_from` type{interface{}} default nil
- @param optional `findData_to` type{interface{}} default nil
+ @param optional `findData_from` type{any} default nil
+ @param optional `findData_to` type{any} default nil
  @param optional `matchByType_from` type{MATCHBY} default MATCHBY_Object
  @param optional `matchByType_to` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
@@ -819,7 +819,7 @@
 
  @receiver `stack` type{*Stack}
  @param optional `findType` type{FIND} default FIND_First
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns true IF successful search, false IF unsuccessful search
  @requires `stack.Get()` has been implemented
@@ -833,7 +833,7 @@
 
  @receiver `stack` type{*Stack}
  @param optional `findType` type{FIND} default FIND_First
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `clonesType_card` type{CLONES} default CLONE_FALSE
  @param optional `clonesType_keys` type{CLONES} default CLONE_FALSE
@@ -853,7 +853,7 @@
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `returnType` type{RETURN} default RETURN_Cards
  @param optional `clonesType` type{CLONES} default CLONE_FALSE
@@ -878,9 +878,9 @@
  
  @receiver `stack` type{*Stack}
  @param `replaceType` type{REPLACE}
- @param `replaceData` type{interface{}}
+ @param `replaceData` type{any}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns type{*Card} a clone of extracted card OR nil if found no cards
  @updates first found card to `replaceData`
@@ -896,9 +896,9 @@
  
  @receiver `stack` type{*Stack}
  @param `replaceType` type{REPLACE}
- @param `replaceData` type{interface{}}
+ @param `replaceData` type{any}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `returnType` type{RETURN} default RETURN_Cards
  @returns type{*Stack} a stack whose values are the extracted cards pre-update
@@ -915,7 +915,7 @@
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates the found card in `stack`
@@ -930,7 +930,7 @@
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates  the found cards in `stack`
@@ -945,7 +945,7 @@
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns type{*Card} the extracted card OR nil if invalid FIND
  @updates `stack` to no longer have found card
@@ -959,7 +959,7 @@
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `returnType` type{RETURN} default RETURN_Cards
  @returns type{*Stack} the extracted card OR nil if invalid FIND
@@ -975,7 +975,7 @@
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates `stack` to no longer have found card
@@ -990,7 +990,7 @@
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
- @param optional `findData` type{interface{}} default nil
+ @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates `stack` to no longer have found cards

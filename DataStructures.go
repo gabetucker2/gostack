@@ -2,8 +2,8 @@ package gostack
 
 type Card struct {
 	Idx int
-	Key interface{}
-	Val interface{}
+	Key any
+	Val any
 }
 
 type Stack struct {
@@ -81,43 +81,43 @@ const (
 	DEEPSEARCH_False
 )
 
-func setRETURNDefaultIfNil(returnType interface{}) {
+func setRETURNDefaultIfNil(returnType any) {
 	if returnType == nil {
 		returnType = RETURN_Cards
 	}
 }
 
-func setFINDDefaultIfNil(findType interface{}) {
+func setFINDDefaultIfNil(findType any) {
 	if findType == nil {
 		findType = FIND_First
 	}
 }
 
-func setORDERDefaultIfNil(orderType interface{}) {
+func setORDERDefaultIfNil(orderType any) {
 	if orderType == nil {
 		orderType = ORDER_Before
 	}
 }
 
-func setMATCHBYDefaultIfNil(matchByType interface{}) {
+func setMATCHBYDefaultIfNil(matchByType any) {
 	if matchByType == nil {
 		matchByType = MATCHBY_Object
 	}
 }
 
-func setCLONEDefaultIfNil(cloneType interface{}) {
+func setCLONEDefaultIfNil(cloneType any) {
 	if cloneType == nil {
 		cloneType = CLONE_False
 	}
 }
 
-func setDEEPSEARCHDefaultIfNil(deepSearchType interface{}) {
+func setDEEPSEARCHDefaultIfNil(deepSearchType any) {
 	if deepSearchType == nil {
 		deepSearchType = DEEPSEARCH_False
 	}
 }
 
-func setDepthDefaultIfNil(depth interface{}) {
+func setDepthDefaultIfNil(depth any) {
 	if depth == nil {
 		depth = 1
 	}

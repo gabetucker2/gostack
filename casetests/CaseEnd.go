@@ -64,13 +64,23 @@ func case_MakeStack(funcName string) {
 
 	test_Start(funcName, showTestText)
 
+	// create out map type conversion function so we can pass map[any]any into MakeStack
+	conversion := func(myMap map[string]int) (newMap map[any]any) {
+		for k, v := range myMap {
+			myMap[k] = v
+		}
+		return
+	}
+
 	// initialize variables
-	map1 := map[string]int {"Alexander" : 111, "Breton" : 222, "Charles" : 333}
+	map1A := map[string]int {"Alexander" : 111, "Breton" : 222, "Charles" : 333}
+	map1B := conversion(map1A)
+	map2 := map[any]any {"Alexander" : 111, "Breton" : 222, "Charles" : 333}
 	arrKeys := []string {"Alex", "Bre", "Charlie"}
 	arrVals := []int {11, 22, 33}
 
 	// make array of arrVals times three
-	var arrValsTimesThree []interface{}
+	var arrValsTimesThree []any
 	for i := 0; i < 3; i++ {
 		for j := range arrVals {
 			arrValsTimesThree = append(arrValsTimesThree, arrVals[j])
@@ -78,14 +88,16 @@ func case_MakeStack(funcName string) {
 	}
 
 	// to stacks (in order of conditions listed in documentation)
-	stack1 := MakeStack(map1)
-	stack2 := MakeStack(arrVals)
-	stack3 := MakeStack(arrKeys, arrVals)
-	stack4 := MakeStack(nil, arrKeys)
-	stack5 := MakeStack(arrVals, nil, 3)
-	stack6 := MakeStack()
+	stack1 := MakeStack(map1B)
+	stack2 := MakeStack(map2)
+	stack3 := MakeStack(arrVals)
+	stack4 := MakeStack(arrKeys, arrVals)
+	stack5 := MakeStack(nil, arrKeys)
+	stack6 := MakeStack(arrVals, nil, 3)
+	stack7 := MakeStack()
 
 	conditions := []bool{
+		test_LenAndSize(stack7, 0),
 		test_IdxsAreGood(stack1),
 		test_IdxsAreGood(stack2),
 		test_IdxsAreGood(stack3),
@@ -96,13 +108,14 @@ func case_MakeStack(funcName string) {
 		test_LenAndSize(stack2, 3),
 		test_LenAndSize(stack3, 3),
 		test_LenAndSize(stack4, 3),
-		test_LenAndSize(stack5, 9),
-		test_LenAndSize(stack6, 0),
-		test_StackEqualArray(stack1, nil, nil, map1),
-		test_StackEqualArray(stack2, arrVals, nil, nil),
-		test_StackEqualArray(stack3, arrVals, arrKeys, nil),
-		test_StackEqualArray(stack4, nil, arrKeys, nil),
-		test_StackEqualArray(stack5, arrValsTimesThree, nil, nil),
+		test_LenAndSize(stack5, 3),
+		test_LenAndSize(stack6, 9),
+		test_StackEqualArray(stack1, nil, nil, map1B),
+		test_StackEqualArray(stack2, nil, nil, map2),
+		test_StackEqualArray(stack3, arrVals, nil, nil),
+		test_StackEqualArray(stack4, arrVals, arrKeys, nil),
+		test_StackEqualArray(stack5, nil, arrKeys, nil),
+		test_StackEqualArray(stack6, arrValsTimesThree, nil, nil),
 	}
 
 	test_End(funcName, conditions)
@@ -112,10 +125,17 @@ func case_MakeStack(funcName string) {
 func case_MakeStackMatrix(funcName string) {
 
 	test_Start(funcName, showTestText)
-
-	// initialize variables
 /*
+	// initialize variables
+	deepMap := map[string]*Stack {
+		"Stacky" : MakeStack(map[string]*Card {
+			"Bohemian Rhapsody" : MakeCard("Queen"),
+		}),
+		"Stew" : MakeStack(),
+	}
+*/
 	// to stacks (in order of conditions listed in documentation)
+/*
 	stack1  := MakeStackMatrix(map1) // BAD
 	stack2  := MakeStackMatrix(arrVals) // BAD
 	stack3  := MakeStackMatrix(arrKeys, arrVals) // BAD
@@ -135,6 +155,21 @@ func case_MakeStackMatrix(funcName string) {
 
 }
 
+func case_stack_StripStackMatrix(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// initialize variables
+	
+
+	conditions := []bool{
+		
+	}
+
+	test_End(funcName, conditions)
+
+}
+
 /** Executes all case tests */
 func Run(_showTestText bool) {
 
@@ -142,8 +177,9 @@ func Run(_showTestText bool) {
 
 	fmt.Println("- BEGINNING TESTS (fix failures/errors in descending order)")
 
-	case_MakeCard("MakeCard")
-	case_MakeStack("MakeStack")
-	//case_MakeStackMatrix("MakeStackMatrix")
+	case_MakeCard("MakeCard") // GOOD
+	case_MakeStack("MakeStack") // BAD
+	//case_MakeStackMatrix("MakeStackMatrix") // BAD
+
 
 }
