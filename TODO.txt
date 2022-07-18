@@ -1,6 +1,7 @@
 ---------------------------------------------------------------
 GABE:
 Central:
+* Add deepPrint support
 * Case testing
  - Implement casting interfaces as respective pointer type when assigning... see test.go, ensure wherever a card is gotten that a new pointer variable is returned
 * Document gostack linear algebra functions - could they all just be multi-dimensional lambda functions??

@@ -188,10 +188,10 @@ func ifElse(test bool, out1, out2 interface{}) interface{} {
 
 /** Sets a set of variables to the variable set passed into a variadic parameter
 
-@param `variadic` type{...[]interface{}}
-@param `var1, var2, ..., varN` type{any}
-@updates `var1, var2, ..., varN` are set to each of the values in the variadic array, or nil if undefined, respectively
-*/
+ @param `variadic` type{...[]interface{}}
+ @param `var1, var2, ..., varN` type{any}
+ @updates `var1, var2, ..., varN` are set to each of the values in the variadic array, or nil if undefined, respectively
+ */
 func unpackVariadic(variadic []interface{}, into ...*interface{}) {
 	vLen := len(variadic)
 	for i, v := range into {

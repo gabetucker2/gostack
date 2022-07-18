@@ -9,24 +9,19 @@ import (
 
 // test variables (test with these variables only after MakeCard's test)
 
-var testCardA = MakeCard("Card A") // in sample stack
-var testCardB = MakeCard("Card B") // in sample stack
-var testCardC = MakeCard("Card C") // in sample stack
-var testCardD = MakeCard("Card D") // out of sample stack
-
-var map1 map[string]int
-var arrKeys []string
-var arrVals []int
-
-/** I hate Go */
-func test_RemoveCompileError(...interface{}) {}
+var testCardA *Card
+var testCardB *Card
+var testCardC *Card
+var testCardD *Card
 
 /** Initialize test variables */
 func test_Setup() {
-	map1 := map[string]int {"Alexander":111, "Breton":222, "Charles":333}
-	arrKeys := []string {"Alex", "Bre", "Charlie"}
-	arrVals := []int {11, 22, 33}
-	test_RemoveCompileError(map1, arrKeys, arrVals)
+
+	testCardA = MakeCard("Card A") // in sample stack
+	testCardB = MakeCard("Card B") // in sample stack
+	testCardC = MakeCard("Card C") // in sample stack
+	testCardD = MakeCard("Card D") // out of sample stack
+
 }
 
 /** Test whether stack equals array */
@@ -72,6 +67,8 @@ func test_Start(funcName string, showTestText bool) {
 		fmt.Println("-   TESTING " + funcName + "()")
 	}
 
+	test_Setup()
+
 }
 
 func test_End(funcName string, conditions []bool) {
@@ -92,7 +89,7 @@ func test_End(funcName string, conditions []bool) {
 	if test == -1 {
 		out += "SUCCESS"
 	} else {
-		out += "FAILURE AT CONDITION IDX = " + strconv.Itoa(test) + " in"
+		out += "FAILURE AT CONDITION #" + strconv.Itoa(test+1) + " in"
 	}
 
 	// print all the data together

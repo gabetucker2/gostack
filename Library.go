@@ -9,28 +9,24 @@ import (
 
 /** Creates a card with inputted val, key, and idx
 
- @param optional `val` type{any} default nil
- @param optional `key` type{any} default nil
- @param optional `idx` type{int} default -1 no pass-by-reference
- @returns type{*Card} the newly-constructed card
- @constructs type{*Card} a newly-constructed card
- @ensures the new card will have val `val`, key `key`, and idx `idx`
+@param optional `val` type{any} default nil
+@param optional `key` type{any} default nil
+@param optional `idx` type{int} default -1 no pass-by-reference
+@returns type{*Card} the newly-constructed card
+@constructs type{*Card} a newly-constructed card
+@ensures the new card will have val `val`, key `key`, and idx `idx`
 */
 func MakeCard(variadic ...interface{}) *Card {
 
 	// unpack variadic into optional parameters
-	var Val, Key, Idx interface{}
-	unpackVariadic(variadic, &Val, &Key, &Idx)
-
-	// set default Idx to -1
-	var newIdx int
-	if Idx == nil { newIdx = -1 } else { newIdx = Idx.(int) }
+	var val, key, idx interface{}
+	unpackVariadic(variadic, &val, &key, &idx)
 
 	// initialize and set new Card
 	card := new(Card)
-	card.Idx = newIdx // clones Idx
-	card.Key = &Key
-	card.Val = &Val
+	if idx == nil { card.Idx = -1 } else { card.Idx = idx.(int) }
+	card.Key = key
+	card.Val = val
 
 	// return
 	return card
@@ -156,7 +152,7 @@ func MakeStackMatrix(variadic ...interface{}) *Stack {
 				
 				// get keys and vals from the input1 map
 				var keys, vals []interface{}
-				for k, v := range input1.(map[interface{}]interface{}) {
+				for k, v := range input1.(map[any]any) {
 					keys = append(keys, k)
 					vals = append(vals, v)
 				}
@@ -552,7 +548,7 @@ func (card *Card) Print() {
 	fmt.Println("gostack: PRINTING CARD")
 	fmt.Printf("- card.Idx: %v\n", card.Idx)
 	fmt.Printf("- card.Key: %v\n", card.Key)
-	fmt.Printf("- card.Val: %v\n", card.Idx)
+	fmt.Printf("- card.Val: %v\n", card.Val)
 
 }
 
