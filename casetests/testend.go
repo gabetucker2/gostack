@@ -1,8 +1,8 @@
 package casetests
 
 import (
-	"strconv"
 	"fmt"
+	"strconv"
 
 	. "github.com/gabetucker2/gostack"
 )
@@ -14,7 +14,26 @@ var testCardB = MakeCard("Card B") // in sample stack
 var testCardC = MakeCard("Card C") // in sample stack
 var testCardD = MakeCard("Card D") // out of sample stack
 
-// test functions
+var map1 map[string]int
+var arrKeys []string
+var arrVals []int
+
+/** Initialize test variables */
+func test_Setup() {
+	map1 := map[string]int {"Andrew":111, "Breton":222, "Charles":333}
+	arrKeys := []string {"Alexander", "Bre", "Charlie"}
+	arrVals := []int {11, 22, 33}
+}
+
+/** Test whether stack equals array */
+func test_stackEqualArray(stack *Stack, arr []interface) bool {
+	for i := range stack.Cards {
+		if stack.Cards[i] != arr[i] {
+			return false
+		}
+	}
+	return true
+}
 
 /** return whether len(cards) == cards.size */
 func test_LenAndSize(stack *Stack, size int) bool {

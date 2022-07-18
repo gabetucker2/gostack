@@ -2,7 +2,7 @@ package casetests
 
 import (
 	"fmt"
-	
+
 	. "github.com/gabetucker2/gostack"
 )
 
@@ -23,7 +23,7 @@ func case_MyFunction(funcName string) {
 	// add failure conditions here for the case test
 	// ensure test_LenAndSize is the first if and only if testing method with Stack type receiver
 	conditions := []bool{
-		test_LenAndSize(stack, ?),
+		
 	}
 
 	test_End(funcName, conditions)
@@ -59,13 +59,43 @@ func case_MakeCard(funcName string) {
 
 }
 
+func case_MakeStack(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// to stacks (in order of conditions listed in documentation)
+	stack1 := MakeStack(map1)
+	stack2 := MakeStack(arrVals)
+	stack3 := MakeStack(arrKeys, arrVals)
+	stack4 := MakeStack(nil, arrVals)
+	stack5 := MakeStack()
+
+	conditions := []bool{
+		test_IdxsAreGood(stack1),
+		test_IdxsAreGood(stack2),
+		test_IdxsAreGood(stack3),
+		test_IdxsAreGood(stack4),
+		test_IdxsAreGood(stack5),
+		test_LenAndSize(stack1, 3),
+		test_LenAndSize(stack2, 3),
+		test_LenAndSize(stack3, 3),
+		test_LenAndSize(stack4, 3),
+		test_LenAndSize(stack5, 0),
+	}
+
+	test_End(funcName, conditions)
+
+}
+
 /** Executes all case tests */
 func Run(_showTestText bool) {
 
 	showTestText = _showTestText
+	test_Setup()
 
 	fmt.Println("- BEGINNING TESTS (fix failures/errors in descending order)")
 
 	case_MakeCard("MakeCard")
+	case_MakeStack("MakeStack")
 
 }

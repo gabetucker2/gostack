@@ -1,9 +1,8 @@
 ---------------------------------------------------------------
 GABE:
 Central:
-* Make findType default first for all generalizable functions
-* Ensure wherever a card is gotten that a new pointer variable is returned
-* Implement casting interfaces as respective pointer type when assigning... see test.go
+* Case testing
+ - Implement casting interfaces as respective pointer type when assigning... see test.go, ensure wherever a card is gotten that a new pointer variable is returned
 * Document gostack linear algebra functions - could they all just be multi-dimensional lambda functions??
  - transpose
  - dot
