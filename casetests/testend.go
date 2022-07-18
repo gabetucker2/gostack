@@ -18,17 +18,26 @@ var map1 map[string]int
 var arrKeys []string
 var arrVals []int
 
+/** I hate Go */
+func test_RemoveCompileError(...interface{}) {}
+
 /** Initialize test variables */
 func test_Setup() {
-	map1 := map[string]int {"Andrew":111, "Breton":222, "Charles":333}
-	arrKeys := []string {"Alexander", "Bre", "Charlie"}
+	map1 := map[string]int {"Alexander":111, "Breton":222, "Charles":333}
+	arrKeys := []string {"Alex", "Bre", "Charlie"}
 	arrVals := []int {11, 22, 33}
+	test_RemoveCompileError(map1, arrKeys, arrVals)
 }
 
 /** Test whether stack equals array */
-func test_StackEqualArray(stack *Stack, arr []interface) bool {
+func test_StackEqualArray(stack *Stack, _vals, _keys, _ma interface{}) bool {
+	vals := _vals.([]interface{})
+	keys := _keys.([]interface{})
+	ma := _ma.(map[interface{}]interface{})
+	maKeys := make([]interface{}, len(ma))
 	for i := range stack.Cards {
-		if stack.Cards[i] != arr[i] {
+		c := stack.Cards[i]
+		if (_vals != nil && vals[i] != c.Val) || (_keys != nil && keys[i] != c.Key) || (_ma != nil && (maKeys[i] != c.Key || ma[maKeys[i]] != c.Val)) {
 			return false
 		}
 	}
@@ -91,6 +100,7 @@ func test_End(funcName string, conditions []bool) {
 
 }
 
+/** Make a sample stack of cards */
 func test_SampleStack() *Stack {
 
 	// make a sample stack of form <"Card A", "Card B", "Card C">
