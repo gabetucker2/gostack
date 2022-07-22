@@ -77,12 +77,32 @@ func MakeStack(variadic ...any) *Stack {
 	stack := new(Stack)
 
 	// run MakeStackMatrix to 1D array and add to our stack `repeats` times
+	repeatIndexWorkingFloor := 0
 	for i := 0; i < repeats.(int); i++ {
-		ls := MakeStackMatrix(input1, input2, []int{1})
-		for i := range ls.Cards {
-			stack.Cards = append(stack.Cards, ls.Cards[i])
+		matrixShape := -1
+		if input1 == nil {
+			if input2 == nil {
+				matrixShape = 0
+			} else {
+				matrixShape = len(unpackArray(input2))
+			}
+		} else {
+			switch reflect.ValueOf(input1).Kind() {
+			case reflect.Map:
+				matrixShape = len(unpackMap(input1))
+			default: // reflect.Array OR reflect.Slice
+				matrixShape = len(unpackArray(input1))
+			}
 		}
+
+		stack.Cards = append(stack.Cards, MakeStackMatrix(input1, input2, []int{matrixShape}).Cards...)
+		for j := 0; j < matrixShape; j++ {
+			stack.Cards[j + repeatIndexWorkingFloor].Idx += repeatIndexWorkingFloor
+		}
+		repeatIndexWorkingFloor += matrixShape
 	}
+
+	stack.Size = len(stack.Cards)
 
 	// return
 	return stack
@@ -101,7 +121,6 @@ func MakeStack(variadic ...any) *Stack {
  @constructs type{*Stack} a new stack with type{*Card} new cards
  @requires
   * `MakeCard()` has been implemented
-  * IF `input1` is a map, then it is passed as map type map[any]any
   * IF `input1` and `input2` are both passed as arguments
       |`input1`| == |`input2`|
  @ensures
@@ -154,26 +173,26 @@ func MakeStackMatrix(variadic ...any) *Stack {
 				// get keys and vals from the input1 map
 				var keys, vals []any
 
-				for k, v := range input1.(map[any]any) {
+				for k, v := range unpackMap(input1) {
 					keys = append(keys, k)
 					vals = append(vals, v)
 				}
 
-				// IF no `matrixShape`` is passed
+				// IF no `matrixShape` is passed
 				if matrixShape == nil {
 					// unpack the map into matrix of shape `inputx` with corresponding keys and vals
 					stack.makeStackMatrixFromND(keys, vals)
 
-				// ELSEIF `matrixShape`` is passed
+				// ELSEIF `matrixShape` is passed
 				} else {
 					// unpack the map into matrix of shape `matrixShape` with corresponding keys and vals
 					stack.makeStackMatrixFrom1D(matrixShape.([]int), keys, vals, new(int))
 				}
 			
-			// ELSEIF `input1` is an array...
-			case reflect.Array:
+			// ELSEIF `input1` is an array (or slice)...
+			default:
 
-				///input1Len := len(input1.([]any))
+				input1Array := unpackArray(input1)
 
 				// ...and `input2` is not passed
 				if input2 == nil {
@@ -186,11 +205,13 @@ func MakeStackMatrix(variadic ...any) *Stack {
 					// ELSEIF `matrixShape` is passed
 					} else {
 						// unpack values from `input1` into matrix of shape `matrixShape`
-						stack.makeStackMatrixFrom1D(matrixShape.([]int), nil, input1, new(int))
+						stack.makeStackMatrixFrom1D(matrixShape.([]int), nil, input1Array, new(int))
 					}
 
 				// ...and `input2` is an array
 				} else {
+
+					input2Array := unpackArray(input2)
 					
 					// IF no `matrixShape` is passed
 					if matrixShape == nil {
@@ -200,7 +221,7 @@ func MakeStackMatrix(variadic ...any) *Stack {
 					// ELSEIF `matrixShape` is passed
 					} else {
 						// unpack keys from `input1` and values from `input2` into matrix of shape `matrixShape`
-						stack.makeStackMatrixFrom1D(matrixShape.([]int), input1, input2, new(int))
+						stack.makeStackMatrixFrom1D(matrixShape.([]int), input1Array, input2Array, new(int))
 					}
 
 				}
@@ -209,6 +230,8 @@ func MakeStackMatrix(variadic ...any) *Stack {
 
 		// ELSEIF `input1` is nil and `input2` is an array
 		} else {
+
+			input2Array := unpackArray(input2)
 			
 			// IF no `matrixShape` is passed
 			if matrixShape == nil {
@@ -218,7 +241,7 @@ func MakeStackMatrix(variadic ...any) *Stack {
 			// ELSEIF `matrixShape` is passed
 			} else {
 				// unpack keys from `input2` into matrix of shape `matrixShape`
-				stack.makeStackMatrixFrom1D(matrixShape.([]int), input2, nil, new(int))
+				stack.makeStackMatrixFrom1D(matrixShape.([]int), input2Array, nil, new(int))
 			}
 
 		}
@@ -267,13 +290,11 @@ func (stack *Stack) StripStackMatrix(variadic ...any) *Stack {
 	var selections []int
 
 	// put firstSelection type{int, []int} into array selections type{[]int}
-	switch firstSelection.(type) {
+	switch fs := firstSelection.(type) {
 	case int:
-		selections = append(selections, firstSelection.(int))
+		selections = append(selections, fs)
 	case []int:
-		for _, idx := range firstSelection.([]int) {
-			selections = append(selections, idx)
-		}
+		selections = append(selections, fs...)
 	}
 
 	// iterate through each selection and add them to our new stack
@@ -322,6 +343,7 @@ func (stack *Stack) ToArray() (arr []any) {
 func (stack *Stack) ToMap() (m map[any]any) {
 
 	// add all card keys and values in stack to m
+	m = make(map[any]any)
 	for i := range stack.Cards {
 		c := stack.Cards[i]
 		m[c.Key] = c.Val
@@ -669,7 +691,7 @@ func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, 
 	to := stack.Get(findType_to, findData_to, matchByType_to, CLONE_False, CLONE_False, CLONE_False, deepSearchType_to, depth_to)
 	// 2) Get the ones to move
 	from := stack.ExtractMany(findType_from, findData_from, matchByType_from, RETURN_Cards, deepSearchType_from, depth_from)
-	// 3) Move 2 to 1
+	// 3) Insert 2 to 1 (works since to.Idx is procedurally updated by ExtractMany())
 	stack.Add(from, orderType, FIND_Idx, to.Idx, matchByType_to, deepSearchType_to, depth_to)
 
 	// return

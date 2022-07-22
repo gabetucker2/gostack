@@ -1,6 +1,6 @@
 package gostack
 
-import(
+import (
 	"reflect"
 )
 
@@ -85,9 +85,7 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 				case Card:
 					newCards = append(newCards, insert.(*Card))
 				case Stack:
-					for _, c := range insert.(*Stack).Cards {
-						newCards = append(newCards, c)
-					}
+					newCards = append(newCards, insert.(*Stack).Cards...)
 				}
 
 				// add the targetCard after insert if insert is Order_BEFORE (insert ordered before targetCard)
@@ -579,12 +577,42 @@ func (setStack *Stack) updateRespectiveField(replaceType REPLACE, replaceData an
 
 }
 
+/** Returns, from any array type, a version of that array which is converted to type []any
+
+ @param `arr` type{any}
+ @return type{[]any}
+ @requires `arr` is an array
+ */
+func unpackArray(arr any) []any {
+    valType := reflect.ValueOf(arr)
+    new := make([]any, valType.Len())
+    for i := 0; i < valType.Len(); i++ {
+        new[i] = valType.Index(i).Interface()
+    }
+    return new
+}
+
+/** Returns, from any map type, a version of that map which is converted to type map[any]any
+
+ @param `arr` type{any}
+ @return type{[]any}
+ @requires `arr` is an array
+ */
+ func unpackMap(s any) map[any]any {
+	v := reflect.ValueOf(s)
+    m := make(map[any]any, v.Len())
+    for _, k := range v.MapKeys() {
+		m[k.Interface()] = v.MapIndex(k).Interface()
+    }
+    return m
+}
+
 /** Recursively add elements from 1D array to stack of matrix shape resembling `matrixShape`
  
  @receiver stack type{*Stack}
  @param matrixShape type{[]int}
- @param keys type{any}
- @param vals type{any}
+ @param keys type{[]any}
+ @param vals type{[]any}
  @param globalI type{*int} used because: extracting from 1-D arrays into N-D matrix, so need to track our position in the 1-D arrays between different recursive calls
  @returns type{*Stack}
  @requires
@@ -592,7 +620,7 @@ func (setStack *Stack) updateRespectiveField(replaceType REPLACE, replaceData an
   * |keys| == |vals| if neither are nil
   * |keys| or |vals| == product of ints in matrixShape
 */
-func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys any, vals any, globalI *int) (ret *Stack) {
+func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []any, globalI *int) (ret *Stack) {
 
 	// make stack
 	if len(matrixShape) > 1 {
@@ -610,13 +638,13 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys any, vals any,
 		for i := 0; i < matrixShape[0]; i++ {
 			c := MakeCard()
 			updated := false
-			if keys != nil && len(keys.([]any)) > 0 {
+			if len(keys) > 0 {
 				updated = true
-				c.Key = keys.([]any)[*globalI]
+				c.Key = keys[*globalI]
 			}
-			if vals != nil && len(vals.([]any)) > 0 {
+			if len(vals) > 0 {
 				updated = true
-				c.Val = vals.([]any)[*globalI]
+				c.Val = vals[*globalI]
 			}
 			if updated {
 				*globalI++

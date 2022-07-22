@@ -189,6 +189,8 @@
 
  In ***gostack***, creating an array of cards is considered atrocious and immoral.  There is no functional support for passing arrays of cards as an argument.  Please only create a []\*Card array if it is a temporary variable to which you are assigning `stack.Cards`.  For instance, if you wanted to make your own `stack.Move(...)` function, you would create a temporary []\*Card variable, iteratively append that variable such that it "moves" whatever card(s) you want to move, then assign `stack.Cards` to that variable, never referencing the variable again.
 
+ Never insert the same card twice into the same stack.  Instead, insert the same value into two different cards.  If you insert two of the same card into the same stack, then the index property will become conflated between the two cards and functions will yield bugs while iterating through stacks.
+
  <h2>Naming</h2>
 
  * "FunctionName" functions are public functions, accessible to the user

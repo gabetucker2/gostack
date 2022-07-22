@@ -81,11 +81,11 @@ const (
 	DEEPSEARCH_False
 )
 
-func setRETURNDefaultIfNil(returnType any) {
+/*func setRETURNDefaultIfNil(returnType any) {
 	if returnType == nil {
 		returnType = RETURN_Cards
 	}
-}
+}*/
 
 func setFINDDefaultIfNil(findType any) {
 	if findType == nil {

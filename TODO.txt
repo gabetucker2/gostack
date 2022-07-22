@@ -1,12 +1,9 @@
 ---------------------------------------------------------------
 GABE:
 Central:
-* Have it so you show how to pass maps into MakeStack
- 1) Pass map[any]any
- 2) Convert map keys into array and vals to array and pass those in
- 3) Create function to parse your custom map type into a map[any]any
- 4) Make an empty stack, and, in a for loop, repeatedly call the Add function while iterating through the map
+* Replace append loops with append(x, y...)
 * Add deepPrint support
+* Add ToSlice function?
 * Case testing
  - Implement casting interfaces as respective pointer type when assigning... see test.go, ensure wherever a card is gotten that a new pointer variable is returned
 * Document gostack linear algebra functions - could they all just be multi-dimensional lambda functions??
