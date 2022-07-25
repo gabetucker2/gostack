@@ -1,5 +1,7 @@
 # gostack
  `gostack` introduces **Stacks**, ambiguously-typed (mathematical) strings of index/key-element pairs intended to replace arrays and maps in *golang*.  **Stacks** are introduced alongside a variety of helpful functions to ensure programmer ease-of-use, concision, and flexibility.
+ 
+ <h1>THIS BRANCH IS OUTDATED.  TO SEE THE CURRENT VERSION, GO TO https://github.com/gabetucker2/gostack/tree/wip</h1>
 
  By default for generics, people tend to use *golang*'s list package, but this package is optimized only with the essentials for transforming and selecting list elements.  While `gostack` offers a much wider breadth of functions for transforming and selecting elements, it also allows you to turn **Stacks** into maps, quickly convert between arrays and **Stacks**, and—most excitingly—to use functions based on lambda expression including **sort**, **TrueForAll**, and **RemoveAll**.
 
