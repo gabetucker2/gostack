@@ -121,6 +121,7 @@ func MakeStack(variadic ...any) *Stack {
  @constructs type{*Stack} a new stack with type{*Card} new cards
  @requires
   * `MakeCard()` has been implemented
+  * If no `matrixShape` is passed, keys dimension must match the vals dimension
   * IF `input1` and `input2` are both passed as arguments
       |`input1`| == |`input2`|
  @ensures
@@ -172,19 +173,23 @@ func MakeStackMatrix(variadic ...any) *Stack {
 				
 				// get keys and vals from the input1 map
 				var keys, vals []any
-
-				for k, v := range unpackMap(input1) {
-					keys = append(keys, k)
-					vals = append(vals, v)
-				}
-
+				
 				// IF no `matrixShape` is passed
 				if matrixShape == nil {
+	
+					// TODO: FIX LATER
+					// unpackDeepMapToKeysVals(input1, keys, vals)
+
 					// unpack the map into matrix of shape `inputx` with corresponding keys and vals
 					stack.makeStackMatrixFromND(keys, vals)
 
 				// ELSEIF `matrixShape` is passed
 				} else {
+
+					for k, v := range unpackMap(input1) {
+						keys = append(keys, k)
+						vals = append(vals, v)
+					}
 					// unpack the map into matrix of shape `matrixShape` with corresponding keys and vals
 					stack.makeStackMatrixFrom1D(matrixShape.([]int), keys, vals, new(int))
 				}

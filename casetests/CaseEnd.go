@@ -109,53 +109,74 @@ func case_MakeStack(funcName string) {
 
 }
 
-/*func case_MakeStackMatrix(funcName string) {
+func case_MakeStackMatrix(funcName string) {
 
 	test_Start(funcName, showTestText)
 
 	// initialize variables
-	deepMap := map[string]*Stack {
-		"Stacky" : MakeStack(map[string]*Card {
-			"Bohemian Rhapsody" : MakeCard("Queen"),
-		}),
-		"Stew" : MakeStack(),
-	}
+	matrixShape := []int { 3, 2 }
+
+	/*shallowMap := map[string]int{
+		"Alex": 111,
+		"Bre": 222,
+		"Charles": 333,
+		"David": 444,
+		"Elliot": 555,
+		"Ferguson": 666,
+    }*/
+
+	arrShallowKeys := []string {"Alex", "Bre", "Charles", "David", "Elliot", "Ferguson"}
+	arrShallowVals := []int {111, 222, 333, 444, 555, 666}
+
+	/*deepMap := map[string]map[string]int{
+        "First": {
+            "Alex": 111,
+            "Bre": 222,
+        },
+        "Second": {
+            "Charles": 333,
+            "David": 444,
+        },
+        "Third": {
+            "Elliot": 555,
+            "Ferguson": 666,
+        },
+    }*/
+
+	//arrDeepKeys := [][]string {{"Alex", "Bre"}, {"Charles", "David"}, {"Elliot", "Ferguson"}}
+	//arrDeepVals := [][]int {{111, 222}, {333, 444}, {555, 666}}
 
 	// to stacks (in order of conditions listed in documentation)
 
-	stack1  := MakeStackMatrix(map1) // BAD
-	stack2  := MakeStackMatrix(arrVals) // BAD
-	stack3  := MakeStackMatrix(arrKeys, arrVals) // BAD
-	stack4  := MakeStackMatrix(nil, arrKeys) // BAD
+	//TODO: fix map support
+	//TODO: implement deep support
+
+	//stack1  := MakeStackMatrix(deepMap) // BAD
+	//stack2  := MakeStackMatrix(arrDeepVals) // BAD
+	//stack3  := MakeStackMatrix(arrDeepKeys, arrDeepVals) // BAD
+	//stack4  := MakeStackMatrix(nil, arrDeepKeys) // BAD
 	stack5  := MakeStackMatrix()
-	stack6  := MakeStackMatrix() // BAD
-	stack7  := MakeStackMatrix() // BAD
-	stack8  := MakeStackMatrix() // BAD
-	stack9  := MakeStackMatrix() // BAD
-	stack10 := MakeStackMatrix() // BAD
+	//stack6  := MakeStackMatrix(shallowMap, nil, matrixShape) // BAD
+	stack7  := MakeStackMatrix(arrShallowVals, nil, matrixShape) // CHECK
+	stack8  := MakeStackMatrix(arrShallowKeys, arrShallowVals, matrixShape) // CHECK
+	stack9  := MakeStackMatrix(nil, arrShallowKeys, matrixShape) // CHECK
+	stack10 := MakeStackMatrix(nil, nil, matrixShape) // CHECK
 
 	conditions := []bool{
-		
+		test_IdxsAreGood(stack7),
+		test_IdxsAreGood(stack8),
+		test_IdxsAreGood(stack9),
+		test_IdxsAreGood(stack10),
+		test_LenAndSize(stack5, 0),
+		test_LenAndSize(stack7, 2, 2, 2),
+		test_LenAndSize(stack8, 2, 2, 2),
+		test_LenAndSize(stack9, 2, 2, 2),
+		test_LenAndSize(stack10, 2, 2, 2),
 	}
 
 	test_End(funcName, conditions)
 
-}*/
-
-/*func case_stack_StripStackMatrix(funcName string) {
-
-	test_Start(funcName, showTestText)
-
-	// initialize variables
-
-
-	conditions := []bool{
-		
-	}
-
-	test_End(funcName, conditions)
-
-}*/
+}
 
 /** Executes all case tests */
 func Run(_showTestText bool) {
@@ -166,9 +187,9 @@ func Run(_showTestText bool) {
 
 	// NON-GENERALIZED FUNCTIONS
 	case_MakeCard("MakeCard") // GOOD
-	case_MakeStack("MakeStack") // BAD
-	/*case_MakeStackMatrix("MakeStackMatrix") // BAD
-	case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
+	case_MakeStack("MakeStack") // GOOD
+	case_MakeStackMatrix("MakeStackMatrix") // BAD
+	/*case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
 	case_stack_ToArray("stack.ToArray") // BAD
 	case_stack_ToMap("stack.ToMap") // BAD
 	case_stack_ToMatrix("stack.ToMatrix") // BAD

@@ -94,7 +94,6 @@ func test_StackEqualArrayOrMap(stack *Stack, _vals, _keys any, _ma any) bool {
 		if _ma != nil {
 			matchExists := false
 			for j := range keys {
-				fmt.Printf("%T == %T => %s\n", keys[j], c.Key, strconv.FormatBool(keys[j] == c.Key))
 				if keys[j] == c.Key && vals[j] == c.Val {
 					matchExists = true
 					break
@@ -113,10 +112,51 @@ func test_StackEqualArrayOrMap(stack *Stack, _vals, _keys any, _ma any) bool {
 	return true
 }
 
-/** return whether len(cards) == cards.size */
-func test_LenAndSize(stack *Stack, size int) bool {
+/** Return an stack of the deepest elements in a stack */
+func test_GetDeepest(stack *Stack) (deepest []int, stacks []*Stack) {
 
-	return len(stack.Cards) == size && stack.Size == size
+	for i := range stack.Cards {
+		c := stack.Cards[i]
+		isStack := false
+		switch c.Val.(type) {
+		case *Stack:
+			isStack = true
+			test_GetDeepest(c.Val.(*Stack))
+		}
+		if !isStack {
+			deepest = append(deepest, i)
+			stacks = append(stacks, stack)
+		}
+	}
+	return
+
+}
+
+/** return whether len(cards) == cards.size */
+func test_LenAndSize(stack *Stack, size ...int) bool {
+
+	test := true
+	if len(size) == 1 {
+
+		test = len(stack.Cards) == size[0] && stack.Size == size[0]
+
+	} else {
+
+		deepest, stacks := test_GetDeepest(stack)
+		global := 0
+		for i, s := range size {
+			for j := 0; j < s; j++ {
+				if len(stacks) <= global || stacks[j].Size != s || i != deepest[global] {
+					test = false
+					break
+				}
+				global++
+			}
+		}
+
+	}
+
+	return test
 
 }
 
@@ -125,7 +165,12 @@ func test_IdxsAreGood(stack *Stack) bool {
 
 	good := true
 	for i := range stack.Cards {
-		if stack.Cards[i].Idx != i {
+		c := stack.Cards[i]
+		switch c.Val.(type) {
+		case *Stack:
+			good = test_IdxsAreGood(c.Val.(*Stack))
+		}
+		if c.Idx != i {
 			good = false
 			break
 		}

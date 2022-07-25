@@ -28,6 +28,8 @@
  >
  >> [File Explanations](#fileExplanations)
  >
+ >> [Package Schema](#packageSchema)
+ >
  >> [Conventions](#conventions)
 
  > [Overview](#overview)
@@ -82,7 +84,9 @@
  >>>
  >>>> [stack.Empty()](#Empty)
  >>>
- >>>> [{card, stack}.Clone(...)](#Clone)
+ >>>> [card.Clone(...)](#Clone)
+ >>>
+ >>>> [stack.Clone(...)](#Clone)
  >>>
  >>>> [stack.Unique(...)](#Unique)
  >>>
@@ -90,10 +94,12 @@
  >>>
  >>>> [stack.Flip()](#Flip)
  >>>
- >>>> [{card, stack}.Print()](#Print)
- >>>>
+ >>>> [card.Print()](#Print)
+ >>>
+ >>>> [stack.Print()](#Print)
+ >>>
  >>>> [stack.Sort(...)](#Sort)
- >>>>
+ >>>
  >>>> [stack.Lambda(...)](#Lambda)
  >>>
  >>> [Generalized Functions](#generalizedFunctions)
@@ -177,6 +183,8 @@
  >>
  >> [unaddedgostack.txt](/unaddedgostack.txt) is where obsolete data to be added back into backend.go and Library.go
 
+<h1 name = "packageSchema">Package Schema</h1>
+
 ![Packages](images/packages.png)
 
 <h1 name = "conventions">CONVENTIONS</h1>
@@ -190,6 +198,8 @@
  In ***gostack***, creating an array of cards is considered atrocious and immoral.  There is no functional support for passing arrays of cards as an argument.  Please only create a []\*Card array if it is a temporary variable to which you are assigning `stack.Cards`.  For instance, if you wanted to make your own `stack.Move(...)` function, you would create a temporary []\*Card variable, iteratively append that variable such that it "moves" whatever card(s) you want to move, then assign `stack.Cards` to that variable, never referencing the variable again.
 
  Never insert the same card twice into the same stack.  Instead, insert the same value into two different cards.  If you insert two of the same card into the same stack, then the index property will become conflated between the two cards and functions will yield bugs while iterating through stacks.
+
+ Stack matrices are assumed to have a uniform shape, meaning they can be modeled by a vector.  stack{{hey}, {stack{hey, hey}}} is an example of a non-uniform shape.  Support is not provided for these cases.
 
  <h2>Naming</h2>
 

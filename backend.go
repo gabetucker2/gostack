@@ -607,6 +607,28 @@ func unpackArray(arr any) []any {
     return m
 }
 
+// TODO: FIX LATER
+/** Returns, from any map type, a version of that map which is converted to type deep map[any]any...
+
+ @param `arr` type{any}
+ @return type{[]any}
+ @requires `arr` is an array
+ */
+/*func unpackDeepMapToKeysVals(input1 any, keys , vals []any) map[any]any {
+    m := unpackMap(input1)
+	for k, v := range m {
+		if reflect.ValueOf(v).Kind() == reflect.Map {
+			unpackDeepMap(m)
+		}
+	}
+
+	for k, v := range  { // TODO: deep unpack
+		keys = append(keys, k)
+		vals = append(vals, v)
+	}
+	return m
+}*/
+
 /** Recursively add elements from 1D array to stack of matrix shape resembling `matrixShape`
  
  @receiver stack type{*Stack}
@@ -671,7 +693,7 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []
   * |keys| == |vals| if neither are nil
   * at least one of `keys` or `vals` are not nil
 */
-func (stack *Stack) makeStackMatrixFromND(keys any, vals any) (ret *Stack) {
+func (stack *Stack) makeStackMatrixFromND(keys, vals any) (ret *Stack) {
 
 	// initialize variable to use as reference for the matrix shape
 	// just because we don't know which input is not nil
