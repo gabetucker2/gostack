@@ -77,7 +77,6 @@ func MakeStack(variadic ...any) *Stack {
 	stack := new(Stack)
 
 	// run MakeStackMatrix to 1D array and add to our stack `repeats` times
-	repeatIndexWorkingFloor := 0
 	for i := 0; i < repeats.(int); i++ {
 		matrixShape := -1
 		if input1 == nil {
@@ -95,14 +94,14 @@ func MakeStack(variadic ...any) *Stack {
 			}
 		}
 
-		stack.Cards = append(stack.Cards, MakeStackMatrix(input1, input2, []int{matrixShape}).Cards...)
-		for j := 0; j < matrixShape; j++ {
-			stack.Cards[j + repeatIndexWorkingFloor].Idx += repeatIndexWorkingFloor
+		if !(input1 == nil && input2 == nil) {
+			stack.Cards = append(stack.Cards, MakeStackMatrix(input1, input2, []int{matrixShape}).Cards...)
 		}
-		repeatIndexWorkingFloor += matrixShape
 	}
 
+	// property sets
 	stack.Size = len(stack.Cards)
+	setIndices(stack.Cards)
 
 	// return
 	return stack
@@ -269,7 +268,6 @@ func MakeStackMatrix(variadic ...any) *Stack {
 
 	// set properties
 	stack.Size = len(stack.Cards)
-	setIndices(stack.Cards)
 
 	// return
 	return stack

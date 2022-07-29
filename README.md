@@ -8,12 +8,12 @@
 
  ***gostack***'s stacks...
  * ...replace arrays, maps, and matrices, eliminating the need for translating data between varying data types while supporting smooth conversion between stacks and your existing data structures
- * ...offer the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity of 5 nested for-loops in a single yet concise line
+ * ...offer the minimum functions needed for unlimited flexibility, allowing the user to seamlessly write what would previously have been a verbose monstrosity of 5 nested for-loops in a single, yet concise, line
  * ...allow the user to get and set based on reference or object with ease, preventing the user from having to worry about convoluted pointer/address management
  * ...support the treatment of stacks as matrices, allowing the user to easily manage data tables, perform linear algebra, and control deep-versus-shallow matrix operations
  * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create novel stack mechanisms of their own design
 
- Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish, ***gostack*** took roughly one fifth the amount of lines (merely 10)—[see for yourself!](/tutorials/race.md)
+ Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish, ***gostack*** took merely 8—[see for yourself!](/tutorials/race.md)
 
  To get a better feel of the library, feel free to take a look at some [examples](/tutorials/Bootstrap.go) of how ***gostack*** can substitute commonly-used functions.
 
@@ -247,16 +247,16 @@
  > * FIND_Last *NONE*
  > * FIND_Idx *int*
  > * FIND_Idxs *ints*
- > * FIND_IdxsStack *stack whose vals are ints*
+ > * FIND_Idxs Stack *stack whose vals are ints*
  > * FIND_Key *any*
  > * FIND_Keys *anys*
- > * FIND_KeysStack *stack whose vals are keys*
+ > * FIND_Keys Stack *stack whose vals are keys*
  > * FIND_Val *any*
  > * FIND_Vals *anys*
- > * FIND_ValsStack *stack whose vals are vals*
+ > * FIND_Vals Stack *stack whose vals are vals*
  > * FIND_Card *Card*
  > * FIND_Cards *Stack*
- > * FIND_CardsStack *stack whose vals are cards*
+ > * FIND_Cards Stack *stack whose vals are cards*
  > * FIND_Slice *[2]int*
  > * FIND_All *NONE*
  > * FIND_Lambda *lambda function*

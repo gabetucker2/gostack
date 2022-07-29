@@ -146,6 +146,7 @@ func test_LenAndSize(stack *Stack, size ...int) bool {
 		global := 0
 		for i, s := range size {
 			for j := 0; j < s; j++ {
+				fmt.Printf("len(stacks) = %d\n", len(stacks))
 				if len(stacks) <= global || stacks[j].Size != s || i != deepest[global] {
 					test = false
 					break

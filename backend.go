@@ -2,6 +2,7 @@ package gostack
 
 import (
 	"reflect"
+	"fmt"
 )
 
 /** Performs the function using a uniform framework for performing deepSearches
@@ -647,15 +648,21 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []
 	// make stack
 	if len(matrixShape) > 1 {
 
+		fmt.Printf("Condition non-final, current shape = %d\nStack = ", matrixShape[0])
+		fmt.Println(stack.Cards)
+
 		for i := 0; i < matrixShape[0]; i++ {
-			// return new stack of stack ... of stack whose vals are nil
-			ret := MakeStack().makeStackMatrixFrom1D(matrixShape[1:], keys, vals, globalI)
 			// insert this return value into a card of our current stack
-			stack.Cards = append(stack.Cards, MakeCard(ret, nil, i))
+			stack.Cards = append(stack.Cards, MakeCard(
+				MakeStack().makeStackMatrixFrom1D(matrixShape[1:], keys, vals, globalI), nil, i))
 		}
+
+		ret = stack
 
 	// no more stacks to make, insert elements into and return current stack
 	} else {
+
+		ret = MakeStack()
 		
 		for i := 0; i < matrixShape[0]; i++ {
 			c := MakeCard()
@@ -671,11 +678,16 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []
 			if updated {
 				*globalI++
 			}
-			stack.Cards = append(stack.Cards, c)
+			ret.Cards = append(ret.Cards, c)
 		}
-		ret = stack
+
+		fmt.Printf("Condition final, current shape = %d\nStack = ", matrixShape[0])
+		fmt.Println(ret.Cards)
 
 	}
+
+	// update indices in this layer
+	setIndices(stack.Cards)
 
 	// return
 	return
@@ -731,6 +743,9 @@ func (stack *Stack) makeStackMatrixFromND(keys, vals any) (ret *Stack) {
 			stack.Cards = append(stack.Cards, c)
 		}
 	}
+
+	// update indices in this layer
+	setIndices(stack.Cards)
 
 	// return
 	return stack

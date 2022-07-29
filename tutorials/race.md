@@ -118,12 +118,11 @@ taskB := MakeStack(taskA, start.GetMany(FIND_Vals, taskA, RETURN_Vals).Unique(TY
 
  // TASK C
 taskC := taskB.Clone().Replace(RETURN_Cards, pairsToInsert, FIND_Lambda, func(stack *Stack, card *Card)bool {
-    v := card.Val
-    return 1 < v && v < 3
+    return 1 < card.Val && card.Val < 3
 })
 ```
 
-`lines: 9`
+`lines: 8`
 
 <h2>Conclusion</h2>
 
