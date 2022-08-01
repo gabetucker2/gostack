@@ -135,6 +135,9 @@ func test_GetDeepest(stack *Stack) (deepest []int, stacks []*Stack) {
 /** return whether len(cards) == cards.size */
 func test_LenAndSize(stack *Stack, size ...int) bool {
 
+	
+
+
 	test := true
 	if len(size) == 1 {
 

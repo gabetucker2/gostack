@@ -2,6 +2,7 @@
 GABE:
 Central:
 * Replace append loops with append(x, y...)
+* Add Depth variable to stack
 * Add deepPrint support
 * Add ToSlice function?
 * Case testing

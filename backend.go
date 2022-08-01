@@ -630,6 +630,30 @@ func unpackArray(arr any) []any {
 	return m
 }*/
 
+/** Assuming normally-shaped matrix, returns the depth of this stack */
+func (stack *Stack) getStackDepth() (depth int) {
+	
+	if stack.Size > 0 {
+
+		c := stack.Cards[0]
+
+		isStack := false
+		switch c.Val.(type) {
+		case *Stack:
+			isStack = true
+			depth = c.Val.(*Stack).getStackDepth() + 1
+		}
+
+		if !isStack {
+			depth = 1
+		}
+
+	}
+
+	return
+
+}
+
 /** Recursively add elements from 1D array to stack of matrix shape resembling `matrixShape`
  
  @receiver stack type{*Stack}
@@ -662,7 +686,7 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []
 	// no more stacks to make, insert elements into and return current stack
 	} else {
 
-		ret = MakeStack()
+		ret = stack
 		
 		for i := 0; i < matrixShape[0]; i++ {
 			c := MakeCard()
