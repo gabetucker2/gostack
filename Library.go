@@ -100,8 +100,7 @@ func MakeStack(variadic ...any) *Stack {
 	}
 
 	// property sets
-	stack.Size = len(stack.Cards)
-	setIndices(stack.Cards)
+	stack.setStackProperties()
 
 	// return
 	return stack
@@ -267,7 +266,7 @@ func MakeStackMatrix(variadic ...any) *Stack {
 	}
 
 	// set properties
-	stack.Size = len(stack.Cards)
+	stack.setStackProperties()
 
 	// return
 	return stack
@@ -315,8 +314,7 @@ func (stack *Stack) StripStackMatrix(variadic ...any) *Stack {
 	}
 
 	// set properties
-	newStack.Size = len(newStack.Cards)
-	setIndices(newStack.Cards)
+	newStack.setStackProperties()
 
 	// return
 	return newStack
@@ -409,6 +407,7 @@ func (stack *Stack) Empty() *Stack {
 
 	// clear stack.Cards
 	stack.Size = 0
+	stack.Depth = 1
 	stack.Cards = []*Card{} // avoid replacing stack object
 
 	// return
@@ -467,6 +466,7 @@ func (stack *Stack) Clone(variadic ...any) *Stack {
 	// init
 	clone := new(Stack)
 	clone.Size = stack.Size
+	clone.Depth = stack.Depth
 	if cloneCards.(bool) {
 		for i := range stack.Cards {
 			clone.Cards = append(clone.Cards, stack.Cards[i].Clone(_cloneKeys, _cloneVals))
@@ -509,8 +509,7 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...any) *Stack {
 	*stack = *stack.deepSearchHandler("Unique", false, FIND_All, nil, matchByType, deepSearchType, depth, typeType, uniqueType, nil, nil, nil, nil, nil, nil, nil, nil)
 
 	// set properties
-	stack.Size = len(stack.Cards)
-	setIndices(stack.Cards)
+	stack.setStackProperties()
 
 	return stack
 
@@ -558,6 +557,8 @@ func (stack *Stack) Flip() *Stack {
 
 	// update
 	stack.Cards = newCards
+
+	// set indices
 	setIndices(stack.Cards)
 
 	// return
@@ -614,6 +615,7 @@ func (stack *Stack) Sort(lambda func(*Card, *Stack, ...any) (ORDER, int), variad
 
 	// main
 	sortIterator(stack, lambda, deepSearchType.(DEEPSEARCH), depth.(int))
+
 }
 
 /** Iterate through a stack calling your lambda function on each card
@@ -634,6 +636,7 @@ func (stack *Stack) Lambda(lambda func(*Card, ...any), variadic ...any) {
 
 	// main
 	generalIterator(stack, lambda, deepSearchType.(DEEPSEARCH), depth.(int))
+
 }
 
 /** Adds to a stack of cards or a cards at (each) position(s) and returns `stack`
@@ -818,8 +821,7 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceData any, findType FIND,
 	}
 
 	// update properties
-	stack.Size = len(stack.Cards)
-	setIndices(stack.Cards)
+	stack.setStackProperties()
 
 	// return
 	return
@@ -861,8 +863,7 @@ func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceData any, findType F
 	}
 
 	// update properties
-	stack.Size = len(stack.Cards)
-	setIndices(stack.Cards)
+	stack.setStackProperties()
 
 	// return
 	return

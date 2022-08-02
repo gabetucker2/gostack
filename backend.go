@@ -125,8 +125,7 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 		}
 		
 		// finalize stackClone in preparation for return
-		stackClone.Size = len(stackClone.Cards)
-		setIndices(stackClone.Cards)
+		stackClone.setStackProperties()
 		ret = stackClone
 
 	} else {
@@ -225,8 +224,8 @@ func getIterator(stack *Stack, lambda func(*Card, ...any) bool, deepSearchType D
 		}
 	}
 	stack.Cards = filteredCards
-	stack.Size = len(stack.Cards)
-	setIndices(stack.Cards)
+	stack.setStackProperties()
+
 }
 
 /** Passes each card into the lambda function iteratively
@@ -243,9 +242,9 @@ func generalIterator(stack *Stack, lambda func(*Card, ...any), deepSearchType DE
 	for i := range subStack.Cards {
 		// use the card object so that card can be updated by the lambda expression
 		lambda(subStack.Cards[i], subStack)
-		setIndices(subStack.Cards) // procedurally update indices on backend
+		subStack.setStackProperties()
 	}
-	subStack.Size = len(subStack.Cards)
+	subStack.setStackProperties()
 }
 
 /** Passes each card into the lambda function iteratively, updating to a new 1D stack
@@ -264,8 +263,8 @@ func sortIterator(stack *Stack, lambda func(*Card, *Stack, ...any) (ORDER, int),
 		// move from the old position to the new position
 		subStack.Move(FIND_Idx, newOrder, FIND_Idx, i, newIdx)
 	}
-	stack.Cards = subStack.Cards
-	stack.Size = len(stack.Cards)
+	stack.setStackProperties()
+	
 }
 
 /** Returns an [][]int of index vertices representing the order of indices needed to access targeted position(s) in `stack`, with []*Card for pure card values
@@ -710,8 +709,8 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []
 
 	}
 
-	// update indices in this layer
-	setIndices(stack.Cards)
+	// update properties in this layer
+	stack.setStackProperties()
 
 	// return
 	return
@@ -768,10 +767,17 @@ func (stack *Stack) makeStackMatrixFromND(keys, vals any) (ret *Stack) {
 		}
 	}
 
-	// update indices in this layer
-	setIndices(stack.Cards)
+	// update properties in this layer
+	stack.setStackProperties()
 
 	// return
 	return stack
 
+}
+
+/** Updates a stack's Size, Depth, and Card Indices */
+func (stack *Stack) setStackProperties() {
+	stack.Size = len(stack.Cards)
+	stack.Depth = stack.getStackDepth()
+	setIndices(stack.Cards)
 }

@@ -224,6 +224,8 @@
  >> **Cards** *[]\*Card*
  >
  >> **Size** *int*
+ >
+ >> **Depth** *int*
 
  > **card** *Card*
  >> **Idx** *int*
@@ -342,6 +344,9 @@
  >>
  >> `Size` *int*
  >>> Returns the cardinality (i.e., `len(stack.cards)`) of this Stack
+ >>
+ >> `Depth` *int*
+ >>> Returns the dimensionality of this Stack, assuming it is uniform
 
 <h4 name = "card">Card</h4>
 

@@ -9,6 +9,7 @@ type Card struct {
 type Stack struct {
 	Cards []*Card
 	Size  int
+	Depth int
 }
 
 type RETURN int
