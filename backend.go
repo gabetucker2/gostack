@@ -2,18 +2,18 @@ package gostack
 
 import (
 	"reflect"
-	"fmt"
 )
 
 /** Performs the function using a uniform framework for performing deepSearches
 
 @shorthand Just pass the proper variables (or nil) into this function from Library.go, and this function will handle the rest
 */
-func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, findData, matchByType, deepSearchType, depth, typeType, uniqueType, insert, orderType, findData_to, findType_to, matchByType_to, cloneType1, cloneType2, cloneType3 any) (ret *Stack) {
+func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, findData, returnType, matchByType, deepSearchType, depth, typeType, uniqueType, insert, orderType, findData_to, findType_to, matchByType_to, cloneType1, cloneType2, cloneType3 any) (ret *Stack) {
 
 	// 0) set defaults
 	setORDERDefaultIfNil(&orderType)
 	setFINDDefaultIfNil(&findType)
+	setMATCHBYDefaultIfNil(&returnType)
 	setMATCHBYDefaultIfNil(&matchByType)
 	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	setDepthDefaultIfNil(&depth)
@@ -103,18 +103,49 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 
 			case "Get":
 
-				// card which we will transform (if necessary) to insert
-				insertCard := targetCard
+				var insertCard *Card
 
-				// clone if necessary
-				if cloneType1 == CLONE_True {
-					insertCard = insertCard.Clone()
-				}
-				if cloneType2 == CLONE_True {
-					insertCard.Key = cloneInterface(insertCard.Key)
-				}
-				if cloneType3 == CLONE_True {
-					insertCard.Val = cloneInterface(insertCard.Val)
+				switch returnType {
+				case RETURN_Cards:
+
+					// card which we will transform (if necessary) to insert
+					insertCard = targetCard
+
+					// clone if necessary
+					if cloneType1 == CLONE_True {
+						insertCard = insertCard.Clone()
+					}
+					if cloneType2 == CLONE_True {
+						insertCard.Key = cloneInterface(insertCard.Key)
+					}
+					if cloneType3 == CLONE_True {
+						insertCard.Val = cloneInterface(insertCard.Val)
+					}
+
+				case RETURN_Idxs:
+
+					insertCard = new(Card)
+					insertCard.Val = i
+					if cloneType1 == CLONE_True {
+						insertCard.Val = cloneInterface(insertCard.Val)
+					}
+
+				case RETURN_Keys:
+
+					insertCard = new(Card)
+					insertCard.Val = targetCard.Key
+					if cloneType1 == CLONE_True {
+						insertCard.Val = cloneInterface(insertCard.Val)
+					}
+
+				case RETURN_Vals:
+
+					insertCard = new(Card)
+					insertCard.Val = targetCard.Val
+					if cloneType1 == CLONE_True {
+						insertCard.Val = cloneInterface(insertCard.Val)
+					}
+
 				}
 
 				// get targeted card OR nil
@@ -671,9 +702,6 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []
 	// make stack
 	if len(matrixShape) > 1 {
 
-		fmt.Printf("Condition non-final, current shape = %d\nStack = ", matrixShape[0])
-		fmt.Println(stack.Cards)
-
 		for i := 0; i < matrixShape[0]; i++ {
 			// insert this return value into a card of our current stack
 			stack.Cards = append(stack.Cards, MakeCard(
@@ -703,9 +731,6 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []
 			}
 			ret.Cards = append(ret.Cards, c)
 		}
-
-		fmt.Printf("Condition final, current shape = %d\nStack = ", matrixShape[0])
-		fmt.Println(ret.Cards)
 
 	}
 

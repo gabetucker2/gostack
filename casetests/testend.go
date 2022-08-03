@@ -10,8 +10,8 @@ import (
 )
 
 /** I hate Go.
- This exists only so that warnings are no longer suggested for private functions/variables used by other scripts in this package.
- */
+This exists only so that warnings are no longer suggested for private functions/variables used by other scripts in this package.
+*/
 func removeWarning(...any) { test_SampleStack() }
 
 // test variables (test with these variables only after MakeCard's test)
@@ -113,7 +113,7 @@ func test_StackEqualArrayOrMap(stack *Stack, _vals, _keys any, _ma any) bool {
 }
 
 /** Return whether len(cards) == cards.size and whether depth measures are accurate */
-func test_LenAndSizeAndDepth(stack *Stack, size []int, depth ...int) (test bool) {
+func test_StackProperties(stack *Stack, size []int, depth ...int) (test bool) {
 
 	/*
 
@@ -152,26 +152,19 @@ func test_LenAndSizeAndDepth(stack *Stack, size []int, depth ...int) (test bool)
 	} else {
 		// else iterate through cards in stack, test on each of them
 
-		/////////////////////////////////
-		for _, s := range size { // get size[0]
-			fmt.Printf("s: %d\n", s)
-			for i := 0; i < s; i++ {
-				fmt.Printf("i: %d, %t\n", i, !test && stack.Depth > 0)
-				if !test && stack.Depth > 0 {
-					if len(size) > 1 {
-						if stack.Size == len(stack.Cards) {
-							test = test_LenAndSizeAndDepth(stack, size[1:])	
-						}
-					} else {
-						test = true
-						break
-					}
-				}
+		for i := range stack.Cards {
+			c := stack.Cards[i]
+
+			switch c.Val.(type) {
+			case *Stack:
+				test = test_StackProperties(c.Val.(*Stack), size[1:], depth[0] + 1)
 			}
+
+			if !test { break }
 		}
-		////////////////////////////////
+
 	}
-	fmt.Printf("test: %t\n", test)
+	
 	return
 
 }

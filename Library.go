@@ -480,7 +480,7 @@ func (stack *Stack) Clone(variadic ...any) *Stack {
 
 }
 
-/** Removes all cards from `stack` which share the same field value as another card in that stack
+/** Removes all cards from `stack` which share the same field value as another card in that stack and returns the new stack
  Assuming elements represent the values of cards in the pre-existing stack,
  Stack{"Hi", "Hey", "Hello", "Hi", "Hey", "Howdy"}.Unique(TYPE_Val) => Stack{"Hi", "Hey", "Hello", "Howdy"}
 
@@ -506,7 +506,7 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...any) *Stack {
 	unpackVariadic(variadic, &matchByType, &deepSearchType, &depth, &uniqueType)
 
 	// allow deepSearchHandler to handle Unique
-	*stack = *stack.deepSearchHandler("Unique", false, FIND_All, nil, matchByType, deepSearchType, depth, typeType, uniqueType, nil, nil, nil, nil, nil, nil, nil, nil)
+	*stack = *stack.deepSearchHandler("Unique", false, FIND_All, nil, nil, matchByType, deepSearchType, depth, typeType, uniqueType, nil, nil, nil, nil, nil, nil, nil, nil)
 
 	// set properties
 	stack.setStackProperties()
@@ -674,7 +674,7 @@ func (stack *Stack) Add(insert any, variadic ...any) *Stack {
 	unpackVariadic(variadic, &orderType, &findType, &findData, &matchByType, &deepSearchType, &depth)
 
 	// allow deepSearchHandler to handle function
-	*stack = *stack.deepSearchHandler("Add", true, findType, findData, matchByType, deepSearchType, depth, nil, nil, insert, orderType, nil, nil, nil, nil, nil, nil)
+	*stack = *stack.deepSearchHandler("Add", true, findType, findData, nil, matchByType, deepSearchType, depth, nil, nil, insert, orderType, nil, nil, nil, nil, nil, nil)
 
 	// allow deepSearchHandler to take care of function
 	return stack
@@ -764,7 +764,7 @@ func (stack *Stack) Get(variadic ...any) (ret *Card) {
 	unpackVariadic(variadic, &findType, &findData, &matchByType, &clonesType_card, &clonesType_key, &clonesType_val, &deepSearchType, &depth)
 
 	// allow deepSearchHandler to take care of function
-	return stack.deepSearchHandler("Get", true, findType, findData, matchByType, deepSearchType, depth, nil, nil, nil, nil, nil, nil, nil, clonesType_card, clonesType_key, clonesType_val).Cards[0]
+	return stack.deepSearchHandler("Get", true, findType, findData, nil, matchByType, deepSearchType, depth, nil, nil, nil, nil, nil, nil, nil, clonesType_card, clonesType_key, clonesType_val).Cards[0]
 
 }
 
@@ -797,7 +797,7 @@ func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
 	unpackVariadic(variadic, &findData, &returnType, &matchByType, &clonesType, &clonesType_keys, &clonesType_vals, &deepSearchType, &depth)
 
 	// allow deepSearchHandler to take care of function
-	return stack.deepSearchHandler("Get", false, findType, findData, matchByType, deepSearchType, depth, nil, nil, nil, nil, nil, nil, nil, clonesType, clonesType_keys, clonesType_vals)
+	return stack.deepSearchHandler("Get", false, findType, findData, returnType, matchByType, deepSearchType, depth, nil, nil, nil, nil, nil, nil, nil, clonesType, clonesType_keys, clonesType_vals)
 
 }
 

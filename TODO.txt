@@ -1,7 +1,6 @@
 ---------------------------------------------------------------
 GABE:
 Central:
-* Integrate returnType into deepSearchHandler
 * Switch matchbytype and returntype order in XMany
 * Replace append loops with append(x, y...)
 * Add matrix transformation to race tutorial

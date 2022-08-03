@@ -87,17 +87,17 @@ func case_MakeStack(funcName string) {
 	}
 
 	conditions := []bool{
-		test_LenAndSizeAndDepth(stack6, []int{0}),
+		test_StackProperties(stack6, []int{0}),
 		test_IdxsAreGood(stack1),
 		test_IdxsAreGood(stack2),
 		test_IdxsAreGood(stack3),
 		test_IdxsAreGood(stack4),
 		test_IdxsAreGood(stack5),
-		test_LenAndSizeAndDepth(stack1, []int{3}),
-		test_LenAndSizeAndDepth(stack2, []int{3}),
-		test_LenAndSizeAndDepth(stack3, []int{3}),
-		test_LenAndSizeAndDepth(stack4, []int{3}),
-		test_LenAndSizeAndDepth(stack5, []int{9}),
+		test_StackProperties(stack1, []int{3}),
+		test_StackProperties(stack2, []int{3}),
+		test_StackProperties(stack3, []int{3}),
+		test_StackProperties(stack4, []int{3}),
+		test_StackProperties(stack5, []int{9}),
 		test_StackEqualArrayOrMap(stack1, nil, nil, map1),
 		test_StackEqualArrayOrMap(stack2, arrVals, nil, nil),
 		test_StackEqualArrayOrMap(stack3, arrVals, arrKeys, nil),
@@ -169,11 +169,11 @@ func case_MakeStackMatrix(funcName string) {
 		test_IdxsAreGood(stack8),
 		test_IdxsAreGood(stack9),
 		test_IdxsAreGood(stack10),
-		test_LenAndSizeAndDepth(stack5, []int{0}),
-		test_LenAndSizeAndDepth(stack7, matrixShape),
-		test_LenAndSizeAndDepth(stack8, matrixShape),
-		test_LenAndSizeAndDepth(stack9, matrixShape),
-		test_LenAndSizeAndDepth(stack10, matrixShape),
+		test_StackProperties(stack5, []int{0}),
+		test_StackProperties(stack7, matrixShape),
+		test_StackProperties(stack8, matrixShape),
+		test_StackProperties(stack9, matrixShape),
+		test_StackProperties(stack10, matrixShape),
 	}
 
 	test_End(funcName, conditions)
