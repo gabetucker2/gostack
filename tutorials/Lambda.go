@@ -70,7 +70,7 @@ func Lambda() {
 	//////////////////////////////////
 
 	// val in range
-	makeSampleStack().Get(func(card *Card) bool {
+	makeSampleStack().Get(FIND_Lambda, func(card *Card) bool {
 		v := card.Val.(int)
 		return 5 < v && v < 14 && v%2 == 0
 	}) // 10, 12

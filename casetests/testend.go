@@ -112,27 +112,64 @@ func test_StackEqualArrayOrMap(stack *Stack, _vals, _keys any, _ma any) bool {
 	return true
 }
 
-/** Return whether len(cards) == cards.size */
-func test_LenAndSize(stack *Stack, size []int) (test bool) {
+/** Return whether len(cards) == cards.size and whether depth measures are accurate */
+func test_LenAndSizeAndDepth(stack *Stack, size []int, depth ...int) (test bool) {
 
-	if size[0] == 0 { test = true }
-	for _, s := range size { // get size[0]
-		fmt.Printf("s: %d\n", s)
-		for i := 0; i < s; i++ {
-			fmt.Printf("i: %d, %t\n", i, !test && stack.Depth > 0)
-			if !test && stack.Depth > 0 {
-				fmt.Println("PASS")
-				if len(size) > 1 {
-					if stack.Size == len(stack.Cards) {
-						test = test_LenAndSize(stack, size[1:])	
+	/*
+
+	PSEUDOCODE OUTLINE:
+
+	// depth
+
+	test = true
+
+	if depth == 0
+		depth = 1 // initialize
+	
+	if stack.Size != len(stack.Cards) || stack.Depth != depth
+		test = false
+	else
+		for each card in stack
+			if card has a stack
+				test = recursive call(card.Val.(*Stack), size[1:], depth + 1)
+			if !test
+				break
+	
+	return
+
+	*/
+
+	test = true
+
+	// initialize depth on first call
+	if len(depth) == 0 {
+		depth[0] = 1
+	}
+
+	if stack.Size != len(stack.Cards) || stack.Depth != depth[0] {
+		// if invalid condition on test
+		test = false
+	} else {
+		// else iterate through cards in stack, test on each of them
+
+		/////////////////////////////////
+		for _, s := range size { // get size[0]
+			fmt.Printf("s: %d\n", s)
+			for i := 0; i < s; i++ {
+				fmt.Printf("i: %d, %t\n", i, !test && stack.Depth > 0)
+				if !test && stack.Depth > 0 {
+					if len(size) > 1 {
+						if stack.Size == len(stack.Cards) {
+							test = test_LenAndSizeAndDepth(stack, size[1:])	
+						}
+					} else {
+						test = true
+						break
 					}
-				} else {
-					test = true
-					break
 				}
 			}
 		}
-		//if true {break}
+		////////////////////////////////
 	}
 	fmt.Printf("test: %t\n", test)
 	return

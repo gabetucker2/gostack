@@ -1,7 +1,10 @@
 ---------------------------------------------------------------
 GABE:
 Central:
+* Integrate returnType into deepSearchHandler
+* Switch matchbytype and returntype order in XMany
 * Replace append loops with append(x, y...)
+* Add matrix transformation to race tutorial
 * Add Depth variable to stack
 * Case testing
  - Implement casting interfaces as respective pointer type when assigning... see test.go, ensure wherever a card is gotten that a new pointer variable is returned
@@ -26,7 +29,6 @@ Peripheral:
 
 ---------------------------------------------------------------
 ANDY:
-* Make it so that stack.Print() prints all stacks within stack cleanly (deep printing)
 * Update JDoc documentation to what the actual jcomments are for functions (just copy+paste)
 * Add IsEmpty() function (just stack.Has()) to bootstrap, update push and pop in bootstrap (should just be the same as add and extract)
 * Replace unnecessary for loops with slices when there's no efficiency loss

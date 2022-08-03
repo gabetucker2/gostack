@@ -535,7 +535,7 @@
 
 <h3 name = "MakeCard">MakeCard</h3>
 
- > `gostack.MakeCard(...val, ...key, ...idx)`
+ `gostack.MakeCard(...val, ...key, ...idx)`
  ```
  Makes a card with inputted vals and keys
 
@@ -864,25 +864,27 @@
  
 <h3 name = "GetMany">GetMany</h3>
  
- `stack.GetMany(findType, ...findData, ...matchByType, ...returnType, ...clonesType, ...clonesType_keys, ...clonesType_vals)`
+ `stack.GetMany(findType, ...findData, ...returnType, ...matchByType, ...clonesType, ...clonesType_keys, ...clonesType_vals)`
  ```
  Gets a stack from specified parameters in a stack
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{any} default nil
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `returnType` type{RETURN} default RETURN_Cards
- @param optional `clonesType` type{CLONES} default CLONE_FALSE
- @param optional `clonesType_keys` type{CLONES} default CLONE_FALSE
- @param optional `clonesType_vals` type{CLONES} default CLONE_FALSE
- @returns type{*Stack} the new stack
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `clonesType` type{CLONES} default CLONE_False
+ @param optional `clonesType_keys` type{CLONES} default CLONE_False
+ @param optional `clonesType_vals` type{CLONES} default CLONE_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `depth` type{int} default -1 (deepest)
+ @returns type{*Stack} the new stack (if find fails, then an empty stack)
  @constructs type{*Stack} new stack of specified values from specified cards in `stack`
  @requires
   * `MakeStack()` has been implemented
   * `clonesType_keys` and `clonesType_vals` are only passed if `returnType` == RETURN_Cards
  @ensures
-  * CLONE_True means the vals of cards in the returned stack are not the original object that was gotten
+  * CLONE_True means the cards in the returned stack are clones
   * CLONE_True for `clonesType_keys` means the cards in the returned stack keys are clones
   * CLONE_True for `clonesType_vals` means the cards in the returned stack vals are clones
  ```
@@ -907,21 +909,23 @@
  
 <h3 name = "ReplaceMany">ReplaceMany</h3>
  
- `stack.Replace(replaceType, replaceData, findType, ...findData, ...matchByType)`
+ `stack.Replace(replaceType, replaceData, findType, ...findData, ...returnType, ...matchByType)`
  ```
-  Returns a stack whose values are clones of the original fields updated to `replaceData`
+ Returns a stack whose values are the original fields updated to `replaceData`
  
  @receiver `stack` type{*Stack}
  @param `replaceType` type{REPLACE}
  @param `replaceData` type{any}
  @param `findType` type{FIND}
  @param optional `findData` type{any} default nil
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `returnType` type{RETURN} default RETURN_Cards
- @returns type{*Stack} a stack whose values are the extracted cards pre-update
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `depth` type{int} default -1 (deepest)
+ @returns type{*Stack} a stack whose values are the extracted cards pre-update (if find fails, then an empty stack)
  @updates all found cards to `replaceData`
  @requires `stack.GetMany()` has been implemented
- @ensures if `replaceData` is nil and `replaceType is REPLACE_Card`, the cards found will be removed from `stack`
+ @ensures IF `replaceData` is nil and `replaceType is REPLACE_Card`, the cards found will be removed from `stack`
  ```
  
 <h3 name = "Update">Update</h3>
@@ -970,16 +974,18 @@
  
 <h3 name = "ExtractMany">ExtractMany</h3>
  
- `stack.ExtractMany(findType, ...findData, ...matchByType, ...returnType)`
+ `stack.ExtractMany(findType, ...findData, ...returnType, ...matchByType)`
  ```
- Gets and removes a set of cards from `stack`
+ Gets and removes a set of data from `stack`
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{any} default nil
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @param optional `returnType` type{RETURN} default RETURN_Cards
- @returns type{*Stack} the extracted card OR nil if invalid FIND
+ @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `depth` type{int} default -1 (deepest)
+ @returns type{*Stack} the extracted card (if find fails, then an empty stack)
  @updates `stack` to no longer have found cards
  @requires `stack.ReplaceMany()` has been implemented
  ```
