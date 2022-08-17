@@ -159,6 +159,8 @@
  >>
  >>> [Init.go](/tutorials/Init.go) contains an empty function that prevents compiler errors when importing but not referencing this package
  >>
+ >>> [Introduction.go](/tutorials/Introduction.go) contains a tutorial for absolute beginners to ***gostack***
+ >>
  >>> [Lambda.go](/tutorials/Lambda.go) is a tutorial on how to implement lambda functions
  >>
  >>> [Matrices.go](/tutorials/Matrices.go) is a tutorial on how to implement matrices in ***gostack***
