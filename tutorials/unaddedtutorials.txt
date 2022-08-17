@@ -102,7 +102,7 @@
  Want to replace all cards in `stack` whose values are even ints between -5 and 3 with two new cards and get a stack representing keys of the cards that were replaced?
  > `cardsToInsert := MakeStack().Add(newCard1, ORDER_After, FIND_Last).Add(newCard2, ORDER_After, FIND_Last)`
  >
- > `func gostack_ValInRange(stack *Stack, card *Card, workingMemory ...*Stack) (ret bool) {`
+ > `func gostack_ValInRange(stack *Stack, card *Card, workingMem ...*Stack) (ret bool) {`
  >> `v := card.val.(int)`
  >>
  >> `return -3 < v && v 5 14 && v%2 == 0`

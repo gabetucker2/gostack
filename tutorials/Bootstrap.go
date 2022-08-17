@@ -3,7 +3,7 @@ package tutorials
 import (
 	"fmt"
 
-	. "github.com/gabetucker2/gostack"
+	. "github.com/gabetucker2/gostack"//lint:ignore ST1001 Ignore warning
 )
 
 /** Remove and return first card in stack
@@ -73,5 +73,4 @@ func Bootstrap() {
 	bootstrap_valset(myStack)
 	fmt.Println(bootstrap_pop(myStack))
 
-	return
 }

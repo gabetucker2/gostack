@@ -1,7 +1,7 @@
 package gostack
 
 import (
-	"reflect"
+	"github.com/gabetucker2/gogenerics"
 )
 
 /** Performs the function using a uniform framework for performing deepSearches
@@ -116,10 +116,10 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 						insertCard = insertCard.Clone()
 					}
 					if cloneType2 == CLONE_True {
-						insertCard.Key = cloneInterface(insertCard.Key)
+						insertCard.Key = gogenerics.CloneInterface(insertCard.Key)
 					}
 					if cloneType3 == CLONE_True {
-						insertCard.Val = cloneInterface(insertCard.Val)
+						insertCard.Val = gogenerics.CloneInterface(insertCard.Val)
 					}
 
 				case RETURN_Idxs:
@@ -127,7 +127,7 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 					insertCard = new(Card)
 					insertCard.Val = i
 					if cloneType1 == CLONE_True {
-						insertCard.Val = cloneInterface(insertCard.Val)
+						insertCard.Val = gogenerics.CloneInterface(insertCard.Val)
 					}
 
 				case RETURN_Keys:
@@ -135,7 +135,7 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 					insertCard = new(Card)
 					insertCard.Val = targetCard.Key
 					if cloneType1 == CLONE_True {
-						insertCard.Val = cloneInterface(insertCard.Val)
+						insertCard.Val = gogenerics.CloneInterface(insertCard.Val)
 					}
 
 				case RETURN_Vals:
@@ -143,7 +143,7 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 					insertCard = new(Card)
 					insertCard.Val = targetCard.Val
 					if cloneType1 == CLONE_True {
-						insertCard.Val = cloneInterface(insertCard.Val)
+						insertCard.Val = gogenerics.CloneInterface(insertCard.Val)
 					}
 
 				}
@@ -179,15 +179,6 @@ func setIndices(cards []*Card) {
 	}
 }
 
-/** Returns a clone of this interface
-
-@param `toClone` type{any}
-@returns type{any}
-*/
-func cloneInterface(toClone any) any {
-	return reflect.New(reflect.ValueOf(toClone).Elem().Type()).Interface()
-}
-
 /** Removes an element at the index within an array (only works for cards)
 
  @param `arr` type{[]*Card{}}
@@ -217,27 +208,12 @@ func ifElse(test bool, out1, out2 any) any {
 	if test { return out1 } else { return out2 }
 }
 
-/** Sets a set of variables to the variable set passed into a variadic parameter
 
- @param `variadic` type{...[]any}
- @param `var1, var2, ..., varN` type{any}
- @updates `var1, var2, ..., varN` are set to each of the values in the variadic array, or nil if undefined, respectively
- */
-func unpackVariadic(variadic []any, into ...*any) {
-	vLen := len(variadic)
-	for i, v := range into {
-		if i < vLen {
-			*v = variadic[i]
-		} else {
-			*v = nil
-		}
-	}
-}
 
 /** Removes the cards from a stack for which lambda(card) is false, updating to a new 1D stack
  
  @param `stack` type{*Stack}
- @param `lambda` type{func(*Card, workingMemory) bool}
+ @param `lambda` type{func(*Card, workingMem) bool}
  @param `deepSearchType` type{DEEPSEARCH}
  @param `depth` type{int}
  @returns `stack`
@@ -262,7 +238,7 @@ func getIterator(stack *Stack, lambda func(*Card, ...any) bool, deepSearchType D
 /** Passes each card into the lambda function iteratively
  
  @param `stack` type{*Stack}
- @param `lambda` type{func(*Card, ...workingMemory)}
+ @param `lambda` type{func(*Card, ...workingMem)}
  @param `deepSearchType` type{DEEPSEARCH}
  @param `depth` type{int}
  @updates `stack.Cards` to whatever the `lambda` function specifies
@@ -281,7 +257,7 @@ func generalIterator(stack *Stack, lambda func(*Card, ...any), deepSearchType DE
 /** Passes each card into the lambda function iteratively, updating to a new 1D stack
  
  @param `stack` type{*Stack}
- @param `lambda` type{func(*Card, *Stack, ...workingMemory) (ORDER, int)}
+ @param `lambda` type{func(*Card, *Stack, ...workingMem) (ORDER, int)}
  @param `deepSearchType` type{DEEPSEARCH}
  @param `depth` type{int}
  @updates `stack.Cards` to whatever the `lambda` function specifies
@@ -606,36 +582,6 @@ func (setStack *Stack) updateRespectiveField(replaceType REPLACE, replaceData an
 
 	}
 
-}
-
-/** Returns, from any array type, a version of that array which is converted to type []any
-
- @param `arr` type{any}
- @return type{[]any}
- @requires `arr` is an array
- */
-func unpackArray(arr any) []any {
-    valType := reflect.ValueOf(arr)
-    new := make([]any, valType.Len())
-    for i := 0; i < valType.Len(); i++ {
-        new[i] = valType.Index(i).Interface()
-    }
-    return new
-}
-
-/** Returns, from any map type, a version of that map which is converted to type map[any]any
-
- @param `arr` type{any}
- @return type{[]any}
- @requires `arr` is an array
- */
- func unpackMap(s any) map[any]any {
-	v := reflect.ValueOf(s)
-    m := make(map[any]any, v.Len())
-    for _, k := range v.MapKeys() {
-		m[k.Interface()] = v.MapIndex(k).Interface()
-    }
-    return m
 }
 
 // TODO: FIX LATER

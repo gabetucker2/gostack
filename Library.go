@@ -5,22 +5,23 @@ import (
 	"math/rand"
 	"reflect"
 	"time"
+	"github.com/gabetucker2/gogenerics"
 )
 
 /** Creates a card with inputted val, key, and idx
 
-@param optional `val` type{any} default nil
-@param optional `key` type{any} default nil
-@param optional `idx` type{int} default -1 no pass-by-reference
-@returns type{*Card} the newly-constructed card
-@constructs type{*Card} a newly-constructed card
-@ensures the new card will have val `val`, key `key`, and idx `idx`
+ @param optional `val` type{any} default nil
+ @param optional `key` type{any} default nil
+ @param optional `idx` type{int} default -1 no pass-by-reference
+ @returns type{*Card} the newly-constructed card
+ @constructs type{*Card} a newly-constructed card
+ @ensures the new card will have val `val`, key `key`, and idx `idx`
 */
 func MakeCard(variadic ...any) *Card {
 
 	// unpack variadic into optional parameters
 	var val, key, idx any
-	unpackVariadic(variadic, &val, &key, &idx)
+	gogenerics.UnpackVariadic(variadic, &val, &key, &idx)
 
 	// initialize and set new Card
 	card := new(Card)
@@ -66,7 +67,7 @@ func MakeStack(variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
 	var input1, input2, repeats any
-	unpackVariadic(variadic, &input1, &input2, &repeats)
+	gogenerics.UnpackVariadic(variadic, &input1, &input2, &repeats)
 
 	// set default
 	if repeats == nil {
@@ -83,14 +84,14 @@ func MakeStack(variadic ...any) *Stack {
 			if input2 == nil {
 				matrixShape = 0
 			} else {
-				matrixShape = len(unpackArray(input2))
+				matrixShape = len(gogenerics.UnpackArray(input2))
 			}
 		} else {
 			switch reflect.ValueOf(input1).Kind() {
 			case reflect.Map:
-				matrixShape = len(unpackMap(input1))
+				matrixShape = len(gogenerics.UnpackMap(input1))
 			default: // reflect.Array OR reflect.Slice
-				matrixShape = len(unpackArray(input1))
+				matrixShape = len(gogenerics.UnpackArray(input1))
 			}
 		}
 
@@ -154,7 +155,7 @@ func MakeStackMatrix(variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
 	var input1, input2, matrixShape any
-	unpackVariadic(variadic, &input1, &input2, &matrixShape)
+	gogenerics.UnpackVariadic(variadic, &input1, &input2, &matrixShape)
 
 	stack := new(Stack)
 
@@ -184,7 +185,7 @@ func MakeStackMatrix(variadic ...any) *Stack {
 				// ELSEIF `matrixShape` is passed
 				} else {
 
-					for k, v := range unpackMap(input1) {
+					for k, v := range gogenerics.UnpackMap(input1) {
 						keys = append(keys, k)
 						vals = append(vals, v)
 					}
@@ -195,7 +196,7 @@ func MakeStackMatrix(variadic ...any) *Stack {
 			// ELSEIF `input1` is an array (or slice)...
 			default:
 
-				input1Array := unpackArray(input1)
+				input1Array := gogenerics.UnpackArray(input1)
 
 				// ...and `input2` is not passed
 				if input2 == nil {
@@ -214,7 +215,7 @@ func MakeStackMatrix(variadic ...any) *Stack {
 				// ...and `input2` is an array
 				} else {
 
-					input2Array := unpackArray(input2)
+					input2Array := gogenerics.UnpackArray(input2)
 					
 					// IF no `matrixShape` is passed
 					if matrixShape == nil {
@@ -234,7 +235,7 @@ func MakeStackMatrix(variadic ...any) *Stack {
 		// ELSEIF `input1` is nil and `input2` is an array
 		} else {
 
-			input2Array := unpackArray(input2)
+			input2Array := gogenerics.UnpackArray(input2)
 			
 			// IF no `matrixShape` is passed
 			if matrixShape == nil {
@@ -285,7 +286,7 @@ func (stack *Stack) StripStackMatrix(variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
 	var firstSelection any
-	unpackVariadic(variadic, &firstSelection)
+	gogenerics.UnpackVariadic(variadic, &firstSelection)
 
 	// init
 	newStack := MakeStack()
@@ -370,7 +371,7 @@ func (stack *Stack) ToMatrix(variadic ...any) (matrix []any) {
 
 	// unpack variadic into optional parameters
 	var depth any
-	unpackVariadic(variadic, &depth)
+	gogenerics.UnpackVariadic(variadic, &depth)
 
 	// update depth
 	if depth == nil {
@@ -427,13 +428,13 @@ func (card *Card) Clone(variadic ...any) *Card {
 
 	// unpack variadic into optional parameters
 	var cloneKey, cloneVal any
-	unpackVariadic(variadic, &cloneKey, &cloneVal)
+	gogenerics.UnpackVariadic(variadic, &cloneKey, &cloneVal)
 
 	// init
 	clone := new(Card)
 	clone.Idx = card.Idx
-	clone.Key = ifElse(cloneKey.(bool), cloneInterface(card.Key), card.Key)
-	clone.Val = ifElse(cloneVal.(bool), cloneInterface(card.Val), card.Val)
+	clone.Key = ifElse(cloneKey.(bool), gogenerics.CloneInterface(card.Key), card.Key)
+	clone.Val = ifElse(cloneVal.(bool), gogenerics.CloneInterface(card.Val), card.Val)
 
 	// return
 	return clone
@@ -458,7 +459,7 @@ func (stack *Stack) Clone(variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
 	var cloneCards, cloneKeys, cloneVals any
-	unpackVariadic(variadic, &cloneCards, &cloneKeys, &cloneVals)
+	gogenerics.UnpackVariadic(variadic, &cloneCards, &cloneKeys, &cloneVals)
 	// cast them to bools once so we don't have to do it every iteration
 	_cloneKeys := cloneKeys.(bool)
 	_cloneVals := cloneVals.(bool)
@@ -503,7 +504,7 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
 	var matchByType, deepSearchType, depth, uniqueType any
-	unpackVariadic(variadic, &matchByType, &deepSearchType, &depth, &uniqueType)
+	gogenerics.UnpackVariadic(variadic, &matchByType, &deepSearchType, &depth, &uniqueType)
 
 	// allow deepSearchHandler to handle Unique
 	*stack = *stack.deepSearchHandler("Unique", false, FIND_All, nil, nil, matchByType, deepSearchType, depth, typeType, uniqueType, nil, nil, nil, nil, nil, nil, nil, nil)
@@ -616,19 +617,22 @@ func (stack *Stack) Print(depth ...int) {
  @param `lambda` type{func(*Card, *Stack, ...any) (ORDER, int)}
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
+ @returns `stack`
  @requires
   * `lambda` returns the order (before/after) and index to which to move your card in the stack
   * `lambda` does not update `stack` itself
  @ensures each card in `stack` is passed into your lambda function
  */
-func (stack *Stack) Sort(lambda func(*Card, *Stack, ...any) (ORDER, int), variadic ...any) {
+func (stack *Stack) Sort(lambda func(*Card, *Stack, ...any) (ORDER, int), variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
 	var deepSearchType, depth any
-	unpackVariadic(variadic, &deepSearchType, &depth)
+	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth)
 
 	// main
 	sortIterator(stack, lambda, deepSearchType.(DEEPSEARCH), depth.(int))
+
+	return stack
 
 }
 
@@ -638,18 +642,21 @@ func (stack *Stack) Sort(lambda func(*Card, *Stack, ...any) (ORDER, int), variad
  @param `lambda` type{func(*Card, ...any)}
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
+ @returns `stack`
  @ensures
   * Each card in `stack` is passed into your lambda function
   * `stack` is the first argument passed into your variadic parameter on the first call
  */
-func (stack *Stack) Lambda(lambda func(*Card, ...any), variadic ...any) {
+func (stack *Stack) Lambda(lambda func(*Card, ...any), variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
 	var deepSearchType, depth any
-	unpackVariadic(variadic, &deepSearchType, &depth)
+	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth)
 
 	// main
 	generalIterator(stack, lambda, deepSearchType.(DEEPSEARCH), depth.(int))
+
+	return stack
 
 }
 
@@ -671,7 +678,7 @@ func (stack *Stack) Add(insert any, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
 	var orderType, findType, findData, matchByType, deepSearchType, depth any
-	unpackVariadic(variadic, &orderType, &findType, &findData, &matchByType, &deepSearchType, &depth)
+	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &matchByType, &deepSearchType, &depth)
 
 	// allow deepSearchHandler to handle function
 	*stack = *stack.deepSearchHandler("Add", true, findType, findData, nil, matchByType, deepSearchType, depth, nil, nil, insert, orderType, nil, nil, nil, nil, nil, nil)
@@ -705,7 +712,7 @@ func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, 
 
 	// unpack variadic into optional parameters
 	var findData_from, findData_to, matchByType_from, matchByType_to, deepSearchType_from, deepSearchType_to, depth_from, depth_to any
-	unpackVariadic(variadic, &findData_from, &findData_to, &matchByType_from, &matchByType_to, &deepSearchType_from, &deepSearchType_to, &depth_from, &depth_to)
+	gogenerics.UnpackVariadic(variadic, &findData_from, &findData_to, &matchByType_from, &matchByType_to, &deepSearchType_from, &deepSearchType_to, &depth_from, &depth_to)
 
 	// 1) Get the card to put them before/after
 	to := stack.Get(findType_to, findData_to, matchByType_to, CLONE_False, CLONE_False, CLONE_False, deepSearchType_to, depth_to)
@@ -734,7 +741,7 @@ func (stack *Stack) Has(variadic ...any) bool {
 
 	// unpack variadic into optional parameters
 	var findType, findData, matchByType, deepSearchType, depth any
-	unpackVariadic(variadic, &findType, &findData, &matchByType, &deepSearchType, &depth)
+	gogenerics.UnpackVariadic(variadic, &findType, &findData, &matchByType, &deepSearchType, &depth)
 
 	// return
 	return stack.Get(findType, findData, matchByType, nil, nil, nil, deepSearchType, depth) != nil
@@ -761,7 +768,7 @@ func (stack *Stack) Get(variadic ...any) (ret *Card) {
 
 	// unpack variadic into optional parameters
 	var findType, findData, matchByType, clonesType_card, clonesType_key, clonesType_val, deepSearchType, depth any
-	unpackVariadic(variadic, &findType, &findData, &matchByType, &clonesType_card, &clonesType_key, &clonesType_val, &deepSearchType, &depth)
+	gogenerics.UnpackVariadic(variadic, &findType, &findData, &matchByType, &clonesType_card, &clonesType_key, &clonesType_val, &deepSearchType, &depth)
 
 	// allow deepSearchHandler to take care of function
 	return stack.deepSearchHandler("Get", true, findType, findData, nil, matchByType, deepSearchType, depth, nil, nil, nil, nil, nil, nil, nil, clonesType_card, clonesType_key, clonesType_val).Cards[0]
@@ -794,7 +801,7 @@ func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
 	var findData, returnType, matchByType, clonesType, clonesType_keys, clonesType_vals, deepSearchType, depth any
-	unpackVariadic(variadic, &findData, &returnType, &matchByType, &clonesType, &clonesType_keys, &clonesType_vals, &deepSearchType, &depth)
+	gogenerics.UnpackVariadic(variadic, &findData, &returnType, &matchByType, &clonesType, &clonesType_keys, &clonesType_vals, &deepSearchType, &depth)
 
 	// allow deepSearchHandler to take care of function
 	return stack.deepSearchHandler("Get", false, findType, findData, returnType, matchByType, deepSearchType, depth, nil, nil, nil, nil, nil, nil, nil, clonesType, clonesType_keys, clonesType_vals)
@@ -820,7 +827,7 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceData any, findType FIND,
 
 	// unpack variadic into optional parameters
 	var findData, matchByType, deepSearchType, depth any
-	unpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
+	gogenerics.UnpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
 	
 	// get deep copy of targeted card OR nil
 	ret = stack.Get(findType, findData, matchByType, CLONE_True, CLONE_True, CLONE_True, deepSearchType, depth)
@@ -862,7 +869,7 @@ func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceData any, findType F
 
 	// unpack variadic into optional parameters
 	var findData, returnType, matchByType, deepSearchType, depth any
-	unpackVariadic(variadic, &findData, &returnType, &matchByType, &deepSearchType, &depth)
+	gogenerics.UnpackVariadic(variadic, &findData, &returnType, &matchByType, &deepSearchType, &depth)
 
 	// get deep copy of targeted cards to return
 	ret = stack.GetMany(findType, findData, returnType, matchByType, CLONE_True, CLONE_True, CLONE_True)
@@ -903,7 +910,7 @@ func (stack *Stack) Update(replaceType REPLACE, replaceData any, findType FIND, 
 
 	// unpack variadic into optional parameters
 	var findData, matchByType, deepSearchType, depth any
-	unpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
+	gogenerics.UnpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
 
 	// update stack
 	stack.Replace(replaceType, replaceData, findType, findData, matchByType, deepSearchType, depth)
@@ -932,7 +939,7 @@ func (stack *Stack) UpdateMany(replaceType REPLACE, replaceData any, findType FI
 
 	// unpack variadic into optional parameters
 	var findData, matchByType, deepSearchType, depth any
-	unpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
+	gogenerics.UnpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
 
 	// update stack
 	stack.ReplaceMany(replaceType, replaceData, findType, findData, matchByType, nil, deepSearchType, depth)
@@ -958,7 +965,7 @@ func (stack *Stack) Extract(findType FIND, variadic ...any) *Card {
 
 	// unpack variadic into optional parameters
 	var findData, matchByType, deepSearchType, depth any
-	unpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
+	gogenerics.UnpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
 
 	// return the original value
 	return stack.Replace(REPLACE_Card, nil, findType, findData, matchByType, deepSearchType, depth)
@@ -982,7 +989,7 @@ func (stack *Stack) ExtractMany(findType FIND, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
 	var findData, returnType, matchByType, deepSearchType, depth any
-	unpackVariadic(variadic, &findData, &returnType, &matchByType, &deepSearchType, &depth)
+	gogenerics.UnpackVariadic(variadic, &findData, &returnType, &matchByType, &deepSearchType, &depth)
 
 	// return the original value
 	return stack.ReplaceMany(REPLACE_Card, nil, findType, findData, returnType, matchByType, deepSearchType, depth)
@@ -1005,7 +1012,7 @@ func (stack *Stack) Remove(findType FIND, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
 	var findData, matchByType, deepSearchType, depth any
-	unpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
+	gogenerics.UnpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
 
 	// remove the card
 	stack.Replace(REPLACE_Card, nil, findType, findData, matchByType, deepSearchType, depth)
@@ -1031,7 +1038,7 @@ func (stack *Stack) RemoveMany(findType FIND, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
 	var findData, matchByType, deepSearchType, depth any
-	unpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
+	gogenerics.UnpackVariadic(variadic, &findData, &matchByType, &deepSearchType, &depth)
 
 	// remove the cards
 	stack.ReplaceMany(REPLACE_Card, nil, findType, findData, matchByType, nil, deepSearchType, depth)

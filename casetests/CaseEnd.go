@@ -3,8 +3,7 @@ package casetests
 import (
 	"fmt"
 
-	//lint:ignore ST1001 — we would like to dot import gostack
-	. "github.com/gabetucker2/gostack"
+	. "github.com/gabetucker2/gostack"//lint:ignore ST1001 Ignore warning
 )
 
 // variables
@@ -157,9 +156,7 @@ func case_MakeStackMatrix(funcName string) {
 	//stack4  := MakeStackMatrix(nil, arrDeepKeys) // BAD
 	stack5  := MakeStackMatrix()
 	//stack6  := MakeStackMatrix(shallowMap, nil, matrixShape) // BAD
-	fmt.Println("--------------------------------------------")
 	stack7  := MakeStackMatrix(arrShallowVals, nil, matrixShape) // CHECK
-	fmt.Println("--------------------------------------------")
 	stack8  := MakeStackMatrix(arrShallowKeys, arrShallowVals, matrixShape) // CHECK
 	stack9  := MakeStackMatrix(nil, arrShallowKeys, matrixShape) // CHECK
 	stack10 := MakeStackMatrix(nil, nil, matrixShape) // CHECK

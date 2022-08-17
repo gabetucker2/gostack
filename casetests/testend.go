@@ -119,8 +119,6 @@ func test_StackProperties(stack *Stack, size []int, depth ...int) (test bool) {
 
 	PSEUDOCODE OUTLINE:
 
-	// depth
-
 	test = true
 
 	if depth == 0
@@ -143,7 +141,7 @@ func test_StackProperties(stack *Stack, size []int, depth ...int) (test bool) {
 
 	// initialize depth on first call
 	if len(depth) == 0 {
-		depth[0] = 1
+		depth = append(depth, 1)
 	}
 
 	if stack.Size != len(stack.Cards) || stack.Depth != depth[0] {

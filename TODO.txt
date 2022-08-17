@@ -41,7 +41,7 @@ ANDY:
 * Lambda tutorial updates
  - Replace makeSampleStack() with MakeStack() from frontend.go
  - Implement for values other than ints
- - Make some more lambda function examples which use workingMemory param
+ - Make some more lambda function examples which use workingMem param
  - Remove MainFunc, replace MainFunc calls in Lambda() with Get() and other frontend functions
 * Implement bootstrap functions, take inspiration from common functions in other languages
 * Implement ObjectReference tutorial
