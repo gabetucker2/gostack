@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"reflect"
 	"time"
+
 	"github.com/gabetucker2/gogenerics"
 )
 
@@ -704,9 +705,7 @@ func (stack *Stack) Add(insert any, variadic ...any) *Stack {
  @param optional `depth_to` type{int} default -1 (deepest)
  @returns `stack` if moved OR nil if no move occurred (due to bad find)
  @requires you are not moving a stack to a location within that own stack
- @ensures
-  * `findType_to` gets a set of elements
-  * the first element gotten from `findType_from` is selected as the element to add before or after
+ @ensures a stack of cards, or individual cards, can be targeted
  */
 func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, variadic ...any) *Stack {
 
@@ -714,12 +713,79 @@ func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, 
 	var findData_from, findData_to, matchByType_from, matchByType_to, deepSearchType_from, deepSearchType_to, depth_from, depth_to any
 	gogenerics.UnpackVariadic(variadic, &findData_from, &findData_to, &matchByType_from, &matchByType_to, &deepSearchType_from, &deepSearchType_to, &depth_from, &depth_to)
 
-	// 1) Get the card to put them before/after
-	to := stack.Get(findType_to, findData_to, matchByType_to, CLONE_False, CLONE_False, CLONE_False, deepSearchType_to, depth_to)
-	// 2) Get the ones to move
+	// 1) Get the cards to move
 	from := stack.ExtractMany(findType_from, findData_from, matchByType_from, RETURN_Cards, deepSearchType_from, depth_from)
+	// 2) Get the card to put froms before/after depending on whether before or after
+	var toCard *Card
+	toStack := stack.GetMany(findType_to, findData_to, RETURN_Cards, matchByType_to, CLONE_False, CLONE_False, CLONE_False, deepSearchType_to, depth_to)
+	if orderType == ORDER_After {
+		toCard = toStack.Get(FIND_Last)
+	} else if orderType == ORDER_Before {
+		toCard = toStack.Get(FIND_First)
+	}
 	// 3) Insert 2 to 1 (works since to.Idx is procedurally updated by ExtractMany())
-	stack.Add(from, orderType, FIND_Idx, to.Idx, matchByType_to, deepSearchType_to, depth_to)
+	stack.Add(from, orderType, FIND_Idx, toCard.Idx, matchByType_to, deepSearchType_to, depth_to)
+
+	// return
+	return stack
+
+}
+
+/** Swaps one element or slice with the position of another element or slice
+ 
+ @receiver `stack` type{*Stack}
+ @param `findType_first` type{FIND}
+ @param `findType_second` type{FIND}
+ @param optional `findData_first` type{any} default nil
+ @param optional `findData_second` type{any} default nil
+ @param optional `matchByType_first` type{MATCHBY} default MATCHBY_Object
+ @param optional `matchByType_second` type{MATCHBY} default MATCHBY_Object
+ @param optional `deepSearchType_first` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType_second` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `depth_first` type{int} default -1 (deepest)
+ @param optional `depth_second` type{int} default -1 (deepest)
+ @returns `stack` if moved OR nil if no move occurred (due second bad find)
+ @requires you are not swapping a stack with a location within that own stack
+ @ensures a stack of cards, or individual cards, can be targeted
+ */
+func (stack *Stack) Swap(findType_first FIND, findType_second FIND, variadic ...any) *Stack {
+
+	// unpack variadic insecond optional parameters
+	var findData_first, findData_second, matchByType_first, matchByType_second, deepSearchType_first, deepSearchType_second, depth_first, depth_second any
+	gogenerics.UnpackVariadic(variadic, &findData_first, &findData_second, &matchByType_first, &matchByType_second, &deepSearchType_first, &deepSearchType_second, &depth_first, &depth_second)
+
+	// 1) Get the first and second cards being targeted
+	firsts := stack.GetMany(findType_second, findData_second, RETURN_Cards, matchByType_second, CLONE_False, CLONE_False, CLONE_False, deepSearchType_second, depth_second)
+	seconds := stack.GetMany(findType_first, findData_first, RETURN_Cards, matchByType_first, CLONE_False, CLONE_False, CLONE_False, deepSearchType_first, depth_first)
+	// 2) Determine which card is before the other in the stack.  If the second is before the first, switch the first variable and the second variable and all corresponding variables.
+	if seconds.Cards[0].Idx < firsts.Cards[0].Idx {
+		_tempFirst := firsts//lint:ignore SA4006 Ignore warning
+		firsts = seconds
+		seconds = _tempFirst//lint:ignore SA4006 Ignore warning
+
+		_tempFindData_first := findData_first
+		findData_first = findData_second
+		findData_second = _tempFindData_first
+
+		_tempMatchByType_first := matchByType_first
+		matchByType_first = matchByType_second
+		matchByType_second = _tempMatchByType_first
+
+		_tempDeepSearchType_first := deepSearchType_first
+		deepSearchType_first = deepSearchType_second
+		deepSearchType_second = _tempDeepSearchType_first
+
+		_tempDepth_first := depth_first
+		depth_first = depth_second
+		depth_second = _tempDepth_first
+	}
+	// 3) Now, in order second preserve the integrity of indices should the client choose second use FIND_Idx(s)...
+	//    * Insert a copy of firsts after seconds,
+	stack.Add(firsts, ORDER_After, findData_second, matchByType_second, deepSearchType_second, depth_second)
+	//    * move second after first,
+	stack.Move(findType_second, ORDER_After, findType_first, findData_first, findData_second, matchByType_first, matchByType_second, deepSearchType_first, deepSearchType_second, depth_first, depth_second)
+	//    * and remove the original copy of first
+	stack.Remove(findType_first, findData_first, matchByType_first, deepSearchType_first, depth_first)
 
 	// return
 	return stack

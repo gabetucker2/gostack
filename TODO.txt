@@ -1,6 +1,8 @@
 ---------------------------------------------------------------
 GABE:
 Central:
+* Create swap function
+* Update documentation to reflect actual parameters
 * Switch matchbytype and returntype order in XMany
 * Replace append loops with append(x, y...)
 * Add matrix transformation to race tutorial

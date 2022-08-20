@@ -107,6 +107,8 @@
  >>>
  >>>> [stack.Move(...)](#Move)
  >>>
+ >>>> [stack.Swap(...)](#Swap)
+ >>>
  >>>> [stack.Has(...)](#Has)
  >>>
  >>>> [stack.Get(...)](#Get)
@@ -318,6 +320,7 @@
 
  * **stack.Add(insert, ...orderType, ...findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
  * **stack.Move(findType_from, orderType, findType_to, ...findData_from, ...findData_to, ...matchByType_from, ...matchByType_to, ...deepSearchType, ...depth)**
+ * **stack.Swap(findType_from, findType_to, ...findData_from, ...findData_to, ...matchByType_from, ...matchByType_to, ...deepSearchType, ...depth)**
  * **stack.Has(returnType, findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
  * **stack.Get(...findType, ...findData, ...matchByType, ...clonesType_card, ...clonesType_keys, ...clonesType_vals, ...deepSearchType, ...depth)**
  * **stack.GetMany(findType, ...findData, ...matchByType, ...returnType, ...clonesType, ...clonesType_keys, ...clonesType_vals, ...deepSearchType, ...depth)**
@@ -826,8 +829,35 @@
  @param optional `findData_to` type{any} default nil
  @param optional `matchByType_from` type{MATCHBY} default MATCHBY_Object
  @param optional `matchByType_to` type{MATCHBY} default MATCHBY_Object
- @returns `stack`
- @ensures IF `findType_to` or `findType_from` get over one position, method doesn't perform move and prints invalid argument (FIND_Slice is the sole exception to this rule)
+ @param optional `deepSearchType_from` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType_to` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `depth_from` type{int} default -1 (deepest)
+ @param optional `depth_to` type{int} default -1 (deepest)
+ @returns `stack` if moved OR nil if no move occurred (due to bad find)
+ @requires you are not moving a stack to a location within that own stack
+ @ensures a stack of cards, or individual cards, can be targeted
+ ```
+ 
+<h3 name = "Swap">Swap</h3>
+ 
+ `stack.Swap(findType_from, findType_to, ...findData_from, ...findData_to, ...matchByType_from, ...matchByType_to, ...deepSearchType, ...depth)`
+ ```
+ Swaps one element or slice with the position of another element or slice
+ 
+ @receiver `stack` type{*Stack}
+ @param `findType_first` type{FIND}
+ @param `findType_second` type{FIND}
+ @param optional `findData_first` type{any} default nil
+ @param optional `findData_second` type{any} default nil
+ @param optional `matchByType_first` type{MATCHBY} default MATCHBY_Object
+ @param optional `matchByType_second` type{MATCHBY} default MATCHBY_Object
+ @param optional `deepSearchType_first` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType_second` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `depth_first` type{int} default -1 (deepest)
+ @param optional `depth_second` type{int} default -1 (deepest)
+ @returns `stack` if moved OR nil if no move occurred (due second bad find)
+ @requires you are not swapping a stack with a location within that own stack
+ @ensures a stack of cards, or individual cards, can be targeted
  ```
  
 <h3 name = "Has">Has</h3>

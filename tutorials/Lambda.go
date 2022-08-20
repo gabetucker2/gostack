@@ -1,5 +1,5 @@
 /**
-TUTORIAL BEGINS ON LINE 72.
+TUTORIAL BEGINS ON LINE 32.
 */
 
 package tutorials
@@ -12,25 +12,6 @@ import (
 	. "github.com/gabetucker2/gostack"//lint:ignore ST1001 Ignore warning
 )
 
-// TEMPLATE:
-/*
-func gostack_tutorials_lambda_NameHere(card *Card, workingMem any) (ret bool) {
-
-	if workingMem == nil { // first run setup
-		workingMem[0] = MakeStack()
-
-		// first run stuff here (e.g., for loop)
-
-		// workingMem.Add(MakeCard(dataToAccess)) // add to working memory
-	}
-
-	// stuff here
-
-	return
-
-}
-*/
-
 func lambda_ValInRange(card *Card, workingMem ...any) bool {
 	v := card.Val.(int)
 	return 5 < v && v < 14 && v%2 == 0
@@ -39,26 +20,6 @@ func lambda_ValInRange(card *Card, workingMem ...any) bool {
 func lambda_KeyInRange(card *Card, workingMem ...any) bool {
 	k := card.Key.(int)
 	return k%5 == 0
-}
-
-func lambda_Max(card *Card, workingMem ...any) bool {
-
-	var stack, maxIdx any
-	gogenerics.UnpackVariadic(workingMem, &stack, &maxIdx)
-
-	// if max == nil, that means the for loop determining the Idx of the highest card has not been run yet
-	// (expect initial max input value of nil)
-	if maxIdx == nil {
-		currentMax := math.MinInt
-		for _, card := range stack.(*Stack).Cards {
-			if card.Val.(int) > currentMax {
-				currentMax = card.Val.(int);
-				maxIdx = card.Idx
-			}
-		}
-	}
-	return maxIdx == card.Idx
-
 }
 
 /** Executes the Lambda.go tutorial */
@@ -70,8 +31,8 @@ func Lambda() {
 	/**
 	//--------------------------------------------------------------------------------------//
 	 Hi there.  Welcome to our lambda tutorial!  This is the most advanced tutorial in
-	 	gostack, but also our most exciting, because lambda functions are the most powerful
-		tools in gostack.  If you are reading this, you should be at the point of
+	 	gostack, but it is also our most exciting because lambda functions are the most
+		powerful tools in gostack.  If you are reading this, you should be at the point of
 		understanding everything else in gostack in order to understand what is covered
 		in this script.  By the time you are done reading, you will understand the most
 		complex feature of gostack, meaning you will be capable of utilizing this
@@ -139,6 +100,11 @@ func Lambda() {
 	makeSampleStack().Get(FIND_Lambda, lambda_ValInRange).Print() // val: 10
 
 	/**
+	 You can also use FIND_Lambda to filter for any other function, including UpdateMany:*/
+	
+	makeSampleStack().UpdateMany(REPLACE_Val, 2, FIND_Lambda, lambda_ValInRange).Print() // val: 10
+
+	/**
 	 Great!  Just for example's sake, let's make another function filtering by
 	 	properties of each card's key:*/
 
@@ -159,7 +125,7 @@ func Lambda() {
 		information outside the scope of your current card.  In this case, there are two
 		approaches you could take.
 	
-	 Approach A, sadly, is more optimized: you create a for loop, create a variable
+	 Approach A is less grounded in gostack: you create a for loop, create a variable
 		representing the current highest integer (probably initialized to the lowest
 		representable integer), and, for each card in stack.Cards, if that card's
 		value is greater than your variable, set your variable to that value.  After
@@ -170,14 +136,71 @@ func Lambda() {
 		be abstracted away if possible, Approach B is an approach supported by gostack.
 
 	 Remember earlier when I said to ignore the `...any` field?  Now, we are going to utilize
-		it to track what we will call our working memory.  This will allow us to keep track
-		of information between each iteration over a card.
+		it to track what we will call our working memory.  We will use my gogenerics library
+		to help unpack variables from the working mem.  Working mem will allow us to keep
+		track of information between each iteration over a card.  Otherwise, we would have to
+		run the same for loop in each card iteration, in turn wasting a myriad of (computer)
+		memory.
 	*/
 
-	makeSampleStack().Get(FIND_Lambda, lambda_Max).Print() // val: 40
-	makeSampleStack().UpdateMany(REPLACE_Val, 5, FIND_Lambda, lambda_Max).Print() // vals: 2, 10, 11, 12, 5
+	makeSampleStack().Get(FIND_Lambda, func(card *Card, workingMem ...any) bool {
 
-	// do for matrices
+		var stack, maxIdx any
+		gogenerics.UnpackVariadic(workingMem, &stack, &maxIdx)
+	
+		// if max == nil, that means the for loop determining the Idx of the highest card has
+		//not yet been run (expect initial max input value of nil)
+		if maxIdx == nil {
+			currentMax := math.MinInt
+			for _, card := range stack.(*Stack).Cards {
+				if card.Val.(int) > currentMax {
+					currentMax = card.Val.(int)
+					maxIdx = card.Idx
+				}
+			}
+		}
+		// now, return whether this card's Idx == the idx of the card with the highest value
+		return maxIdx == card.Idx
+	
+	}).Print() // val: 40
+
+	/**
+	 Great!  We still had to write a for loop, but at least it's localized to the inside
+		of a gostack function.  This approach might be unpreferable when it comes to running
+		a function only once, but if you formally declare your lambda function which utilizes
+		working memory, you can call that function multiple times, in turn saving space.
+
+	 For functions offering replace functionality, you can use REPLACE_Lambda in order to
+	 	apply a custom transformation to the stack.  For a complex example, like the one
+		above, you could manage working memory to multiply selected cards by the previous
+		cards values.  For a simpler example, where you select a card and multiply it by
+		two:*/
+	
+	makeSampleStack().UpdateMany(REPLACE_Lambda, func(card *Card, workingMem ...any) {
+		card.Val = card.Val.(int) * 2
+	}, FIND_First).Print() // vals: 4, 10, 11, 12, 40
+
+	/**
+	 We have now shown you how to use lambda support in core gostack functions.
+		But what if you wanted to sort a stack in a certain order?  That's where our Sort
+		function comes into play.  Say we wanted to sort our stack of ints in descending
+		order by value.  We would implement the most common descending order algorithm,
+		outlined here (https://www.geeksforgeeks.org/stable-sort-descending-order/):*/
+
+	makeSampleStack().Sort(func(card *Card, stack *Stack, _ ...any) (ORDER, int) {
+
+		indexToMoveTo := -1 // should never return -1
+		thisVal := card.Val.(int)
+		for i := card.Idx+1; i < stack.Size; i++ {
+			otherCard := stack.Cards[i]
+			otherVal := otherCard.Val.(int)
+			if otherVal >= thisVal {
+				stack.Swap(card, otherCard)
+			}
+		}
+		return ORDER_After, indexToMoveTo
+
+	})
 
 	// varying outputs using gostack's Sort() function
 	
