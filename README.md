@@ -181,8 +181,6 @@
  >>
  >> [README.md](/README.md) is this file
  >>
- >> [TODO.txt](/TODO.txt) is a task list, intended only for the developers
- >>
  >> [unaddedgostack.txt](/unaddedgostack.txt) is where obsolete data to be added back into backend.go and Library.go
 
 <h1 name = "packageSchema">Package Schema</h1>
