@@ -73,13 +73,13 @@ const (
 )
 
 const (
-	CLONE_True CLONE = iota
-	CLONE_False
+	CLONE_False CLONE = iota
+	CLONE_True
 )
 
 const (
-	DEEPSEARCH_True DEEPSEARCH = iota
-	DEEPSEARCH_False
+	DEEPSEARCH_False DEEPSEARCH = iota
+	DEEPSEARCH_True
 )
 
 /*func setRETURNDefaultIfNil(returnType any) {

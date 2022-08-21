@@ -420,8 +420,8 @@ func (stack *Stack) Empty() *Stack {
 /** Returns a clone of the given card
 
  @receiver `card` type{*Card}
- @param `cloneKey` type{bool}
- @param `cloneVal` type{bool}
+ @param `cloneKey` type{CLONE}
+ @param `cloneVal` type{CLONE}
  @returns type{*Card} card clone
  @constructs type{*Card} clone of `card`
 */
@@ -445,9 +445,9 @@ func (card *Card) Clone(variadic ...any) *Card {
 /** Returns a clone of the given stack
 
  @receiver `stack` type{*Stack}
- @param `cloneCards` type{bool}
- @param `cloneKeys` type{bool}
- @param `cloneVals` type{bool}
+ @optional param `cloneCards` type{CLONE} default false
+ @optional param `cloneKeys` type{CLONE} default false
+ @optional param `cloneVals` type{CLONE} default false
  @returns type{*Stack} stack clone
  @constructs type{*Stack} clone of `stack`
  @ensures
@@ -549,19 +549,9 @@ func (stack *Stack) Shuffle() *Stack {
  */
 func (stack *Stack) Flip() *Stack {
 
-	// new card stack
-	var newCards []*Card
-
-	// flip it
-	for i := range stack.Cards {
-		newCards = append(newCards, stack.Cards[i])
-	}
-
-	// update
-	stack.Cards = newCards
-
-	// set indices
-	setIndices(stack.Cards)
+	stack.Sort(func(*Card, *Stack, ...any) (ORDER, int) {
+		return ORDER_Before, 0
+	})
 
 	// return
 	return stack
@@ -640,7 +630,7 @@ func (stack *Stack) Sort(lambda func(*Card, *Stack, ...any) (ORDER, int), variad
 /** Iterate through a stack calling your lambda function on each card
  
  @receiver `stack` type{*Stack}
- @param `lambda` type{func(*Card, ...any)}
+ @param `lambda` type{func(*Card, *Stack, ...any)}
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
  @returns `stack`
@@ -648,7 +638,7 @@ func (stack *Stack) Sort(lambda func(*Card, *Stack, ...any) (ORDER, int), variad
   * Each card in `stack` is passed into your lambda function
   * `stack` is the first argument passed into your variadic parameter on the first call
  */
-func (stack *Stack) Lambda(lambda func(*Card, ...any), variadic ...any) *Stack {
+func (stack *Stack) Lambda(lambda func(*Card, *Stack, ...any), variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
 	var deepSearchType, depth any

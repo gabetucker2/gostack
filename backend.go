@@ -221,12 +221,12 @@ func ifElse(test bool, out1, out2 any) any {
  @ensures each card in `stack.Cards` will not be affected by lambda updates
  @requires `stack.GetMany()` is implemented
  */
-func getIterator(stack *Stack, lambda func(*Card, ...any) bool, deepSearchType DEEPSEARCH, depth int) {
+func getIterator(stack *Stack, lambda func(*Card, *Stack, ...any) bool, deepSearchType DEEPSEARCH, depth int) {
 	subStack := stack.GetMany(FIND_All, nil, nil, nil, nil, nil, nil, deepSearchType, depth)
 	var filteredCards []*Card
 	for i := range subStack.Cards {
 		card := subStack.Cards[i]
-		if lambda(card.Clone(), subStack) { // use a clone card
+		if lambda(card.Clone(), subStack.Clone(CLONE_True, CLONE_True, CLONE_True)) { // use a clone card and stack
 			filteredCards = append(filteredCards, card)
 		}
 	}
@@ -244,11 +244,11 @@ func getIterator(stack *Stack, lambda func(*Card, ...any) bool, deepSearchType D
  @updates `stack.Cards` to whatever the `lambda` function specifies
  @requires `stack.GetMany()` is implemented
  */
-func generalIterator(stack *Stack, lambda func(*Card, ...any), deepSearchType DEEPSEARCH, depth int, otherStacks ...*Stack) {
+func generalIterator(stack *Stack, lambda func(*Card, *Stack, ...any), deepSearchType DEEPSEARCH, depth int, otherStacks ...*Stack) {
 	subStack := stack.GetMany(FIND_All, nil, nil, nil, nil, nil, nil, deepSearchType, depth)
 	for i := range subStack.Cards {
 		// use the card object so that card can be updated by the lambda expression
-		lambda(subStack.Cards[i], subStack)
+		lambda(subStack.Cards[i], subStack, nil)
 		subStack.setStackProperties()
 	}
 	subStack.setStackProperties()

@@ -145,6 +145,7 @@ func Lambda() {
 
 	makeSampleStack().Get(FIND_Lambda, func(card *Card, workingMem ...any) bool {
 
+		// unpack variadic arguments
 		var stack, maxIdx any
 		gogenerics.UnpackVariadic(workingMem, &stack, &maxIdx)
 	
@@ -183,36 +184,50 @@ func Lambda() {
 	/**
 	 We have now shown you how to use lambda support in core gostack functions.
 		But what if you wanted to sort a stack in a certain order?  That's where our Sort
-		function comes into play.  Say we wanted to sort our stack of ints in descending
-		order by value.  We would implement the most common descending order algorithm,
-		outlined here (https://www.geeksforgeeks.org/stable-sort-descending-order/):*/
+		function comes into play.  Say we wanted to implement our own version of the Flip
+		function to flip our stack in the opposite order:*/
 
-	makeSampleStack().Sort(func(card *Card, stack *Stack, _ ...any) (ORDER, int) {
+	makeSampleStack().Sort(func(*Card, *Stack, ...any) (ORDER, int) {
+		return ORDER_Before, 0
+	})
 
-		indexToMoveTo := -1 // should never return -1
+	/**
+	 We now created a function that will flip cards in reverse!  It iterates through each
+	 card in the stack and puts them each in the first position, thereby flipping the stack
+	 around.
+	 
+	 Finally, our Lambda function.  While the Sort function is good for quickly rearranging
+	 cards' orders based on a simple sorting heuristic, it can also fall short when it comes
+	 to performing more complex tasks because it only moves one card at a time; many sorting
+	 algorithms require swapping cards.  The Lambda function is ideal for this.  It is the
+	 most flexible of all the lambda support offered by our functions; it acts as a shell
+	 iterator that allows you to do whatever you would like.
+
+	 If you wanted to do flip a stack in the opposite order using the Lambda function, you
+	 could do:*/
+
+	makeSampleStack().Lambda(func(card *Card, stack *Stack, _ ...any) {
+		stack.Move(FIND_Card, ORDER_Before, FIND_Idx, card, 0)
+	})
+
+	/**
+	 For a more complex example of using the Lambda function—in this instance, e.g., to sort
+	 in descending order by each card's int value:*/
+
+	 makeSampleStack().Lambda(func(card *Card, stack *Stack, _ ...any) {
 		thisVal := card.Val.(int)
 		for i := card.Idx+1; i < stack.Size; i++ {
 			otherCard := stack.Cards[i]
 			otherVal := otherCard.Val.(int)
 			if otherVal >= thisVal {
-				stack.Swap(card, otherCard)
+				stack.Swap(FIND_Card, FIND_Card, card, otherCard)
 			}
 		}
-		return ORDER_After, indexToMoveTo
-
 	})
 
-	// varying outputs using gostack's Sort() function
-	
-
-	// varying outputs using gostack's Lambda() function
-	makeSampleStack().Lambda(func(card *Card, _ ...any) {
-		// if condition is not true, set value to -1
-		v := card.Val.(int)
-		if 5 < v && v < 14 && v%2 == 0 {
-			card.Val = -1
-		}
-	}).Print() // 2, -1, 11, -1, 40
-	// - another way of doing: makeSampleStack().UpdateMany(REPLACE_Val, -1, FIND_Lambda, lambda_ValInRange).Print()
+	/**
+	 That's all you need to know about lambda support in gostack!  If this tutorial could
+	 benefit from any form of improvement, please email me at tucker.854@osu.edu to let
+	 me know.  I welcome your feedback and appreciate your time reading this.*/
 
 }

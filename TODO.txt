@@ -1,7 +1,11 @@
 ---------------------------------------------------------------
 GABE:
 Central:
-* Create swap function
+* Implement mocking in case tests
+* Ensure all iterators...
+A) Save variadic data
+B) Send stack data to second parameter instead of as default through variadic
+Subcentral:
 * Update documentation to reflect actual parameters
 * Switch matchbytype and returntype order in XMany
 * Replace append loops with append(x, y...)
@@ -15,10 +19,6 @@ Central:
  - matrix multi
  - etc
 Peripheral:
-* Implement new lambda examples
- - For REPLACE_Lambda
- - For stack.Sort()
- - For stack.Lambda()
 * Update race.md and related documentation
  - Fix taskC.replace()
 * Implement variadic error-catching function for:
@@ -40,11 +40,6 @@ ANDY:
  - Remove comments saying "avoid for-loop cloning"
  - Update percentage descriptions corresponding to amount of lines after update
  - The initial map cannot have two of the same key, meaning we have to implement x_KEYNAME for each key in the map and then decode this within the procedure
-* Lambda tutorial updates
- - Replace makeSampleStack() with MakeStack() from frontend.go
- - Implement for values other than ints
- - Make some more lambda function examples which use workingMem param
- - Remove MainFunc, replace MainFunc calls in Lambda() with Get() and other frontend functions
 * Implement bootstrap functions, take inspiration from common functions in other languages
 * Implement ObjectReference tutorial
  - Add passing-by-object vs passing-by-address tutorial (just & before variable, our functions support that)
