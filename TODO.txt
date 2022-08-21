@@ -1,7 +1,6 @@
 ---------------------------------------------------------------
 GABE:
 Central:
-* Implement mocking in case tests
 * Ensure all iterators...
 A) Save variadic data
 B) Send stack data to second parameter instead of as default through variadic

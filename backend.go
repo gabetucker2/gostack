@@ -254,26 +254,6 @@ func generalIterator(stack *Stack, lambda func(*Card, *Stack, ...any), deepSearc
 	subStack.setStackProperties()
 }
 
-/** Passes each card into the lambda function iteratively, updating to a new 1D stack
- 
- @param `stack` type{*Stack}
- @param `lambda` type{func(*Card, *Stack, ...workingMem) (ORDER, int)}
- @param `deepSearchType` type{DEEPSEARCH}
- @param `depth` type{int}
- @updates `stack.Cards` to whatever the `lambda` function specifies
- */
-func sortIterator(stack *Stack, lambda func(*Card, *Stack, ...any) (ORDER, int), deepSearchType DEEPSEARCH, depth int) {
-	subStack := stack.GetMany(FIND_All, nil, nil, nil, nil, nil, nil, deepSearchType, depth)
-	for i := range subStack.Cards {
-		// iterate, get the new index from the sorter
-		newOrder, newIdx := lambda(subStack.Cards[i], subStack)
-		// move from the old position to the new position
-		subStack.Move(FIND_Idx, newOrder, FIND_Idx, i, newIdx)
-	}
-	stack.setStackProperties()
-	
-}
-
 /** Returns an [][]int of index vertices representing the order of indices needed to access targeted position(s) in `stack`, with []*Card for pure card values
  
  @param `getFirst` type{bool}
@@ -499,7 +479,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, mat
 	
 		case FIND_Lambda:
 			filterStack := stack.Clone() // so that no changes can be made to the original stack from FIND_Lambda functions
-			getIterator(filterStack, findData.(func(*Card, ...any) bool), deepSearchType, depth)
+			getIterator(filterStack, findData.(func(*Card, *Stack, ...any) bool), deepSearchType, depth)
 			for i := range filterStack.Cards {
 				filteredList = append(filteredList, i)	
 				if getFirst { break }
@@ -578,7 +558,7 @@ func (setStack *Stack) updateRespectiveField(replaceType REPLACE, replaceData an
 
 	case REPLACE_Lambda:
 		 // DEEPSEARCH_False since targeting cards that have already been filtered using Get()
-		generalIterator(setStack, replaceData.(func(*Card, ...any)), DEEPSEARCH_False, -1)
+		generalIterator(setStack, replaceData.(func(*Card, *Stack, ...any)), DEEPSEARCH_False, -1)
 
 	}
 

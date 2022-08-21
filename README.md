@@ -98,8 +98,6 @@
  >>>
  >>>> [stack.Print()](#Print)
  >>>
- >>>> [stack.Sort(...)](#Sort)
- >>>
  >>>> [stack.Lambda(...)](#Lambda)
  >>>
  >>> [Generalized Functions](#generalizedFunctions)
@@ -313,7 +311,6 @@
  * **stack.Flip()**
  * **card.Print()**
  * **stack.Print()**
- * **stack.Sort(lambda sort function, ...deepSearchType, ...depth)**
  * **stack.Lambda(lambda function, ...deepSearchType, ...depth)**
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
@@ -768,20 +765,6 @@
  @receiver `stack` type{*Stack}
  @updates terminal logs
  @requires card.Print() has been implemented
- ```
- 
-<h3 name = "Sort">Sort</h3>
- 
- `stack.Sort(lambda sort function, ...deepSearchType, ...depth)`
- ```
- Order the cards contingent on some attribute they contain
- 
- @receiver `stack` type{*Stack}
- @param `lambda` type{func(*Card, *Stack, ...any) (ORDER, int)}
- @requires
-  * `lambda` returns the order (before/after) and index to which to move your card in the stack
-  * `lambda` does not update `stack` itself
- @ensures each card in `stack` is passed into your lambda function
  ```
  
 <h3 name = "Lambda">Lambda</h3>

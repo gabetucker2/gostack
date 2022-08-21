@@ -549,8 +549,8 @@ func (stack *Stack) Shuffle() *Stack {
  */
 func (stack *Stack) Flip() *Stack {
 
-	stack.Sort(func(*Card, *Stack, ...any) (ORDER, int) {
-		return ORDER_Before, 0
+	stack.Lambda(func(card *Card, stack *Stack, _ ...any) {
+		stack.Move(FIND_Card, ORDER_Before, FIND_Idx, card, 0)
 	})
 
 	// return
@@ -599,31 +599,6 @@ func (stack *Stack) Print(depth ...int) {
 			c.Val.(*Stack).Print(depth[0]+1)
 		}
 	}
-
-}
-
-/** Order the cards contingent on some attribute they contain
- 
- @receiver `stack` type{*Stack}
- @param `lambda` type{func(*Card, *Stack, ...any) (ORDER, int)}
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int} default -1 (deepest)
- @returns `stack`
- @requires
-  * `lambda` returns the order (before/after) and index to which to move your card in the stack
-  * `lambda` does not update `stack` itself
- @ensures each card in `stack` is passed into your lambda function
- */
-func (stack *Stack) Sort(lambda func(*Card, *Stack, ...any) (ORDER, int), variadic ...any) *Stack {
-
-	// unpack variadic into optional parameters
-	var deepSearchType, depth any
-	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth)
-
-	// main
-	sortIterator(stack, lambda, deepSearchType.(DEEPSEARCH), depth.(int))
-
-	return stack
 
 }
 
