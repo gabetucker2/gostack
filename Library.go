@@ -613,14 +613,14 @@ func (stack *Stack) Print(depth ...int) {
   * Each card in `stack` is passed into your lambda function
   * `stack` is the first argument passed into your variadic parameter on the first call
  */
-func (stack *Stack) Lambda(lambda func(*Card, *Stack, ...any), variadic ...any) *Stack {
+func (stack *Stack) Lambda(lambda any, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
 	var deepSearchType, depth any
 	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth)
-
+	
 	// main
-	generalIterator(stack, lambda, deepSearchType.(DEEPSEARCH), depth.(int))
+	generalIterator(stack, lambda.(func(*Card, *Stack, ...any)), deepSearchType.(DEEPSEARCH), depth.(int))
 
 	return stack
 

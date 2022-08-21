@@ -1,5 +1,5 @@
 /**
-TUTORIAL BEGINS ON LINE 32.
+TUTORIAL BEGINS ON LINE 33.
 */
 
 package tutorials
@@ -12,12 +12,12 @@ import (
 	. "github.com/gabetucker2/gostack"//lint:ignore ST1001 Ignore warning
 )
 
-func lambda_ValInRange(card *Card, workingMem ...any) bool {
+func lambda_ValInRange(card *Card) bool {
 	v := card.Val.(int)
 	return 5 < v && v < 14 && v%2 == 0
 }
 
-func lambda_KeyInRange(card *Card, workingMem ...any) bool {
+func lambda_KeyInRange(card *Card) bool {
 	k := card.Key.(int)
 	return k%5 == 0
 }
@@ -32,24 +32,23 @@ func Lambda() {
 	//--------------------------------------------------------------------------------------//
 	 Hi there.  Welcome to our lambda tutorial!  This is the most advanced tutorial in
 	 	gostack, but it is also our most exciting because lambda functions are the most
-		powerful tools in gostack.  If you are reading this, you should be at the point of
-		understanding everything else in gostack in order to understand what is covered
-		in this script.  By the time you are done reading, you will understand the most
-		complex feature of gostack, meaning you will be capable of utilizing this
-		library to its fullest potential.
+		powerful tools in gostack.  A prerequisite for understanding this script is what
+		is Introduction.go.  By the time you are done reading, you will understand the most
+		complex feature in gostack, meaning you will be capable of utilizing this library
+		to its fullest potential.
 		
-	 Consider: if you wanted to do something simple like getting a stack whose values are
+	 Consider: if you wanted to do something simple like making a stack whose values are
 		the keys of another stack, gostack's traditional functions have you covered.  If you
-		want to replace the 5th card in a stack with another card, core functions also have
+		wanted to replace the 5th card in a stack with another card, core functions also have
 		you covered.  The same is true of pulling information from the Nth dimension in
 		stack matrices, cloning, or directing multiple stacks to reference the same object.
 		
 	 But if you wanted to create a custom filter for a stack (e.g., get all
 		cards whose Vals are over 2, whose Keys are multiples of 3, and whose Idxs are
-		even), you would traditionally have to write your own for loop with a nested if
+		even), you would traditionally have to write your own for-loop with a nested if
 		statement and extract the cards that match your condition from the old stack to a
-		new stack.  gostack's support, which we will call lambda support, removes this
-		necessity.
+		new stack.  gostack's support for this case, which we will call lambda support,
+		removes the necessity for for-loops.
 
 	 Below, we are creating a simple function to return a new stack with specified properties:*/
 
@@ -61,17 +60,19 @@ func Lambda() {
 
 	/**
 	 Reference this function in the future to get an idea of how it is being affected by
-	 	our lambda functions.
+	 	our lambda support.
 
 	 Next, we are going to pass the FIND_Lambda argument to the GetMany() function.  Our
 	 	goal will be to get a stack of cards from another stack based on which cards match
 	 	our custom filter.  Our custom filter will be a function of structure
-		`func(*Card, ...any) bool`.  (For now, don't worry about the `...any` field.)  Our
-		function, which we will call lambda_ValInRange, is going to do something very
-		simple: it will return true, or false, respective of whether the inputted card
-		matches your filter.  Given v is card.Val, our filter will test whether v is
-		between 5 and 14 and whether it's a multiple of 2.  See lambda_ValInRange on
-		line 33.
+		`func(*Card, *Stack, ...any) bool`, but we can initialize the function with as few
+		of these parameters as we would like.  (And, for now, don't worry about the `...any`
+		field.)  Our function, which we will call lambda_ValInRange, is going to do something
+		very simple: it will return true or false respective of whether the inputted card
+		matches your filter.  We will call these types of functions, which return whether
+		a card matches a condition, conditional functions.  Given v is card.Val, our filter
+		will test whether v is between 5 and 14 and whether it's a multiple of 2.  See
+		lambda_ValInRange on line 15.
 		
 	 Next, let us apply it below:*/
 	
@@ -83,8 +84,8 @@ func Lambda() {
 
 	 One limitation of this approach is how golang does not provide support for nested
 	 	functions, meaning lambda_ValInRange is in an awkward position being so far from
-		its call.  If we wanted to make lambda_ValInRange an anonymous function (calls
-		once) that's all in one location, we would do the following:*/
+		its reference.  If we wanted to make lambda_ValInRange an anonymous function (calls
+		once) so it's more legible, we would do the following:*/
 	
 	makeSampleStack().GetMany(FIND_Lambda, func(card *Card) bool {
 		v := card.Val.(int)
@@ -92,7 +93,8 @@ func Lambda() {
 	}).Print() // vals: 10, 12
 
 	/**
-	 Notice how this approach is identical to our previous approach.
+	 Notice how this approach is semantically identical to our previous approach (save
+	 	for the function's initialization).
 
 	 And, just for a reminder, calling Get, as opposed to GetMany, on lambda_ValInRange
 	 	yields the first card found matching the filter:*/
@@ -102,7 +104,7 @@ func Lambda() {
 	/**
 	 You can also use FIND_Lambda to filter for any other function, including UpdateMany:*/
 	
-	makeSampleStack().UpdateMany(REPLACE_Val, 2, FIND_Lambda, lambda_ValInRange).Print() // val: 10
+	makeSampleStack().UpdateMany(REPLACE_Val, 2, FIND_Lambda, lambda_ValInRange).Print() // val: 2, 2 (replacing vals 10, 12)
 
 	/**
 	 Great!  Just for example's sake, let's make another function filtering by
@@ -111,86 +113,110 @@ func Lambda() {
 	makeSampleStack().GetMany(FIND_Lambda, lambda_KeyInRange).Print() // keys: 0, 90, 20
 
 	/**
-	 Stunning.  Now, let's get only the cards whose vals match the lambda_ValInRange
+	 Awesome!  Now, let's get only the cards whose vals match the lambda_ValInRange
 		condition and whose keys match the lambda_KeyInRange condition:*/
 
 	makeSampleStack().GetMany(FIND_Lambda, func(card *Card) bool {
 		return lambda_ValInRange(card) && lambda_KeyInRange(card)
-	}).Print() // card: {Idx: 1, Key: 90, Val: 10}
+	}).Print() // stack[0] = card: {Idx: 1, Key: 90, Val: 10}
 
 	/**
-	 This should hopefully have given you an intuitive feel for how lambda functions
-		work.  But what if you wanted your filter to return true if and only if the card
-		is the maximum in your current stack?  This would require you to keep track of
-		information outside the scope of your current card.  In this case, there are two
-		approaches you could take.
+	 This should give you an intuitive feel for how lambda support works. But what if
+	 	you wanted your filter to return true if and only if the card is the maximum in
+		your current stack?  This would require you to access information outside
+		the scope of your current card.  In this case, there are two approaches you
+		could take.
 	
-	 Approach A is less grounded in gostack: you create a for loop, create a variable
+	 Approach A is less grounded in gostack: you create a for-loop, create a variable
 		representing the current highest integer (probably initialized to the lowest
 		representable integer), and, for each card in stack.Cards, if that card's
-		value is greater than your variable, set your variable to that value.  After
-		the loop, output the value.
+		value is greater than or equal to your variable, set your variable to that card's
+		value.  After the loop, output whether the card's value is equal to that variable.
 	
-	 What is disappointing here is how the more optimized approach requires you to write
-	 	for loops.  But if you are strongly grounded in the principle that for loops should
-		be abstracted away if possible, Approach B is an approach supported by gostack.
+	 What is disappointing here is how this more optimized approach requires you to write
+	 	for-loops.  But there is an Approach B which, albeit less optimized, is far
+		more elegant and closely tailored for gostack.  This approach is writing the for-
+		loop inside of a gostack conditional function, so that any gostack function which
+		intakes FIND_Lambda can simply have your getMaximum conditional function passed as
+		an argument.
 
 	 Remember earlier when I said to ignore the `...any` field?  Now, we are going to utilize
 		it to track what we will call our working memory.  We will use our gogenerics library
 		to help unpack variables from the working mem.  Working mem will allow us to keep
 		track of information between each iteration over a card.  Otherwise, we would have to
-		run the same for loop in each card iteration, in turn wasting a myriad of (computer)
-		memory.
-	*/
+		run the same for-loop in each card iteration, in turn wasting a myriad of (computer)
+		memory.*/
 
-	makeSampleStack().Get(FIND_Lambda, func(card *Card, workingMem ...any) bool {
+	makeSampleStack().Get(FIND_Lambda, func(card *Card, stack *Stack, workingMem ...any) bool {
 
-		// unpack variadic arguments
-		var stack, maxIdx any
-		gogenerics.UnpackVariadic(workingMem, &stack, &maxIdx)
+		// unpack variadic arguments into my own variables
+		var maxIdx any
+		gogenerics.UnpackVariadic(workingMem, &maxIdx)
 	
-		// if max == nil, that means the for loop determining the Idx of the highest card has
-		//not yet been run (expect initial max input value of nil)
+		// if max == nil, that means the for-loop setting maxIdx to the Idx of the highest val'd card
+		// has not yet been run (since maxIdx value is nil only in the first iteration)
 		if maxIdx == nil {
 			currentMax := math.MinInt
-			for _, card := range stack.(*Stack).Cards {
+			for _, card := range stack.Cards {
 				if card.Val.(int) > currentMax {
 					currentMax = card.Val.(int)
 					maxIdx = card.Idx
 				}
 			}
 		}
-		// now, return whether this card's Idx == the idx of the card with the highest value
+
+		// now, return whether this card's Idx == the Idx of the card with the highest value
 		return maxIdx == card.Idx
 	
 	}).Print() // val: 40
 
 	/**
-	 Great!  We still had to write a for loop, but at least it's localized to the inside
-		of a gostack function.  This approach might be unpreferable when it comes to running
-		a function only once, but if you formally declare your lambda function which utilizes
-		working memory, you can call that function multiple times, in turn saving space.
-
-	 For functions offering replace functionality, you can use REPLACE_Lambda in order to
-	 	apply a custom transformation to the stack.  For a complex example, like the one
-		above, you could manage working memory to multiply selected cards by the previous
-		cards values.  For a simpler example, where you select some cards and multiply it by
-		two:*/
+	 For functions offering replace functionality, you can use REPLACE_Lambda in order
+	 	to apply a custom transformation to a stack.  For a simple example, where you
+		select some cards and multiply it by two:*/
 	
-	makeSampleStack().UpdateMany(REPLACE_Lambda, func(card *Card, workingMem ...any) {
+	makeSampleStack().UpdateMany(REPLACE_Lambda, func(card *Card) {
 		card.Val = card.Val.(int) * 2 // multiply selected cards by two
 	}, FIND_All).Print() // vals: 4, 20, 22, 24, 80
 
 	/**
-	 If you wanted to get really fancy, you could use lambda support to replace AND to
-	 	select cards.  In this case, let's apply the same *2 multiplier to only the cards
-		which are even before the multiplication:*/
+	 For a less simple example, you could look at the *Stack parameter to multiply
+	 	selected cards by the previous card in the stack:*/
 	
-	makeSampleStack().UpdateMany(REPLACE_Lambda, func(card *Card, workingMem ...any) {
-		card.Val = card.Val.(int) * 2 // multiply selected cards by two
-	}, FIND_Lambda, func(card *Card, stack *Stack, _ ...any) bool {
-		return card.Val.(int) % 2 == 0 // select even cards
-	}).Print() // vals: 4, 20, 11, 24, 80
+	makeSampleStack().UpdateMany(REPLACE_Lambda, func(card *Card, stack *Stack) {
+
+		// multiply my card by the previous card' in the stack's value if it's not the first card
+		if card.Idx > 0 {
+			card.Val = card.Val.(int) * stack.Get(FIND_Idx, card.Idx-1).Val.(int)
+		}
+
+	}, FIND_All).Print() // vals: 2, 20, 220, 2640, 52800
+
+	/**
+	 For a complex example, you could manage working memory to multiply selected cards
+	 	by the previous *selected* card's value, or by 1 if it doesn't exist.  Let's only
+		select cards which are even for this instance:*/
+	
+	makeSampleStack().UpdateMany(REPLACE_Lambda, func(card *Card, _ *Stack, workingMem ...any) {
+
+		// unpack variadic arguments into my own variables
+		var prevVal any
+		gogenerics.UnpackVariadic(workingMem, &prevVal)
+
+		// set prevVal to 1 if first iteration, or else all cards would be multiplied by 0 since nil.(int) == 0
+		if card.Idx == 0 { prevVal = 1 }
+
+		// multiply my card by the previous selected card's value
+		card.Val = card.Val.(int) * prevVal.(int)
+
+		// set prevVal so the next selected card knows this card's val
+		prevVal = card.Val
+
+	}, FIND_Lambda, func(card *Card) bool {
+
+		return card.Val.(int) % 2 == 0 // select only the even cards
+
+	}).Print() // vals: 2, 20, 11, 240, 4800
 
 	/**
 	 We have now shown you how to use lambda support in core gostack functions. But what
