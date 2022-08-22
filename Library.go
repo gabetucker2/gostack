@@ -434,8 +434,8 @@ func (card *Card) Clone(variadic ...any) *Card {
 	// init
 	clone := new(Card)
 	clone.Idx = card.Idx
-	clone.Key = ifElse(cloneKey.(bool), gogenerics.CloneInterface(card.Key), card.Key)
-	clone.Val = ifElse(cloneVal.(bool), gogenerics.CloneInterface(card.Val), card.Val)
+	clone.Key = gogenerics.IfElse(cloneKey.(bool), gogenerics.CloneInterface(card.Key), card.Key)
+	clone.Val = gogenerics.IfElse(cloneVal.(bool), gogenerics.CloneInterface(card.Val), card.Val)
 
 	// return
 	return clone

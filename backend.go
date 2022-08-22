@@ -196,18 +196,6 @@ func removeIdx(arr []*Card, idx int) []*Card {
 	return newArr
 }
 
-/** Returns out1 if test is true; else return out2
- 
- @param `test` type{bool}
- @param `out1` type{any}
- @param `out2` type{any}
- @returns any `out1` or `out2`
- @requires neither param yields a syntax error
- */
-func ifElse(test bool, out1, out2 any) any {
-	if test { return out1 } else { return out2 }
-}
-
 
 
 /** Removes the cards from a stack for which lambda(card) is false, updating to a new 1D stack
@@ -467,7 +455,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, mat
 				if !getFirst {
 					for i := 0; i < slice[1] - slice[0]; {
 						filteredList = append(filteredList, i+slice[0])
-						i = ifElse(slice[1] > slice[0], i+1, i-1).(int)
+						i = gogenerics.IfElse(slice[1] > slice[0], i+1, i-1).(int)
 					}
 				}
 			}
@@ -700,8 +688,8 @@ func (stack *Stack) makeStackMatrixFromND(keys, vals any) (ret *Stack) {
 			stack.Cards = append(
 				stack.Cards,
 				MakeCard(MakeStack().makeStackMatrixFromND(
-					ifElse(keys != nil, keys, nil).([]any),
-					ifElse(vals != nil, vals, nil).([]any),
+					gogenerics.IfElse(keys != nil, keys, nil).([]any),
+					gogenerics.IfElse(vals != nil, vals, nil).([]any),
 				)),
 			)
 
