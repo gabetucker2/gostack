@@ -201,7 +201,7 @@ func removeIdx(arr []*Card, idx int) []*Card {
 /** Removes the cards from a stack for which lambda(card) is false, updating to a new 1D stack
  
  @param `stack` type{*Stack}
- @param `lambda` type{func(*Card, workingMem) bool}
+ @param `lambda` type{func(*Card, *Stack, workingMem) bool}
  @param `deepSearchType` type{DEEPSEARCH}
  @param `depth` type{int}
  @returns `stack`
@@ -226,7 +226,7 @@ func getIterator(stack *Stack, lambda func(*Card, *Stack, ...any) bool, deepSear
 /** Passes each card into the lambda function iteratively
  
  @param `stack` type{*Stack}
- @param `lambda` type{func(*Card, ...workingMem)}
+ @param `lambda` type{func(*Card, *Stack, ...workingMem)}
  @param `deepSearchType` type{DEEPSEARCH}
  @param `depth` type{int}
  @updates `stack.Cards` to whatever the `lambda` function specifies

@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	//lint:ignore ST1001 — we would like to dot import gostack
+	"github.com/gabetucker2/gogenerics"
 	. "github.com/gabetucker2/gostack"
 )
 
@@ -146,6 +147,8 @@ func test_StackProperties(stack *Stack, size []int, depth ...int) (test bool) {
 
 	if stack.Size != len(stack.Cards) || stack.Depth != depth[0] {
 		// if invalid condition on test
+		fmt.Print("-     DETAIL: ")
+		fmt.Println(gogenerics.IfElse(stack.Size != len(stack.Cards), "stack.Size does not match len(stack.Cards)", "stack.Depth does not match actual depth").(string))
 		test = false
 	} else {
 		// else iterate through cards in stack, test on each of them
