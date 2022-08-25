@@ -25,10 +25,10 @@ var testCardD *Card
 /** Initialize test variables */
 func test_Setup() {
 
-	testCardA = MakeCard("Card A") // in sample stack
-	testCardB = MakeCard("Card B") // in sample stack
-	testCardC = MakeCard("Card C") // in sample stack
-	testCardD = MakeCard("Card D") // out of sample stack
+	testCardA = MakeCard("Key1", "Card A") // in sample stack
+	testCardB = MakeCard("Key2", "Card B") // in sample stack
+	testCardC = MakeCard("Key3", "Card C") // in sample stack
+	testCardD = MakeCard("Key4", "Card D") // out of sample stack
 
 	removeWarning(testCardA, testCardB, testCardC, testCardD)
 
@@ -233,9 +233,29 @@ func test_SampleStack() *Stack {
 	stack := MakeStack()
 
 	// create stack (don't use .Add() function, or else you'll have to case test)
-	stack.Cards = append(stack.Cards, testCardA)
-	stack.Cards = append(stack.Cards, testCardB)
-	stack.Cards = append(stack.Cards, testCardC)
+	stack.Cards = append(stack.Cards, testCardA.Clone())
+	stack.Cards = append(stack.Cards, testCardB.Clone())
+	stack.Cards = append(stack.Cards, testCardC.Clone())
+	
+	return stack
+
+}
+
+/** Make a sample StackMatrix of cards */
+func test_SampleStackMatrix() *Stack {
+
+	// make a sample stack of form <"Card A", "Card B", "Card C">
+	stack := MakeStack()
+
+	// create stack (don't use .Add() function, or else you'll have to case test)
+	stack.Cards = append(stack.Cards, MakeCard(MakeStack()))
+	stack.Cards = append(stack.Cards, MakeCard(MakeStack()))
+
+	stack.Cards[0].Val.(*Stack).Cards = append(stack.Cards[0].Val.(*Stack).Cards, testCardA.Clone())
+	stack.Cards[0].Val.(*Stack).Cards = append(stack.Cards[0].Val.(*Stack).Cards, testCardB.Clone())
+
+	stack.Cards[1].Val.(*Stack).Cards = append(stack.Cards[0].Val.(*Stack).Cards, testCardC.Clone())
+	stack.Cards[1].Val.(*Stack).Cards = append(stack.Cards[0].Val.(*Stack).Cards, testCardD.Clone())
 	
 	return stack
 

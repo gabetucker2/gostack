@@ -177,6 +177,30 @@ func case_MakeStackMatrix(funcName string) {
 
 }
 
+func case_stack_StripStackMatrix(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	stackMatrix := test_SampleStackMatrix()
+
+	conditions := []bool{
+		stackMatrix.StripStackMatrix() == stackMatrix,
+		stackMatrix.StripStackMatrix(0, 0).Cards[0] == testCardA,
+		stackMatrix.StripStackMatrix(0, 1).Cards[0] == testCardB,
+		stackMatrix.StripStackMatrix(1, 0).Cards[0] == testCardC,
+		stackMatrix.StripStackMatrix(1, 1).Cards[0] == testCardD,
+		stackMatrix.StripStackMatrix(0) == MakeStack([]*Card {testCardA, testCardB}),
+		stackMatrix.StripStackMatrix(1) == MakeStack([]*Card {testCardC, testCardD}),
+		stackMatrix.StripStackMatrix(0, []int {0, 1}) == MakeStack([]*Card {testCardA, testCardB}),
+		stackMatrix.StripStackMatrix(1, []int {0, 1}) == MakeStack([]*Card {testCardC, testCardD}),
+		stackMatrix.StripStackMatrix([]int {0, 1}, 0) == MakeStack([]*Card {testCardA, testCardC}),
+		stackMatrix.StripStackMatrix([]int {0, 1}, 1) == MakeStack([]*Card {testCardB, testCardD}),
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
 /** Executes all case tests */
 func Run(_showTestText bool) {
 
@@ -188,8 +212,8 @@ func Run(_showTestText bool) {
 	case_MakeCard("MakeCard") // GOOD
 	case_MakeStack("MakeStack") // GOOD
 	case_MakeStackMatrix("MakeStackMatrix") // BAD
-	/*case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
-	case_stack_ToArray("stack.ToArray") // BAD
+	case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
+	/*case_stack_ToArray("stack.ToArray") // BAD
 	case_stack_ToMap("stack.ToMap") // BAD
 	case_stack_ToMatrix("stack.ToMatrix") // BAD
 	case_stack_Empty("stack.Empty") // BAD
