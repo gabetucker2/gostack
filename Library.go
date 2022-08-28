@@ -435,8 +435,8 @@ func (card *Card) Clone(variadic ...any) *Card {
 	// init
 	clone := new(Card)
 	clone.Idx = card.Idx
-	clone.Key = gogenerics.IfElse(cloneKey.(bool), gogenerics.Cloneany(card.Key), card.Key)
-	clone.Val = gogenerics.IfElse(cloneVal.(bool), gogenerics.Cloneany(card.Val), card.Val)
+	clone.Key = gogenerics.IfElse(cloneKey.(bool), gogenerics.CloneInterface(card.Key), card.Key)
+	clone.Val = gogenerics.IfElse(cloneVal.(bool), gogenerics.CloneInterface(card.Val), card.Val)
 
 	// return
 	return clone
@@ -518,11 +518,12 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...any) *Stack {
 
 }
 
-/** Compares whether two cards equal one another in terms of idxs/keys/vals
+/** Returns whether two cards equal one another
  
  @receiver `thisCard` type{*Card}
  @param `otherCard` type{*Card}
  @param `compareCards` type{bool} default false
+	By default, does not compare the card structs, but rather their individual values; can be set true and adjusted with `matchByTypeCard`
  @param `matchByTypeCard` type{MATCHBY} default MATCHBY_Object
  @param `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
  @param `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
@@ -546,6 +547,64 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
 			((matchByTypeKey == MATCHBY_Object && thisCard.Key == otherCard.Key) || (matchByTypeKey == MATCHBY_Reference && &thisCard.Key == &thisCard.Key)) &&
 			((matchByTypeVal == MATCHBY_Object && thisCard.Val == otherCard.Val) || (matchByTypeVal == MATCHBY_Reference && &thisCard.Val == &thisCard.Val)) &&
 			(compareIdxs == false || thisCard.Idx == otherCard.Idx)
+
+}
+
+/** Returns whether two stacks equal one another
+ 
+ @receiver `thisStack` type{*Stack}
+ @param `otherStack` type{*Stack}
+ @param `compareStacks` type{bool} default false
+	By default, does not compare the stack structs, but rather their cards; can be set true and adjusted with `matchByTypeStack`
+ @param `matchByTypeStack` type{MATCHBY} default MATCHBY_Object
+ @param `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param `compareCards` type{bool} default true
+	By default, does not compare the card structs, but rather their individual values; can be set true and adjusted with `matchByTypeCard`
+ @param `matchByTypeCard` type{MATCHBY} default MATCHBY_Object
+ @param `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
+ @param `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
+ @param `compareIdxs` type{bool} default false
+ @returns type{bool}
+ */
+func (thisStack *Stack) Equals(otherStack *Stack, variadic ...any) bool {
+
+	// unpack variadic into optional parameters
+	var compareStacks, matchByTypeStack, deepSearchType, compareCards, matchByTypeCard, matchByTypeKey, matchByTypeVal, compareIdxs any
+	gogenerics.UnpackVariadic(variadic, &compareStacks, &matchByTypeStack, &deepSearchType, &compareCards, &matchByTypeCard, &matchByTypeKey, &matchByTypeVal, &compareIdxs)
+	// set default vals
+	if compareStacks == nil {compareStacks = true}
+	setMATCHBYDefaultIfNil(matchByTypeStack)
+	setDEEPSEARCHDefaultIfNil(deepSearchType)
+
+	matches := true
+
+	if compareStacks.(bool) {
+		// just test whether the stacks equal one another
+		matches = (matchByTypeStack == MATCHBY_Object && thisStack == otherStack) || (matchByTypeStack == MATCHBY_Reference && &thisStack == &otherStack)
+	} else {
+		// test whether the properties of the cards within each stack equal one another (recursively self-call)
+		for i := range thisStack.Cards {
+			thisCard := thisStack.Cards[i]
+			otherCard := gogenerics.IfElse(i < len(otherStack.Cards), thisStack.Cards[i], nil).(*Card)
+			
+			matches = thisCard.Equals(otherCard, compareCards, matchByTypeCard, matchByTypeKey, matchByTypeVal, compareIdxs)
+			
+			if matches == true && deepSearchType == DEEPSEARCH_True {
+				switch thisCard.Val.(type) { // go deeper if possible, otherwise don't worry
+				case *Stack:
+					switch otherCard.Val.(type) { // check whether otherCard can go deeper since thisCard can; if not, it's not an equal stack
+					case *Stack:
+						matches = thisCard.Val.(*Stack).Equals(otherCard.Val.(*Stack), compareStacks, matchByTypeStack, deepSearchType, compareCards, matchByTypeCard, matchByTypeKey, matchByTypeVal, compareIdxs)
+					default:
+						matches = false
+					}
+				}
+			}
+		}
+
+	}
+
+	return matches
 
 }
 
