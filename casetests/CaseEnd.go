@@ -201,6 +201,65 @@ func case_stack_StripStackMatrix(funcName string) {
 	
 }
 
+func case_stack_ToArray(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	array := test_SampleStack().ToArray()
+
+	conditions := []bool{
+		len(array) == 3,
+		array[0] == testCardA,
+		array[1] == testCardB,
+		array[2] == testCardC,
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_ToMap(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	m := test_SampleStack().ToMap()
+
+	conditions := []bool{
+		len(m) == 3,
+		m["Key1"] == "Card A",
+		m["Key2"] == "Card B",
+		m["Key3"] == "Card C",
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_ToMatrix(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	mat1 := test_SampleStackMatrix().ToMatrix(1).([]any)
+	mat2 := test_SampleStackMatrix().ToMatrix(2).([][]any)
+	mat3 := test_SampleStackMatrix().ToMatrix(-1).([][]any)
+
+	conditions := []bool{
+		len(mat1) == 2,
+		len(mat2) == 2,
+		len(mat3) == 2,
+		len(mat1[0].([]any)) == 0,
+		len(mat1[1].([]any)) == 0,
+		len(mat2[0]) == 2,
+		len(mat2[1]) == 2,
+		len(mat3[0]) == 2,
+		len(mat3[1]) == 2,
+		// TODO: test using Equals function here
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
 /** Executes all case tests */
 func Run(_showTestText bool) {
 
@@ -213,10 +272,10 @@ func Run(_showTestText bool) {
 	case_MakeStack("MakeStack") // GOOD
 	case_MakeStackMatrix("MakeStackMatrix") // BAD
 	case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
-	/*case_stack_ToArray("stack.ToArray") // BAD
+	case_stack_ToArray("stack.ToArray") // BAD
 	case_stack_ToMap("stack.ToMap") // BAD
 	case_stack_ToMatrix("stack.ToMatrix") // BAD
-	case_stack_Empty("stack.Empty") // BAD
+	/*case_stack_Empty("stack.Empty") // BAD
 	case_card_Clone("card.Clone") // BAD
 	case_stack_Clone("stack.Clone") // BAD
 	case_stack_Unique("stack.Unique") // BAD

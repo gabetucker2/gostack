@@ -90,6 +90,10 @@
  >>>
  >>>> [stack.Unique(...)](#Unique)
  >>>
+ >>>> [card.Equals(...)](#Equals)
+ >>>
+ >>>> [stack.Equals(...)](#Equals)
+ >>>
  >>>> [stack.Shuffle()](#Shuffle)
  >>>
  >>>> [stack.Flip()](#Flip)
@@ -305,6 +309,8 @@
  * **card.Clone(...cloneKey, ...cloneVal)**
  * **stack.Clone(...cloneCards, ...cloneKeys, ...cloneVals)**
  * **stack.Unique(typeType, ...matchByType, ...deepSearchType, ...depth)**
+ * **card.Equals(*Card, ...matchByType, ...matchByType, ...matchByType)**
+ * **stack.Equals(*Stack, ...matchByType)**
  * **stack.Shuffle()**
  * **stack.Flip()**
  * **card.Print()**
@@ -720,6 +726,18 @@
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
  @returns `stack`
  @updates `stack` to have no repeating values between field `typeType`
+ ```
+ 
+<h3 name = "Equals">Equals</h3>
+ 
+ `card.Equals(*Card, ...matchByType, ...matchByType, ...matchByType)`
+ ```
+
+ ```
+ 
+ `stack.Equals(*Stack, ...matchByType)`
+ ```
+
  ```
  
 <h3 name = "Shuffle">Shuffle</h3>

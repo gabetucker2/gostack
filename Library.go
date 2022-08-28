@@ -7,16 +7,17 @@ import (
 	"time"
 
 	"github.com/gabetucker2/gogenerics"
+	"github.com/h2non/filetype/matchers"
 )
 
 /** Creates a card with inputted val, key, and idx
 
- @param optional `val` type{any} default nil
- @param optional `key` type{any} default nil
- @param optional `idx` type{int} default -1 no pass-by-reference
- @returns type{*Card} the newly-constructed card
- @constructs type{*Card} a newly-constructed card
- @ensures the new card will have val `val`, key `key`, and idx `idx`
+@param optional `val` type{any} default nil
+@param optional `key` type{any} default nil
+@param optional `idx` type{int} default -1 no pass-by-reference
+@returns type{*Card} the newly-constructed card
+@constructs type{*Card} a newly-constructed card
+@ensures the new card will have val `val`, key `key`, and idx `idx`
 */
 func MakeCard(variadic ...any) *Card {
 
@@ -323,7 +324,7 @@ func (stack *Stack) StripStackMatrix(variadic ...any) *Stack {
 
 }
 
-/** Creates a new interface array from values of `stack`
+/** Creates a new any array from values of `stack`
 
  @receiver `stack` type{*Stack}
  @returns type{[]any} new array
@@ -337,7 +338,7 @@ func (stack *Stack) ToArray() (arr []any) {
 
 }
 
-/** Creates a new interface-interface map from values of `stack`
+/** Creates a new any-any map from values of `stack`
 
  @receiver `stack` type{*Stack}
  @returns type{map[any]any} new map
@@ -361,14 +362,14 @@ func (stack *Stack) ToMap() (m map[any]any) {
 
  @receiver `stack` type{*Stack}
  @param optional `depth` type{int} default -1 (deepest)
- @returns type{[]interface}
+ @returns type{[]any, [][]any, ..., []...[]any}
  @ensures
   * -1 depth means it will go as deep as it can
   * new map keys and values correspond to `stack` keys and values
   * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} =>
       []any{[]any{"Hi"}, []any{"Hola", "Hello"}, "Hey"}
  */
-func (stack *Stack) ToMatrix(variadic ...any) (matrix []any) {
+func (stack *Stack) ToMatrix(variadic ...any) (matrix any) {
 
 	// unpack variadic into optional parameters
 	var depth any
@@ -387,9 +388,9 @@ func (stack *Stack) ToMatrix(variadic ...any) (matrix []any) {
 			// if this Card's val is a Stack
 			subStack, isStack := c.Val.(*Stack)
 			if isStack {
-				matrix = append(matrix, subStack.ToMatrix(depth.(int) - 1))
+				matrix = append(matrix.([]any), subStack.ToMatrix(depth.(int) - 1))
 			} else {
-				matrix = append(matrix, c.Val)
+				matrix = append(matrix.([]any), c.Val)
 			}
 		}
 	}
@@ -434,8 +435,8 @@ func (card *Card) Clone(variadic ...any) *Card {
 	// init
 	clone := new(Card)
 	clone.Idx = card.Idx
-	clone.Key = gogenerics.IfElse(cloneKey.(bool), gogenerics.CloneInterface(card.Key), card.Key)
-	clone.Val = gogenerics.IfElse(cloneVal.(bool), gogenerics.CloneInterface(card.Val), card.Val)
+	clone.Key = gogenerics.IfElse(cloneKey.(bool), gogenerics.Cloneany(card.Key), card.Key)
+	clone.Val = gogenerics.IfElse(cloneVal.(bool), gogenerics.Cloneany(card.Val), card.Val)
 
 	// return
 	return clone
@@ -514,6 +515,37 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...any) *Stack {
 	stack.setStackProperties()
 
 	return stack
+
+}
+
+/** Compares whether two cards equal one another in terms of idxs/keys/vals
+ 
+ @receiver `thisCard` type{*Card}
+ @param `otherCard` type{*Card}
+ @param `compareCards` type{bool} default false
+ @param `matchByTypeCard` type{MATCHBY} default MATCHBY_Object
+ @param `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
+ @param `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
+ @param `compareIdxs` type{bool} default false
+ @returns type{bool}
+ */
+func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
+
+	// unpack variadic into optional parameters
+	var compareCards, matchByTypeCard, matchByTypeKey, matchByTypeVal, compareIdxs any
+	gogenerics.UnpackVariadic(variadic, &compareCards, &matchByTypeCard, &matchByTypeKey, &matchByTypeVal, &compareIdxs)
+	// set default vals
+	if compareCards == nil {compareCards = true}
+	setMATCHBYDefaultIfNil(matchByTypeCard)
+	setMATCHBYDefaultIfNil(matchByTypeKey)
+	setMATCHBYDefaultIfNil(matchByTypeVal)
+	if compareIdxs == nil {compareIdxs = false}
+
+	// return whether conditions yield true
+	return 	(compareCards == false || ((matchByTypeCard == MATCHBY_Object && thisCard == otherCard) || (matchByTypeCard == MATCHBY_Reference && &thisCard == &otherCard))) &&
+			((matchByTypeKey == MATCHBY_Object && thisCard.Key == otherCard.Key) || (matchByTypeKey == MATCHBY_Reference && &thisCard.Key == &thisCard.Key)) &&
+			((matchByTypeVal == MATCHBY_Object && thisCard.Val == otherCard.Val) || (matchByTypeVal == MATCHBY_Reference && &thisCard.Val == &thisCard.Val)) &&
+			(compareIdxs == false || thisCard.Idx == otherCard.Idx)
 
 }
 
