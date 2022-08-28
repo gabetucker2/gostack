@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/gabetucker2/gogenerics"
-	"github.com/h2non/filetype/matchers"
 )
 
 /** Creates a card with inputted val, key, and idx
@@ -334,7 +333,7 @@ func (stack *Stack) StripStackMatrix(variadic ...any) *Stack {
 func (stack *Stack) ToArray() (arr []any) {
 
 	// return
-	return stack.ToMatrix(1)
+	return stack.ToMatrix(1).([]any)
 
 }
 
@@ -544,8 +543,8 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
 
 	// return whether conditions yield true
 	return 	(compareCards == false || ((matchByTypeCard == MATCHBY_Object && thisCard == otherCard) || (matchByTypeCard == MATCHBY_Reference && &thisCard == &otherCard))) &&
-			((matchByTypeKey == MATCHBY_Object && thisCard.Key == otherCard.Key) || (matchByTypeKey == MATCHBY_Reference && &thisCard.Key == &thisCard.Key)) &&
-			((matchByTypeVal == MATCHBY_Object && thisCard.Val == otherCard.Val) || (matchByTypeVal == MATCHBY_Reference && &thisCard.Val == &thisCard.Val)) &&
+			((matchByTypeKey == MATCHBY_Object && thisCard.Key == otherCard.Key) || (matchByTypeKey == MATCHBY_Reference && &thisCard.Key == &otherCard.Key)) &&
+			((matchByTypeVal == MATCHBY_Object && thisCard.Val == otherCard.Val) || (matchByTypeVal == MATCHBY_Reference && &thisCard.Val == &otherCard.Val)) &&
 			(compareIdxs == false || thisCard.Idx == otherCard.Idx)
 
 }
@@ -589,7 +588,7 @@ func (thisStack *Stack) Equals(otherStack *Stack, variadic ...any) bool {
 			
 			matches = thisCard.Equals(otherCard, compareCards, matchByTypeCard, matchByTypeKey, matchByTypeVal, compareIdxs)
 			
-			if matches == true && deepSearchType == DEEPSEARCH_True {
+			if matches && deepSearchType == DEEPSEARCH_True {
 				switch thisCard.Val.(type) { // go deeper if possible, otherwise don't worry
 				case *Stack:
 					switch otherCard.Val.(type) { // check whether otherCard can go deeper since thisCard can; if not, it's not an equal stack
