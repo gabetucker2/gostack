@@ -183,6 +183,10 @@ func case_stack_StripStackMatrix(funcName string) {
 
 	stackMatrix := test_SampleStackMatrix()
 
+	fmt.Println("BEFORE")
+	fmt.Println(stackMatrix.StripStackMatrix(0, 0).Cards[0])
+	fmt.Println("AFTER")
+
 	conditions := []bool{
 		stackMatrix.StripStackMatrix() == stackMatrix,
 		stackMatrix.StripStackMatrix(0, 0).Cards[0] == testCardA,

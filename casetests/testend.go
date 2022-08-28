@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"strconv"
 
-	//lint:ignore ST1001 — we would like to dot import gostack
 	"github.com/gabetucker2/gogenerics"
+	//lint:ignore ST1001 — we would like to dot import gostack
 	. "github.com/gabetucker2/gostack"
 )
 
@@ -113,7 +113,7 @@ func test_StackEqualArrayOrMap(stack *Stack, _vals, _keys any, _ma any) bool {
 	return true
 }
 
-/** Return whether len(cards) == cards.size and whether depth measures are accurate */
+/** Return whether len(cards) == cards.Size and whether depth measures are accurate */
 func test_StackProperties(stack *Stack, size []int, depth ...int) (test bool) {
 
 	/*

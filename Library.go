@@ -420,8 +420,8 @@ func (stack *Stack) Empty() *Stack {
 /** Returns a clone of the given card
 
  @receiver `card` type{*Card}
- @param `cloneKey` type{CLONE}
- @param `cloneVal` type{CLONE}
+ @param optional `cloneKey` type{CLONE} default CLONE_False
+ @param optional `cloneVal` type{CLONE} default CLONE_False
  @returns type{*Card} card clone
  @constructs type{*Card} clone of `card`
 */
@@ -430,12 +430,15 @@ func (card *Card) Clone(variadic ...any) *Card {
 	// unpack variadic into optional parameters
 	var cloneKey, cloneVal any
 	gogenerics.UnpackVariadic(variadic, &cloneKey, &cloneVal)
+	// set default vals
+	setCLONEDefaultIfNil(&cloneKey)
+	setCLONEDefaultIfNil(&cloneVal)
 
 	// init
 	clone := new(Card)
 	clone.Idx = card.Idx
-	clone.Key = gogenerics.IfElse(cloneKey.(bool), gogenerics.CloneInterface(card.Key), card.Key)
-	clone.Val = gogenerics.IfElse(cloneVal.(bool), gogenerics.CloneInterface(card.Val), card.Val)
+	clone.Key = gogenerics.IfElse(cloneKey == CLONE_True, gogenerics.CloneInterface(&card.Key), card.Key)
+	clone.Val = gogenerics.IfElse(cloneVal == CLONE_True, gogenerics.CloneInterface(&card.Val), card.Val)
 
 	// return
 	return clone
@@ -521,12 +524,12 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...any) *Stack {
  
  @receiver `thisCard` type{*Card}
  @param `otherCard` type{*Card}
- @param `compareCards` type{bool} default false
+ @param optional `compareCards` type{bool} default false
 	By default, does not compare the card structs, but rather their individual values; can be set true and adjusted with `matchByTypeCard`
- @param `matchByTypeCard` type{MATCHBY} default MATCHBY_Object
- @param `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
- @param `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
- @param `compareIdxs` type{bool} default false
+ @param optional `matchByTypeCard` type{MATCHBY} default MATCHBY_Object
+ @param optional `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
+ @param optional `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
+ @param optional `compareIdxs` type{bool} default false
  @returns type{bool}
  */
 func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
