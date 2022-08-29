@@ -180,21 +180,32 @@ func Introduction() {
 	 But what if we wanted to do something more complex, like removing cards that were found
 	 	in the stack, or replacing them with another value?*/
 
-	// to remove found cards for gottenData from myStack
-	gottenData = myStack.ExtractMany(FIND_Val, 539) // Praying Mantis, Beetle
+	// remove found cards for gottenData from a clone of myStack
+	gottenData = myStack.Clone().ExtractMany(FIND_Val, 539) // Praying Mantis, Beetle
 
-	// to set gottenData to myStack where myStack's first card is placed after its last card
+	// set gottenData to myStack where myStack's first card is placed after its last card
 	gottenData = myStack.Move(FIND_First, ORDER_After, FIND_Last)
 
-	// to set gottenData to a clone of myStack
-	gottenData = myStack.Clone()
+	// set gottenData to a clone of myStack where TODO: fill in, and add parameter for stack.Clone that allows not cloning the stack itself since this is allowed
+	gottenData = myStack.Clone(CLONE_True, CLONE_False)
 
-	// to set gottenData to a clone of myStack which has another card appended to the end of its stack
+	// set gottenData to a clone of myStack which has another card appended to the end of its stack
 	gottenData = myStack.Clone().Add(MakeCard("Moth", 400), ORDER_After, FIND_Last)
 
-	// replace first card with a moth card, setting gottenData to the card that was replaced
+	// replace first card in myStack with a moth card, setting gottenData to the card that was replaced
 	gottenData = myStack.Replace(REPLACE_Card, MakeCard("Moth", 400), FIND_First)
 
-	// TODO: add more
+	// set gottenData to a clone of myStack where the first card and the second card are switched
+	gottenData = myStack.Clone().Swap(FIND_First, FIND_Idx, nil, 1)
+
+	// set gotten data to a clone of myStack which is put into a random order, flipped in the opposite order, and with any cards who have the same value as other cards removed
+	gottenData = myStack.Clone().Shuffle().Flip().Unique(TYPE_Val)
+
+	/**
+	 There are many more functions than the ones displayed here that you are welcome
+	 	to read about in the git's README.md, but the these examples should suffice for
+		providing intuitions about how gostack works.  If this tutorial could benefit
+		from any form of improvement, please email me at tucker.854@osu.edu to let me
+		know.  I welcome your feedback and appreciate you reading this.*/
 
 }

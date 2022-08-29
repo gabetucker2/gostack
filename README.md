@@ -80,7 +80,7 @@
  >>>
  >>>> [stack.ToMap()](#ToMap)
  >>>
- >>>> [stack.ToMatrix()](#ToMatrix)
+ >>>> [stack.ToMatrix(...)](#ToMatrix)
  >>>
  >>>> [stack.Empty()](#Empty)
  >>>

@@ -818,6 +818,7 @@ func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, 
  @param optional `deepSearchType_second` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth_first` type{int} default -1 (deepest)
  @param optional `depth_second` type{int} default -1 (deepest)
+ @updates `stack`
  @returns `stack` if moved OR nil if no move occurred (due second bad find)
  @requires you are not swapping a stack with a location within that own stack
  @ensures a stack of cards, or individual cards, can be targeted
