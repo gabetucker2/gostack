@@ -192,4 +192,9 @@ func Introduction() {
 	// to set gottenData to a clone of myStack which has another card appended to the end of its stack
 	gottenData = myStack.Clone().Add(MakeCard("Moth", 400), ORDER_After, FIND_Last)
 
+	// replace first card with a moth card, setting gottenData to the card that was replaced
+	gottenData = myStack.Replace(REPLACE_Card, MakeCard("Moth", 400), FIND_First)
+
+	// TODO: add more
+
 }
