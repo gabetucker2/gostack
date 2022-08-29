@@ -59,7 +59,6 @@ const (
 const (
 	TYPE_Key TYPE = iota
 	TYPE_Val
-	TYPE_Card
 )
 
 const (

@@ -278,7 +278,6 @@
  > **TYPE**
  > * TYPE_Key
  > * TYPE_Val
- > * TYPE_Card
 
  > **ORDER**
  > * ORDER_Before
@@ -490,8 +489,6 @@
 >> TYPE_Key
 >
 >> TYPE_Val
->
->> TYPE_Card
  
 <h4 name = "ORDER">ORDER</h4>
 
