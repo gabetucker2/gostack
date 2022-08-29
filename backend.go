@@ -635,20 +635,28 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []
 		ret = stack
 		
 		for i := 0; i < matrixShape[0]; i++ {
-			c := MakeCard()
-			updated := false
-			if len(keys) > 0 {
-				updated = true
-				c.Key = keys[*globalI]
-			}
-			if len(vals) > 0 {
-				updated = true
-				c.Val = vals[*globalI]
-			}
-			if updated {
-				*globalI++
-			}
-			ret.Cards = append(ret.Cards, c)
+
+			switch vals[i].(type) {
+			case []*Card:
+				// set to existing card in card array `vals`
+				ret.Cards = append(ret.Cards, vals[i].(*Card))
+			default:
+				// make new card initialized to vals determined in val array `vals`
+				c := MakeCard()
+				updated := false
+				if len(keys) > 0 {
+					updated = true
+					c.Key = keys[*globalI]
+				}
+				if len(vals) > 0 {
+					updated = true
+					c.Val = vals[*globalI]
+				}
+				if updated {
+					*globalI++
+				}
+				ret.Cards = append(ret.Cards, c)
+			}	
 		}
 
 	}

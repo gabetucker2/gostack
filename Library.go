@@ -56,7 +56,10 @@ func MakeCard(variadic ...any) *Card {
       IF `input1` is a map
         unpack the map into new cards with corresponding keys and vals
       ELSEIF `input1` is an array and `input2` is not passed/nil
-        unpack values from `input1` into new cards
+	    IF `input1` is an array of cards:
+		  set `stack.Cards` to `input1`
+		ELSE:
+          unpack values from `input1` into new cards
       ELSEIF `input1` is an array and `input2` is an array
         unpack keys from `input1` and values from `input2` into new cards
       ELSEIF `input1` is nil and `input2` is an array
@@ -143,7 +146,10 @@ func MakeStack(variadic ...any) *Stack {
         IF `input1` is a map
           unpack the map into matrix of shape `matrixShape` with corresponding keys and vals
         ELSEIF `input1` is an array and `input2` is not passed/nil
-          unpack values from `input1` into matrix of shape `matrixShape`
+	      IF `input1` is an array of cards:
+		    set `stack.Cards` to cards in `input1` in matrix of shape `matrixShape`
+		  ELSE:
+            unpack values from `input1` into new cards in matrix of shape `matrixShape`
         ELSEIF `input1` is an array and `input2` is an array
           unpack keys from `input1` and values from `input2` into matrix of shape `matrixShape`
         ELSEIF `input1` is nil and `input2` is an array
@@ -208,8 +214,16 @@ func MakeStackMatrix(variadic ...any) *Stack {
 					
 					// ELSEIF `matrixShape` is passed
 					} else {
-						// unpack values from `input1` into matrix of shape `matrixShape`
-						stack.makeStackMatrixFrom1D(matrixShape.([]int), nil, input1Array, new(int))
+
+						// IF `input1` is an array of cards:
+						if true {
+							// set `stack.Cards` to cards in `input1` in matrix of shape `matrixShape`
+							stack.makeStackMatrixFrom1D(matrixShape.([]int), nil, input1Array, new(int))
+						// ELSE:
+						} else {
+							// unpack values from `input1` into new cards in matrix of shape `matrixShape`
+							stack.makeStackMatrixFrom1D(matrixShape.([]int), nil, input1Array, new(int))
+						}
 					}
 
 				// ...and `input2` is an array
@@ -725,7 +739,7 @@ func (stack *Stack) Lambda(lambda any, variadic ...any) *Stack {
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
  @param optional `overrideStackConversion` type{bool} default false
-	if `insert` is of type Stack:
+	if `insert` is of type{Stack}:
 		if not `overrideStackConversion`:
 			add to `stack` from `insert.Cards`
 		else if `overrideStackConversion`:
@@ -915,7 +929,6 @@ func (stack *Stack) Get(variadic ...any) (ret *Card) {
  @returns type{*Stack} the new stack (if find fails, then an empty stack)
  @constructs type{*Stack} new stack of specified values from specified cards in `stack`
  @requires
-  * `MakeStack()` has been implemented
   * `clonesType_keys` and `clonesType_vals` are only passed if `returnType` == RETURN_Cards
  @ensures
   * CLONE_True means the cards in the returned stack are clones

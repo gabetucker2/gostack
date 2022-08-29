@@ -53,7 +53,7 @@ func Introduction() {
 			[]*Cards: { },
 		}*/
 	
-	myStack := MakeStack()//lint:ignore SA4006 Ignore warning (please ignore these comments)
+	myStack := MakeStack()//lint:ignore SA4006 Ignore warning (please ignore these types of lint comments)
 
 	/**
 	 Great!  We have now made an empty stack.  Now let's make some cards we can use to add
@@ -72,19 +72,35 @@ func Introduction() {
 	/**
 	 We have now created three cards.  But these cards are kind of awkwardly floating around
 	 	in the void, so let's put them in our myStack.  There are several ways we could do this
-		that are useful in different situations:*/
-
-	// if you have neither yet created your cards nor your stack:
-	myStack = MakeStack([]*Card {MakeCard("Butterfly"), MakeCard("Praying Mantis"), MakeCard("Beetle")})//lint:ignore SA4006 Ignore warning
+		that are useful in different situations (feel free to ignore the alternative examples):*/
 	
-	// if you have already created your cards and have not yet created your stack:
-	myStack = MakeStack([]*Card {cardA, cardB, cardC})
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// if you have already created your cards but have not yet created your stack:
+	myStack = MakeStack([]*Card {cardA, cardB, cardC})//lint:ignore SA4006 Ignore warning
 
-	// if you have already created your cards and don't want to replace your existing stack:
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// if you have neither created your cards nor your stack:
+	 // makes a stack of cards, each of whom's vals are a string in an array of strings (recommended)
+	myStack = MakeStack([]string {"Butterfly", "Praying Mantis", "Beetle"})//lint:ignore SA4006 Ignore warning
+	
+	//   ALTERNATIVE:
+	// makes a stack by directly initializing it using cards
+   myStack = MakeStack([]*Card {MakeCard("Butterfly"), MakeCard("Praying Mantis"), MakeCard("Beetle")})
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// if you have already created your cards and your stack and you don't want to replace your existing stack:
+	 // creates a temporary stack and inserts its cards into myStack (recommended)
 	myStack.Add(MakeStack([]*Card {cardA, cardB, cardC}))
+
+	 //   ALTERNATIVES:
+	 // repeatedly adds to the front of myStack in reverse order
 	myStack.Add(cardC).Add(cardB).Add(cardA)
+	 // repeatedly adds to the back of myStack
 	myStack.Add(cardA, ORDER_After, FIND_Last).Add(cardB, ORDER_After, FIND_Last).Add(cardC, ORDER_After, FIND_Last)
+	 // creates an array of cards and uses a loop to add them each to the back of myStack
 	myCards := []*Card {cardA, cardB, cardC}; for _, c := range myCards { myStack.Add(c, ORDER_After, FIND_Last) };
+	 // creates an array of cards and uses a loop to add them in reverse order to the front of myStack
+	myCards = []*Card {cardA, cardB, cardC}; for i := range myCards { myStack.Add(myCards[len(myCards)-1-i]) };
 
 	/**
 	 Each of these lines of code are different ways of creating the same thing.  Let's
@@ -112,6 +128,12 @@ func Introduction() {
 			},
 		}
 		
-	 Simple enough!  */
+	 Simple enough!  Next, let's say we were sad enough to make a book about insects.
+	 	This is a very strange book: it is just a list of insect names paired with the
+		amount of years that have passed since their discovery.  This is a map structure:
+		there can only be one of each insect name, but there can be many of the same year
+		discovered.  As such, this is how we would make our data structure:*/
+
+	myStack = MakeStack()
 
 }
