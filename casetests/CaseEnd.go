@@ -412,10 +412,10 @@ func Run(_showTestText bool) {
 	case_card_Clone("card.Clone") // BAD
 	case_stack_Clone("stack.Clone") // BAD
 	case_stack_Unique("stack.Unique") // BAD
-	case_card_Equals("card.Equals") // BAD
+	/*case_card_Equals("card.Equals") // BAD
 	case_stack_Equals("stack.Equals") // BAD
 	case_stack_Shuffle("stack.Shuffle") // BAD
-	/*case_stack_Flip("stack.Flip") // BAD
+	case_stack_Flip("stack.Flip") // BAD
 	case_card_Print("card.Print") // BAD
 	case_stack_Print("stack.Print") // BAD
 	case_stack_Lambda("stack.Lambda") // BAD

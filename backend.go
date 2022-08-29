@@ -50,10 +50,7 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 				// where newCards is uniqueCards
 				newCards = targetStack.Cards
 				for i, newCard := range newCards {
-					if (typeType == TYPE_Card &&
-						(matchByType == MATCHBY_Object && targetCard == newCard) ||
-						(matchByType == MATCHBY_Reference && &targetCard == &newCard) ) || 
-						(typeType == TYPE_Key &&
+					if (typeType == TYPE_Key &&
 						(matchByType == MATCHBY_Object && targetCard.Key == newCard.Key) ||
 						(matchByType == MATCHBY_Reference && &targetCard.Key == &newCard.Key) ) ||
 						(typeType == TYPE_Val &&
