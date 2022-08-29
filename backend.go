@@ -616,7 +616,10 @@ func (stack *Stack) getStackDepth() (depth int) {
   * |keys| == |vals| if neither are nil
   * |keys| or |vals| == product of ints in matrixShape
 */
-func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []any, globalI *int) (ret *Stack) {
+func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []any, globalI *int, overrideCards any) (ret *Stack) {
+	
+	// set defaults
+	if overrideCards == nil {overrideCards = false}
 
 	// make stack
 	if len(matrixShape) > 1 {
@@ -624,7 +627,7 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []
 		for i := 0; i < matrixShape[0]; i++ {
 			// insert this return value into a card of our current stack
 			stack.Cards = append(stack.Cards, MakeCard(
-				MakeStack().makeStackMatrixFrom1D(matrixShape[1:], keys, vals, globalI), nil, i))
+				MakeStack().makeStackMatrixFrom1D(matrixShape[1:], keys, vals, globalI, overrideCards), nil, i))
 		}
 
 		ret = stack
@@ -633,30 +636,38 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []
 	} else {
 
 		ret = stack
+
+		makeNewCard := func() {
+			// make new card initialized to vals determined in val array `vals`
+			c := MakeCard()
+			updated := false
+			if len(keys) > 0 {
+				updated = true
+				c.Key = keys[*globalI]
+			}
+			if len(vals) > 0 {
+				updated = true
+				c.Val = vals[*globalI]
+			}
+			if updated {
+				*globalI++
+			}
+			ret.Cards = append(ret.Cards, c)
+		}
 		
 		for i := 0; i < matrixShape[0]; i++ {
 
-			switch vals[i].(type) {
-			case []*Card:
-				// set to existing card in card array `vals`
-				ret.Cards = append(ret.Cards, vals[i].(*Card))
-			default:
-				// make new card initialized to vals determined in val array `vals`
-				c := MakeCard()
-				updated := false
-				if len(keys) > 0 {
-					updated = true
-					c.Key = keys[*globalI]
+			if overrideCards.(bool) {
+				makeNewCard()
+			} else {
+				switch vals[i].(type) {
+				case []*Card:
+					// set to existing card in card array `vals`
+					ret.Cards = append(ret.Cards, vals[i].(*Card))
+				default:
+					makeNewCard()
 				}
-				if len(vals) > 0 {
-					updated = true
-					c.Val = vals[*globalI]
-				}
-				if updated {
-					*globalI++
-				}
-				ret.Cards = append(ret.Cards, c)
-			}	
+			}
 		}
 
 	}
