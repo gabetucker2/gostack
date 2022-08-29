@@ -260,6 +260,114 @@ func case_stack_ToMatrix(funcName string) {
 	
 }
 
+func case_stack_Empty(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	stack1 := test_SampleStack().Empty()
+	stack2 := test_SampleStackMatrix().Empty()
+
+	conditions := []bool{
+		test_StackProperties(stack1, []int {0}, 1),
+		test_StackProperties(stack2, []int {0}, 1),
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_card_Clone(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	cardA := MakeCard("Original", "Original")
+	cardAClone := cardA.Clone(CLONE_True, CLONE_True)
+	cardAClone.Key = "New"
+	cardAClone.Val = "New"
+	
+	cardB := MakeCard("Original", "Original")
+	cardBClone := cardB.Clone(CLONE_True, CLONE_False)
+	cardBClone.Key = "New"
+	cardBClone.Val = "New"
+	
+	cardC := MakeCard("Original", "Original")
+	cardCClone := cardC.Clone(CLONE_False, CLONE_True)
+	cardCClone.Key = "New"
+	cardCClone.Val = "New"
+	
+	cardD := MakeCard("Original", "Original")
+	cardDClone := cardD.Clone(CLONE_False, CLONE_False)
+	cardDClone.Key = "New"
+	cardDClone.Val = "New"
+
+	conditions := []bool{
+		cardA.Idx == -1,
+		cardA.Key == "Original",
+		cardA.Val == "Original",
+		cardAClone.Idx == -1,
+		cardAClone.Key == "New",
+		cardAClone.Val == "New",
+
+		cardB.Idx == -1,
+		cardB.Key == "Original",
+		cardB.Val == "New",
+		cardBClone.Idx == -1,
+		cardBClone.Key == "New",
+		cardBClone.Val == "New",
+
+		cardC.Idx == -1,
+		cardC.Key == "New",
+		cardC.Val == "Original",
+		cardCClone.Idx == -1,
+		cardCClone.Key == "New",
+		cardCClone.Val == "New",
+
+		cardD.Idx == -1,
+		cardD.Key == "New",
+		cardD.Val == "New",
+		cardDClone.Idx == -1,
+		cardDClone.Key == "New",
+		cardDClone.Val == "New",
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_Clone(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// if card.Clone() works, we expect stack.Clone() to work since it calls card.Clone(), meaning we only need to test for non parameter-related functionality
+	stackA := MakeStack([]string {"Original", "Original"}, []string {"Original", "Original"})
+	stackAClone := stackA.Clone(CLONE_True, CLONE_False)
+	stackAClone.Get(FIND_First).Key = "New"
+	stackAClone.Get(FIND_Last).Key = "New"
+	stackAClone.Get(FIND_First).Val = "New"
+	stackAClone.Get(FIND_Last).Val = "New"
+
+	conditions := []bool{
+		test_StackProperties(stackA, []int {2}, 1),
+
+		stackA.Get(FIND_First).Idx == 0,
+		stackA.Get(FIND_Last).Idx == 1,
+		stackA.Get(FIND_First).Key == "Original",
+		stackA.Get(FIND_Last).Key == "Original",
+		stackA.Get(FIND_First).Val == "New",
+		stackA.Get(FIND_Last).Val == "New",
+
+		stackAClone.Get(FIND_First).Idx == 0,
+		stackAClone.Get(FIND_Last).Idx == 1,
+		stackAClone.Get(FIND_First).Key == "New",
+		stackAClone.Get(FIND_Last).Key == "New",
+		stackAClone.Get(FIND_First).Val == "New",
+		stackAClone.Get(FIND_Last).Val == "New",
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
 /** Executes all case tests */
 func Run(_showTestText bool) {
 
@@ -269,21 +377,21 @@ func Run(_showTestText bool) {
 
 	// NON-GENERALIZED FUNCTIONS
 	case_MakeCard("MakeCard") // GOOD
-	case_MakeStack("MakeStack") // GOOD
+	case_MakeStack("MakeStack") // BAD
 	case_MakeStackMatrix("MakeStackMatrix") // BAD
 	case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
 	case_stack_ToArray("stack.ToArray") // BAD
 	case_stack_ToMap("stack.ToMap") // BAD
 	case_stack_ToMatrix("stack.ToMatrix") // BAD
-	/*case_stack_Empty("stack.Empty") // BAD
+	case_stack_Empty("stack.Empty") // BAD
 	case_card_Clone("card.Clone") // BAD
 	case_stack_Clone("stack.Clone") // BAD
-	case_stack_Unique("stack.Unique") // BAD
+	/*case_stack_Unique("stack.Unique") // BAD
+	case_stack_Sort("stack.Equals") // BAD
 	case_stack_Shuffle("stack.Shuffle") // BAD
 	case_stack_Flip("stack.Flip") // BAD
 	case_card_Print("card.Print") // BAD
 	case_stack_Print("stack.Print") // BAD
-	case_stack_Sort("stack.Sort") // BAD
 	case_stack_Lambda("stack.Lambda") // BAD
 	
 	// GENERALIZED FUNCTIONS
