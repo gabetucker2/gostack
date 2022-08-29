@@ -319,7 +319,7 @@
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
- * **stack.Add(insert, ...orderType, ...findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
+ * **stack.Add(insert, ...orderType, ...findType, ...findData, ...matchByType, ...deepSearchType, ...depth, ...overrideStackConversion)**
  * **stack.Move(findType_from, orderType, findType_to, ...findData_from, ...findData_to, ...matchByType_from, ...matchByType_to, ...deepSearchType, ...depth)**
  * **stack.Swap(findType_from, findType_to, ...findData_from, ...findData_to, ...matchByType_from, ...matchByType_to, ...deepSearchType, ...depth)**
  * **stack.Has(returnType, findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
@@ -824,9 +824,9 @@
  
 <h3 name = "Add">Add</h3>
  
- `stack.Add(insert, ...orderType, ...findType, ...findData, ...matchByType)`
+ `stack.Add(insert, ...orderType, ...findType, ...findData, ...matchByType, ...deepSearchType, ...depth, ...overrideStackConversion)`
  ```
- Adds to a stack of cards or a cards at (each) position(s) 
+ Adds to a stack of cards or a cards at (each) position(s) and returns `stack`
  
  @receiver `stack` type{*Stack}
  @param `insert` type{Card, Stack}
@@ -834,8 +834,17 @@
  @param optional `findType` type{FIND} default FIND_First
  @param optional `findData` type{any} default nil
  @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
- @returns `stack`
- @updates `stack.Cards` to have new cards before/after each designated position
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `depth` type{int} default -1 (deepest)
+ @param optional `overrideStackConversion` type{bool} default false
+	if `insert` is of type Stack:
+		if not `overrideStackConversion`:
+			add to `stack` from `insert.Cards`
+		else if `overrideStackConversion`:
+			add the `insert` stack to `stack` as the val of a card
+ @returns `stack` if cards were added OR nil if no cards were added (due to invalid find)
+ @updates `stack` to have new cards before/after each designated position
+ @requires `stack.Clone()` has been implemented
  ```
  
 <h3 name = "Move">Move</h3>

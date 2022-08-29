@@ -8,7 +8,7 @@ import (
 
 @shorthand Just pass the proper variables (or nil) into this function from Library.go, and this function will handle the rest
 */
-func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, findData, returnType, matchByType, deepSearchType, depth, typeType, uniqueType, insert, orderType, findData_to, findType_to, matchByType_to, cloneType1, cloneType2, cloneType3 any) (ret *Stack) {
+func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, findData, returnType, matchByType, deepSearchType, depth, typeType, uniqueType, insert, orderType, findData_to, findType_to, matchByType_to, cloneType1, cloneType2, cloneType3, overrideStackConversion any) (ret *Stack) {
 
 	// 0) set defaults
 	setORDERDefaultIfNil(&orderType)
@@ -20,6 +20,7 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 	setCLONEDefaultIfNil(&cloneType1)
 	setCLONEDefaultIfNil(&cloneType2)
 	setCLONEDefaultIfNil(&cloneType3)
+	if overrideStackConversion == nil {overrideStackConversion = false}
 
 	// 1) clone the stack
 	var stackClone *Stack
@@ -86,7 +87,11 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 				case Card:
 					newCards = append(newCards, insert.(*Card))
 				case Stack:
-					newCards = append(newCards, insert.(*Stack).Cards...)
+					if overrideStackConversion.(bool) {
+						newCards = append(newCards, MakeCard(insert.(*Stack)))
+					} else {
+						newCards = append(newCards, insert.(*Stack).Cards...)
+					}
 				}
 
 				// add the targetCard after insert if insert is Order_BEFORE (insert ordered before targetCard)
