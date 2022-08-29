@@ -349,7 +349,7 @@
  >>> Returns an interface array to represent the elements in the Stack
  >>
  >> `Size` *int*
- >>> Returns the cardinality (i.e., `len(stack.cards)`) of this Stack
+ >>> Returns the cardinality (i.e., `len(stack.Cards)`) of this Stack
  >>
  >> `Depth` *int*
  >>> Returns the dimensionality of this Stack, assuming it is uniform
@@ -362,10 +362,10 @@
  >>> `card.Idx` *int*
  >>>> The index of this card
  >>>
- >>> `card.Key` *any (any)*
+ >>> `card.Key` *any*
  >>>> The key of this card (or nil if doesn't exist)
  >>>
- >>> `card.Val` *any (any)*
+ >>> `card.Val` *any*
  >>>> The val of this card (or nil if doesn't exist)
 
 <h3 name = "enums">enums</h3>
@@ -417,25 +417,25 @@
  >>> []int
  >>
  >> FIND_IdxsStack
- >>> stack where type{stack.card.Val} == int
+ >>> stack where type{stack.Card.Val} == int
  >>
  >> FIND_Key
- >>> any (any)
+ >>> any
  >>
  >> FIND_Keys
- >>> []any ([]any)
+ >>> []any
  >>
  >> FIND_KeysStack
- >>> stack where type{stack.card.Val} == any (any)
+ >>> stack where type{stack.Card.Val} == any
  >>
  >> FIND_Val
- >>> any (any)
+ >>> any
  >>
  >> FIND_Vals
- >>> []any ([]any)
+ >>> []any
  >>
  >> FIND_ValsStack
- >>> stack where type{stack.card.Val} == any (any)
+ >>> stack where type{stack.Card.Val} == any
  >>
  >> FIND_Card
  >>> *Card
@@ -444,7 +444,7 @@
  >>> *Stack (input is the cards in this stack)
  >>
  >> FIND_CardsStack
- >>> stack where type{stack.card.Val} == *Card
+ >>> stack where type{stack.Card.Val} == *Card
  >>
  >> FIND_Slice
  >>> [2]int

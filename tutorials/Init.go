@@ -1,2 +1,3 @@
 package tutorials
-func RemoveImportedButNotUsedError() {}
+
+func RemoveNotUsedError(...any) {}

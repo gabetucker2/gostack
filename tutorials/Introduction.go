@@ -7,7 +7,7 @@ package tutorials
 import (
 	"fmt"
 
-	. "github.com/gabetucker2/gostack"//lint:ignore ST1001 Ignore warning
+	. "github.com/gabetucker2/gostack" //lint:ignore ST1001 Ignore warning
 )
 
 func Introduction() {
@@ -134,6 +134,62 @@ func Introduction() {
 		there can only be one of each insect name, but there can be many of the same year
 		discovered.  As such, this is how we would make our data structure:*/
 
-	myStack = MakeStack()
+	myStack = MakeStack([]string {"Butterfly", "Praying Mantis", "Beetle", "Ant", "Bumble Bee"}, []int {20, 539, 539, 340, 11})
+
+	/**
+	 Great.  So now, let's say we wanted to access this structure in various ways.  We
+	 	would do this using the stack.Get/GetMany(...) function.  For simplicity's sake,
+		we will show only the keys of the card(s) returned.  Here's some examples:*/
+
+	var gottenData any
+	RemoveNotUsedError(gottenData) // (please ignore this line)
+	
+	// to get the first card in myStack: card {Idx: 0, Key: "Butterfly", Val: 539}:
+	gottenData = myStack.Get(FIND_First) // Butterfly
+	gottenData = myStack.Get(FIND_First, nil) // Butterfly
+	gottenData = myStack.Get(FIND_Idx, 0) // Butterfly
+
+	// to get the first card with the val of 539:
+	gottenData = myStack.Get(FIND_Val, 539) // Praying Mantis
+
+	// to get a stack containing all cards with the val of 539:
+	gottenData = myStack.GetMany(FIND_Val, 539) // Praying Mantis, Beetle
+
+	// to get all cards whose vals are either 20 or 340
+	gottenData = myStack.GetMany(FIND_Val, []int {20, 340}) // Butterfly, Ant
+	gottenData = myStack.GetMany(FIND_ValsStack, MakeStack([]int {20, 340})) // Butterfly, Ant
+
+	// to get all cards whose vals are under 30 (read more on this type of functionality in Lambda.go)
+	gottenData = myStack.GetMany(FIND_Lambda, func(card *Card) bool {
+		return card.Val.(int) < 30
+	}) // Butterfly, Bumble Bee
+
+	/**
+	 Exciting!  So we have now have performed many different types of retrievals on our
+	 	myStack stack.  But, in each output, we have gotten either a Card (from .Get()) or
+		a stack of cards (from .GetMany()).  But what if we wanted to make a new stack
+		whose values are the keys of myStack?  For instance, if you wanted to play around
+		with the types of insects without messing up myStack, what would you do?*/
+	
+	gottenData = myStack.GetMany(FIND_All, nil, RETURN_Keys)
+
+	/**
+	 There we go!  We now have a stack whose cards' keys are nil and whose cards vals are
+	 	myStack's keys.  You can do the equivalent for Idxs or Vals.
+	
+	 But what if we wanted to do something more complex, like removing cards that were found
+	 	in the stack, or replacing them with another value?*/
+
+	// to remove found cards for gottenData from myStack
+	gottenData = myStack.ExtractMany(FIND_Val, 539) // Praying Mantis, Beetle
+
+	// to set gottenData to myStack where myStack's first card is placed after its last card
+	gottenData = myStack.Move(FIND_First, ORDER_After, FIND_Last)
+
+	// to set gottenData to a clone of myStack
+	gottenData = myStack.Clone()
+
+	// to set gottenData to a clone of myStack which has another card appended to the end of its stack
+	gottenData = myStack.Clone().Add(MakeCard("Moth", 400), ORDER_After, FIND_Last)
 
 }

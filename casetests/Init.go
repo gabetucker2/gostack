@@ -1,2 +1,3 @@
 package casetests
-func RemoveImportedButNotUsedError() {}
+
+func RemoveNotUsedError() {}

@@ -8,8 +8,8 @@ import (
 func main() {
 
 	// remove import errors when stuff below is commented out
-	casetests.RemoveImportedButNotUsedError()
-	tutorials.RemoveImportedButNotUsedError()
+	casetests.RemoveNotUsedError()
+	tutorials.RemoveNotUsedError()
 
 	// tests
 	casetests.Run(true)

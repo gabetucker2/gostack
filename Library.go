@@ -438,7 +438,6 @@ func (stack *Stack) Empty() *Stack {
 /** Returns a clone of the given card
 
  @receiver `card` type{*Card}
- @param optional `cloneCard` type{CLONE} default CLONE_True
  @param optional `cloneKey` type{CLONE} default CLONE_False
  @param optional `cloneVal` type{CLONE} default CLONE_False
  @returns type{*Card} card clone
@@ -447,15 +446,14 @@ func (stack *Stack) Empty() *Stack {
 func (card *Card) Clone(variadic ...any) *Card {
 
 	// unpack variadic into optional parameters
-	var cloneCard, cloneKey, cloneVal any
-	gogenerics.UnpackVariadic(variadic, &cloneCard, &cloneKey, &cloneVal)
+	var cloneKey, cloneVal any
+	gogenerics.UnpackVariadic(variadic, &cloneKey, &cloneVal)
 	// set default vals
-	if cloneCard == nil {cloneCard = CLONE_True}
 	setCLONEDefaultIfNil(&cloneKey)
 	setCLONEDefaultIfNil(&cloneVal)
 
 	// init
-	clone := gogenerics.IfElse(cloneCard == CLONE_True, new(Card), card).(*Card)
+	clone := new(Card)
 	clone.Idx = card.Idx
 	clone.Key = gogenerics.IfElse(cloneKey == CLONE_True, gogenerics.CloneInterface(&card.Key), card.Key)
 	clone.Val = gogenerics.IfElse(cloneVal == CLONE_True, gogenerics.CloneInterface(&card.Val), card.Val)
@@ -468,7 +466,6 @@ func (card *Card) Clone(variadic ...any) *Card {
 /** Returns a clone of the given stack
 
  @receiver `stack` type{*Stack}
- @optional param `cloneCards` type{CLONE} default CLONE_False
  @optional param `cloneKeys` type{CLONE} default CLONE_False
  @optional param `cloneVals` type{CLONE} default CLONE_False
  @returns type{*Stack} stack clone
@@ -482,15 +479,15 @@ func (card *Card) Clone(variadic ...any) *Card {
 func (stack *Stack) Clone(variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var cloneCards, cloneKeys, cloneVals any
-	gogenerics.UnpackVariadic(variadic, &cloneCards, &cloneKeys, &cloneVals)
+	var cloneKeys, cloneVals any
+	gogenerics.UnpackVariadic(variadic, &cloneKeys, &cloneVals)
 
 	// init
 	clone := new(Stack)
 	clone.Size = stack.Size
 	clone.Depth = stack.Depth
 	for i := range stack.Cards {
-		clone.Cards = append(clone.Cards, stack.Cards[i].Clone(cloneCards, cloneKeys, cloneVals))
+		clone.Cards = append(clone.Cards, stack.Cards[i].Clone(cloneKeys, cloneVals))
 	}
 
 	// return
