@@ -314,8 +314,8 @@
  * **card.Clone(...cloneKey, ...cloneVal)**
  * **stack.Clone(...cloneCards, ...cloneKeys, ...cloneVals)**
  * **stack.Unique(typeType, ...matchByType, ...deepSearchType, ...depth)**
- * **card.Equals(Card, ...compareCards, ...matchByTypeCard, ...matchByTypeKey, ...matchByTypeVal, ...compareIdxs)**
- * **stack.Equals(Stack, ...compareStacks, ...matchByTypeStack, ...deepSearchType, ...compareCards, ...matchByTypeCard, ...matchByTypeKey, ...matchByTypeVal, ...compareIdxs)**
+ * **card.Equals(Card, ...matchByTypeKey, ...matchByTypeVal, ...compareIdxs)**
+ * **stack.Equals(Stack, ...compareStacks, ...matchByTypeStack, ...deepSearchType, ...depth, ...matchByTypeKey, ...matchByTypeVal)**
  * **stack.Shuffle()**
  * **stack.Flip()**
  * **card.Print()**
@@ -755,19 +755,19 @@
  @returns type{bool}
  ```
  
- `stack.Equals(*Stack, ...compareStacks, ...matchByTypeStack, ...deepSearchType, ...compareCards, ...matchByTypeCard, ...matchByTypeKey, ...matchByTypeVal, ...compareIdxs)`
+ `stack.Equals(*Stack, ...compareStacks, ...matchByTypeStack, ...deepSearchType, ...compareCards, ...matchByTypeCard, ...matchByTypeKey, ...matchByTypeVal)`
  ```
  Returns whether two stacks equal one another
  
  @receiver `thisStack` type{*Stack}
  @param `otherStack` type{*Stack}
- @param `compareStacks` type{bool} default false
+ @param `compareStacks` type{COMPARE} default COMPARE_False
 	By default, does not compare the stack structs, but rather their cards; can be set true and adjusted with `matchByTypeStack`
  @param `matchByTypeStack` type{MATCHBY} default MATCHBY_Object
  @param `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `depth` type{int} default -1 (deepest)
  @param `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
  @param `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
- @param `compareIdxs` type{bool} default false
  @returns type{bool}
  ```
  

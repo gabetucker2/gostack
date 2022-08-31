@@ -412,8 +412,8 @@ func case_card_Equals(funcName string) {
 		card1.Equals(card2),
 
 		// test whether idx parameter works
-		card1.Equals(card2, nil, nil, false),
-		!card1.Equals(card2, nil, nil, true),
+		card1.Equals(card2, nil, nil, COMPARE_False),
+		!card1.Equals(card2, nil, nil, COMPARE_True),
 
 		// test whether matchByTypes work
 		card1.Equals(card3),
@@ -437,14 +437,53 @@ func case_stack_Equals(funcName string) {
 
 	// since we've already tested the properties of card.Equals(), and stack invokes card.Equals(),
 	// we don't need as thorough of a test for non-stack-specific parameters
+
 	stack1 := MakeStack([]string {"Hello", "Hey"})
 	stack2 := MakeStack([]string {"Hello", "Hey"})
+	stack3 := stack1
+	stack4 := MakeStack([]string {"Hi", "Hey"})
+	
+	deep1 := MakeStackMatrix([]string {"Hello", "Hey", "Howdy", "Hi"}, nil, []int {2, 2})
+	deep2 := MakeStackMatrix([]string {"Hello", "Hey", "Howdy", "Hi"}, nil, []int {2, 2})
+	deep3 := deep1
+	deep4 := MakeStackMatrix([]string {"Hello", "Hey", "Howdy", "Heyo"}, nil, []int {2, 2})
+
+	string1 := "Hi"
+	string2 := "Hello"
+	objRefStack1 := MakeStack([]string {"Hi", "Hello"})
+	objRefStack2 := MakeStack([]string {string1, string2})
+
+	deeper1 := MakeStack(objRefStack1)
+	deeper2 := MakeStackMatrix(objRefStack2)
+	deeper3 := MakeStackMatrix(objRefStack2)
 
 	conditions := []bool{
 		
-		//
-		stack1.Equals(stack2),
-		stack1.Equals(stack2, true),
+		// test whether stack compare object vs reference works
+		stack1.Equals(stack2, COMPARE_False),
+		stack1.Equals(stack2, COMPARE_True),
+		stack1.Equals(stack2, COMPARE_True, MATCHBY_Object),
+		!stack1.Equals(stack2, COMPARE_True, MATCHBY_Reference),
+		stack1.Equals(stack3, COMPARE_True, MATCHBY_Reference),
+		!stack1.Equals(stack4, COMPARE_True, MATCHBY_Object),
+		!stack1.Equals(stack4, COMPARE_True, MATCHBY_Reference),
+
+		// test whether the same tests hold true for a deepsearch-true equivalent
+		deep1.Equals(deep2, COMPARE_False, nil, DEEPSEARCH_True),
+		deep1.Equals(deep2, COMPARE_True, nil, DEEPSEARCH_True),
+		deep1.Equals(deep2, COMPARE_True, MATCHBY_Object, DEEPSEARCH_True),
+		!deep1.Equals(deep2, COMPARE_True, MATCHBY_Reference, DEEPSEARCH_True),
+		deep1.Equals(deep3, COMPARE_True, MATCHBY_Reference, DEEPSEARCH_True),
+		!deep1.Equals(deep4, COMPARE_True, MATCHBY_Object, DEEPSEARCH_True),
+		!deep1.Equals(deep4, COMPARE_True, MATCHBY_Reference, DEEPSEARCH_True),
+
+		// test depth
+		deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, -1),
+		deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, 2),
+		deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, 1),
+		!deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, 1, nil, MATCHBY_Reference),
+		deeper2.Equals(deeper3, nil, nil, DEEPSEARCH_True, 1, nil, MATCHBY_Reference),
+
 	}
 
 	test_End(funcName, conditions)
