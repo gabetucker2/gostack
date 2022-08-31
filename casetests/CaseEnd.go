@@ -397,11 +397,34 @@ func case_card_Equals(funcName string) {
 
 	test_Start(funcName, showTestText)
 
+	keyVar := "MyKey"
+	valVar := "MyVal"
+
 	card1 := MakeCard("MyKey", "MyVal") // Idx == -1
 	card2 := MakeCard("MyKey", "MyVal", 0)
 
+	card3 := MakeCard(keyVar, valVar)
+	card4 := MakeCard(keyVar, valVar)
+
 	conditions := []bool{
+
+		// compare by object
 		card1.Equals(card2),
+
+		// test whether idx parameter works
+		card1.Equals(card2, nil, nil, false),
+		!card1.Equals(card2, nil, nil, true),
+
+		// test whether matchByTypes work
+		card1.Equals(card3),
+		card1.Equals(card3, MATCHBY_Object, MATCHBY_Object),
+		!card1.Equals(card3, MATCHBY_Object, MATCHBY_Reference),
+		!card1.Equals(card3, MATCHBY_Reference, MATCHBY_Object),
+		!card1.Equals(card3, MATCHBY_Reference, MATCHBY_Reference),
+		card3.Equals(card4, MATCHBY_Object, MATCHBY_Reference),
+		card3.Equals(card4, MATCHBY_Reference, MATCHBY_Object),
+		card3.Equals(card4, MATCHBY_Reference, MATCHBY_Reference),
+		
 	}
 
 	test_End(funcName, conditions)
