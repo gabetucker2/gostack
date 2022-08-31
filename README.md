@@ -733,12 +733,9 @@
  
  @receiver `thisCard` type{*Card}
  @param `otherCard` type{*Card}
- @param `compareCards` type{bool} default false
-	By default, does not compare entire card structs; can be set true and adjusted with `matchByTypeCard`
- @param `matchByTypeCard` type{MATCHBY} default MATCHBY_Object
- @param `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
- @param `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
- @param `compareIdxs` type{bool} default false
+ @param optional `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
+ @param optional `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
+ @param optional `compareIdxs` type{bool} default false
  @returns type{bool}
  ```
  
@@ -752,9 +749,6 @@
 	By default, does not compare the stack structs, but rather their cards; can be set true and adjusted with `matchByTypeStack`
  @param `matchByTypeStack` type{MATCHBY} default MATCHBY_Object
  @param `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param `compareCards` type{bool} default true
-	By default, does not compare the card structs, but rather their individual values; can be set true and adjusted with `matchByTypeCard`
- @param `matchByTypeCard` type{MATCHBY} default MATCHBY_Object
  @param `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
  @param `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
  @param `compareIdxs` type{bool} default false

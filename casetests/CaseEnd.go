@@ -393,6 +393,21 @@ func case_stack_Unique(funcName string) {
 	
 }
 
+func case_card_Equals(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	card1 := MakeCard("MyKey", "MyVal") // Idx == -1
+	card2 := MakeCard("MyKey", "MyVal", 0)
+
+	conditions := []bool{
+		card1.Equals(card2),
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
 /** Executes all case tests */
 func Run(_showTestText bool) {
 
@@ -412,8 +427,8 @@ func Run(_showTestText bool) {
 	case_card_Clone("card.Clone") // BAD
 	case_stack_Clone("stack.Clone") // BAD
 	case_stack_Unique("stack.Unique") // BAD
-	/*case_card_Equals("card.Equals") // BAD
-	case_stack_Equals("stack.Equals") // BAD
+	case_card_Equals("card.Equals") // BAD
+	/*case_stack_Equals("stack.Equals") // BAD
 	case_stack_Shuffle("stack.Shuffle") // BAD
 	case_stack_Flip("stack.Flip") // BAD
 	case_card_Print("card.Print") // BAD

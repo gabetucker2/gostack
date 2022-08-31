@@ -534,9 +534,6 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...any) *Stack {
  
  @receiver `thisCard` type{*Card}
  @param `otherCard` type{*Card}
- @param optional `compareCards` type{bool} default false
-	By default, does not compare the card structs, but rather their individual values; can be set true and adjusted with `matchByTypeCard`
- @param optional `matchByTypeCard` type{MATCHBY} default MATCHBY_Object
  @param optional `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
  @param optional `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
  @param optional `compareIdxs` type{bool} default false
@@ -545,18 +542,15 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...any) *Stack {
 func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
 
 	// unpack variadic into optional parameters
-	var compareCards, matchByTypeCard, matchByTypeKey, matchByTypeVal, compareIdxs any
-	gogenerics.UnpackVariadic(variadic, &compareCards, &matchByTypeCard, &matchByTypeKey, &matchByTypeVal, &compareIdxs)
+	var matchByTypeKey, matchByTypeVal, compareIdxs any
+	gogenerics.UnpackVariadic(variadic, &matchByTypeKey, &matchByTypeVal, &compareIdxs)
 	// set default vals
-	if compareCards == nil {compareCards = true}
-	setMATCHBYDefaultIfNil(matchByTypeCard)
 	setMATCHBYDefaultIfNil(matchByTypeKey)
 	setMATCHBYDefaultIfNil(matchByTypeVal)
 	if compareIdxs == nil {compareIdxs = false}
 
 	// return whether conditions yield true
-	return 	(compareCards == false || ((matchByTypeCard == MATCHBY_Object && thisCard == otherCard) || (matchByTypeCard == MATCHBY_Reference && &thisCard == &otherCard))) &&
-			((matchByTypeKey == MATCHBY_Object && thisCard.Key == otherCard.Key) || (matchByTypeKey == MATCHBY_Reference && &thisCard.Key == &otherCard.Key)) &&
+	return 	((matchByTypeKey == MATCHBY_Object && thisCard.Key == otherCard.Key) || (matchByTypeKey == MATCHBY_Reference && &thisCard.Key == &otherCard.Key)) &&
 			((matchByTypeVal == MATCHBY_Object && thisCard.Val == otherCard.Val) || (matchByTypeVal == MATCHBY_Reference && &thisCard.Val == &otherCard.Val)) &&
 			(compareIdxs == false || thisCard.Idx == otherCard.Idx)
 
@@ -570,9 +564,6 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
 	By default, does not compare the stack structs, but rather their cards; can be set true and adjusted with `matchByTypeStack`
  @param `matchByTypeStack` type{MATCHBY} default MATCHBY_Object
  @param `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param `compareCards` type{bool} default true
-	By default, does not compare the card structs, but rather their individual values; can be set true and adjusted with `matchByTypeCard`
- @param `matchByTypeCard` type{MATCHBY} default MATCHBY_Object
  @param `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
  @param `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
  @param `compareIdxs` type{bool} default false
@@ -581,8 +572,8 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
 func (thisStack *Stack) Equals(otherStack *Stack, variadic ...any) bool {
 
 	// unpack variadic into optional parameters
-	var compareStacks, matchByTypeStack, deepSearchType, compareCards, matchByTypeCard, matchByTypeKey, matchByTypeVal, compareIdxs any
-	gogenerics.UnpackVariadic(variadic, &compareStacks, &matchByTypeStack, &deepSearchType, &compareCards, &matchByTypeCard, &matchByTypeKey, &matchByTypeVal, &compareIdxs)
+	var compareStacks, matchByTypeStack, deepSearchType, matchByTypeKey, matchByTypeVal, compareIdxs any
+	gogenerics.UnpackVariadic(variadic, &compareStacks, &matchByTypeStack, &deepSearchType, &matchByTypeKey, &matchByTypeVal, &compareIdxs)
 	// set default vals
 	if compareStacks == nil {compareStacks = true}
 	setMATCHBYDefaultIfNil(matchByTypeStack)
@@ -599,14 +590,14 @@ func (thisStack *Stack) Equals(otherStack *Stack, variadic ...any) bool {
 			thisCard := thisStack.Cards[i]
 			otherCard := gogenerics.IfElse(i < len(otherStack.Cards), thisStack.Cards[i], nil).(*Card)
 			
-			matches = thisCard.Equals(otherCard, compareCards, matchByTypeCard, matchByTypeKey, matchByTypeVal, compareIdxs)
+			matches = thisCard.Equals(otherCard, matchByTypeKey, matchByTypeVal, compareIdxs)
 			
 			if matches && deepSearchType == DEEPSEARCH_True {
 				switch thisCard.Val.(type) { // go deeper if possible, otherwise don't worry
 				case *Stack:
 					switch otherCard.Val.(type) { // check whether otherCard can go deeper since thisCard can; if not, it's not an equal stack
 					case *Stack:
-						matches = thisCard.Val.(*Stack).Equals(otherCard.Val.(*Stack), compareStacks, matchByTypeStack, deepSearchType, compareCards, matchByTypeCard, matchByTypeKey, matchByTypeVal, compareIdxs)
+						matches = thisCard.Val.(*Stack).Equals(otherCard.Val.(*Stack), compareStacks, matchByTypeStack, deepSearchType, matchByTypeKey, matchByTypeVal, compareIdxs)
 					default:
 						matches = false
 					}
