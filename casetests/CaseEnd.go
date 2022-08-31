@@ -431,6 +431,26 @@ func case_card_Equals(funcName string) {
 	
 }
 
+func case_stack_Equals(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// since we've already tested the properties of card.Equals(), and stack invokes card.Equals(),
+	// we don't need as thorough of a test for non-stack-specific parameters
+	stack1 := MakeStack([]string {"Hello", "Hey"})
+	stack2 := MakeStack([]string {"Hello", "Hey"})
+
+	conditions := []bool{
+		
+		//
+		stack1.Equals(stack2),
+		stack1.Equals(stack2, true),
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
 /** Executes all case tests */
 func Run(_showTestText bool) {
 
@@ -451,8 +471,8 @@ func Run(_showTestText bool) {
 	case_stack_Clone("stack.Clone") // BAD
 	case_stack_Unique("stack.Unique") // BAD
 	case_card_Equals("card.Equals") // BAD
-	/*case_stack_Equals("stack.Equals") // BAD
-	case_stack_Shuffle("stack.Shuffle") // BAD
+	case_stack_Equals("stack.Equals") // BAD
+	/*case_stack_Shuffle("stack.Shuffle") // BAD
 	case_stack_Flip("stack.Flip") // BAD
 	case_card_Print("card.Print") // BAD
 	case_stack_Print("stack.Print") // BAD

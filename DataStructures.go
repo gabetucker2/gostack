@@ -20,6 +20,7 @@ type ORDER int
 type MATCHBY int
 type CLONE int
 type DEEPSEARCH int
+type COMPARE int
 
 const (
 	RETURN_Idxs RETURN = iota
@@ -81,6 +82,11 @@ const (
 	DEEPSEARCH_True
 )
 
+const (
+	COMPARE_False COMPARE = iota
+	COMPARE_True
+)
+
 /*func setRETURNDefaultIfNil(returnType any) {
 	if returnType == nil {
 		returnType = RETURN_Cards
@@ -120,5 +126,11 @@ func setDEEPSEARCHDefaultIfNil(deepSearchType any) {
 func setDepthDefaultIfNil(depth any) {
 	if depth == nil {
 		depth = 1
+	}
+}
+
+func setCOMPAREDefaultIfNil(compareType any) {
+	if compareType == nil {
+		compareType = COMPARE_False
 	}
 }

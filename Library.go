@@ -536,7 +536,7 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...any) *Stack {
  @param `otherCard` type{*Card}
  @param optional `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
  @param optional `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
- @param optional `compareIdxs` type{bool} default false
+ @param optional `compareIdxs` type{COMPARE} default COMPARE_False
  @returns type{bool}
  */
 func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
@@ -547,12 +547,12 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
 	// set default vals
 	setMATCHBYDefaultIfNil(matchByTypeKey)
 	setMATCHBYDefaultIfNil(matchByTypeVal)
-	if compareIdxs == nil {compareIdxs = false}
+	setCOMPAREDefaultIfNil(compareIdxs)
 
 	// return whether conditions yield true
 	return 	((matchByTypeKey == MATCHBY_Object && thisCard.Key == otherCard.Key) || (matchByTypeKey == MATCHBY_Reference && &thisCard.Key == &otherCard.Key)) &&
 			((matchByTypeVal == MATCHBY_Object && thisCard.Val == otherCard.Val) || (matchByTypeVal == MATCHBY_Reference && &thisCard.Val == &otherCard.Val)) &&
-			(compareIdxs == false || thisCard.Idx == otherCard.Idx)
+			(compareIdxs == COMPARE_False || thisCard.Idx == otherCard.Idx)
 
 }
 
@@ -560,13 +560,13 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
  
  @receiver `thisStack` type{*Stack}
  @param `otherStack` type{*Stack}
- @param `compareStacks` type{bool} default false
+ @param `compareStacks` type{COMPARE} default COMPARE_False
 	By default, does not compare the stack structs, but rather their cards; can be set true and adjusted with `matchByTypeStack`
  @param `matchByTypeStack` type{MATCHBY} default MATCHBY_Object
  @param `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
  @param `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
- @param `compareIdxs` type{bool} default false
+ @param `compareIdxs` type{COMPARE} default COMPARE_False
  @returns type{bool}
  */
 func (thisStack *Stack) Equals(otherStack *Stack, variadic ...any) bool {
@@ -578,10 +578,12 @@ func (thisStack *Stack) Equals(otherStack *Stack, variadic ...any) bool {
 	if compareStacks == nil {compareStacks = true}
 	setMATCHBYDefaultIfNil(matchByTypeStack)
 	setDEEPSEARCHDefaultIfNil(deepSearchType)
+	setCOMPAREDefaultIfNil(compareStacks)
+	setCOMPAREDefaultIfNil(compareIdxs)
 
 	matches := true
 
-	if compareStacks.(bool) {
+	if compareStacks == COMPARE_True {
 		// just test whether the stacks equal one another
 		matches = (matchByTypeStack == MATCHBY_Object && thisStack == otherStack) || (matchByTypeStack == MATCHBY_Reference && &thisStack == &otherStack)
 	} else {

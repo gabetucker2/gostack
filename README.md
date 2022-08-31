@@ -66,6 +66,8 @@
  >>>>> [CLONE](#CLONE)
  >>>>
  >>>>> [DEEPSEARCH](#DEEPSEARCH)
+ >>>>
+ >>>>> [COMPARE](#COMPARE)
  >>>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
  >>>> [MakeCard(...)](#MakeCard)
@@ -294,6 +296,10 @@
  > **DEEPSEARCH**
  > * DEEPSEARCH_True
  > * DEEPSEARCH_False
+
+ > **COMPARE**
+ > * COMPARE_True
+ > * COMPARE_False
 
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
@@ -532,6 +538,16 @@
  >> DEEPSEARCH_True
  >>
  >> DEEPSEARCH_False
+ >>> default
+
+<h4 name = "COMPARE">COMPARE</h4>
+
+ This is an enum intended to make it easy to call functions to decide whether to compare things in Equals tests.
+
+ > ***COMPARE***
+ >> COMPARE_True
+ >>
+ >> COMPARE_False
  >>> default
 
 <h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>
