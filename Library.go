@@ -11,12 +11,12 @@ import (
 
 /** Creates a card with inputted val, key, and idx
 
- @param optional `val` type{any} default nil
- @param optional `key` type{any} default nil
- @param optional `idx` type{int} default -1 no pass-by-reference
- @returns type{*Card} the newly-constructed card
- @constructs type{*Card} a newly-constructed card
- @ensures the new card will have val `val`, key `key`, and idx `idx`
+@param optional `val` type{any} default nil
+@param optional `key` type{any} default nil
+@param optional `idx` type{int} default -1 no pass-by-reference
+@returns type{*Card} the newly-constructed card
+@constructs type{*Card} a newly-constructed card
+@ensures the new card will have val `val`, key `key`, and idx `idx`
 */
 func MakeCard(variadic ...any) *Card {
 
@@ -716,24 +716,24 @@ func (stack *Stack) Print(depth ...int) {
 /** Iterate through a stack calling your lambda function on each card
  
  @receiver `stack` type{*Stack}
- @param `lambda` type{func(*Card, *Stack, ...any)}
+ @param `lambda` type{func(*Card, *Stack, (returnVal) any, ...any)}
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
- @returns `stack`
+ @returns (returnVal) type{any}
  @ensures
   * Each card in `stack` is passed into your lambda function
   * `stack` is the first argument passed into your variadic parameter on the first call
  */
-func (stack *Stack) Lambda(lambda any, variadic ...any) *Stack {
+func (stack *Stack) Lambda(lambda any, variadic ...any) (ret any) {
 
 	// unpack variadic into optional parameters
 	var deepSearchType, depth any
 	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth)
 	
 	// main
-	generalIterator(stack, lambda.(func(*Card, *Stack, ...any)), deepSearchType.(DEEPSEARCH), depth.(int))
+	generalIterator(stack, lambda.(func(*Card, *Stack, any, ...any)), deepSearchType.(DEEPSEARCH), depth.(int), ret)
 
-	return stack
+	return ret
 
 }
 

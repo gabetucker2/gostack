@@ -550,6 +550,47 @@ func case_stack_Print(funcName string) {
 	
 }
 
+func case_stack_Lambda(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	stackToFlip := MakeStack([]int {1, 2, 3, 4})
+	stackToCountKeysOver30 := MakeStack(nil, []int {5, 10, 20, 25, 50})
+	stackToAdd := MakeStack([]int {1, 2, 3, 4})
+
+	// flipper
+	stackToFlip.Lambda(func(card *Card, stack *Stack, _ ...any) {
+		// moves each card, from first to last, to the first position in the stack
+		newCards := []*Card {card}
+		for _, c := range stack.Cards {
+			if c != card {
+				newCards = append(newCards, c)
+			}
+		}
+		stack.Cards = newCards
+	})
+
+	// get amount of cards with keys under 30
+	keyCount := stackToCountKeysOver30.Lambda(func(card *Card, stack *Stack, ret any) {
+		if card.Key.(int) < 30 { ret = ret.(int) + 1 }
+	})
+
+	// add each card by its previous value
+	stackToAdd.Lambda(func(card *Card, stack *Stack, _ any, previousVal any) {
+		card.Val = card.Val.(int) + previousVal.(int)
+		previousVal = card.Val
+	})
+	
+	conditions := []bool{
+		stackToFlip.Equals(MakeStack([]int {4, 3, 2, 1})),
+		keyCount == 4,
+		stackToAdd.Equals(MakeStack(1, 3, 6, 10)),
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
 /** Executes all case tests */
 func Run(_showTestText bool) {
 
@@ -575,10 +616,10 @@ func Run(_showTestText bool) {
 	case_stack_Flip("stack.Flip") // BAD
 	case_card_Print("card.Print") // BAD
 	case_stack_Print("stack.Print") // BAD
-	/*case_stack_Lambda("stack.Lambda") // BAD
+	case_stack_Lambda("stack.Lambda") // BAD
 	
 	// GENERALIZED FUNCTIONS
-	case_stack_Add("stack.Add") // BAD
+	/*case_stack_Add("stack.Add") // BAD
 	case_stack_Move("stack.Move") // BAD
 	case_stack_Has("stack.Has") // BAD
 	case_stack_Get("stack.Get") // BAD
