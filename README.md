@@ -761,13 +761,13 @@
  
  @receiver `thisStack` type{*Stack}
  @param `otherStack` type{*Stack}
- @param `compareStacks` type{COMPARE} default COMPARE_False
+ @param optional `compareStacks` type{COMPARE} default COMPARE_False
 	By default, does not compare the stack structs, but rather their cards; can be set true and adjusted with `matchByTypeStack`
- @param `matchByTypeStack` type{MATCHBY} default MATCHBY_Object
- @param `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `matchByTypeStack` type{MATCHBY} default MATCHBY_Object
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
- @param `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
- @param `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
+ @param optional `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
+ @param optional `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
  @returns type{bool}
  ```
  

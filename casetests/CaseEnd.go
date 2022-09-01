@@ -490,6 +490,66 @@ func case_stack_Equals(funcName string) {
 	
 }
 
+func case_stack_Shuffle(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	
+
+	conditions := []bool{
+		
+		
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_Flip(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	conditions := []bool{
+		
+		
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_card_Print(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	MakeCard("CardKey", "CardVal", 420).Print()
+	
+	conditions := []bool{
+		true, // unfortunately, we have to check manually
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_Print(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	MakeStack([]string {"ShallowKeyFirst", "ShallowKeySecond"}, []string {"ShallowValFirst", "ShallowValSecond"}).Print()
+
+	MakeStackMatrix([]string {"DeepKeyFirst", "DeepKeySecond", "DeepKeyThird", "DeepKeyFourth"}, []string {"DeepValFirst", "DeepValSecond", "DeepValThird", "DeepValFourth"}, []int {2, 2}).Print()
+	
+	conditions := []bool{
+		true, // unfortunately, we have to check manually
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
 /** Executes all case tests */
 func Run(_showTestText bool) {
 
@@ -511,11 +571,11 @@ func Run(_showTestText bool) {
 	case_stack_Unique("stack.Unique") // BAD
 	case_card_Equals("card.Equals") // BAD
 	case_stack_Equals("stack.Equals") // BAD
-	/*case_stack_Shuffle("stack.Shuffle") // BAD
+	case_stack_Shuffle("stack.Shuffle") // BAD
 	case_stack_Flip("stack.Flip") // BAD
 	case_card_Print("card.Print") // BAD
 	case_stack_Print("stack.Print") // BAD
-	case_stack_Lambda("stack.Lambda") // BAD
+	/*case_stack_Lambda("stack.Lambda") // BAD
 	
 	// GENERALIZED FUNCTIONS
 	case_stack_Add("stack.Add") // BAD

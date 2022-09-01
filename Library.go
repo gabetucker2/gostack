@@ -560,13 +560,13 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
  
  @receiver `thisStack` type{*Stack}
  @param `otherStack` type{*Stack}
- @param `compareStacks` type{COMPARE} default COMPARE_False
+ @param optional `compareStacks` type{COMPARE} default COMPARE_False
 	By default, does not compare the stack structs, but rather their cards; can be set true and adjusted with `matchByTypeStack`
- @param `matchByTypeStack` type{MATCHBY} default MATCHBY_Object
- @param `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `matchByTypeStack` type{MATCHBY} default MATCHBY_Object
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
- @param `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
- @param `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
+ @param optional `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
+ @param optional `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
  @returns type{bool}
  */
 func (thisStack *Stack) Equals(otherStack *Stack, variadic ...any) bool {
@@ -617,21 +617,36 @@ func (thisStack *Stack) Equals(otherStack *Stack, variadic ...any) bool {
 /** Shuffles the order of `stack` cards
 
  @receiver `stack` type{*Stack}
+ @param optional `newOrder` type{bool} default true
  @returns `stack`
  @updates
   * `stack` card ordering is randomized
   * rand.Seed is updated to time.Now().UnixNano()
+ @ensures if stack.Size > 1 and newOrder == true, then new order will be different than previous
  */
-func (stack *Stack) Shuffle() *Stack {
+func (stack *Stack) Shuffle(variadic ...any) *Stack {
 
-	// pseudo-randomize seed
-	rand.Seed(time.Now().UnixNano())
+	// unpack variadic into optional parameters
+	var newOrder any
+	gogenerics.UnpackVariadic(variadic, &newOrder)
+	if newOrder == nil {newOrder = false}
 
-	// shuffle
-	rand.Shuffle(stack.Size, func(i, j int) { stack.Cards[i], stack.Cards[j] = stack.Cards[j], stack.Cards[i] })
-	
-	// set indices
-	setIndices(stack.Cards)
+	// body
+	initClone := stack.Clone()
+
+	for ok := true; ok; ok = (newOrder.(bool) && stack.Size > 1 && initClone.Equals(stack, COMPARE_False, nil, DEEPSEARCH_True)) { // emulate a do-while loop
+		
+		// pseudo-randomize seed
+		rand.Seed(time.Now().UnixNano())
+
+		////////////////////////////////////// NEED A DEEP IMPLEMENTATION
+		// shuffle
+		rand.Shuffle(stack.Size, func(i, j int) { stack.Cards[i], stack.Cards[j] = stack.Cards[j], stack.Cards[i] })
+		
+		// set indices
+		setIndices(stack.Cards)
+
+	}
 
 	// return
 	return stack
@@ -673,8 +688,7 @@ func (card *Card) Print() {
  
  @receiver `stack` type{*Stack}
  @param optional `depth` type{int} default 0
-  the starting depth of `stack` within other stacks (usually there is no reason for the client to pass this)
- @updates terminal logs
+   The starting depth of `stack` within other stacks; this variable only exists for text-indenting purposes to make your terminal output look a bit cleaner.  1 depth => one "-" added before the print.
  @requires `card.Print()` has been implemented
  */
 func (stack *Stack) Print(depth ...int) {
