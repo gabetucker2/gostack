@@ -69,12 +69,14 @@ func case_MakeStack(funcName string) {
 	map1 := map[string]int {"Alexander" : 111, "Breton" : 222, "Charles" : 333}
 	arrKeys := []string {"Alex", "Bre", "Charlie"}
 	arrVals := []int {11, 22, 33}
-
+	
 	// to stacks (in order of conditions listed in documentation)
 	stack1 := MakeStack(map1)
 	stack2 := MakeStack(arrVals)
 	stack3 := MakeStack(arrKeys, arrVals)
+	fmt.Println("---------------")
 	stack4 := MakeStack(nil, arrKeys)
+	fmt.Println("---------------")
 	stack5 := MakeStack(arrVals, nil, 3)
 	stack6 := MakeStack()
 
@@ -85,7 +87,7 @@ func case_MakeStack(funcName string) {
 			arrValsTimesThree = append(arrValsTimesThree, arrVals[j])
 		}
 	}
-
+	
 	conditions := []bool{
 		test_StackProperties(stack6, []int{0}),
 		test_IdxsAreGood(stack1),
@@ -104,7 +106,7 @@ func case_MakeStack(funcName string) {
 		test_StackEqualArrayOrMap(stack4, nil, arrKeys, nil),
 		test_StackEqualArrayOrMap(stack5, arrValsTimesThree, nil, nil),
 	}
-
+	
 	test_End(funcName, conditions)
 
 }

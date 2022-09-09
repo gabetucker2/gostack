@@ -11,12 +11,12 @@ import (
 
 /** Creates a card with inputted val, key, and idx
 
-@param optional `val` type{any} default nil
-@param optional `key` type{any} default nil
-@param optional `idx` type{int} default -1 no pass-by-reference
-@returns type{*Card} the newly-constructed card
-@constructs type{*Card} a newly-constructed card
-@ensures the new card will have val `val`, key `key`, and idx `idx`
+ @param optional `val` type{any} default nil
+ @param optional `key` type{any} default nil
+ @param optional `idx` type{int} default -1 no pass-by-reference
+ @returns type{*Card} the newly-constructed card
+ @constructs type{*Card} a newly-constructed card
+ @ensures the new card will have val `val`, key `key`, and idx `idx`
 */
 func MakeCard(variadic ...any) *Card {
 
@@ -99,7 +99,7 @@ func MakeStack(variadic ...any) *Stack {
 				matrixShape = len(gogenerics.UnpackArray(input1))
 			}
 		}
-
+		
 		if !(input1 == nil && input2 == nil) {
 			stack.Cards = append(stack.Cards, MakeStackMatrix(input1, input2, []int{matrixShape}, overrideCards).Cards...)
 		}

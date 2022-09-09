@@ -1,6 +1,5 @@
 package tutorials
 
-<<<<<<< HEAD
 import (
 	. "github.com/gabetucker2/gostack" //lint:ignore ST1001 Ignore warning
 )
@@ -8,6 +7,7 @@ import (
 /** Executes the Bootstrap.go tutorial */
 func Bootstrap() {
 
+	
 	// makeSampleStack := func() *Stack {
 	// 	return MakeStack([]int{2, 10, 11, 12, 40}, []int{0, 90, 4, 2, 20})
 	// }
@@ -15,11 +15,6 @@ func Bootstrap() {
 	// myStack := makeSampleStack()
 	// bootstrap_
 
-=======
-/** Executes the Bootstrap.go tutorial */
-func Bootstrap() {
-
->>>>>>> e208db9d0fdff8169bdf79d8cff564711cdce50f
 }
 
 // QUESTIONS FOR GABE!
@@ -34,7 +29,7 @@ func MakeArr() []int {
 }
 
 /*
-Adds a card/value to the front of an array/any and returns a 'stack'
+Adds a card/value to the front of an array/any and returns a 'stack's
 
 input is an array/any and a number you want to append to the front
 */
