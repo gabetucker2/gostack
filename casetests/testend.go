@@ -6,14 +6,8 @@ import (
 	"strconv"
 
 	"github.com/gabetucker2/gogenerics"
-	//lint:ignore ST1001 — we would like to dot import gostack
-	. "github.com/gabetucker2/gostack"
+	. "github.com/gabetucker2/gostack" //lint:ignore ST1001 — we would like to dot import gostack
 )
-
-/** I hate Go.
-This exists only so that warnings are no longer suggested for private functions/variables used by other scripts in this package.
-*/
-func removeWarning(...any) { test_SampleStack() }
 
 // test variables (test with these variables only after MakeCard's test)
 
@@ -30,7 +24,7 @@ func test_Setup() {
 	testCardC = MakeCard("Key3", "Card C") // in sample stack
 	testCardD = MakeCard("Key4", "Card D") // out of sample stack
 
-	removeWarning(testCardA, testCardB, testCardC, testCardD)
+	gogenerics.RemoveUnusedError(testCardA, testCardB, testCardC, testCardD)
 
 }
 
