@@ -142,7 +142,7 @@ func Introduction() {
 		we will show only the keys of the card(s) returned.  Here's some examples:*/
 
 	var gottenData any
-	RemoveNotUsedError(gottenData) // (please ignore this line)
+	RemoveUnusedError(gottenData) // (please ignore this line)
 	
 	// to get the first card in myStack: card {Idx: 0, Key: "Butterfly", Val: 539}:
 	gottenData = myStack.Get(FIND_First) // Butterfly

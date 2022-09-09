@@ -601,6 +601,7 @@ func case_stack_Lambda(funcName string) {
 func Run(_showTestText bool) {
 
 	showTestText = _showTestText
+	gogenerics.RemoveUnusedError(case_MakeCard)
 
 	fmt.Println("- BEGINNING TESTS (fix failures/errors in descending order)")
 

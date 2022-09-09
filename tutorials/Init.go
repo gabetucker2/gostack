@@ -1,3 +1,3 @@
 package tutorials
 
-func RemoveNotUsedError(...any) {}
+func RemoveUnusedError(...any) {}

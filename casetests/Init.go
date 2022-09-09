@@ -1,3 +1,3 @@
 package casetests
 
-func RemoveNotUsedError() {}
+func RemoveUnusedError() {}
