@@ -11,12 +11,12 @@ import (
 
 /** Creates a card with inputted val, key, and idx
 
- @param optional `val` type{any} default nil
- @param optional `key` type{any} default nil
- @param optional `idx` type{int} default -1 no pass-by-reference
- @returns type{*Card} the newly-constructed card
- @constructs type{*Card} a newly-constructed card
- @ensures the new card will have val `val`, key `key`, and idx `idx`
+@param optional `val` type{any} default nil
+@param optional `key` type{any} default nil
+@param optional `idx` type{int} default -1 no pass-by-reference
+@returns type{*Card} the newly-constructed card
+@constructs type{*Card} a newly-constructed card
+@ensures the new card will have val `val`, key `key`, and idx `idx`
 */
 func MakeCard(variadic ...any) *Card {
 
@@ -534,31 +534,25 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...any) *Stack {
  
  @receiver `thisCard` type{*Card}
  @param `otherCard` type{*Card}
- @param optional `compareCards` type{bool} default false
-	By default, does not compare the card structs, but rather their individual values; can be set true and adjusted with `matchByTypeCard`
- @param optional `matchByTypeCard` type{MATCHBY} default MATCHBY_Object
  @param optional `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
  @param optional `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
- @param optional `compareIdxs` type{bool} default false
+ @param optional `compareIdxs` type{COMPARE} default COMPARE_False
  @returns type{bool}
  */
 func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
 
 	// unpack variadic into optional parameters
-	var compareCards, matchByTypeCard, matchByTypeKey, matchByTypeVal, compareIdxs any
-	gogenerics.UnpackVariadic(variadic, &compareCards, &matchByTypeCard, &matchByTypeKey, &matchByTypeVal, &compareIdxs)
+	var matchByTypeKey, matchByTypeVal, compareIdxs any
+	gogenerics.UnpackVariadic(variadic, &matchByTypeKey, &matchByTypeVal, &compareIdxs)
 	// set default vals
-	if compareCards == nil {compareCards = true}
-	setMATCHBYDefaultIfNil(matchByTypeCard)
 	setMATCHBYDefaultIfNil(matchByTypeKey)
 	setMATCHBYDefaultIfNil(matchByTypeVal)
-	if compareIdxs == nil {compareIdxs = false}
+	setCOMPAREDefaultIfNil(compareIdxs)
 
 	// return whether conditions yield true
-	return 	(compareCards == false || ((matchByTypeCard == MATCHBY_Object && thisCard == otherCard) || (matchByTypeCard == MATCHBY_Reference && &thisCard == &otherCard))) &&
-			((matchByTypeKey == MATCHBY_Object && thisCard.Key == otherCard.Key) || (matchByTypeKey == MATCHBY_Reference && &thisCard.Key == &otherCard.Key)) &&
+	return 	((matchByTypeKey == MATCHBY_Object && thisCard.Key == otherCard.Key) || (matchByTypeKey == MATCHBY_Reference && &thisCard.Key == &otherCard.Key)) &&
 			((matchByTypeVal == MATCHBY_Object && thisCard.Val == otherCard.Val) || (matchByTypeVal == MATCHBY_Reference && &thisCard.Val == &otherCard.Val)) &&
-			(compareIdxs == false || thisCard.Idx == otherCard.Idx)
+			(compareIdxs == COMPARE_False || thisCard.Idx == otherCard.Idx)
 
 }
 
@@ -566,31 +560,31 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
  
  @receiver `thisStack` type{*Stack}
  @param `otherStack` type{*Stack}
- @param `compareStacks` type{bool} default false
+ @param optional `compareStacks` type{COMPARE} default COMPARE_False
 	By default, does not compare the stack structs, but rather their cards; can be set true and adjusted with `matchByTypeStack`
- @param `matchByTypeStack` type{MATCHBY} default MATCHBY_Object
- @param `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param `compareCards` type{bool} default true
-	By default, does not compare the card structs, but rather their individual values; can be set true and adjusted with `matchByTypeCard`
- @param `matchByTypeCard` type{MATCHBY} default MATCHBY_Object
- @param `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
- @param `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
- @param `compareIdxs` type{bool} default false
+ @param optional `matchByTypeStack` type{MATCHBY} default MATCHBY_Object
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `depth` type{int} default -1 (deepest)
+ @param optional `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
+ @param optional `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
  @returns type{bool}
  */
 func (thisStack *Stack) Equals(otherStack *Stack, variadic ...any) bool {
 
 	// unpack variadic into optional parameters
-	var compareStacks, matchByTypeStack, deepSearchType, compareCards, matchByTypeCard, matchByTypeKey, matchByTypeVal, compareIdxs any
-	gogenerics.UnpackVariadic(variadic, &compareStacks, &matchByTypeStack, &deepSearchType, &compareCards, &matchByTypeCard, &matchByTypeKey, &matchByTypeVal, &compareIdxs)
+	var compareStacks, matchByTypeStack, deepSearchType, depth, matchByTypeKey, matchByTypeVal, compareIdxs any
+	gogenerics.UnpackVariadic(variadic, &compareStacks, &matchByTypeStack, &deepSearchType, &depth, &matchByTypeKey, &matchByTypeVal)
 	// set default vals
 	if compareStacks == nil {compareStacks = true}
 	setMATCHBYDefaultIfNil(matchByTypeStack)
 	setDEEPSEARCHDefaultIfNil(deepSearchType)
+	setDepthDefaultIfNil(depth)
+	setCOMPAREDefaultIfNil(compareStacks)
+	setCOMPAREDefaultIfNil(compareIdxs)
 
 	matches := true
 
-	if compareStacks.(bool) {
+	if compareStacks == COMPARE_True {
 		// just test whether the stacks equal one another
 		matches = (matchByTypeStack == MATCHBY_Object && thisStack == otherStack) || (matchByTypeStack == MATCHBY_Reference && &thisStack == &otherStack)
 	} else {
@@ -599,14 +593,14 @@ func (thisStack *Stack) Equals(otherStack *Stack, variadic ...any) bool {
 			thisCard := thisStack.Cards[i]
 			otherCard := gogenerics.IfElse(i < len(otherStack.Cards), thisStack.Cards[i], nil).(*Card)
 			
-			matches = thisCard.Equals(otherCard, compareCards, matchByTypeCard, matchByTypeKey, matchByTypeVal, compareIdxs)
+			matches = thisCard.Equals(otherCard, matchByTypeKey, matchByTypeVal, compareIdxs)
 			
-			if matches && deepSearchType == DEEPSEARCH_True {
+			if matches && deepSearchType == DEEPSEARCH_True && depth != 0 {
 				switch thisCard.Val.(type) { // go deeper if possible, otherwise don't worry
 				case *Stack:
 					switch otherCard.Val.(type) { // check whether otherCard can go deeper since thisCard can; if not, it's not an equal stack
 					case *Stack:
-						matches = thisCard.Val.(*Stack).Equals(otherCard.Val.(*Stack), compareStacks, matchByTypeStack, deepSearchType, compareCards, matchByTypeCard, matchByTypeKey, matchByTypeVal, compareIdxs)
+						matches = thisCard.Val.(*Stack).Equals(otherCard.Val.(*Stack), compareStacks, matchByTypeStack, deepSearchType, gogenerics.IfElse(depth.(int) == -1, -1, depth.(int)-1).(int), matchByTypeKey, matchByTypeVal, COMPARE_False)
 					default:
 						matches = false
 					}
@@ -623,21 +617,36 @@ func (thisStack *Stack) Equals(otherStack *Stack, variadic ...any) bool {
 /** Shuffles the order of `stack` cards
 
  @receiver `stack` type{*Stack}
+ @param optional `newOrder` type{bool} default true
  @returns `stack`
  @updates
   * `stack` card ordering is randomized
   * rand.Seed is updated to time.Now().UnixNano()
+ @ensures if stack.Size > 1 and newOrder == true, then new order will be different than previous
  */
-func (stack *Stack) Shuffle() *Stack {
+func (stack *Stack) Shuffle(variadic ...any) *Stack {
 
-	// pseudo-randomize seed
-	rand.Seed(time.Now().UnixNano())
+	// unpack variadic into optional parameters
+	var newOrder any
+	gogenerics.UnpackVariadic(variadic, &newOrder)
+	if newOrder == nil {newOrder = false}
 
-	// shuffle
-	rand.Shuffle(stack.Size, func(i, j int) { stack.Cards[i], stack.Cards[j] = stack.Cards[j], stack.Cards[i] })
-	
-	// set indices
-	setIndices(stack.Cards)
+	// body
+	initClone := stack.Clone()
+
+	for ok := true; ok; ok = (newOrder.(bool) && stack.Size > 1 && initClone.Equals(stack, COMPARE_False, nil, DEEPSEARCH_True)) { // emulate a do-while loop
+		
+		// pseudo-randomize seed
+		rand.Seed(time.Now().UnixNano())
+
+		////////////////////////////////////// NEED A DEEP IMPLEMENTATION
+		// shuffle
+		rand.Shuffle(stack.Size, func(i, j int) { stack.Cards[i], stack.Cards[j] = stack.Cards[j], stack.Cards[i] })
+		
+		// set indices
+		setIndices(stack.Cards)
+
+	}
 
 	// return
 	return stack
@@ -679,8 +688,7 @@ func (card *Card) Print() {
  
  @receiver `stack` type{*Stack}
  @param optional `depth` type{int} default 0
-  the starting depth of `stack` within other stacks (usually there is no reason for the client to pass this)
- @updates terminal logs
+   The starting depth of `stack` within other stacks; this variable only exists for text-indenting purposes to make your terminal output look a bit cleaner.  1 depth => one "-" added before the print.
  @requires `card.Print()` has been implemented
  */
 func (stack *Stack) Print(depth ...int) {
@@ -708,24 +716,24 @@ func (stack *Stack) Print(depth ...int) {
 /** Iterate through a stack calling your lambda function on each card
  
  @receiver `stack` type{*Stack}
- @param `lambda` type{func(*Card, *Stack, ...any)}
+ @param `lambda` type{func(*Card, *Stack, (returnVal) any, ...any)}
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
- @returns `stack`
+ @returns (returnVal) type{any}
  @ensures
   * Each card in `stack` is passed into your lambda function
   * `stack` is the first argument passed into your variadic parameter on the first call
  */
-func (stack *Stack) Lambda(lambda any, variadic ...any) *Stack {
+func (stack *Stack) Lambda(lambda any, variadic ...any) (ret any) {
 
 	// unpack variadic into optional parameters
 	var deepSearchType, depth any
 	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth)
 	
 	// main
-	generalIterator(stack, lambda.(func(*Card, *Stack, ...any)), deepSearchType.(DEEPSEARCH), depth.(int))
+	generalIterator(stack, lambda.(func(*Card, *Stack, any, ...any)), deepSearchType.(DEEPSEARCH), depth.(int), ret, nil) // TODO: replace nil final value
 
-	return stack
+	return ret
 
 }
 
@@ -818,6 +826,7 @@ func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, 
  @param optional `deepSearchType_second` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth_first` type{int} default -1 (deepest)
  @param optional `depth_second` type{int} default -1 (deepest)
+ @updates `stack`
  @returns `stack` if moved OR nil if no move occurred (due second bad find)
  @requires you are not swapping a stack with a location within that own stack
  @ensures a stack of cards, or individual cards, can be targeted

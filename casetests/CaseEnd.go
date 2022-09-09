@@ -3,7 +3,8 @@ package casetests
 import (
 	"fmt"
 
-	. "github.com/gabetucker2/gostack"//lint:ignore ST1001 Ignore warning
+	"github.com/gabetucker2/gogenerics"
+	. "github.com/gabetucker2/gostack" //lint:ignore ST1001 Ignore warning
 )
 
 // variables
@@ -260,6 +261,340 @@ func case_stack_ToMatrix(funcName string) {
 	
 }
 
+func case_stack_Empty(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	stack1 := test_SampleStack().Empty()
+	stack2 := test_SampleStackMatrix().Empty()
+
+	conditions := []bool{
+		test_StackProperties(stack1, []int {0}, 1),
+		test_StackProperties(stack2, []int {0}, 1),
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_card_Clone(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	cardA := MakeCard("Original", "Original")
+	cardAClone := cardA.Clone(CLONE_True, CLONE_True)
+	cardAClone.Key = "New"
+	cardAClone.Val = "New"
+	
+	cardB := MakeCard("Original", "Original")
+	cardBClone := cardB.Clone(CLONE_True, CLONE_False)
+	cardBClone.Key = "New"
+	cardBClone.Val = "New"
+	
+	cardC := MakeCard("Original", "Original")
+	cardCClone := cardC.Clone(CLONE_False, CLONE_True)
+	cardCClone.Key = "New"
+	cardCClone.Val = "New"
+	
+	cardD := MakeCard("Original", "Original")
+	cardDClone := cardD.Clone(CLONE_False, CLONE_False)
+	cardDClone.Key = "New"
+	cardDClone.Val = "New"
+
+	conditions := []bool{
+		cardA.Idx == -1,
+		cardA.Key == "Original",
+		cardA.Val == "Original",
+		cardAClone.Idx == -1,
+		cardAClone.Key == "New",
+		cardAClone.Val == "New",
+
+		cardB.Idx == -1,
+		cardB.Key == "Original",
+		cardB.Val == "New",
+		cardBClone.Idx == -1,
+		cardBClone.Key == "New",
+		cardBClone.Val == "New",
+
+		cardC.Idx == -1,
+		cardC.Key == "New",
+		cardC.Val == "Original",
+		cardCClone.Idx == -1,
+		cardCClone.Key == "New",
+		cardCClone.Val == "New",
+
+		cardD.Idx == -1,
+		cardD.Key == "New",
+		cardD.Val == "New",
+		cardDClone.Idx == -1,
+		cardDClone.Key == "New",
+		cardDClone.Val == "New",
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_Clone(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// if card.Clone() works, we expect stack.Clone() to work since it calls card.Clone(), meaning we only need to test for non parameter-related functionality
+	stackA := MakeStack([]string {"Original", "Original"}, []string {"Original", "Original"})
+	stackAClone := stackA.Clone(CLONE_True, CLONE_False)
+	stackAClone.Get(FIND_First).Key = "New"
+	stackAClone.Get(FIND_Last).Key = "New"
+	stackAClone.Get(FIND_First).Val = "New"
+	stackAClone.Get(FIND_Last).Val = "New"
+
+	conditions := []bool{
+		test_StackProperties(stackA, []int {2}, 1),
+
+		stackA.Get(FIND_First).Idx == 0,
+		stackA.Get(FIND_Last).Idx == 1,
+		stackA.Get(FIND_First).Key == "Original",
+		stackA.Get(FIND_Last).Key == "Original",
+		stackA.Get(FIND_First).Val == "New",
+		stackA.Get(FIND_Last).Val == "New",
+
+		stackAClone.Get(FIND_First).Idx == 0,
+		stackAClone.Get(FIND_Last).Idx == 1,
+		stackAClone.Get(FIND_First).Key == "New",
+		stackAClone.Get(FIND_Last).Key == "New",
+		stackAClone.Get(FIND_First).Val == "New",
+		stackAClone.Get(FIND_Last).Val == "New",
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_Unique(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	myStackKeys := MakeStack(nil, []string {"Person", "Place", "Person", "Thing", "Person"})
+	myStackVals := MakeStack([]string {"Person", "Place", "Person", "Thing", "Person"})
+
+	filteredByKey := myStackKeys.Clone().Unique(TYPE_Key)
+	filteredByVal := myStackVals.Clone().Unique(TYPE_Val)
+
+	conditions := []bool{
+		filteredByKey.Size == 3,
+		filteredByVal.Size == 3,
+		filteredByKey.Cards[0].Key == "Person",
+		filteredByKey.Cards[1].Key == "Place",
+		filteredByKey.Cards[2].Key == "Thing",
+		filteredByVal.Cards[0].Val == "Person",
+		filteredByVal.Cards[1].Val == "Place",
+		filteredByVal.Cards[2].Val == "Thing",
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_card_Equals(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	keyVar := "MyKey"
+	valVar := "MyVal"
+
+	card1 := MakeCard("MyKey", "MyVal") // Idx == -1
+	card2 := MakeCard("MyKey", "MyVal", 0)
+
+	card3 := MakeCard(keyVar, valVar)
+	card4 := MakeCard(keyVar, valVar)
+
+	conditions := []bool{
+
+		// compare by object
+		card1.Equals(card2),
+
+		// test whether idx parameter works
+		card1.Equals(card2, nil, nil, COMPARE_False),
+		!card1.Equals(card2, nil, nil, COMPARE_True),
+
+		// test whether matchByTypes work
+		card1.Equals(card3),
+		card1.Equals(card3, MATCHBY_Object, MATCHBY_Object),
+		!card1.Equals(card3, MATCHBY_Object, MATCHBY_Reference),
+		!card1.Equals(card3, MATCHBY_Reference, MATCHBY_Object),
+		!card1.Equals(card3, MATCHBY_Reference, MATCHBY_Reference),
+		card3.Equals(card4, MATCHBY_Object, MATCHBY_Reference),
+		card3.Equals(card4, MATCHBY_Reference, MATCHBY_Object),
+		card3.Equals(card4, MATCHBY_Reference, MATCHBY_Reference),
+		
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_Equals(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// since we've already tested the properties of card.Equals(), and stack invokes card.Equals(),
+	// we don't need as thorough of a test for non-stack-specific parameters
+
+	stack1 := MakeStack([]string {"Hello", "Hey"})
+	stack2 := MakeStack([]string {"Hello", "Hey"})
+	stack3 := stack1
+	stack4 := MakeStack([]string {"Hi", "Hey"})
+	
+	deep1 := MakeStackMatrix([]string {"Hello", "Hey", "Howdy", "Hi"}, nil, []int {2, 2})
+	deep2 := MakeStackMatrix([]string {"Hello", "Hey", "Howdy", "Hi"}, nil, []int {2, 2})
+	deep3 := deep1
+	deep4 := MakeStackMatrix([]string {"Hello", "Hey", "Howdy", "Heyo"}, nil, []int {2, 2})
+
+	string1 := "Hi"
+	string2 := "Hello"
+	objRefStack1 := MakeStack([]string {"Hi", "Hello"})
+	objRefStack2 := MakeStack([]string {string1, string2})
+
+	deeper1 := MakeStack(objRefStack1)
+	deeper2 := MakeStackMatrix(objRefStack2)
+	deeper3 := MakeStackMatrix(objRefStack2)
+
+	conditions := []bool{
+		
+		// test whether stack compare object vs reference works
+		stack1.Equals(stack2, COMPARE_False),
+		stack1.Equals(stack2, COMPARE_True),
+		stack1.Equals(stack2, COMPARE_True, MATCHBY_Object),
+		!stack1.Equals(stack2, COMPARE_True, MATCHBY_Reference),
+		stack1.Equals(stack3, COMPARE_True, MATCHBY_Reference),
+		!stack1.Equals(stack4, COMPARE_True, MATCHBY_Object),
+		!stack1.Equals(stack4, COMPARE_True, MATCHBY_Reference),
+
+		// test whether the same tests hold true for a deepsearch-true equivalent
+		deep1.Equals(deep2, COMPARE_False, nil, DEEPSEARCH_True),
+		deep1.Equals(deep2, COMPARE_True, nil, DEEPSEARCH_True),
+		deep1.Equals(deep2, COMPARE_True, MATCHBY_Object, DEEPSEARCH_True),
+		!deep1.Equals(deep2, COMPARE_True, MATCHBY_Reference, DEEPSEARCH_True),
+		deep1.Equals(deep3, COMPARE_True, MATCHBY_Reference, DEEPSEARCH_True),
+		!deep1.Equals(deep4, COMPARE_True, MATCHBY_Object, DEEPSEARCH_True),
+		!deep1.Equals(deep4, COMPARE_True, MATCHBY_Reference, DEEPSEARCH_True),
+
+		// test depth
+		deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, -1),
+		deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, 2),
+		deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, 1),
+		!deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, 1, nil, MATCHBY_Reference),
+		deeper2.Equals(deeper3, nil, nil, DEEPSEARCH_True, 1, nil, MATCHBY_Reference),
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_Shuffle(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	
+
+	conditions := []bool{
+		
+		
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_Flip(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	conditions := []bool{
+		
+		
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_card_Print(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	MakeCard("CardKey", "CardVal", 420).Print()
+	
+	conditions := []bool{
+		true, // unfortunately, we have to check manually
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_Print(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	MakeStack([]string {"ShallowKeyFirst", "ShallowKeySecond"}, []string {"ShallowValFirst", "ShallowValSecond"}).Print()
+
+	MakeStackMatrix([]string {"DeepKeyFirst", "DeepKeySecond", "DeepKeyThird", "DeepKeyFourth"}, []string {"DeepValFirst", "DeepValSecond", "DeepValThird", "DeepValFourth"}, []int {2, 2}).Print()
+	
+	conditions := []bool{
+		true, // unfortunately, we have to check manually
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_Lambda(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	stackToFlip := MakeStack([]int {1, 2, 3, 4})
+	stackToCountKeysOver30 := MakeStack(nil, []int {5, 10, 20, 25, 50})
+	stackToAdd := MakeStack([]int {1, 2, 3, 4})
+
+	// flipper
+	stackToFlip.Lambda(func(card *Card, stack *Stack, _ ...any) {
+		// moves each card, from first to last, to the first position in the stack
+		newCards := []*Card {card}
+		for _, c := range stack.Cards {
+			if c != card {
+				newCards = append(newCards, c)
+			}
+		}
+		stack.Cards = newCards
+	})
+
+	// get amount of cards with keys under 30
+	keyCount := stackToCountKeysOver30.Lambda(func(card *Card, stack *Stack, ret any) {
+		if card.Key.(int) < 30 { ret = ret.(int) + 1 }
+	})
+
+	// add each card by its previous value
+	stackToAdd.Lambda(func(card *Card, stack *Stack, _ any, workingMem ...any) {
+		var previousVal any
+		gogenerics.UnpackVariadic(workingMem, &previousVal)
+		
+		card.Val = card.Val.(int) + previousVal.(int)
+		previousVal = card.Val
+	})
+	
+	conditions := []bool{
+		stackToFlip.Equals(MakeStack([]int {4, 3, 2, 1})),
+		keyCount == 4,
+		stackToAdd.Equals(MakeStack(1, 3, 6, 10)),
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
 /** Executes all case tests */
 func Run(_showTestText bool) {
 
@@ -269,25 +604,26 @@ func Run(_showTestText bool) {
 
 	// NON-GENERALIZED FUNCTIONS
 	case_MakeCard("MakeCard") // GOOD
-	case_MakeStack("MakeStack") // GOOD
+	case_MakeStack("MakeStack") // BAD
 	case_MakeStackMatrix("MakeStackMatrix") // BAD
 	case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
 	case_stack_ToArray("stack.ToArray") // BAD
 	case_stack_ToMap("stack.ToMap") // BAD
 	case_stack_ToMatrix("stack.ToMatrix") // BAD
-	/*case_stack_Empty("stack.Empty") // BAD
+	case_stack_Empty("stack.Empty") // BAD
 	case_card_Clone("card.Clone") // BAD
 	case_stack_Clone("stack.Clone") // BAD
 	case_stack_Unique("stack.Unique") // BAD
+	case_card_Equals("card.Equals") // BAD
+	case_stack_Equals("stack.Equals") // BAD
 	case_stack_Shuffle("stack.Shuffle") // BAD
 	case_stack_Flip("stack.Flip") // BAD
 	case_card_Print("card.Print") // BAD
 	case_stack_Print("stack.Print") // BAD
-	case_stack_Sort("stack.Sort") // BAD
 	case_stack_Lambda("stack.Lambda") // BAD
 	
 	// GENERALIZED FUNCTIONS
-	case_stack_Add("stack.Add") // BAD
+	/*case_stack_Add("stack.Add") // BAD
 	case_stack_Move("stack.Move") // BAD
 	case_stack_Has("stack.Has") // BAD
 	case_stack_Get("stack.Get") // BAD

@@ -1,5 +1,6 @@
 package tutorials
 
+<<<<<<< HEAD
 import (
 	. "github.com/gabetucker2/gostack" //lint:ignore ST1001 Ignore warning
 )
@@ -14,6 +15,11 @@ func Bootstrap() {
 	// myStack := makeSampleStack()
 	// bootstrap_
 
+=======
+/** Executes the Bootstrap.go tutorial */
+func Bootstrap() {
+
+>>>>>>> e208db9d0fdff8169bdf79d8cff564711cdce50f
 }
 
 // QUESTIONS FOR GABE!

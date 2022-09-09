@@ -50,10 +50,7 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 				// where newCards is uniqueCards
 				newCards = targetStack.Cards
 				for i, newCard := range newCards {
-					if (typeType == TYPE_Card &&
-						(matchByType == MATCHBY_Object && targetCard == newCard) ||
-						(matchByType == MATCHBY_Reference && &targetCard == &newCard) ) || 
-						(typeType == TYPE_Key &&
+					if (typeType == TYPE_Key &&
 						(matchByType == MATCHBY_Object && targetCard.Key == newCard.Key) ||
 						(matchByType == MATCHBY_Reference && &targetCard.Key == &newCard.Key) ) ||
 						(typeType == TYPE_Val &&
@@ -231,17 +228,17 @@ func getIterator(stack *Stack, lambda func(*Card, *Stack, ...any) bool, deepSear
 /** Passes each card into the lambda function iteratively
  
  @param `stack` type{*Stack}
- @param `lambda` type{func(*Card, *Stack, ...workingMem)}
+ @param `lambda` type{func(*Card, *Stack, any, ...workingMem)}
  @param `deepSearchType` type{DEEPSEARCH}
  @param `depth` type{int}
  @updates `stack.Cards` to whatever the `lambda` function specifies
  @requires `stack.GetMany()` is implemented
  */
-func generalIterator(stack *Stack, lambda func(*Card, *Stack, ...any), deepSearchType DEEPSEARCH, depth int, otherStacks ...*Stack) {
+func generalIterator(stack *Stack, lambda func(*Card, *Stack, any, ...any), deepSearchType DEEPSEARCH, depth int, ret any, workingMem ...any) {
 	subStack := stack.GetMany(FIND_All, nil, nil, nil, nil, nil, nil, deepSearchType, depth)
 	for i := range subStack.Cards {
 		// use the card object so that card can be updated by the lambda expression
-		lambda(subStack.Cards[i], subStack, nil)
+		lambda(subStack.Cards[i], subStack, ret, workingMem...)
 		subStack.setStackProperties()
 	}
 	subStack.setStackProperties()
@@ -551,7 +548,7 @@ func (setStack *Stack) updateRespectiveField(replaceType REPLACE, replaceData an
 
 	case REPLACE_Lambda:
 		 // DEEPSEARCH_False since targeting cards that have already been filtered using Get()
-		generalIterator(setStack, replaceData.(func(*Card, *Stack, ...any)), DEEPSEARCH_False, -1)
+		generalIterator(setStack, replaceData.(func(*Card, *Stack, any, ...any)), DEEPSEARCH_False, -1, nil)
 
 	}
 
