@@ -3,7 +3,8 @@ package casetests
 import (
 	"fmt"
 
-	. "github.com/gabetucker2/gostack"//lint:ignore ST1001 Ignore warning
+	"github.com/gabetucker2/gogenerics"
+	. "github.com/gabetucker2/gostack" //lint:ignore ST1001 Ignore warning
 )
 
 // variables
@@ -576,7 +577,10 @@ func case_stack_Lambda(funcName string) {
 	})
 
 	// add each card by its previous value
-	stackToAdd.Lambda(func(card *Card, stack *Stack, _ any, previousVal any) {
+	stackToAdd.Lambda(func(card *Card, stack *Stack, _ any, workingMem ...any) {
+		var previousVal any
+		gogenerics.UnpackVariadic(workingMem, &previousVal)
+		
 		card.Val = card.Val.(int) + previousVal.(int)
 		previousVal = card.Val
 	})

@@ -731,7 +731,7 @@ func (stack *Stack) Lambda(lambda any, variadic ...any) (ret any) {
 	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth)
 	
 	// main
-	generalIterator(stack, lambda.(func(*Card, *Stack, any, ...any)), deepSearchType.(DEEPSEARCH), depth.(int), ret)
+	generalIterator(stack, lambda.(func(*Card, *Stack, any, ...any)), deepSearchType.(DEEPSEARCH), depth.(int), ret, nil) // TODO: replace nil final value
 
 	return ret
 
