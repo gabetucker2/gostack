@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	. "github.com/gabetucker2/gostack" //lint:ignore ST1001 Ignore warning
+	"github.com/gabetucker2/gogenerics"
 )
 
 func Introduction() {
@@ -142,7 +143,7 @@ func Introduction() {
 		we will show only the keys of the card(s) returned.  Here's some examples:*/
 
 	var gottenData any
-	RemoveUnusedError(gottenData) // (please ignore this line)
+	gogenerics.RemoveUnusedError(gottenData) // (please ignore this line)
 	
 	// to get the first card in myStack: card {Idx: 0, Key: "Butterfly", Val: 539}:
 	gottenData = myStack.Get(FIND_First) // Butterfly

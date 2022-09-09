@@ -146,8 +146,6 @@
  >> [casetests](/casetests) [**.../gostack/casetests** package]
  >>> [CaseEnd.go](/casetests/CaseEnd.go) contains case tests for **library.go** functions
  >>
- >>> [Init.go](/casetests/Init.go) contains an empty function that prevents compiler errors when importing but not referencing this package
- >>
  >>> [testend.go](/casetests/testend.go) contains functions to implement **caseend.go** functions
  >>
  >>> [unaddedcases.txt](/casetests/unaddedcases.txt) is where obsolete data to be added into future case tests is stored, intended only for the developers
@@ -162,8 +160,6 @@
  >>
  >> [tutorials](/tutorials) [**.../gostack/tutorials** package]
  >>> [Bootstrap.go](/tutorials/Bootstrap.go) is a tutorial on how to implement some common functions using golang
- >>
- >>> [Init.go](/tutorials/Init.go) contains an empty function that prevents compiler errors when importing but not referencing this package
  >>
  >>> [Introduction.go](/tutorials/Introduction.go) contains a tutorial for absolute beginners to ***gostack***
  >>

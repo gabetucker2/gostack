@@ -1,3 +1,0 @@
-package casetests
-
-func RemoveUnusedError() {}
