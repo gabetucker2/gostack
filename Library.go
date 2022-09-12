@@ -318,6 +318,7 @@ func (stack *Stack) StripStackMatrix(variadic ...any) *Stack {
 		selections = append(selections, fs...)
 	}
 
+	// fmt.Println(len(selections))
 	// iterate through each selection and add them to our new stack
 	for _, idx := range selections {
 		c := stack.Cards[idx]
@@ -457,6 +458,10 @@ func (card *Card) Clone(variadic ...any) *Card {
 	clone.Idx = card.Idx
 	clone.Key = gogenerics.IfElse(cloneKey == CLONE_True, gogenerics.CloneInterface(&card.Key), card.Key)
 	clone.Val = gogenerics.IfElse(cloneVal == CLONE_True, gogenerics.CloneInterface(&card.Val), card.Val)
+	if clone.Val == CLONE_False{
+		fmt.Println(&clone.Val)
+		fmt.Println(&card.Val)
+	}
 
 	// return
 	return clone
@@ -694,8 +699,8 @@ func (card *Card) Print() {
 func (stack *Stack) Print(depth ...int) {
 
 	fmt.Println("gostack: PRINTING STACK")
-	if len(depth) == 0 {
-		depth[0] = 0
+	if depth == nil {
+		depth = []int {0}
 	}
 	for i := 0; i < depth[0]; i++ {
 		fmt.Print("-")

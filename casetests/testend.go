@@ -19,10 +19,10 @@ var testCardD *Card
 /** Initialize test variables */
 func test_Setup() {
 
-	testCardA = MakeCard("Key1", "Card A") // in sample stack
-	testCardB = MakeCard("Key2", "Card B") // in sample stack
-	testCardC = MakeCard("Key3", "Card C") // in sample stack
-	testCardD = MakeCard("Key4", "Card D") // out of sample stack
+	testCardA = MakeCard("Card A", "Key1") // in sample stack
+	testCardB = MakeCard("Card B", "Key2") // in sample stack
+	testCardC = MakeCard("Card C", "Key3") // in sample stack
+	testCardD = MakeCard("Card D", "Key4") // out of sample stack
 
 	gogenerics.RemoveUnusedError(testCardA, testCardB, testCardC, testCardD)
 
