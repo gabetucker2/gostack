@@ -296,8 +296,8 @@ func case_card_Clone(funcName string) {
 	cardBClone := cardB.Clone(CLONE_True, CLONE_False)
 	cardBClone.Key = "New"
 	cardBClone.Val = "New"
-	fmt.Println(&cardB.Val)
-	fmt.Println(&cardBClone.Val)
+	fmt.Println(cardB.Val)
+	fmt.Println(cardB.Val.(string) == "New")
 	
 	cardC := MakeCard("Original", "Original")
 	cardCClone := cardC.Clone(CLONE_False, CLONE_True)

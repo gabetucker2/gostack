@@ -11,12 +11,12 @@ import (
 
 /** Creates a card with inputted val, key, and idx
 
- @param optional `val` type{any} default nil
- @param optional `key` type{any} default nil
- @param optional `idx` type{int} default -1 no pass-by-reference
- @returns type{*Card} the newly-constructed card
- @constructs type{*Card} a newly-constructed card
- @ensures the new card will have val `val`, key `key`, and idx `idx`
+@param optional `val` type{any} default nil
+@param optional `key` type{any} default nil
+@param optional `idx` type{int} default -1 no pass-by-reference
+@returns type{*Card} the newly-constructed card
+@constructs type{*Card} a newly-constructed card
+@ensures the new card will have val `val`, key `key`, and idx `idx`
 */
 func MakeCard(variadic ...any) *Card {
 
@@ -437,6 +437,7 @@ func (stack *Stack) Empty() *Stack {
 }
 
 /** Returns a clone of the given card
+ NOTE: Memory address of Key/Val in new card will be different even if CLONE_False, but updating one will update the other
 
  @receiver `card` type{*Card}
  @param optional `cloneKey` type{CLONE} default CLONE_False
@@ -456,11 +457,17 @@ func (card *Card) Clone(variadic ...any) *Card {
 	// init
 	clone := new(Card)
 	clone.Idx = card.Idx
-	clone.Key = gogenerics.IfElse(cloneKey == CLONE_True, gogenerics.CloneInterface(&card.Key), card.Key)
-	clone.Val = gogenerics.IfElse(cloneVal == CLONE_True, gogenerics.CloneInterface(&card.Val), card.Val)
-	if clone.Val == CLONE_False{
-		fmt.Println(&clone.Val)
-		fmt.Println(&card.Val)
+	if cloneKey == CLONE_True {
+		clone.Key = gogenerics.CloneInterface(&card.Key)
+	} else {
+		clone.Key = reflect.ValueOf(&card.Key).Elem().Interface()
+		card.Key = reflect.ValueOf(&clone.Key).Elem().Interface()
+	}
+	if cloneVal == CLONE_True {
+		clone.Val = gogenerics.CloneInterface(&card.Val)
+	} else {
+		clone.Val = reflect.ValueOf(&card.Val).Elem().Interface()
+		card.Val = reflect.ValueOf(&clone.Val).Elem().Interface()
 	}
 
 	// return
