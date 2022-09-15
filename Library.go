@@ -714,9 +714,10 @@ func (card *Card) Print(variadic ...any) {
 	if depth == nil {
 		depth = 0
 	}
+	depth = depth.(int)
 
 	// prints
-	fmt.Printf("%v|gostack: PRINTING CARD\n", depthPrinter(depth.(int)), )
+	fmt.Printf("%v|gostack: PRINTING CARD\n", depthPrinter(depth.(int)))
 	fmt.Printf("%v- &card: %v\n", depthPrinter(depth.(int)), &card)
 	fmt.Printf("%v- card.Idx: %v\n", depthPrinter(depth.(int)), card.Idx)
 	fmt.Printf("%v- card.Key: %v\n", depthPrinter(depth.(int)), card.Key)
@@ -732,7 +733,7 @@ func (card *Card) Print(variadic ...any) {
  @requires `card.Print()` has been implemented
  */
 func (stack *Stack) Print(depth ...int) {
-
+	
 	if depth == nil {
 		depth = []int {0}
 	}
@@ -742,14 +743,15 @@ func (stack *Stack) Print(depth ...int) {
 	fmt.Printf("%v- stack.Depth: %v\n", depthPrinter(depth[0]), stack.Depth)
 	for i := range stack.Cards {
 		c := stack.Cards[i]
-		c.Print(depth[0])
 
 		switch c.Val.(type) {
 		case *Stack:
-			c.Val.(*Stack).Print(depth[0]+1)
+			c.Val.(*Stack).Print(depth[0]+4)
+		default:
+			c.Print(depth[0]+4)
 		}
 	}
-
+	
 }
 
 /** Iterate through a stack calling your lambda function on each card

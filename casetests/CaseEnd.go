@@ -575,9 +575,10 @@ func case_stack_Print(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	MakeStack([]string {"ShallowKeyFirst", "ShallowKeySecond"}, []string {"ShallowValFirst", "ShallowValSecond"}).Print()
+	// comment out to clean up console:
 
-	MakeStackMatrix([]string {"DeepKeyFirst", "DeepKeySecond", "DeepKeyThird", "DeepKeyFourth"}, []string {"DeepValFirst", "DeepValSecond", "DeepValThird", "DeepValFourth"}, []int {2, 2}).Print()
+	// MakeStack([]string {"ShallowKeyFirst", "ShallowKeySecond"}, []string {"ShallowValFirst", "ShallowValSecond"}).Print()
+	// MakeStackMatrix([]string {"DeepKeyFirst", "DeepKeySecond", "DeepKeyThird", "DeepKeyFourth"}, []string {"DeepValFirst", "DeepValSecond", "DeepValThird", "DeepValFourth"}, []int {2, 2}).Print()
 	
 	conditions := []bool{
 		true, // unfortunately, we have to check manually
@@ -657,22 +658,22 @@ func Run(_showTestText bool) {
 	// case_stack_Shuffle("stack.Shuffle") // BAD
 	// case_stack_Flip("stack.Flip") // BAD
 	case_card_Print("card.Print") // GOOD
-	//case_stack_Print("stack.Print") // BAD
+	case_stack_Print("stack.Print") // GOOD
 	// case_stack_Lambda("stack.Lambda") // BAD
 	
 	// GENERALIZED FUNCTIONS
-	/*case_stack_Add("stack.Add") // BAD
-	case_stack_Move("stack.Move") // BAD
-	case_stack_Has("stack.Has") // BAD
-	case_stack_Get("stack.Get") // BAD
-	case_stack_GetMany("stack.GetMany") // BAD
-	case_stack_Replace("stack.Replace") // BAD
-	case_stack_ReplaceMany("stack.ReplaceMany") // BAD
-	case_stack_Update("stack.Update") // BAD
-	case_stack_UpdateMany("stack.UpdateMany") // BAD
-	case_stack_Extract("stack.Extract") // BAD
-	case_stack_ExtractMany("stack.ExtractMany") // BAD
-	case_stack_Remove("stack.Remove") // BAD
-	case_stack_RemoveMany("stack.RemoveMany") // BAD*/
+	// case_stack_Add("stack.Add") // BAD
+	// case_stack_Move("stack.Move") // BAD
+	// case_stack_Has("stack.Has") // BAD
+	// case_stack_Get("stack.Get") // BAD
+	// case_stack_GetMany("stack.GetMany") // BAD
+	// case_stack_Replace("stack.Replace") // BAD
+	// case_stack_ReplaceMany("stack.ReplaceMany") // BAD
+	// case_stack_Update("stack.Update") // BAD
+	// case_stack_UpdateMany("stack.UpdateMany") // BAD
+	// case_stack_Extract("stack.Extract") // BAD
+	// case_stack_ExtractMany("stack.ExtractMany") // BAD
+	// case_stack_Remove("stack.Remove") // BAD
+	// case_stack_RemoveMany("stack.RemoveMany") // BAD
 
 }

@@ -1,7 +1,7 @@
 package gostack
 
 import (
-	"fmt"
+	//"fmt"
 
 	"github.com/gabetucker2/gogenerics"
 )
@@ -659,7 +659,7 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []
 				makeNewCard()
 			} else {
 				//fmt.Println("start")
-				fmt.Println(vals[i])
+				//fmt.Println(vals[i])
 				//fmt.Println("end")
 				switch vals[i].(type) {
 				case []*Card:
