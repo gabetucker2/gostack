@@ -344,7 +344,7 @@ func (stack *Stack) StripStackMatrix(variadic ...any) *Stack {
 /** Creates a new any array from values of `stack`
 
  @receiver `stack` type{*Stack}
- @parameter optional `returnType` default RETURN_Vals
+ @parameter optional `returnType` type{RETURN} default RETURN_Vals
  @returns type{[]any} new array
  @requires `stack.ToMatrix()` has been implemented
  @ensures new array values correspond to `stack` values
@@ -383,7 +383,7 @@ func (stack *Stack) ToMap() (m map[any]any) {
 /** Creates a new matrix from a stack by depth.  For instance, if depth = 2, then returns the stacks inside stack as an [][]any
 
  @receiver `stack` type{*Stack}
- @parameter optional `returnType` default RETURN_Vals
+ @parameter optional `returnType` type{RETURN} default RETURN_Vals
  @param optional `depth` type{int} default -1 (deepest)
  @returns type{[]any, [][]any, ..., []...[]any}
  @ensures
@@ -702,15 +702,25 @@ func (stack *Stack) Flip() *Stack {
 /** Prints information regarding `card` to the console
  
  @receiver `card` type{*Card}
+ @param optional `depth` type{int} default 0
  @updates terminal logs
  */
-func (card *Card) Print() {
+func (card *Card) Print(variadic ...any) {
 
-	fmt.Println("gostack: PRINTING CARD")
-	fmt.Printf("- &card: %v\n", &card)
-	fmt.Printf("- card.Idx: %v\n", card.Idx)
-	fmt.Printf("- card.Key: %v\n", card.Key)
-	fmt.Printf("- card.Val: %v\n", card.Val)
+	// unpack variadic into optional parameters
+	var depth any
+	gogenerics.UnpackVariadic(variadic, &depth)
+
+	if depth == nil {
+		depth = 0
+	}
+
+	// prints
+	fmt.Printf("%v|gostack: PRINTING CARD\n", depthPrinter(depth.(int)), )
+	fmt.Printf("%v- &card: %v\n", depthPrinter(depth.(int)), &card)
+	fmt.Printf("%v- card.Idx: %v\n", depthPrinter(depth.(int)), card.Idx)
+	fmt.Printf("%v- card.Key: %v\n", depthPrinter(depth.(int)), card.Key)
+	fmt.Printf("%v- card.Val: %v\n", depthPrinter(depth.(int)), card.Val)
 
 }
 
@@ -723,19 +733,16 @@ func (card *Card) Print() {
  */
 func (stack *Stack) Print(depth ...int) {
 
-	fmt.Println("gostack: PRINTING STACK")
 	if depth == nil {
 		depth = []int {0}
 	}
-	for i := 0; i < depth[0]; i++ {
-		fmt.Print("-")
-	}
-	fmt.Printf("- &stack: %v\n", &stack)
-	fmt.Printf("- stack.Size: %v\n", stack.Size)
-	fmt.Printf("- stack.Depth: %v\n", stack.Depth)
+	fmt.Printf("%v|gostack: PRINTING STACK\n", depthPrinter(depth[0]))
+	fmt.Printf("%v- &stack: %v\n", depthPrinter(depth[0]), &stack)
+	fmt.Printf("%v- stack.Size: %v\n", depthPrinter(depth[0]), stack.Size)
+	fmt.Printf("%v- stack.Depth: %v\n", depthPrinter(depth[0]), stack.Depth)
 	for i := range stack.Cards {
 		c := stack.Cards[i]
-		c.Print()
+		c.Print(depth[0])
 
 		switch c.Val.(type) {
 		case *Stack:

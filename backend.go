@@ -745,3 +745,10 @@ func (stack *Stack) setStackProperties() {
 	stack.Depth = stack.getStackDepth()
 	setIndices(stack.Cards)
 }
+
+func depthPrinter(depth int) (out string) {
+	for i := 0; i < depth; i++ {
+		out += "-"
+	}
+	return out
+}

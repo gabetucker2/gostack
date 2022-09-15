@@ -558,7 +558,10 @@ func case_card_Print(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	MakeCard("CardKey", "CardVal", 420).Print()
+	// comment out to clean up console:
+
+	// MakeCard("CardKey", "CardVal", 420).Print()
+	// MakeCard("CardKey", "CardVal", 420).Print(2)
 	
 	conditions := []bool{
 		true, // unfortunately, we have to check manually
@@ -653,8 +656,8 @@ func Run(_showTestText bool) {
 	// case_stack_Equals("stack.Equals") // BAD
 	// case_stack_Shuffle("stack.Shuffle") // BAD
 	// case_stack_Flip("stack.Flip") // BAD
-	// case_card_Print("card.Print") // BAD
-	// case_stack_Print("stack.Print") // BAD
+	case_card_Print("card.Print") // GOOD
+	//case_stack_Print("stack.Print") // BAD
 	// case_stack_Lambda("stack.Lambda") // BAD
 	
 	// GENERALIZED FUNCTIONS
