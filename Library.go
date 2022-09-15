@@ -344,14 +344,19 @@ func (stack *Stack) StripStackMatrix(variadic ...any) *Stack {
 /** Creates a new any array from values of `stack`
 
  @receiver `stack` type{*Stack}
+ @parameter optional `returnType` default RETURN_Vals
  @returns type{[]any} new array
  @requires `stack.ToMatrix()` has been implemented
  @ensures new array values correspond to `stack` values
  */
-func (stack *Stack) ToArray() (arr []any) {
+func (stack *Stack) ToArray(variadic ...any) (arr []any) {
+
+	// unpack variadic into optional parameters
+	var returnType any
+	gogenerics.UnpackVariadic(variadic, &returnType)
 
 	// return
-	return stack.ToMatrix(1).([]any)
+	return stack.ToMatrix(returnType, 1).([]any)
 
 }
 
@@ -378,6 +383,7 @@ func (stack *Stack) ToMap() (m map[any]any) {
 /** Creates a new matrix from a stack by depth.  For instance, if depth = 2, then returns the stacks inside stack as an [][]any
 
  @receiver `stack` type{*Stack}
+ @parameter optional `returnType` default RETURN_Vals
  @param optional `depth` type{int} default -1 (deepest)
  @returns type{[]any, [][]any, ..., []...[]any}
  @ensures
@@ -389,8 +395,10 @@ func (stack *Stack) ToMap() (m map[any]any) {
 func (stack *Stack) ToMatrix(variadic ...any) any {
 
 	// unpack variadic into optional parameters
-	var depth any
-	gogenerics.UnpackVariadic(variadic, &depth)
+	var returnType, depth any
+	gogenerics.UnpackVariadic(variadic, &returnType, &depth)
+	setRETURNDefaultIfNil(&returnType)
+	
 	var matrix []any
 
 	// update depth
@@ -408,7 +416,16 @@ func (stack *Stack) ToMatrix(variadic ...any) any {
 			if isStack {
 				matrix = append(matrix, subStack.ToMatrix(depth.(int) - 1))
 			} else {
-				matrix = append(matrix, c.Val)
+				switch returnType {
+				case RETURN_Vals:
+					matrix = append(matrix, c.Val)
+				case RETURN_Keys:
+					matrix = append(matrix, c.Key)
+				case RETURN_Idxs:
+					matrix = append(matrix, c.Idx)
+				case RETURN_Cards:
+					matrix = append(matrix, c)
+				}
 			}
 		}
 	}
@@ -557,9 +574,9 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
 	var matchByTypeKey, matchByTypeVal, compareIdxs any
 	gogenerics.UnpackVariadic(variadic, &matchByTypeKey, &matchByTypeVal, &compareIdxs)
 	// set default vals
-	setMATCHBYDefaultIfNil(matchByTypeKey)
-	setMATCHBYDefaultIfNil(matchByTypeVal)
-	setCOMPAREDefaultIfNil(compareIdxs)
+	setMATCHBYDefaultIfNil(&matchByTypeKey)
+	setMATCHBYDefaultIfNil(&matchByTypeVal)
+	setCOMPAREDefaultIfNil(&compareIdxs)
 
 	// return whether conditions yield true
 	return 	((matchByTypeKey == MATCHBY_Object && thisCard.Key == otherCard.Key) || (matchByTypeKey == MATCHBY_Reference && &thisCard.Key == &otherCard.Key)) &&
@@ -588,11 +605,11 @@ func (thisStack *Stack) Equals(otherStack *Stack, variadic ...any) bool {
 	gogenerics.UnpackVariadic(variadic, &compareStacks, &matchByTypeStack, &deepSearchType, &depth, &matchByTypeKey, &matchByTypeVal)
 	// set default vals
 	if compareStacks == nil {compareStacks = true}
-	setMATCHBYDefaultIfNil(matchByTypeStack)
-	setDEEPSEARCHDefaultIfNil(deepSearchType)
-	setDepthDefaultIfNil(depth)
-	setCOMPAREDefaultIfNil(compareStacks)
-	setCOMPAREDefaultIfNil(compareIdxs)
+	setMATCHBYDefaultIfNil(&matchByTypeStack)
+	setDEEPSEARCHDefaultIfNil(&deepSearchType)
+	setDepthDefaultIfNil(&depth)
+	setCOMPAREDefaultIfNil(&compareStacks)
+	setCOMPAREDefaultIfNil(&compareIdxs)
 
 	matches := true
 
@@ -690,6 +707,7 @@ func (stack *Stack) Flip() *Stack {
 func (card *Card) Print() {
 
 	fmt.Println("gostack: PRINTING CARD")
+	fmt.Printf("- &card: %v\n", &card)
 	fmt.Printf("- card.Idx: %v\n", card.Idx)
 	fmt.Printf("- card.Key: %v\n", card.Key)
 	fmt.Printf("- card.Val: %v\n", card.Val)
@@ -712,7 +730,9 @@ func (stack *Stack) Print(depth ...int) {
 	for i := 0; i < depth[0]; i++ {
 		fmt.Print("-")
 	}
+	fmt.Printf("- &stack: %v\n", &stack)
 	fmt.Printf("- stack.Size: %v\n", stack.Size)
+	fmt.Printf("- stack.Depth: %v\n", stack.Depth)
 	for i := range stack.Cards {
 		c := stack.Cards[i]
 		c.Print()

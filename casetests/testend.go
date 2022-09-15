@@ -221,15 +221,21 @@ func test_End(funcName string, conditions []bool) {
 }
 
 /** Make a sample stack of cards */
-func test_SampleStack() *Stack {
+func test_SampleStack(clone bool) *Stack {
 
 	// make a sample stack of form <"Card A", "Card B", "Card C">
 	stack := MakeStack()
 
 	// create stack (don't use .Add() function, or else you'll have to case test)
-	stack.Cards = append(stack.Cards, testCardA.Clone())
-	stack.Cards = append(stack.Cards, testCardB.Clone())
-	stack.Cards = append(stack.Cards, testCardC.Clone())
+	if clone {
+		stack.Cards = append(stack.Cards, testCardA.Clone())
+		stack.Cards = append(stack.Cards, testCardB.Clone())
+		stack.Cards = append(stack.Cards, testCardC.Clone())
+	} else {
+		stack.Cards = append(stack.Cards, testCardA)
+		stack.Cards = append(stack.Cards, testCardB)
+		stack.Cards = append(stack.Cards, testCardC)
+	}
 	
 	return stack
 

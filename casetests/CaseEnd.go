@@ -212,13 +212,38 @@ func case_stack_ToArray(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	array := test_SampleStack().ToArray()
+	arrayVals1 := test_SampleStack(true).ToArray()
+	arrayVals2 := test_SampleStack(true).ToArray(RETURN_Vals)
+	arrayKeys := test_SampleStack(true).ToArray(RETURN_Keys)
+	arrayIdxs := test_SampleStack(true).ToArray(RETURN_Idxs)
+	arrayCards := test_SampleStack(false).ToArray(RETURN_Cards)
 	
 	conditions := []bool{
-		len(array) == 3,
-		array[0] == testCardA.Val,
-		array[1] == testCardB.Val,
-		array[2] == testCardC.Val,
+		len(arrayVals1) == 3,
+		len(arrayVals2) == 3,
+		len(arrayKeys) == 3,
+		len(arrayIdxs) == 3,
+		len(arrayCards) == 3,
+
+		arrayVals1[0] == testCardA.Val,
+		arrayVals1[1] == testCardB.Val,
+		arrayVals1[2] == testCardC.Val,
+
+		arrayVals2[0] == testCardA.Val,
+		arrayVals2[1] == testCardB.Val,
+		arrayVals2[2] == testCardC.Val,
+
+		arrayKeys[0] == testCardA.Key,
+		arrayKeys[1] == testCardB.Key,
+		arrayKeys[2] == testCardC.Key,
+
+		arrayIdxs[0] == testCardA.Idx,
+		arrayIdxs[1] == testCardB.Idx,
+		arrayIdxs[2] == testCardC.Idx,
+
+		arrayCards[0].(*Card) == testCardA,
+		arrayCards[1].(*Card) == testCardB,
+		arrayCards[2].(*Card) == testCardC,
 	}
 
 	test_End(funcName, conditions)
@@ -229,7 +254,7 @@ func case_stack_ToMap(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	m := test_SampleStack().ToMap()
+	m := test_SampleStack(true).ToMap()
 
 	conditions := []bool{
 		len(m) == 3,
@@ -271,7 +296,7 @@ func case_stack_Empty(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	stack1 := test_SampleStack().Empty()
+	stack1 := test_SampleStack(true).Empty()
 	stack2 := test_SampleStackMatrix().Empty()
 
 	conditions := []bool{
@@ -617,11 +642,11 @@ func Run(_showTestText bool) {
 	// case_MakeStack("MakeStack") // BAD
 	// case_MakeStackMatrix("MakeStackMatrix") // BAD
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
-	// case_stack_ToArray("stack.ToArray") // BAD
+	case_stack_ToArray("stack.ToArray") // GOOD
 	case_stack_ToMap("stack.ToMap") // GOOD
 	// case_stack_ToMatrix("stack.ToMatrix") // BAD
 	case_stack_Empty("stack.Empty") // GOOD
-	case_card_Clone("card.Clone") // BAD
+	// case_card_Clone("card.Clone") // BAD
 	// case_stack_Clone("stack.Clone") // BAD
 	// case_stack_Unique("stack.Unique") // BAD
 	// case_card_Equals("card.Equals") // BAD

@@ -87,50 +87,50 @@ const (
 	COMPARE_True
 )
 
-/*func setRETURNDefaultIfNil(returnType any) {
-	if returnType == nil {
-		returnType = RETURN_Cards
-	}
-}*/
-
-func setFINDDefaultIfNil(findType any) {
-	if findType == nil {
-		findType = FIND_First
+func setRETURNDefaultIfNil(returnType *any) {
+	if *returnType == nil {
+		*returnType = RETURN_Vals
 	}
 }
 
-func setORDERDefaultIfNil(orderType any) {
-	if orderType == nil {
-		orderType = ORDER_Before
+func setFINDDefaultIfNil(findType *any) {
+	if *findType == nil {
+		*findType = FIND_First
 	}
 }
 
-func setMATCHBYDefaultIfNil(matchByType any) {
-	if matchByType == nil {
-		matchByType = MATCHBY_Object
+func setORDERDefaultIfNil(orderType *any) {
+	if *orderType == nil {
+		*orderType = ORDER_Before
 	}
 }
 
-func setCLONEDefaultIfNil(cloneType any) {
-	if cloneType == nil {
-		cloneType = CLONE_False
+func setMATCHBYDefaultIfNil(matchByType *any) {
+	if *matchByType == nil {
+		*matchByType = MATCHBY_Object
 	}
 }
 
-func setDEEPSEARCHDefaultIfNil(deepSearchType any) {
-	if deepSearchType == nil {
-		deepSearchType = DEEPSEARCH_False
+func setCLONEDefaultIfNil(cloneType *any) {
+	if *cloneType == nil {
+		*cloneType = CLONE_False
 	}
 }
 
-func setDepthDefaultIfNil(depth any) {
-	if depth == nil {
-		depth = 1
+func setDEEPSEARCHDefaultIfNil(deepSearchType *any) {
+	if *deepSearchType == nil {
+		*deepSearchType = DEEPSEARCH_False
 	}
 }
 
-func setCOMPAREDefaultIfNil(compareType any) {
-	if compareType == nil {
-		compareType = COMPARE_False
+func setDepthDefaultIfNil(depth *any) {
+	if *depth == nil {
+		*depth = 1
+	}
+}
+
+func setCOMPAREDefaultIfNil(compareType *any) {
+	if *compareType == nil {
+		*compareType = COMPARE_False
 	}
 }
