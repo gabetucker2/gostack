@@ -154,6 +154,6 @@ taskD := MakeStackMatrix(MakeStack(taskC.Clone().ToMap(), nil, 4), nil, []int{2,
 
 <h2>Conclusion</h2>
 
-***gostack*** won the race!  It took 450% fewer lines than ***classical go***, meaning it only took 22% of the lines that ***classical go*** took, in turn saving 35 lines of space (excluding comments and empty lines).
+***gostack*** won the race!  It took 6.7 times fewer lines than ***classical go*** (9 compared to 61), in turn saving 52 lines of space (excluding comments and empty lines).
 
 [Return to the main page](/../../)
