@@ -145,7 +145,7 @@ func MakeStack(variadic ...any) *Stack {
       ELSEIF `input1` is not passed
         the stack is empty
 	ELSEIF `matrixShape` is passed
-	  treating `input1`/`input2` as 1D arrays:
+	  treating `input1`/`input2` as 1D structures:
 	  IF `input1` is passed
         IF `input1` is a map
           unpack the map into matrix of shape `matrixShape` with corresponding keys and vals
@@ -495,8 +495,8 @@ func (card *Card) Clone(variadic ...any) *Card {
 /** Returns a clone of the given stack
 
  @receiver `stack` type{*Stack}
- @optional param `cloneKeys` type{CLONE} default CLONE_False
- @optional param `cloneVals` type{CLONE} default CLONE_False
+ @optional param `cloneKeys` type{CLONE} default CLONE_True
+ @optional param `cloneVals` type{CLONE} default CLONE_True
  @returns type{*Stack} stack clone
  @constructs type{*Stack} clone of `stack`
  @ensures

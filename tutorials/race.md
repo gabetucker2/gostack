@@ -2,7 +2,9 @@
 
 <h2>Introduction</h2>
 
- Welcome to the race!
+ Welcome!  This consists of a race between ***classical Go*** and ***gostack*** to see who can perform the same data management tasks faster.
+
+ Keep in mind that ***gostack*** code has been updated since this was written and ***classical go*** code is untested, meaning this script will be slightly outdated until ***gostack*** is finished.
 
  <h4>Jump To</h4>
 
@@ -18,7 +20,9 @@
  >
  > B) ...create a new map such that the list's values are its keys and its values are the corresponding indices from the original list...
  >
- > C) ...and, in a copy of B's map, replace pairs whose values are between 1 and 3 with a new array of key-value pairs...
+ > C) ...in a copy of B's map, replace pairs whose values are between 1 and 3 with a new slice of key-value pairs...
+ >
+ > D) ...and create a copy of C, concatenating the array to itself 4 times, and putting its key-value pairs in a 2x2x2x2 matrix...
 
  ...all the while ensuring no object is cloned in the process, you could use ***classical go*** or ***gostack***...
 
@@ -38,13 +42,15 @@ pairsToInsert <"I" : "Am new", "To" : "This set">
 
 // TASK C
 => taskC <40 : 0, "I" : "Am new", "To" : "This set", 520 : 4>
+
+// TASK D ('k' represents a key, just an abstraction for legibility)
+=> taskD < < << k, k >, < k, k >>, << k, k >, < k, k >> >,
+           < << k, k >, < k, k >>, << k, k >, < k, k >> > >
 ```
 
 <h2>Let's see how quickly we can do this using...</h2>
 
 <h3 name = "classical">...classical go</h3>
-
-TODO: Update slightly buggy classical code
 
 ```
 // INIT
@@ -91,16 +97,35 @@ var taskC map[any]any
 for k, v := range taskB {
     if 1 < v.(int) && v.(int) < 4 {
         for k3 := range pairsToInsert {
-            k4, v4 := pairsToInsert[k3] // circumvent for loop cloning
+            k4, v4 := pairsToInsert[k3] // circumvent for-loop cloning of keys/vals
             taskC[k4] = v4
         }
     } else {
         taskC[k] = v
     }
 }
+
+// TASK D
+var taskD [][][][]any
+type kvPair struct {
+    key any
+    val any
+}
+for a := 0; a < 2; a++ { // using for-loops rather than recursion to make the code more legible 
+    for b := 0; b < 2; b++ {
+        for c := 0; c < 2; c++ {
+            for d := 0; d < 2; d++ {
+                k, v := taskC[a+(b*2)]
+                kClone := reflect.New(reflect.ValueOf(k).Elem().Type()).Interface() // clone our key and value
+                vClone := reflect.New(reflect.ValueOf(v).Elem().Type()).Interface()
+                taskD[a][b][c][d] = kvPair {key: kClone, val: vClone}
+            }
+        }
+    }
+}
 ```
 
-`lines: 45`
+`lines: 61`
 
 <h3 name = "gostack">...gostack</h3>
 
@@ -116,13 +141,16 @@ taskA := start.GetMany(FIND_Keys, searchKeys, RETURN_Vals).Unique(TYPE_Val)
 // TASK B
 taskB := MakeStack(taskA, start.GetMany(FIND_Vals, taskA, RETURN_Vals).Unique(TYPE_Val))
 
- // TASK C
-taskC := taskB.Clone().Replace(RETURN_Cards, pairsToInsert, FIND_Lambda, func(stack *Stack, card *Card)bool {
-    return 1 < card.Val && card.Val < 3
+// TASK C
+taskC := taskB.Clone().Replace(RETURN_Cards, pairsToInsert, FIND_Lambda, func(stack *Stack, card *Card) bool {
+    return 1 < card.Val.(int) && card.Val.(int) < 3
 })
+
+// TASK D
+taskD := MakeStackMatrix(MakeStack(taskC.Clone().ToMap(), nil, 4), nil, []int{2, 2, 2, 2})
 ```
 
-`lines: 8`
+`lines: 9`
 
 <h2>Conclusion</h2>
 
