@@ -147,7 +147,7 @@ taskC := taskB.Clone().Replace(RETURN_Cards, pairsToInsert, FIND_Lambda, func(st
 })
 
 // TASK D
-taskD := MakeStackMatrix(MakeStack(taskC.Clone().ToMap(), nil, 4), nil, []int{2, 2, 2, 2})
+taskD := MakeStackMatrix(MakeStack(taskC.ToMap(), nil, 4), nil, []int{2, 2, 2, 2})
 ```
 
 `lines: 9`
