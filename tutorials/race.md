@@ -24,7 +24,7 @@
  >
  > D) ...and create a copy of C, concatenating the array to itself 4 times, and putting its key-value pairs in a 2x2x2x2 matrix...
 
- ...all the while ensuring no object is cloned in the process, you could use ***classical go*** or ***gostack***...
+ ...all the while ensuring no object is cloned in the process, you could use ***classical go*** or ***gostack***:
 
 <h3 name = "pseudocode">...pseudocode outline</h3>
 
@@ -116,8 +116,8 @@ for a := 0; a < 2; a++ { // using for-loops rather than recursion to make the co
         for c := 0; c < 2; c++ {
             for d := 0; d < 2; d++ {
                 k, v := taskC[a+(b*2)]
-                kClone := reflect.New(reflect.ValueOf(k).Elem().Type()).Interface() // clone our key and value
-                vClone := reflect.New(reflect.ValueOf(v).Elem().Type()).Interface()
+                kClone := reflect.New(reflect.ValueOf(k).Elem().Type()).Interface() // clone our key
+                vClone := reflect.New(reflect.ValueOf(v).Elem().Type()).Interface() // clone our value
                 taskD[a][b][c][d] = kvPair {key: kClone, val: vClone}
             }
         }

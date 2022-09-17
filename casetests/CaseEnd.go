@@ -74,9 +74,9 @@ func case_MakeStack(funcName string) {
 	stack1 := MakeStack(map1)
 	stack2 := MakeStack(arrVals)
 	stack3 := MakeStack(arrKeys, arrVals)
-	//fmt.Println("---------------")
+	fmt.Println("---------------")
 	stack4 := MakeStack(nil, arrKeys)
-	//fmt.Println("---------------")
+	fmt.Println("---------------")
 	stack5 := MakeStack(arrVals, nil, 3)
 	stack6 := MakeStack()
 
@@ -643,7 +643,7 @@ func Run(_showTestText bool) {
 
 	// NON-GENERALIZED FUNCTIONS
 	case_MakeCard("MakeCard") // GOOD
-	// case_MakeStack("MakeStack") // BAD
+	case_MakeStack("MakeStack") // BAD
 	// case_MakeStackMatrix("MakeStackMatrix") // BAD
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
 	case_stack_ToArray("stack.ToArray") // GOOD

@@ -1,8 +1,6 @@
 package gostack
 
 import (
-	//"fmt"
-
 	"github.com/gabetucker2/gogenerics"
 )
 
@@ -658,15 +656,26 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []
 			if overrideCards.(bool) {
 				makeNewCard()
 			} else {
-				//fmt.Println("start")
-				//fmt.Println(vals[i])
-				//fmt.Println("end")
-				switch vals[i].(type) {
-				case []*Card:
-					// set to existing card in card array `vals`
-					ret.Cards = append(ret.Cards, vals[i].(*Card))
-				default:
-					makeNewCard()
+
+				// if inserting vals
+				if len(vals) != 0 {
+					switch vals[i].(type) {
+					case []*Card:
+						// set to existing card in card array `vals`
+						ret.Cards = append(ret.Cards, vals[i].(*Card))
+					default:
+						makeNewCard()
+					}
+
+				// if inserting only keys
+				} else {
+					switch keys[i].(type) {
+					case []*Card:
+						// set to existing card in card array `keys`
+						ret.Cards = append(ret.Cards, keys[i].(*Card))
+					default:
+						makeNewCard()
+					}
 				}
 			}
 		}
