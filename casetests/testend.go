@@ -108,7 +108,7 @@ func test_StackEqualArrayOrMap(stack *Stack, _vals, _keys any, _ma any) bool {
 }
 
 /** Return whether len(cards) == cards.Size and whether depth measures are accurate */
-func test_StackProperties(stack *Stack, size []int, depth ...int) (test bool) {
+ func test_StackProperties(stack *Stack, size []int, depth ...int) (test bool) {
 
 	/*
 
@@ -139,10 +139,14 @@ func test_StackProperties(stack *Stack, size []int, depth ...int) (test bool) {
 		depth = append(depth, 1)
 	}
 
-	if stack.Size != len(stack.Cards) || stack.Depth != depth[0] {
+	if size[0] != stack.Size || stack.Size != len(stack.Cards) || stack.Depth != depth[0] {
 		// if invalid condition on test
 		fmt.Print("-     DETAIL: ")
-		fmt.Println(gogenerics.IfElse(stack.Size != len(stack.Cards), "stack.Size does not match len(stack.Cards)", "stack.Depth does not match actual depth").(string))
+		fmt.Printf(
+			gogenerics.IfElse(size[0] != stack.Size, "size[0] (%v) does not match stack.Size (%v)\n", gogenerics.IfElse(stack.Size != len(stack.Cards), "stack.Size (%v) does not match len(stack.Cards) (%v)\n", "stack.Depth (%v) does not match expected depth (%v)\n")).(string),
+			gogenerics.IfElse(size[0] != stack.Size, size[0], gogenerics.IfElse(stack.Size != len(stack.Cards), stack.Size, stack.Depth)),
+			gogenerics.IfElse(size[0] != stack.Size, stack.Size, gogenerics.IfElse(stack.Size != len(stack.Cards), len(stack.Cards), depth[0])),
+		)
 		test = false
 	} else {
 		// else iterate through cards in stack, test on each of them
@@ -152,7 +156,7 @@ func test_StackProperties(stack *Stack, size []int, depth ...int) (test bool) {
 
 			switch c.Val.(type) {
 			case *Stack:
-				test = test_StackProperties(c.Val.(*Stack), size[1:], depth[0] + 1)
+				test = test_StackProperties(c.Val.(*Stack), size[1:], depth[0])
 			}
 
 			if !test { break }

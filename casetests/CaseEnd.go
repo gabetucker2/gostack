@@ -74,9 +74,7 @@ func case_MakeStack(funcName string) {
 	stack1 := MakeStack(map1)
 	stack2 := MakeStack(arrVals)
 	stack3 := MakeStack(arrKeys, arrVals)
-	fmt.Println("---------------")
 	stack4 := MakeStack(nil, arrKeys)
-	fmt.Println("---------------")
 	stack5 := MakeStack(arrVals, nil, 3)
 	stack6 := MakeStack()
 
@@ -89,22 +87,25 @@ func case_MakeStack(funcName string) {
 	}
 	
 	conditions := []bool{
-		test_StackProperties(stack6, []int{0}),
 		test_IdxsAreGood(stack1),
 		test_IdxsAreGood(stack2),
 		test_IdxsAreGood(stack3),
 		test_IdxsAreGood(stack4),
 		test_IdxsAreGood(stack5),
+
 		test_StackProperties(stack1, []int{3}),
 		test_StackProperties(stack2, []int{3}),
 		test_StackProperties(stack3, []int{3}),
 		test_StackProperties(stack4, []int{3}),
 		test_StackProperties(stack5, []int{9}),
+
 		test_StackEqualArrayOrMap(stack1, nil, nil, map1),
 		test_StackEqualArrayOrMap(stack2, arrVals, nil, nil),
 		test_StackEqualArrayOrMap(stack3, arrVals, arrKeys, nil),
 		test_StackEqualArrayOrMap(stack4, nil, arrKeys, nil),
 		test_StackEqualArrayOrMap(stack5, arrValsTimesThree, nil, nil),
+		
+		test_StackProperties(stack6, []int{0}),
 	}
 	
 	test_End(funcName, conditions)

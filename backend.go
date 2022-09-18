@@ -596,6 +596,10 @@ func (stack *Stack) getStackDepth() (depth int) {
 
 	}
 
+	if depth == 0 {
+		depth = 1
+	}
+
 	return
 
 }
