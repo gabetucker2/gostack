@@ -138,14 +138,14 @@ func case_MakeStackMatrix(funcName string) {
 	// initialize variables
 	matrixShape := []int { 3, 2 }
 
-	/*shallowMap := map[string]int{
+	shallowMap := map[string]int{
 		"Alex": 111,
 		"Bre": 222,
 		"Charles": 333,
 		"David": 444,
 		"Elliot": 555,
 		"Ferguson": 666,
-    }*/
+    }
 
 	arrShallowKeys := []string {"Alex", "Bre", "Charles", "David", "Elliot", "Ferguson"}
 	arrShallowVals := []int {111, 222, 333, 444, 555, 666}
@@ -170,31 +170,36 @@ func case_MakeStackMatrix(funcName string) {
 
 	// to stacks (in order of conditions listed in documentation)
 
+	//TODO: add stackequalsarrayormap tests
 	//TODO: fix map support
 	//TODO: implement deep support
 	//TODO: implement overrideCard support
+	//TODO: ensure cases of irregularly-shaped matrices
 
 	//stack1  := MakeStackMatrix(deepMap) // BAD
 	//stack2  := MakeStackMatrix(arrDeepVals) // BAD
 	//stack3  := MakeStackMatrix(arrDeepKeys, arrDeepVals) // BAD
 	//stack4  := MakeStackMatrix(nil, arrDeepKeys) // BAD
-	stack5  := MakeStackMatrix()
-	//stack6  := MakeStackMatrix(shallowMap, nil, matrixShape) // BAD
-	stack7  := MakeStackMatrix(arrShallowVals, nil, matrixShape) // CHECK
-	stack8  := MakeStackMatrix(arrShallowKeys, arrShallowVals, matrixShape) // CHECK
-	stack9  := MakeStackMatrix(nil, arrShallowKeys, matrixShape) // CHECK
-	stack10 := MakeStackMatrix(nil, nil, matrixShape) // CHECK
+	stack5  := MakeStackMatrix() // GOOD
+	stack6  := MakeStackMatrix(shallowMap, nil, matrixShape) // GOOD
+	stack7  := MakeStackMatrix(arrShallowVals, nil, matrixShape) // GOOD
+	stack8  := MakeStackMatrix(arrShallowKeys, arrShallowVals, matrixShape) // GOOD
+	stack9  := MakeStackMatrix(nil, arrShallowKeys, matrixShape) // GOOD
+	stack10 := MakeStackMatrix(nil, nil, matrixShape) // GOOD
+
+	stack6.Print()
 
 	conditions := []bool{
+		test_IdxsAreGood(stack6),
 		test_IdxsAreGood(stack7),
 		test_IdxsAreGood(stack8),
 		test_IdxsAreGood(stack9),
 		test_IdxsAreGood(stack10),
-		
-		test_StackProperties(stack7, matrixShape),
-		test_StackProperties(stack8, matrixShape),
-		test_StackProperties(stack9, matrixShape),
-		test_StackProperties(stack10, matrixShape),
+
+		test_StackProperties(stack7, matrixShape, 2),
+		test_StackProperties(stack8, matrixShape, 2),
+		test_StackProperties(stack9, matrixShape, 2),
+		test_StackProperties(stack10, matrixShape, 2),
 		
 		test_StackProperties(stack5, []int{0}),
 	}

@@ -707,6 +707,7 @@ func (stack *Stack) Flip() *Stack {
  
  @receiver `card` type{*Card}
  @param optional `depth` type{int} default 0
+ 	This variable only exists for text-indenting purposes to make your terminal output look a bit cleaner.  1 depth => 4 "-" added before the print.
  @updates terminal logs
  */
 func (card *Card) Print(variadic ...any) {
@@ -722,7 +723,7 @@ func (card *Card) Print(variadic ...any) {
 
 	// prints
 	fmt.Printf("%v|gostack: PRINTING CARD\n", depthPrinter(depth.(int)))
-	fmt.Printf("%v- &card: %v\n", depthPrinter(depth.(int)), &card)
+	fmt.Printf("%v- &card:    %v\n", depthPrinter(depth.(int)), &card)
 	fmt.Printf("%v- card.Idx: %v\n", depthPrinter(depth.(int)), card.Idx)
 	fmt.Printf("%v- card.Key: %v\n", depthPrinter(depth.(int)), card.Key)
 	fmt.Printf("%v- card.Val: %v\n", depthPrinter(depth.(int)), card.Val)
@@ -733,8 +734,8 @@ func (card *Card) Print(variadic ...any) {
  
  @receiver `stack` type{*Stack}
  @param optional `depth` type{int} default 0
-   The starting depth of `stack` within other stacks; this variable only exists for text-indenting purposes to make your terminal output look a bit cleaner.  1 depth => one "-" added before the print.
- @requires `card.Print()` has been implemented
+   This variable only exists for text-indenting purposes to make your terminal output look a bit cleaner.  1 depth => 4 "-" added before the print.
+ @updates terminal logs
  */
 func (stack *Stack) Print(depth ...int) {
 	
@@ -742,15 +743,18 @@ func (stack *Stack) Print(depth ...int) {
 		depth = []int {0}
 	}
 	fmt.Printf("%v|gostack: PRINTING STACK\n", depthPrinter(depth[0]))
-	fmt.Printf("%v- &stack: %v\n", depthPrinter(depth[0]), &stack)
-	fmt.Printf("%v- stack.Size: %v\n", depthPrinter(depth[0]), stack.Size)
+	fmt.Printf("%v- &stack:      %v\n", depthPrinter(depth[0]), &stack)
+	if len(depth) == 2 {
+		fmt.Printf("%v- card.Idx:    %v\n", depthPrinter(depth[0]), depth[1])
+	}
+	fmt.Printf("%v- stack.Size:  %v\n", depthPrinter(depth[0]), stack.Size)
 	fmt.Printf("%v- stack.Depth: %v\n", depthPrinter(depth[0]), stack.Depth)
 	for i := range stack.Cards {
 		c := stack.Cards[i]
 
 		switch c.Val.(type) {
 		case *Stack:
-			c.Val.(*Stack).Print(depth[0]+4)
+			c.Val.(*Stack).Print(depth[0]+4, i)
 		default:
 			c.Print(depth[0]+4)
 		}

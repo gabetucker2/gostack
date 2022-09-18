@@ -98,7 +98,9 @@ func test_StackEqualArrayOrMap(stack *Stack, _vals, _keys any, _ma any) bool {
 	
 }
 
-/** Return whether len(cards) == cards.Size and whether depth measures are accurate */
+/** Return whether len(cards) == cards.Size and whether depth measures are accurate
+ NOTE: depth is one variable that's just optional
+ */
  func test_StackProperties(stack *Stack, size []int, depth ...int) (test bool) {
 
 	/*
@@ -115,7 +117,7 @@ func test_StackEqualArrayOrMap(stack *Stack, _vals, _keys any, _ma any) bool {
 	else
 		for each card in stack
 			if card has a stack
-				test = recursive call(card.Val.(*Stack), size[1:], depth + 1)
+				test = recursive call(card.Val.(*Stack), size[1:], depth - 1)
 			if !test
 				break
 	
@@ -147,7 +149,7 @@ func test_StackEqualArrayOrMap(stack *Stack, _vals, _keys any, _ma any) bool {
 
 			switch c.Val.(type) {
 			case *Stack:
-				test = test_StackProperties(c.Val.(*Stack), size[1:], depth[0])
+				test = test_StackProperties(c.Val.(*Stack), size[1:], depth[0] - 1) // TODO: this seems rather sus... double-check this
 			}
 
 			if !test { break }
