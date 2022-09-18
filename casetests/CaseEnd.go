@@ -69,6 +69,7 @@ func case_MakeStack(funcName string) {
 	map1 := map[string]int {"Alexander" : 111, "Breton" : 222, "Charles" : 333}
 	arrKeys := []string {"Alex", "Bre", "Charlie"}
 	arrVals := []int {11, 22, 33}
+	arrCardToVals := []*Card {new(Card), new(Card), new(Card)}
 	
 	// to stacks (in order of conditions listed in documentation)
 	stack1 := MakeStack(map1)
@@ -76,7 +77,10 @@ func case_MakeStack(funcName string) {
 	stack3 := MakeStack(arrKeys, arrVals)
 	stack4 := MakeStack(nil, arrKeys)
 	stack5 := MakeStack(arrVals, nil, 3)
-	stack6 := MakeStack()
+	stack6 := MakeStack(nil, nil, 10)
+	stack7 := MakeStack(stack2.Cards) // should equal stack2
+	stack8 := MakeStack(stack2.Cards, nil, nil, true) // should be a stack of cards pointing to the cards of stack2
+	stack9 := MakeStack()
 
 	// make array of arrVals times three (what stack5 should yield)
 	var arrValsTimesThree []any
@@ -86,26 +90,41 @@ func case_MakeStack(funcName string) {
 		}
 	}
 	
+	// stack of Cards of Cards
+	for i := 0; i < 3; i++ {
+		arrCardToVals[i].Val = stack2.Cards[i]
+		arrCardToVals[i].Idx = i
+	}
+
 	conditions := []bool{
 		test_IdxsAreGood(stack1),
 		test_IdxsAreGood(stack2),
 		test_IdxsAreGood(stack3),
 		test_IdxsAreGood(stack4),
 		test_IdxsAreGood(stack5),
+		test_IdxsAreGood(stack6),
+		test_IdxsAreGood(stack7),
+		test_IdxsAreGood(stack8),
 
 		test_StackProperties(stack1, []int{3}),
 		test_StackProperties(stack2, []int{3}),
 		test_StackProperties(stack3, []int{3}),
 		test_StackProperties(stack4, []int{3}),
 		test_StackProperties(stack5, []int{9}),
+		test_StackProperties(stack6, []int{10}),
+		test_StackProperties(stack7, []int{3}),
+		test_StackProperties(stack8, []int{3}),
 
 		test_StackEqualArrayOrMap(stack1, nil, nil, map1),
 		test_StackEqualArrayOrMap(stack2, arrVals, nil, nil),
 		test_StackEqualArrayOrMap(stack3, arrVals, arrKeys, nil),
 		test_StackEqualArrayOrMap(stack4, nil, arrKeys, nil),
 		test_StackEqualArrayOrMap(stack5, arrValsTimesThree, nil, nil),
+		test_StackEqualArrayOrMap(stack6, nil, nil, nil),
+		test_StackEqualArrayOrMap(stack7, arrVals, nil, nil),
+		test_StackEqualArrayOrMap(stack8, stack2.Cards, nil, nil), // stack.Cards[0].Val (&{0 <nil> 11}) != expected Val (&{0 <nil> 0xc000112990})
 		
-		test_StackProperties(stack6, []int{0}),
+		test_StackProperties(stack9, []int{0}),
 	}
 	
 	test_End(funcName, conditions)
@@ -163,7 +182,9 @@ func case_MakeStackMatrix(funcName string) {
 	stack7  := MakeStackMatrix(arrShallowVals, nil, matrixShape) // CHECK
 	stack8  := MakeStackMatrix(arrShallowKeys, arrShallowVals, matrixShape) // CHECK
 	stack9  := MakeStackMatrix(nil, arrShallowKeys, matrixShape) // CHECK
+	fmt.Println("A")
 	stack10 := MakeStackMatrix(nil, nil, matrixShape) // CHECK
+	fmt.Println("B")
 
 	conditions := []bool{
 		test_IdxsAreGood(stack7),
@@ -644,8 +665,8 @@ func Run(_showTestText bool) {
 
 	// NON-GENERALIZED FUNCTIONS
 	case_MakeCard("MakeCard") // GOOD
-	case_MakeStack("MakeStack") // BAD
-	// case_MakeStackMatrix("MakeStackMatrix") // BAD
+	case_MakeStack("MakeStack") // GOOD
+	//case_MakeStackMatrix("MakeStackMatrix") // BAD
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
 	case_stack_ToArray("stack.ToArray") // GOOD
 	case_stack_ToMap("stack.ToMap") // GOOD

@@ -28,22 +28,6 @@ func test_Setup() {
 
 }
 
-/** Returns, from any array type, a version of that array which is converted to type []any
- (These functions are repeated in backend.  Likely fix this in the future to remove redundancy.)
-
- @param `arr` type{any}
- @return type{[]any}
- @requires `arr` is an array
- */
-func test_UnpackArray(arr any) []any {
-    valType := reflect.ValueOf(arr)
-    new := make([]any, valType.Len())
-    for i := 0; i < valType.Len(); i++ {
-        new[i] = valType.Index(i).Interface()
-    }
-    return new
-}
-
 /** Returns, from any map type, a version of that map which is converted to type map[any]any
  (These functions are repeated in backend.  Likely fix this in the future to remove redundancy.)
 
@@ -68,43 +52,66 @@ func test_UnpackArray(arr any) []any {
 func test_StackEqualArrayOrMap(stack *Stack, _vals, _keys any, _ma any) bool {
 
 	// init
-	var keys, vals []any
-	var ma map[any]any
-	if _vals != nil { vals = test_UnpackArray(_vals) }
-	if _keys != nil { keys = test_UnpackArray(_keys) }
-	if _ma != nil {
-		ma = test_UnpackMap(_ma);
-		mapReflectVal := reflect.ValueOf(ma)
-		for _, k := range mapReflectVal.MapKeys() {
-			keys = append(keys, k.Interface())
-			vals = append(vals, mapReflectVal.MapIndex(k).Interface())
-		}
-	}
-
-	// return true iff stack does not raise any mismatches
-	for i := range stack.Cards {
-		c := stack.Cards[i]
-
-		// if testing a map (no need for match history tracking because go map can't have two of same key)
-		if _ma != nil {
-			matchExists := false
-			for j := range keys {
-				if keys[j] == c.Key && vals[j] == c.Val {
-					matchExists = true
-					break
-				}
-			}
-			if !matchExists {
+	if _vals == nil && _keys == nil && _ma == nil {
+		for i, c := range stack.Cards {
+			if c.Key != nil || c.Val != nil {
+				fmt.Print("-     DETAIL: ")
+				fmt.Printf(gogenerics.IfElse(c.Key != nil, "stack.Cards[%v].Key != nil", "stack.Cards[%v].Val != nil").(string), i)
 				return false
 			}
-
-		// if testing an array
-		} else if (_vals != nil && vals[i] != c.Val) || (_keys != nil && keys[i] != c.Key) {
-			 return false
 		}
-		
+	} else {
+		var keys, vals []any
+		var ma map[any]any
+		if _vals != nil { vals = gogenerics.UnpackArray(_vals) }
+		if _keys != nil { keys = gogenerics.UnpackArray(_keys) }
+		if _ma != nil {
+			ma = test_UnpackMap(_ma);
+			mapReflectVal := reflect.ValueOf(ma)
+			for _, k := range mapReflectVal.MapKeys() {
+				keys = append(keys, k.Interface())
+				vals = append(vals, mapReflectVal.MapIndex(k).Interface())
+			}
+		}
+
+		// return true iff stack does not raise any mismatches
+		for i := range stack.Cards {
+			c := stack.Cards[i]
+
+			// if testing a map (no need for match history tracking because go map can't have two of same key)
+			if _ma != nil {
+				matchExists := false
+				for j := range keys {
+					if keys[j] == c.Key && vals[j] == c.Val {
+						matchExists = true
+						break
+					}
+				}
+				if !matchExists {
+					return false
+				}
+
+			// if testing an array
+			} else if (_vals != nil && c.Val != vals[i]) || (_keys != nil && c.Key != keys[i]) {
+				fmt.Print("-     DETAIL: ")
+				fmt.Printf(
+					gogenerics.IfElse(_vals != nil && vals[i] != c.Val, "stack.Cards[%v].Val (%v) != expected Val ", "stack.Cards[%v].Key (%v) != expected Key ").(string),
+					i,
+					gogenerics.IfElse(_vals != nil && vals[i] != c.Val, c.Val, c.Key),
+				)
+				if _vals != nil && vals[i] != c.Val {
+					fmt.Printf("(%v)\n", vals[i])
+				} else {
+					fmt.Printf("(%v)\n", keys[i])
+				}
+				return false
+			}
+			
+		}
 	}
+	
 	return true
+	
 }
 
 /** Return whether len(cards) == cards.Size and whether depth measures are accurate */

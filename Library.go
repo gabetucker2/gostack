@@ -11,12 +11,12 @@ import (
 
 /** Creates a card with inputted val, key, and idx
 
-@param optional `val` type{any} default nil
-@param optional `key` type{any} default nil
-@param optional `idx` type{int} default -1 no pass-by-reference
-@returns type{*Card} the newly-constructed card
-@constructs type{*Card} a newly-constructed card
-@ensures the new card will have val `val`, key `key`, and idx `idx`
+ @param optional `val` type{any} default nil
+ @param optional `key` type{any} default nil
+ @param optional `idx` type{int} default -1 no pass-by-reference
+ @returns type{*Card} the newly-constructed card
+ @constructs type{*Card} a newly-constructed card
+ @ensures the new card will have val `val`, key `key`, and idx `idx`
 */
 func MakeCard(variadic ...any) *Card {
 
@@ -66,6 +66,8 @@ func MakeCard(variadic ...any) *Card {
         unpack keys from `input1` and values from `input2` into new cards
       ELSEIF `input1` is nil and `input2` is an array
         unpack keys from `input2` into new cards
+	ELSEIF `input1` is nil and `input2` is nil and `repeats` is passed
+		make `repeats` cards with nil value and nil key
     ELSE
       the stack is empty
  */
@@ -76,7 +78,11 @@ func MakeStack(variadic ...any) *Stack {
 	gogenerics.UnpackVariadic(variadic, &input1, &input2, &repeats, &overrideCards)
 	// set default
 	if repeats == nil {
-		repeats = 1
+		if input1 == nil && input2 == nil {
+			repeats = 0
+		} else {
+			repeats = 1
+		}
 	}
 
 	// new stack
@@ -87,7 +93,7 @@ func MakeStack(variadic ...any) *Stack {
 		matrixShape := -1
 		if input1 == nil {
 			if input2 == nil {
-				matrixShape = 0
+				matrixShape = 1
 			} else {
 				matrixShape = len(gogenerics.UnpackArray(input2))
 			}
@@ -100,9 +106,7 @@ func MakeStack(variadic ...any) *Stack {
 			}
 		}
 		
-		if !(input1 == nil && input2 == nil) {
-			stack.Cards = append(stack.Cards, MakeStackMatrix(input1, input2, []int{matrixShape}, overrideCards).Cards...)
-		}
+		stack.Cards = append(stack.Cards, MakeStackMatrix(input1, input2, []int{matrixShape}, overrideCards).Cards...)
 	}
 
 	// property sets
@@ -158,8 +162,8 @@ func MakeStack(variadic ...any) *Stack {
           unpack keys from `input1` and values from `input2` into matrix of shape `matrixShape`
         ELSEIF `input1` is nil and `input2` is an array
           unpack keys from `input2` into matrix of shape `matrixShape`
-	  ELSEIF `input1` is not passed
-	    create a StackMatrix of shape `matrixShape` whose deepest card vals are nil
+	  ELSEIF `input1` is not passed AND `input2` is not passed
+	    create a StackMatrix of shape `matrixShape` whose deepest card keys/vals are nil
  */
 func MakeStackMatrix(variadic ...any) *Stack {
 
@@ -268,7 +272,7 @@ func MakeStackMatrix(variadic ...any) *Stack {
 
 		}
 
-	// ELSEIF `input1` is not passed
+	// ELSEIF `input1` is nil AND `input2` is nil
 	} else {
 
 		// IF no `matrixShape` is passed
