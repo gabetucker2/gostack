@@ -28,22 +28,6 @@ func test_Setup() {
 
 }
 
-/** Returns, from any map type, a version of that map which is converted to type map[any]any
- (These functions are repeated in backend.  Likely fix this in the future to remove redundancy.)
-
- @param `arr` type{any}
- @return type{[]any}
- @requires `arr` is an array
- */
- func test_UnpackMap(s any) map[any]any {
-    v := reflect.ValueOf(s)
-    m := make(map[any]any, v.Len())
-    for _, k := range v.MapKeys() {
-		m[k.Interface()] = v.MapIndex(k).Interface()
-    }
-    return m
-}
-
 /** Test whether stack equals array or map
  (Incomplete documentation)
 
@@ -66,7 +50,7 @@ func test_StackEqualArrayOrMap(stack *Stack, _vals, _keys any, _ma any) bool {
 		if _vals != nil { vals = gogenerics.UnpackArray(_vals) }
 		if _keys != nil { keys = gogenerics.UnpackArray(_keys) }
 		if _ma != nil {
-			ma = test_UnpackMap(_ma);
+			ma = gogenerics.UnpackMap(_ma);
 			mapReflectVal := reflect.ValueOf(ma)
 			for _, k := range mapReflectVal.MapKeys() {
 				keys = append(keys, k.Interface())
@@ -187,6 +171,7 @@ func test_IdxsAreGood(stack *Stack) bool {
 		}
 		if c.Idx != i {
 			good = false
+			fmt.Printf("-     DETAIL: c.Idx (%v) != i (%v)", c.Idx, i)
 			break
 		}
 	}

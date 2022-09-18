@@ -172,6 +172,7 @@ func case_MakeStackMatrix(funcName string) {
 
 	//TODO: fix map support
 	//TODO: implement deep support
+	//TODO: implement overrideCard support
 
 	//stack1  := MakeStackMatrix(deepMap) // BAD
 	//stack2  := MakeStackMatrix(arrDeepVals) // BAD
@@ -182,20 +183,20 @@ func case_MakeStackMatrix(funcName string) {
 	stack7  := MakeStackMatrix(arrShallowVals, nil, matrixShape) // CHECK
 	stack8  := MakeStackMatrix(arrShallowKeys, arrShallowVals, matrixShape) // CHECK
 	stack9  := MakeStackMatrix(nil, arrShallowKeys, matrixShape) // CHECK
-	fmt.Println("A")
 	stack10 := MakeStackMatrix(nil, nil, matrixShape) // CHECK
-	fmt.Println("B")
 
 	conditions := []bool{
 		test_IdxsAreGood(stack7),
 		test_IdxsAreGood(stack8),
 		test_IdxsAreGood(stack9),
 		test_IdxsAreGood(stack10),
-		test_StackProperties(stack5, []int{0}),
+		
 		test_StackProperties(stack7, matrixShape),
 		test_StackProperties(stack8, matrixShape),
 		test_StackProperties(stack9, matrixShape),
 		test_StackProperties(stack10, matrixShape),
+		
+		test_StackProperties(stack5, []int{0}),
 	}
 
 	test_End(funcName, conditions)
@@ -666,7 +667,7 @@ func Run(_showTestText bool) {
 	// NON-GENERALIZED FUNCTIONS
 	case_MakeCard("MakeCard") // GOOD
 	case_MakeStack("MakeStack") // GOOD
-	//case_MakeStackMatrix("MakeStackMatrix") // BAD
+	case_MakeStackMatrix("MakeStackMatrix") // BAD
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
 	case_stack_ToArray("stack.ToArray") // GOOD
 	case_stack_ToMap("stack.ToMap") // GOOD
