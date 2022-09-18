@@ -122,7 +122,7 @@ func case_MakeStack(funcName string) {
 		test_StackEqualArrayOrMap(stack5, arrValsTimesThree, nil, nil),
 		test_StackEqualArrayOrMap(stack6, nil, nil, nil),
 		test_StackEqualArrayOrMap(stack7, arrVals, nil, nil),
-		test_StackEqualArrayOrMap(stack8, stack2.Cards, nil, nil), // stack.Cards[0].Val (&{0 <nil> 11}) != expected Val (&{0 <nil> 0xc000112990})
+		test_StackEqualArrayOrMap(stack8, stack2.Cards, nil, nil),
 		
 		test_StackProperties(stack9, []int{0}),
 	}
