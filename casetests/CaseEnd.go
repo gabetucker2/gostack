@@ -181,13 +181,13 @@ func case_MakeStackMatrix(funcName string) {
 	//stack3  := MakeStackMatrix(arrDeepKeys, arrDeepVals) // BAD
 	//stack4  := MakeStackMatrix(nil, arrDeepKeys) // BAD
 	stack5  := MakeStackMatrix() // GOOD
-	stack6  := MakeStackMatrix(shallowMap, nil, matrixShape) // GOOD
-	stack7  := MakeStackMatrix(arrShallowVals, nil, matrixShape) // GOOD
-	stack8  := MakeStackMatrix(arrShallowKeys, arrShallowVals, matrixShape) // GOOD
-	stack9  := MakeStackMatrix(nil, arrShallowKeys, matrixShape) // GOOD
-	stack10 := MakeStackMatrix(nil, nil, matrixShape) // GOOD
+	stack6  := MakeStackMatrix(shallowMap, nil, matrixShape) // BAD
+	stack7  := MakeStackMatrix(arrShallowVals, nil, matrixShape) // BAD
+	stack8  := MakeStackMatrix(arrShallowKeys, arrShallowVals, matrixShape) // BAD
+	stack9  := MakeStackMatrix(nil, arrShallowKeys, matrixShape) // BAD
+	stack10 := MakeStackMatrix(nil, nil, matrixShape) // BAD
 
-	stack6.Print()
+	stack7.Print()
 
 	conditions := []bool{
 		test_IdxsAreGood(stack6),

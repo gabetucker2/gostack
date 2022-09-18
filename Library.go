@@ -722,7 +722,7 @@ func (card *Card) Print(variadic ...any) {
 	depth = depth.(int)
 
 	// prints
-	fmt.Printf("%v|gostack: PRINTING CARD\n", depthPrinter(depth.(int)))
+	fmt.Printf("%v|%vCARD\n", depthPrinter(depth.(int)), gogenerics.IfElse(depth == 0, "gostack: PRINTING ", ""))
 	fmt.Printf("%v- &card:    %v\n", depthPrinter(depth.(int)), &card)
 	fmt.Printf("%v- card.Idx: %v\n", depthPrinter(depth.(int)), card.Idx)
 	fmt.Printf("%v- card.Key: %v\n", depthPrinter(depth.(int)), card.Key)
@@ -742,7 +742,7 @@ func (stack *Stack) Print(depth ...int) {
 	if depth == nil {
 		depth = []int {0}
 	}
-	fmt.Printf("%v|gostack: PRINTING STACK\n", depthPrinter(depth[0]))
+	fmt.Printf("%v|%vSTACK\n", depthPrinter(depth[0]), gogenerics.IfElse(len(depth) != 2, "gostack: PRINTING ", "SUB"))
 	fmt.Printf("%v- &stack:      %v\n", depthPrinter(depth[0]), &stack)
 	if len(depth) == 2 {
 		fmt.Printf("%v- card.Idx:    %v\n", depthPrinter(depth[0]), depth[1])
