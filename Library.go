@@ -27,8 +27,18 @@ func MakeCard(variadic ...any) *Card {
 	// initialize and set new Card
 	card := new(Card)
 	if idx == nil { card.Idx = -1 } else { card.Idx = idx.(int) }
-	card.Key = key
-	card.Val = val
+	
+	if reflect.ValueOf(val).Kind() == reflect.Ptr {
+		card.Val = *val.(*any)
+	} else {
+		card.Val = val
+	}
+	
+	if reflect.ValueOf(key).Kind() == reflect.Ptr {
+		card.Key = *key.(*any)
+	} else {
+		card.Key = key
+	}	
 
 	// return
 	return card

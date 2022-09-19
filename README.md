@@ -6,7 +6,7 @@
 
  <h1 name = "introduction">Introduction</h1>
 
- Introducing **Stacks**—sets of **Card** elements (like a stack of cards)—***gostack*** serves as an all-in-one library for flexible, parsimonious, and elegant data management in *golang*.
+ Introducing **Stacks**—sets of **Card** elements (like a stack of cards)—***gostack*** serves as an all-in-one library for flexible, parsimonious, and elegant scripting in *golang*.
 
  ***gostack***'s stacks...
  * ...replace arrays, maps, and matrices, eliminating the need for translating data between varying data types while supporting smooth conversion between stacks and your existing data structures

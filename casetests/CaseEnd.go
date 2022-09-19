@@ -37,6 +37,10 @@ func case_MakeCard(funcName string) {
 	card2 := MakeCard("Card 2")
 	card3 := MakeCard("Card 3", card2)
 	card4 := MakeCard(card1, 8, 2)
+	myStr := "Hello"
+	card5 := MakeCard(&myStr)
+	card6 := MakeCard(&myStr)
+	*card6.Val.(*any) = "Hi"
 
 	// test whether updating fields does so by object
 	card2.Val = "Card 4"
@@ -47,14 +51,22 @@ func case_MakeCard(funcName string) {
 		card2.Idx == -1,
 		card3.Idx == -1,
 		card4.Idx == 2,
+		card5.Idx == -1,
+		card6.Idx == -1,
+		
 		card1.Key == nil,
 		card2.Key == nil,
 		card3.Key == 7,
 		card4.Key == 8,
+		card5.Key == nil,
+		card6.Key == nil,
+
 		card1.Val == nil,
 		card2.Val == "Card 4",
 		card3.Val == "Card 3",
 		card4.Val == card1,
+		*card5.Val.(*any) == "Hi",
+		*card6.Val.(*any) == "Hi",
 	}
 
 	test_End(funcName, conditions)
@@ -680,9 +692,9 @@ func Run(_showTestText bool) {
 
 	// NON-GENERALIZED FUNCTIONS
 	case_MakeCard("MakeCard") // GOOD
-	case_card_Equals("card.Equals") // BAD
+	// case_card_Equals("card.Equals") // BAD
 	// case_stack_Equals("stack.Equals") // BAD
-	case_MakeStack("MakeStack") // GOOD
+	// case_MakeStack("MakeStack") // GOOD
 	// case_MakeStackMatrix("MakeStackMatrix") // BAD
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
 	case_stack_ToArray("stack.ToArray") // GOOD
