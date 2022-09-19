@@ -15,9 +15,9 @@
  * ...support the treatment of stacks as matrices, allowing the user to easily manage data tables, perform linear algebra, and control deep-versus-shallow matrix operations
  * ..., even when our built-in functions aren't enough, allow the user to effortlessly implement their own lambda functions to create novel stack mechanisms of their own design
 
- Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 45 lines to make it to the finish, ***gostack*** took merely 8—[see for yourself!](/tutorials/race.md)
+ Is ***gostack*** really more efficient than ***classical go***?  To put this to the test, we created a race for the two; they each have to complete 3 data management tasks as quickly and efficiently as possible.  Whereas ***classical go*** took 61 lines to make it to the finish, ***gostack*** took merely 9—[see for yourself!](/tutorials/race.md)
 
- To get a better feel of the library, feel free to take a look at some [examples](/tutorials/Bootstrap.go) of how ***gostack*** can substitute commonly-used functions.
+ To get a better feel of the library, feel free to take a look at some [examples](/tutorials/Bootstrap.go) of how ***gostack*** can substitute commonly-used functions.  Alternatively, take a look at our beginner-friendly [introductory tutorial](/tutorials/Introduction.go)!
 
 <h1 name = "glossary">Glossary</h1>
 
