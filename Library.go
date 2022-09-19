@@ -33,7 +33,7 @@ func MakeCard(variadic ...any) *Card {
 	} else {
 		card.Val = val
 	}
-	
+
 	if reflect.ValueOf(key).Kind() == reflect.Ptr {
 		card.Key = *key.(*any)
 	} else {
