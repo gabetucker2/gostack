@@ -63,7 +63,7 @@
  >>>>
  >>>>> [ORDER](#ORDER)
  >>>>
- >>>>> [MATCHBY](#MATCHBY)
+ >>>>> [POINTER](#POINTER)
  >>>>
  >>>>> [CLONE](#CLONE)
  >>>>
@@ -285,9 +285,9 @@
  > * ORDER_Before
  > * ORDER_After
 
- > **MATCHBY**
- > * MATCHBY_Object
- > * MATCHBY_Reference
+ > **POINTER**
+ > * POINTER_False
+ > * POINTER_True
 
  > **CLONE**
  > * CLONE_True
@@ -317,9 +317,9 @@
  * **stack.Empty()**
  * **card.Clone(...cloneKey, ...cloneVal)**
  * **stack.Clone(...cloneCards, ...cloneKeys, ...cloneVals)**
- * **stack.Unique(typeType, ...matchByType, ...deepSearchType, ...depth)**
- * **card.Equals(Card, ...matchByTypeKey, ...matchByTypeVal, ...compareIdxs, ...printType)**
- * **stack.Equals(Stack, ...compareStacks, ...matchByTypeStack, ...deepSearchType, ...depth, ...matchByTypeKey, ...matchByTypeVal)**
+ * **stack.Unique(typeType, ...pointerType, ...deepSearchType, ...depth)**
+ * **card.Equals(Card, ...pointerTypeKey, ...pointerTypeVal, ...compareIdxs, ...printType)**
+ * **stack.Equals(Stack, ...compareStacks, ...pointerTypeStack, ...deepSearchType, ...depth, ...pointerTypeKey, ...pointerTypeVal)**
  * **stack.Shuffle()**
  * **stack.Flip()**
  * **card.Print()**
@@ -328,20 +328,20 @@
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
- * **stack.Add(insert, ...orderType, ...findType, ...findData, ...matchByType, ...deepSearchType, ...depth, ...overrideStackConversion)**
- * **stack.Move(findType_from, orderType, findType_to, ...findData_from, ...findData_to, ...matchByType_from, ...matchByType_to, ...deepSearchType, ...depth)**
- * **stack.Swap(findType_from, findType_to, ...findData_from, ...findData_to, ...matchByType_from, ...matchByType_to, ...deepSearchType, ...depth)**
- * **stack.Has(returnType, findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
- * **stack.Get(...findType, ...findData, ...matchByType, ...clonesType_card, ...clonesType_keys, ...clonesType_vals, ...deepSearchType, ...depth)**
- * **stack.GetMany(findType, ...findData, ...matchByType, ...returnType, ...clonesType, ...clonesType_keys, ...clonesType_vals, ...deepSearchType, ...depth)**
- * **stack.Replace(replaceType, replaceData, findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
- * **stack.ReplaceMany(replaceType, replaceData, findType, ...findData, ...matchByType, ...returnType, ...deepSearchType, ...depth)**
- * **stack.Update(findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
- * **stack.UpdateMany(findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
- * **stack.Extract(findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
- * **stack.ExtractMany(findType, ...findData, ...matchByType, ...returnType, ...deepSearchType, ...depth)**
- * **stack.Remove(findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
- * **stack.RemoveMany(findType, ...findData, ...matchByType, ...deepSearchType, ...depth)**
+ * **stack.Add(insert, ...orderType, ...findType, ...findData, ...pointerType, ...deepSearchType, ...depth, ...overrideStackConversion)**
+ * **stack.Move(findType_from, orderType, findType_to, ...findData_from, ...findData_to, ...pointerType_from, ...pointerType_to, ...deepSearchType, ...depth)**
+ * **stack.Swap(findType_from, findType_to, ...findData_from, ...findData_to, ...pointerType_from, ...pointerType_to, ...deepSearchType, ...depth)**
+ * **stack.Has(returnType, findType, ...findData, ...pointerType, ...deepSearchType, ...depth)**
+ * **stack.Get(...findType, ...findData, ...pointerType, ...clonesType_card, ...clonesType_keys, ...clonesType_vals, ...deepSearchType, ...depth)**
+ * **stack.GetMany(findType, ...findData, ...pointerType, ...returnType, ...clonesType, ...clonesType_keys, ...clonesType_vals, ...deepSearchType, ...depth)**
+ * **stack.Replace(replaceType, replaceData, findType, ...findData, ...pointerType, ...deepSearchType, ...depth)**
+ * **stack.ReplaceMany(replaceType, replaceData, findType, ...findData, ...pointerType, ...returnType, ...deepSearchType, ...depth)**
+ * **stack.Update(findType, ...findData, ...pointerType, ...deepSearchType, ...depth)**
+ * **stack.UpdateMany(findType, ...findData, ...pointerType, ...deepSearchType, ...depth)**
+ * **stack.Extract(findType, ...findData, ...pointerType, ...deepSearchType, ...depth)**
+ * **stack.ExtractMany(findType, ...findData, ...pointerType, ...returnType, ...deepSearchType, ...depth)**
+ * **stack.Remove(findType, ...findData, ...pointerType, ...deepSearchType, ...depth)**
+ * **stack.RemoveMany(findType, ...findData, ...pointerType, ...deepSearchType, ...depth)**
 
 <h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
 
@@ -510,25 +510,25 @@
 >>
 >> ORDER_After
 
-<h4 name = "MATCHBY">MATCHBY</h4>
+<h4 name = "POINTER">POINTER</h4>
 
- This is an enum intended to make it easy to target whether a function searching for a match between input data and data in the stack element is matching by having the same values (MATCHBY_Object) or the same memory address (MATCHBY_Reference).
+ This is an enum intended to make it easy to target whether a function searching for a match between input data and data in the stack element is matching by having the same values (POINTER_False) or the same memory address (POINTER_True).
 
  Matching by reference only works for Val, Key, and Card FIND types.  It would not make much sense to match an index that's managed on the backend by reference (FIND_Idx), to match a lambda expression (FIND_Lambda), or to match using a position that's not even comparing values (FIND_First, FIND_Last, FIND_All).
 
  Take care to note that all cases where objects are matching by reference will also be matching by object.
 
- > ***MATCHBY***
- >> MATCHBY_Object
+ > ***POINTER***
+ >> POINTER_False
  >>> default
  >>
- >> MATCHBY_Reference
+ >> POINTER_True
 
 <h4 name = "CLONE">CLONE</h4>
 
  This is an enum intended to make it possible to tell the function whether to return a clone of an object or a pointer of an object.
 
- > ***MATCHBY***
+ > ***POINTER***
  >> CLONE_True
  >>
  >> CLONE_False
@@ -744,44 +744,44 @@
  
 <h3 name = "Unique">Unique</h3>
  
- `stack.Unique(typeType, ...matchByType, ...deepSearchType, ...depth)`
+ `stack.Unique(typeType, ...pointerType, ...deepSearchType, ...depth)`
  ```
  Removes all cards from `stack` which share the same field value as another card before
 
  @receiver `stack` type{*Stack}
  @param `typeType` type{TYPE}
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerType` type{POINTER} default POINTER_False
  @returns `stack`
  @updates `stack` to have no repeating values between field `typeType`
  ```
  
 <h3 name = "Equals">Equals</h3>
  
- `card.Equals(*Card, ...compareCards, ...matchByTypeCard, ...matchByTypeKey, ...matchByTypeVal, ...compareIdxs)`
+ `card.Equals(*Card, ...compareCards, ...pointerTypeCard, ...pointerTypeKey, ...pointerTypeVal, ...compareIdxs)`
  ```
  Returns whether two cards equal one another
  
  @receiver `thisCard` type{*Card}
  @param `otherCard` type{*Card}
- @param optional `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
- @param optional `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerTypeKey` type{POINTER} default POINTER_False
+ @param optional `pointerTypeVal` type{POINTER} default POINTER_False
  @param optional `compareIdxs` type{bool} default false
  @returns type{bool}
  ```
  
- `stack.Equals(*Stack, ...compareStacks, ...matchByTypeStack, ...deepSearchType, ...compareCards, ...matchByTypeCard, ...matchByTypeKey, ...matchByTypeVal)`
+ `stack.Equals(*Stack, ...compareStacks, ...pointerTypeStack, ...deepSearchType, ...compareCards, ...pointerTypeCard, ...pointerTypeKey, ...pointerTypeVal)`
  ```
  Returns whether two stacks equal one another
  
  @receiver `thisStack` type{*Stack}
  @param `otherStack` type{*Stack}
  @param optional `compareStacks` type{COMPARE} default COMPARE_False
-	By default, does not compare the stack structs, but rather their cards; can be set true and adjusted with `matchByTypeStack`
- @param optional `matchByTypeStack` type{MATCHBY} default MATCHBY_Object
+	By default, does not compare the stack structs, but rather their cards; can be set true and adjusted with `pointerTypeStack`
+ @param optional `pointerTypeStack` type{POINTER} default POINTER_False
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
- @param optional `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
- @param optional `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerTypeKey` type{POINTER} default POINTER_False
+ @param optional `pointerTypeVal` type{POINTER} default POINTER_False
  @returns type{bool}
  ```
  
@@ -845,7 +845,7 @@
  
 <h3 name = "Add">Add</h3>
  
- `stack.Add(insert, ...orderType, ...findType, ...findData, ...matchByType, ...deepSearchType, ...depth, ...overrideStackConversion)`
+ `stack.Add(insert, ...orderType, ...findType, ...findData, ...pointerType, ...deepSearchType, ...depth, ...overrideStackConversion)`
  ```
  Adds to a stack of cards or a cards at (each) position(s) and returns `stack`
  
@@ -854,7 +854,7 @@
  @param optional `orderType` type{ORDER} default ORDER_Before
  @param optional `findType` type{FIND} default FIND_First
  @param optional `findData` type{any} default nil
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerType` type{POINTER} default POINTER_False
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
  @param optional `overrideStackConversion` type{bool} default false
@@ -870,7 +870,7 @@
  
 <h3 name = "Move">Move</h3>
  
- `stack.Move(findType_from, orderType, findType_to, ...findData_from, ...findData_to, ...matchByType_from, ...matchByType_to)`
+ `stack.Move(findType_from, orderType, findType_to, ...findData_from, ...findData_to, ...pointerType_from, ...pointerType_to)`
  ```
  Moves one element or slice of cards to before or after another element or slice of cards
  
@@ -880,8 +880,8 @@
  @param `findType_to` type{FIND}
  @param optional `findData_from` type{any} default nil
  @param optional `findData_to` type{any} default nil
- @param optional `matchByType_from` type{MATCHBY} default MATCHBY_Object
- @param optional `matchByType_to` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerType_from` type{POINTER} default POINTER_False
+ @param optional `pointerType_to` type{POINTER} default POINTER_False
  @param optional `deepSearchType_from` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `deepSearchType_to` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth_from` type{int} default -1 (deepest)
@@ -893,7 +893,7 @@
  
 <h3 name = "Swap">Swap</h3>
  
- `stack.Swap(findType_from, findType_to, ...findData_from, ...findData_to, ...matchByType_from, ...matchByType_to, ...deepSearchType, ...depth)`
+ `stack.Swap(findType_from, findType_to, ...findData_from, ...findData_to, ...pointerType_from, ...pointerType_to, ...deepSearchType, ...depth)`
  ```
  Swaps one element or slice with the position of another element or slice
  
@@ -902,8 +902,8 @@
  @param `findType_second` type{FIND}
  @param optional `findData_first` type{any} default nil
  @param optional `findData_second` type{any} default nil
- @param optional `matchByType_first` type{MATCHBY} default MATCHBY_Object
- @param optional `matchByType_second` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerType_first` type{POINTER} default POINTER_False
+ @param optional `pointerType_second` type{POINTER} default POINTER_False
  @param optional `deepSearchType_first` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `deepSearchType_second` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth_first` type{int} default -1 (deepest)
@@ -915,28 +915,28 @@
  
 <h3 name = "Has">Has</h3>
  
- `stack.Has(...findType, ...findData, ...matchByType)`
+ `stack.Has(...findType, ...findData, ...pointerType)`
  ```
  Returns a boolean representing whether a search exists in the stack
 
  @receiver `stack` type{*Stack}
  @param optional `findType` type{FIND} default FIND_First
  @param optional `findData` type{any} default nil
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerType` type{POINTER} default POINTER_False
  @returns true IF successful search, false IF unsuccessful search
  @requires `stack.Get()` has been implemented
  ```
  
 <h3 name = "Get">Get</h3>
  
- `stack.Get(...findType, ...findData, ...matchByType, ...clonesType_card, ...clonesType_keys, ...clonesType_vals)`
+ `stack.Get(...findType, ...findData, ...pointerType, ...clonesType_card, ...clonesType_keys, ...clonesType_vals)`
  ```
  Gets a card from specified parameters in a stack, or nil if does not exist
 
  @receiver `stack` type{*Stack}
  @param optional `findType` type{FIND} default FIND_First
  @param optional `findData` type{any} default nil
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerType` type{POINTER} default POINTER_False
  @param optional `clonesType_card` type{CLONES} default CLONE_FALSE
  @param optional `clonesType_keys` type{CLONES} default CLONE_FALSE
  @param optional `clonesType_vals` type{CLONES} default CLONE_FALSE
@@ -949,7 +949,7 @@
  
 <h3 name = "GetMany">GetMany</h3>
  
- `stack.GetMany(findType, ...findData, ...returnType, ...matchByType, ...clonesType, ...clonesType_keys, ...clonesType_vals)`
+ `stack.GetMany(findType, ...findData, ...returnType, ...pointerType, ...clonesType, ...clonesType_keys, ...clonesType_vals)`
  ```
  Gets a stack from specified parameters in a stack
  
@@ -957,7 +957,7 @@
  @param `findType` type{FIND}
  @param optional `findData` type{any} default nil
  @param optional `returnType` type{RETURN} default RETURN_Cards
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerType` type{POINTER} default POINTER_False
  @param optional `clonesType` type{CLONES} default CLONE_False
  @param optional `clonesType_keys` type{CLONES} default CLONE_False
  @param optional `clonesType_vals` type{CLONES} default CLONE_False
@@ -976,7 +976,7 @@
  
 <h3 name = "Replace">Replace</h3>
  
- `stack.Replace(replaceType, replaceData, findType, ...findData, ...matchByType)`
+ `stack.Replace(replaceType, replaceData, findType, ...findData, ...pointerType)`
  ```
  Returns a clone of a found card before its respective field is updated to `replaceData` (OR nil if not found)
  
@@ -985,7 +985,7 @@
  @param `replaceData` type{any}
  @param `findType` type{FIND}
  @param optional `findData` type{any} default nil
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerType` type{POINTER} default POINTER_False
  @returns type{*Card} a clone of extracted card OR nil if found no cards
  @updates first found card to `replaceData`
  @requires `stack.Get()` has been implemented
@@ -994,7 +994,7 @@
  
 <h3 name = "ReplaceMany">ReplaceMany</h3>
  
- `stack.Replace(replaceType, replaceData, findType, ...findData, ...returnType, ...matchByType)`
+ `stack.Replace(replaceType, replaceData, findType, ...findData, ...returnType, ...pointerType)`
  ```
  Returns a stack whose values are the original fields updated to `replaceData`
  
@@ -1004,7 +1004,7 @@
  @param `findType` type{FIND}
  @param optional `findData` type{any} default nil
  @param optional `returnType` type{RETURN} default RETURN_Cards
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerType` type{POINTER} default POINTER_False
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
  @returns type{*Stack} a stack whose values are the extracted cards pre-update (if find fails, then an empty stack)
@@ -1015,14 +1015,14 @@
  
 <h3 name = "Update">Update</h3>
  
- `stack.Update(findType, ...findData, ...matchByType)`
+ `stack.Update(findType, ...findData, ...pointerType)`
  ```
  Updates a card in and returns `stack`
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{any} default nil
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerType` type{POINTER} default POINTER_False
  @returns `stack`
  @updates the found card in `stack`
  @requires `stack.Replace()` has been implemented
@@ -1030,14 +1030,14 @@
  
 <h3 name = "UpdateMany">UpdateMany</h3>
  
- `stack.UpdateMany(findType, ...findData, ...matchByType)`
+ `stack.UpdateMany(findType, ...findData, ...pointerType)`
  ```
  Updates cards in and returns `stack`
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{any} default nil
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerType` type{POINTER} default POINTER_False
  @returns `stack`
  @updates  the found cards in `stack`
  @requires `stack.ReplaceMany()` has been implemented
@@ -1045,21 +1045,21 @@
  
 <h3 name = "Extract">Extract</h3>
  
- `stack.Extract(findType, ...findData, ...matchByType)`
+ `stack.Extract(findType, ...findData, ...pointerType)`
  ```
  Gets and removes a card from `stack`, or returns nil if it does not exist
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{any} default nil
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerType` type{POINTER} default POINTER_False
  @returns type{*Card} the extracted card OR nil if invalid FIND
  @updates `stack` to no longer have found card
  ```
  
 <h3 name = "ExtractMany">ExtractMany</h3>
  
- `stack.ExtractMany(findType, ...findData, ...returnType, ...matchByType)`
+ `stack.ExtractMany(findType, ...findData, ...returnType, ...pointerType)`
  ```
  Gets and removes a set of data from `stack`
  
@@ -1067,7 +1067,7 @@
  @param `findType` type{FIND}
  @param optional `findData` type{any} default nil
  @param optional `returnType` type{RETURN} default RETURN_Cards
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerType` type{POINTER} default POINTER_False
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
  @returns type{*Stack} the extracted card (if find fails, then an empty stack)
@@ -1077,14 +1077,14 @@
  
 <h3 name = "Remove">Remove</h3>
  
- `stack.Remove(findType, ...findData, ...matchByType)`
+ `stack.Remove(findType, ...findData, ...pointerType)`
  ```
  Removes a card from and returns `stack`
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{any} default nil
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerType` type{POINTER} default POINTER_False
  @returns `stack`
  @updates `stack` to no longer have found card
  @requires `stack.Replace()` has been implemented
@@ -1092,14 +1092,14 @@
  
 <h3 name = "RemoveMany">RemoveMany</h3>
  
- `stack.RemoveMany(findType, ...findData, ...matchByType)`
+ `stack.RemoveMany(findType, ...findData, ...pointerType)`
  ```
  Removes a set of cards from and returns `stack`
  
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
  @param optional `findData` type{any} default nil
- @param optional `matchByType` type{MATCHBY} default MATCHBY_Object
+ @param optional `pointerType` type{POINTER} default POINTER_False
  @returns `stack`
  @updates `stack` to no longer have found cards
  @requires `stack.ReplaceMany()` has been implemented

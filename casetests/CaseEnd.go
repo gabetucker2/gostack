@@ -486,15 +486,15 @@ func case_card_Equals(funcName string) {
 		card1.Equals(card2, nil, nil, COMPARE_False, PRINT_False),
 		!card1.Equals(card2, nil, nil, COMPARE_True, PRINT_False),
 
-		// test whether matchByTypes work
+		// test whether pointerTypes work
 		card1.Equals(card3, nil, nil, nil, PRINT_False),
-		card1.Equals(card3, MATCHBY_Object, MATCHBY_Object, nil, PRINT_False),
-		!card1.Equals(card3, MATCHBY_Object, MATCHBY_Reference, nil, PRINT_False),
-		!card1.Equals(card3, MATCHBY_Reference, MATCHBY_Object, nil, PRINT_False),
-		!card1.Equals(card3, MATCHBY_Reference, MATCHBY_Reference, nil, PRINT_False),
-		card3.Equals(card4, MATCHBY_Object, MATCHBY_Reference, nil, PRINT_True),
-		card3.Equals(card4, MATCHBY_Reference, MATCHBY_Object, nil, PRINT_False),
-		card3.Equals(card4, MATCHBY_Reference, MATCHBY_Reference, nil, PRINT_False),
+		card1.Equals(card3, POINTER_False, POINTER_False, nil, PRINT_False),
+		!card1.Equals(card3, POINTER_False, POINTER_True, nil, PRINT_False),
+		!card1.Equals(card3, POINTER_True, POINTER_False, nil, PRINT_False),
+		!card1.Equals(card3, POINTER_True, POINTER_True, nil, PRINT_False),
+		card3.Equals(card4, POINTER_False, POINTER_True, nil, PRINT_True),
+		card3.Equals(card4, POINTER_True, POINTER_False, nil, PRINT_False),
+		card3.Equals(card4, POINTER_True, POINTER_True, nil, PRINT_False),
 		
 	}
 
@@ -533,27 +533,27 @@ func case_stack_Equals(funcName string) {
 		// test whether stack compare object vs reference works
 		stack1.Equals(stack2, COMPARE_False),
 		stack1.Equals(stack2, COMPARE_True),
-		stack1.Equals(stack2, COMPARE_True, MATCHBY_Object),
-		!stack1.Equals(stack2, COMPARE_True, MATCHBY_Reference),
-		stack1.Equals(stack3, COMPARE_True, MATCHBY_Reference),
-		!stack1.Equals(stack4, COMPARE_True, MATCHBY_Object),
-		!stack1.Equals(stack4, COMPARE_True, MATCHBY_Reference),
+		stack1.Equals(stack2, COMPARE_True, POINTER_False),
+		!stack1.Equals(stack2, COMPARE_True, POINTER_True),
+		stack1.Equals(stack3, COMPARE_True, POINTER_True),
+		!stack1.Equals(stack4, COMPARE_True, POINTER_False),
+		!stack1.Equals(stack4, COMPARE_True, POINTER_True),
 
 		// test whether the same tests hold true for a deepsearch-true equivalent
 		deep1.Equals(deep2, COMPARE_False, nil, DEEPSEARCH_True),
 		deep1.Equals(deep2, COMPARE_True, nil, DEEPSEARCH_True),
-		deep1.Equals(deep2, COMPARE_True, MATCHBY_Object, DEEPSEARCH_True),
-		!deep1.Equals(deep2, COMPARE_True, MATCHBY_Reference, DEEPSEARCH_True),
-		deep1.Equals(deep3, COMPARE_True, MATCHBY_Reference, DEEPSEARCH_True),
-		!deep1.Equals(deep4, COMPARE_True, MATCHBY_Object, DEEPSEARCH_True),
-		!deep1.Equals(deep4, COMPARE_True, MATCHBY_Reference, DEEPSEARCH_True),
+		deep1.Equals(deep2, COMPARE_True, POINTER_False, DEEPSEARCH_True),
+		!deep1.Equals(deep2, COMPARE_True, POINTER_True, DEEPSEARCH_True),
+		deep1.Equals(deep3, COMPARE_True, POINTER_True, DEEPSEARCH_True),
+		!deep1.Equals(deep4, COMPARE_True, POINTER_False, DEEPSEARCH_True),
+		!deep1.Equals(deep4, COMPARE_True, POINTER_True, DEEPSEARCH_True),
 
 		// test depth
 		deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, -1),
 		deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, 2),
 		deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, 1),
-		!deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, 1, nil, MATCHBY_Reference),
-		deeper2.Equals(deeper3, nil, nil, DEEPSEARCH_True, 1, nil, MATCHBY_Reference),
+		!deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, 1, nil, POINTER_True),
+		deeper2.Equals(deeper3, nil, nil, DEEPSEARCH_True, 1, nil, POINTER_True),
 
 	}
 

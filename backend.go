@@ -8,13 +8,13 @@ import (
 
 @shorthand Just pass the proper variables (or nil) into this function from Library.go, and this function will handle the rest
 */
-func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, findData, returnType, matchByType, deepSearchType, depth, typeType, uniqueType, insert, orderType, findData_to, findType_to, matchByType_to, cloneType1, cloneType2, cloneType3, overrideStackConversion any) (ret *Stack) {
+func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, findData, returnType, pointerType, deepSearchType, depth, typeType, uniqueType, insert, orderType, findData_to, findType_to, pointerType_to, cloneType1, cloneType2, cloneType3, overrideStackConversion any) (ret *Stack) {
 
 	// 0) set defaults
 	setORDERDefaultIfNil(&orderType)
 	setFINDDefaultIfNil(&findType)
-	setMATCHBYDefaultIfNil(&returnType)
-	setMATCHBYDefaultIfNil(&matchByType)
+	setPOINTERDefaultIfNil(&returnType)
+	setPOINTERDefaultIfNil(&pointerType)
 	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	setDepthDefaultIfNil(&depth)
 	setCLONEDefaultIfNil(&cloneType1)
@@ -31,7 +31,7 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 	}
 
 	// 2) get position data from clone
-	targetIndices, targetCards, targetStacks := stackClone.getPositions(getFirst, findType.(FIND), findData, matchByType.(MATCHBY), deepSearchType.(DEEPSEARCH), depth.(int))
+	targetIndices, targetCards, targetStacks := stackClone.getPositions(getFirst, findType.(FIND), findData, pointerType.(POINTER), deepSearchType.(DEEPSEARCH), depth.(int))
 	
 	// 3) iterate through each card in targetCards
 	if !(getFirst && len(targetCards) == 0) {
@@ -51,11 +51,11 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 				newCards = targetStack.Cards
 				for i, newCard := range newCards {
 					if (typeType == TYPE_Key &&
-						(matchByType == MATCHBY_Object && targetCard.Key == newCard.Key) ||
-						(matchByType == MATCHBY_Reference && &targetCard.Key == &newCard.Key) ) ||
+						(pointerType == POINTER_False && targetCard.Key == newCard.Key) ||
+						(pointerType == POINTER_True && &targetCard.Key == &newCard.Key) ) ||
 						(typeType == TYPE_Val &&
-						(matchByType == MATCHBY_Object && targetCard.Val == newCard.Val) ||
-						(matchByType == MATCHBY_Reference && &targetCard.Val == &newCard.Val) ) {
+						(pointerType == POINTER_False && targetCard.Val == newCard.Val) ||
+						(pointerType == POINTER_True && &targetCard.Val == &newCard.Val) ) {
 							
 							// target already exists in the card array, so remove it from the output card array
 							removeIdx(newCards, i)
@@ -250,7 +250,7 @@ func generalIterator(stack *Stack, lambda func(*Card, *Stack, any, ...any), deep
  @param `stack` type{*Stack} no pass-by-reference
  @param `findType` type{FIND}
  @param `findData` type{any}
- @param `matchByType` type{MATCHBY} no pass-by-reference
+ @param `pointerType` type{POINTER} no pass-by-reference
  @param `deepSearchType` type{DEEPSEARCH}
  @param `depth` type{int}
  @returns 3 arrays of data pertaining to the found cards:
@@ -270,12 +270,12 @@ func generalIterator(stack *Stack, lambda func(*Card, *Stack, any, ...any), deep
    ELSE
      return an array of all found elements
  */
-func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, matchByType MATCHBY, deepSearchType DEEPSEARCH, depth int) (targetIdxs [][]int, targetCards []*Card, targetStacks []*Stack) {
+func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, pointerType POINTER, deepSearchType DEEPSEARCH, depth int) (targetIdxs [][]int, targetCards []*Card, targetStacks []*Stack) {
 
-	/** Returns a bool for whether the matchBy yields a true result */
-	matchByObjectOrReference := func(x1, x2 any) bool {
-		return (matchByType == MATCHBY_Object    &&  x1 ==  x2) ||
-			   (matchByType == MATCHBY_Reference && &x1 == &x2)
+	/** Returns a bool for whether the pointer yields a true result */
+	comparePointer := func(x1, x2 any) bool {
+		return (pointerType == POINTER_False    &&  x1 ==  x2) ||
+			   (pointerType == POINTER_True && &x1 == &x2)
 	}
 
 	// setup main by deepening iteratively
@@ -348,7 +348,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, mat
 		case FIND_Key:
 			for i := range stack.Cards {
 				testKey := stack.Cards[i].Key
-				if matchByObjectOrReference(testKey, findData) {
+				if comparePointer(testKey, findData) {
 					filteredList = append(filteredList, i)
 					if getFirst { break }
 				}
@@ -360,7 +360,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, mat
 				testKey := stack.Cards[i].Key
 				for j := range keyArray {
 					targetKey := keyArray[j]
-					if matchByObjectOrReference(testKey, targetKey) {
+					if comparePointer(testKey, targetKey) {
 						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}
@@ -373,7 +373,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, mat
 				testKey := stack.Cards[i].Key
 				for j := range keyStack.Cards {
 					targetKey := keyStack.Cards[j].Val
-					if matchByObjectOrReference(testKey, targetKey) {
+					if comparePointer(testKey, targetKey) {
 						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}
@@ -383,7 +383,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, mat
 		case FIND_Val:
 			for i := range stack.Cards {
 				testVal := stack.Cards[i].Val
-				if matchByObjectOrReference(testVal, findData) {
+				if comparePointer(testVal, findData) {
 					filteredList = append(filteredList, i)
 					if getFirst { break }
 				}
@@ -395,7 +395,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, mat
 				testVal := stack.Cards[i].Val
 				for j := range valArray {
 					targetVal := valArray[j]
-					if matchByObjectOrReference(testVal, targetVal) {
+					if comparePointer(testVal, targetVal) {
 						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}
@@ -408,7 +408,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, mat
 				testVal := stack.Cards[i].Val
 				for j := range valStack.Cards {
 					targetVal := valStack.Cards[j].Val
-					if matchByObjectOrReference(testVal, targetVal) {
+					if comparePointer(testVal, targetVal) {
 						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}
@@ -418,7 +418,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, mat
 		case FIND_Card:
 			for i := range stack.Cards {
 				testCard := stack.Cards[i]
-				if matchByObjectOrReference(testCard, findData.(*Card)) {
+				if comparePointer(testCard, findData.(*Card)) {
 					filteredList = append(filteredList, i)
 					if getFirst { break }
 				}
@@ -430,7 +430,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, mat
 				testCard := stack.Cards[i]
 				for j := range cardStack.Cards {
 					targetCard := cardStack.Cards[j]
-					if matchByObjectOrReference(testCard, targetCard) {
+					if comparePointer(testCard, targetCard) {
 						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}
@@ -443,7 +443,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, mat
 				testCard := stack.Cards[i]
 				for j := range cardStack.Cards {
 					targetCard := cardStack.Cards[j].Val
-					if matchByObjectOrReference(testCard, targetCard) {
+					if comparePointer(testCard, targetCard) {
 						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}

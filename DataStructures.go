@@ -17,7 +17,7 @@ type FIND int
 type REPLACE int
 type TYPE int
 type ORDER int
-type MATCHBY int
+type POINTER int
 type CLONE int
 type DEEPSEARCH int
 type COMPARE int
@@ -69,8 +69,8 @@ const (
 )
 
 const (
-	MATCHBY_Object MATCHBY = iota
-	MATCHBY_Reference
+	POINTER_False POINTER = iota
+	POINTER_True
 )
 
 const (
@@ -111,9 +111,9 @@ func setORDERDefaultIfNil(orderType *any) {
 	}
 }
 
-func setMATCHBYDefaultIfNil(matchByType *any) {
-	if *matchByType == nil {
-		*matchByType = MATCHBY_Object
+func setPOINTERDefaultIfNil(pointerType *any) {
+	if *pointerType == nil {
+		*pointerType = POINTER_False
 	}
 }
 

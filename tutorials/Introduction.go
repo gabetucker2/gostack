@@ -37,8 +37,8 @@ func Introduction() {
 		should almost always be a mutable (e.g., string, int, float) type so that it's easy
 		to use as a reference when you're searching for Vals.  Val, on the other hand, should
 		be the main information you're storing.  You do not need to define your Key or Val for
-		a card, in which case their values are nil.  Also, if and only if a card is not in a
-		stack, its Idx will be -1.  Further, the same card should *never* be in two different
+		a card, in which case their values are nil.  Also, if a card is not in a stack, its
+		Idx will initialize to -1.  Further, the same card should *never* be in two different
 		stacks, or else this will lead to internal bugs (for instance, if your card is in the
 		first position of myStack1 and in the third position of myStack2, then to what value
 		what should card.Idx be set?).
@@ -84,9 +84,9 @@ func Introduction() {
 	 // makes a stack of cards, each of whom's vals are a string in an array of strings (recommended)
 	myStack = MakeStack([]string {"Butterfly", "Praying Mantis", "Beetle"})//lint:ignore SA4006 Ignore warning
 	
-	//   ALTERNATIVE:
-	// makes a stack by directly initializing it using cards
-   myStack = MakeStack([]*Card {MakeCard("Butterfly"), MakeCard("Praying Mantis"), MakeCard("Beetle")})
+	 //   ALTERNATIVE:
+	 // makes a stack by directly initializing it using cards
+     myStack = MakeStack([]*Card {MakeCard("Butterfly"), MakeCard("Praying Mantis"), MakeCard("Beetle")})
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// if you have already created your cards and your stack and you don't want to replace your existing stack:
@@ -129,11 +129,11 @@ func Introduction() {
 			},
 		}
 		
-	 Simple enough!  Next, let's say we were sad enough to make a book about insects.
+	 Simple enough!  Next, let's say we were to make a book about insects.
 	 	This is a very strange book: it is just a list of insect names paired with the
 		amount of years that have passed since their discovery.  This is a map structure:
 		there can only be one of each insect name, but there can be many of the same year
-		discovered.  As such, this is how we would make our data structure:*/
+		of discovery.  As such, this is how we would make our data structure:*/
 
 	myStack = MakeStack([]string {"Butterfly", "Praying Mantis", "Beetle", "Ant", "Bumble Bee"}, []int {20, 539, 539, 340, 11})
 
@@ -143,7 +143,6 @@ func Introduction() {
 		we will show only the keys of the card(s) returned.  Here's some examples:*/
 
 	var gottenData any
-	gogenerics.RemoveUnusedError(gottenData) // (please ignore this line)
 	
 	// to get the first card in myStack: card {Idx: 0, Key: "Butterfly", Val: 539}:
 	gottenData = myStack.Get(FIND_First) // Butterfly
@@ -208,5 +207,7 @@ func Introduction() {
 		providing intuitions about how gostack works.  If this tutorial could benefit
 		from any form of improvement, please email me at tucker.854@osu.edu to let me
 		know.  I welcome your feedback and appreciate you reading this.*/
+		
+	gogenerics.RemoveUnusedError(gottenData) // (please ignore this line)
 
 }
