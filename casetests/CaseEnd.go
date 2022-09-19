@@ -187,7 +187,15 @@ func case_MakeStackMatrix(funcName string) {
 	stack9  := MakeStackMatrix(nil, arrShallowKeys, matrixShape) // BAD
 	stack10 := MakeStackMatrix(nil, nil, matrixShape) // BAD
 
-	stack7.Print()
+	stack7Test := MakeStack(nil, nil, 3)
+	for i := 0; i < 3; i++ {
+		subStack := MakeStack(nil, nil, 2)
+		stack7Test.Cards[i].Val = subStack
+		for j := 0; j < 2; j++ {
+			c := subStack.Cards[j]
+			c.Val = arrShallowVals[i*2 + j]
+		}
+	}
 
 	conditions := []bool{
 		test_IdxsAreGood(stack6),
@@ -196,11 +204,12 @@ func case_MakeStackMatrix(funcName string) {
 		test_IdxsAreGood(stack9),
 		test_IdxsAreGood(stack10),
 
+		test_StackProperties(stack6, matrixShape, 2),
 		test_StackProperties(stack7, matrixShape, 2),
 		test_StackProperties(stack8, matrixShape, 2),
 		test_StackProperties(stack9, matrixShape, 2),
 		test_StackProperties(stack10, matrixShape, 2),
-		
+
 		test_StackProperties(stack5, []int{0}),
 	}
 
@@ -471,21 +480,21 @@ func case_card_Equals(funcName string) {
 	conditions := []bool{
 
 		// compare by object
-		card1.Equals(card2),
+		card1.Equals(card2, nil, nil, nil, PRINT_False),
 
 		// test whether idx parameter works
-		card1.Equals(card2, nil, nil, COMPARE_False),
-		!card1.Equals(card2, nil, nil, COMPARE_True),
+		card1.Equals(card2, nil, nil, COMPARE_False, PRINT_False),
+		!card1.Equals(card2, nil, nil, COMPARE_True, PRINT_False),
 
 		// test whether matchByTypes work
-		card1.Equals(card3),
-		card1.Equals(card3, MATCHBY_Object, MATCHBY_Object),
-		!card1.Equals(card3, MATCHBY_Object, MATCHBY_Reference),
-		!card1.Equals(card3, MATCHBY_Reference, MATCHBY_Object),
-		!card1.Equals(card3, MATCHBY_Reference, MATCHBY_Reference),
-		card3.Equals(card4, MATCHBY_Object, MATCHBY_Reference),
-		card3.Equals(card4, MATCHBY_Reference, MATCHBY_Object),
-		card3.Equals(card4, MATCHBY_Reference, MATCHBY_Reference),
+		card1.Equals(card3, nil, nil, nil, PRINT_False),
+		card1.Equals(card3, MATCHBY_Object, MATCHBY_Object, nil, PRINT_False),
+		!card1.Equals(card3, MATCHBY_Object, MATCHBY_Reference, nil, PRINT_False),
+		!card1.Equals(card3, MATCHBY_Reference, MATCHBY_Object, nil, PRINT_False),
+		!card1.Equals(card3, MATCHBY_Reference, MATCHBY_Reference, nil, PRINT_False),
+		card3.Equals(card4, MATCHBY_Object, MATCHBY_Reference, nil, PRINT_True),
+		card3.Equals(card4, MATCHBY_Reference, MATCHBY_Object, nil, PRINT_False),
+		card3.Equals(card4, MATCHBY_Reference, MATCHBY_Reference, nil, PRINT_False),
 		
 	}
 
@@ -671,8 +680,10 @@ func Run(_showTestText bool) {
 
 	// NON-GENERALIZED FUNCTIONS
 	case_MakeCard("MakeCard") // GOOD
+	case_card_Equals("card.Equals") // BAD
+	// case_stack_Equals("stack.Equals") // BAD
 	case_MakeStack("MakeStack") // GOOD
-	case_MakeStackMatrix("MakeStackMatrix") // BAD
+	// case_MakeStackMatrix("MakeStackMatrix") // BAD
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
 	case_stack_ToArray("stack.ToArray") // GOOD
 	case_stack_ToMap("stack.ToMap") // GOOD
@@ -681,8 +692,6 @@ func Run(_showTestText bool) {
 	// case_card_Clone("card.Clone") // BAD
 	// case_stack_Clone("stack.Clone") // BAD
 	// case_stack_Unique("stack.Unique") // BAD
-	// case_card_Equals("card.Equals") // BAD
-	// case_stack_Equals("stack.Equals") // BAD
 	// case_stack_Shuffle("stack.Shuffle") // BAD
 	// case_stack_Flip("stack.Flip") // BAD
 	case_card_Print("card.Print") // GOOD

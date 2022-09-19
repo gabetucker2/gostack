@@ -51,7 +51,6 @@ func MakeCard(variadic ...any) *Card {
 	  OR `input1` is nil and `input2` is an array
   * IF `input1` and `input2` are both passed as arguments
       |`input1`| == |`input2`|
-  * `MakeStackMatrix()` has been implemented
  @ensures
   * repeats the function filling `repeats` (or, if nil or under 0, 1) amount of times
   * IF `input1` is passed
@@ -130,7 +129,6 @@ func MakeStack(variadic ...any) *Stack {
  @returns type{*Stack} a new stack
  @constructs type{*Stack} a new stack with type{*Card} new cards
  @requires
-  * `MakeCard()` has been implemented
   * If no `matrixShape` is passed, keys dimension must match the vals dimension
   * IF `input1` and `input2` are both passed as arguments
       |`input1`| == |`input2`|
@@ -570,22 +568,42 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...any) *Stack {
  @param optional `matchByTypeKey` type{MATCHBY} default MATCHBY_Object
  @param optional `matchByTypeVal` type{MATCHBY} default MATCHBY_Object
  @param optional `compareIdxs` type{COMPARE} default COMPARE_False
+ @param optional `printType` type{PRINT} default PRINT_False
  @returns type{bool}
  */
 func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
 
 	// unpack variadic into optional parameters
-	var matchByTypeKey, matchByTypeVal, compareIdxs any
-	gogenerics.UnpackVariadic(variadic, &matchByTypeKey, &matchByTypeVal, &compareIdxs)
+	var matchByTypeKey, matchByTypeVal, compareIdxs, printType any
+	gogenerics.UnpackVariadic(variadic, &matchByTypeKey, &matchByTypeVal, &compareIdxs, &printType)
 	// set default vals
 	setMATCHBYDefaultIfNil(&matchByTypeKey)
 	setMATCHBYDefaultIfNil(&matchByTypeVal)
 	setCOMPAREDefaultIfNil(&compareIdxs)
+	setPRINTDefaultIfNil(&printType)
+
+	printIfFalse := func(condition bool, lagCondition *bool, printType any, stringToPrint string) {
+		if printType.(PRINT) == PRINT_True && *lagCondition && !condition {
+			fmt.Printf("-     DETAIL: FAILURE OF CONDITION: %v\n", stringToPrint)
+			*lagCondition = false
+		}
+	}
+
+	lagCondition := true
+	condition := true
+	
+	condition = condition &&
+		((matchByTypeKey == MATCHBY_Object && thisCard.Key == otherCard.Key) || (matchByTypeKey == MATCHBY_Reference && &thisCard.Key == &otherCard.Key))
+	printIfFalse(condition, &lagCondition, printType, fmt.Sprintf("(matchByTypeKey == MATCHBY_Object (%v) && thisCard.Key == otherCard.Key (%v)) || (matchByTypeKey == MATCHBY_Reference (%v) && &thisCard.Key == &otherCard.Key (%v))", matchByTypeKey == MATCHBY_Object, thisCard.Key == otherCard.Key, matchByTypeKey == MATCHBY_Reference, &thisCard.Key == &otherCard.Key))
+	condition = condition &&
+		((matchByTypeVal == MATCHBY_Object && thisCard.Val == otherCard.Val) || (matchByTypeVal == MATCHBY_Reference && &thisCard.Val == &otherCard.Val))
+	printIfFalse(condition, &lagCondition, printType, fmt.Sprintf("(matchByTypeVal == MATCHBY_Object (%v) && thisCard.Val == otherCard.Val (%v)) || (matchByTypeVal == MATCHBY_Reference (%v) && &thisCard.Val == &otherCard.Val (%v))", matchByTypeVal == MATCHBY_Object, thisCard.Val == otherCard.Val, matchByTypeVal == MATCHBY_Reference, &thisCard.Val == &otherCard.Val))
+	condition = condition &&
+		(compareIdxs == COMPARE_False || thisCard.Idx == otherCard.Idx)
+	printIfFalse(condition, &lagCondition, printType, fmt.Sprintf("compareIdxs == COMPARE_False (%v) || thisCard.Idx == otherCard.Idx (%v)", compareIdxs == COMPARE_False, thisCard.Idx == otherCard.Idx))
 
 	// return whether conditions yield true
-	return 	((matchByTypeKey == MATCHBY_Object && thisCard.Key == otherCard.Key) || (matchByTypeKey == MATCHBY_Reference && &thisCard.Key == &otherCard.Key)) &&
-			((matchByTypeVal == MATCHBY_Object && thisCard.Val == otherCard.Val) || (matchByTypeVal == MATCHBY_Reference && &thisCard.Val == &otherCard.Val)) &&
-			(compareIdxs == COMPARE_False || thisCard.Idx == otherCard.Idx)
+	return condition
 
 }
 

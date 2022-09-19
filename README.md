@@ -2,6 +2,8 @@
 
 ![Banner](images/gostack_Smaller.png)
 
+ *"The purpose of abstraction is not to be vague, but to create a new semantic level in which one can be absolutely precise." - Edsger W. Dijkstra*
+
  <h1 name = "introduction">Introduction</h1>
 
  Introducing **Stacks**—sets of **Card** elements (like a stack of cards)—***gostack*** serves as an all-in-one library for flexible, parsimonious, and elegant data management in *golang*.
@@ -68,6 +70,8 @@
  >>>>> [DEEPSEARCH](#DEEPSEARCH)
  >>>>
  >>>>> [COMPARE](#COMPARE)
+ >>>>
+ >>>>> [PRINT](#PRINT)
  >>>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
  >>>> [MakeCard(...)](#MakeCard)
@@ -297,6 +301,10 @@
  > * COMPARE_True
  > * COMPARE_False
 
+ > **PRINT**
+ > * PRINT_True
+ > * PRINT_False
+
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
  * **MakeCard(...idx, ...key, ...val)**
@@ -310,7 +318,7 @@
  * **card.Clone(...cloneKey, ...cloneVal)**
  * **stack.Clone(...cloneCards, ...cloneKeys, ...cloneVals)**
  * **stack.Unique(typeType, ...matchByType, ...deepSearchType, ...depth)**
- * **card.Equals(Card, ...matchByTypeKey, ...matchByTypeVal, ...compareIdxs)**
+ * **card.Equals(Card, ...matchByTypeKey, ...matchByTypeVal, ...compareIdxs, ...printType)**
  * **stack.Equals(Stack, ...compareStacks, ...matchByTypeStack, ...deepSearchType, ...depth, ...matchByTypeKey, ...matchByTypeVal)**
  * **stack.Shuffle()**
  * **stack.Flip()**
@@ -544,6 +552,16 @@
  >> COMPARE_True
  >>
  >> COMPARE_False
+ >>> default
+
+<h4 name = "PRINT">PRINT</h4>
+
+ This is an enum intended to make it easy to enable terminal printing to debug errors using certain gostack functions.
+
+ > ***PRINT***
+ >> PRINT_True
+ >>
+ >> PRINT_False
  >>> default
 
 <h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>

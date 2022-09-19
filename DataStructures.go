@@ -21,6 +21,7 @@ type MATCHBY int
 type CLONE int
 type DEEPSEARCH int
 type COMPARE int
+type PRINT int
 
 const (
 	RETURN_Idxs RETURN = iota
@@ -87,6 +88,11 @@ const (
 	COMPARE_True
 )
 
+const (
+	PRINT_False PRINT = iota
+	PRINT_True
+)
+
 func setRETURNDefaultIfNil(returnType *any) {
 	if *returnType == nil {
 		*returnType = RETURN_Vals
@@ -132,5 +138,11 @@ func setDepthDefaultIfNil(depth *any) {
 func setCOMPAREDefaultIfNil(compareType *any) {
 	if *compareType == nil {
 		*compareType = COMPARE_False
+	}
+}
+
+func setPRINTDefaultIfNil(compareType *any) {
+	if *compareType == nil {
+		*compareType = PRINT_False
 	}
 }
