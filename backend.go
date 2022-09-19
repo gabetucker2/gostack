@@ -761,9 +761,23 @@ func (stack *Stack) setStackProperties() {
 	setIndices(stack.Cards)
 }
 
+/** Prints some number of - outputs based on depth. */
 func depthPrinter(depth int) (out string) {
 	for i := 0; i < depth; i++ {
 		out += "-"
 	}
 	return out
+}
+
+/** Sets the card value to `to`'s address if it's already a pointer'; else, just set the card value to `to`. */
+func setCardProps(c *Card, to any, valNotKey bool) {
+	if valNotKey {
+		if gogenerics.SetPointer(c.Val, to) == nil {
+			c.Val = to
+		}
+	} else {
+		if gogenerics.SetPointer(c.Key, to) == nil {
+			c.Key = to
+		}
+	}
 }

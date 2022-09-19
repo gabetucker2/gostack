@@ -11,12 +11,12 @@ import (
 
 /** Creates a card with inputted val, key, and idx
 
-@param optional `val` type{any} default nil
-@param optional `key` type{any} default nil
-@param optional `idx` type{int} default -1 no pass-by-reference
-@returns type{*Card} the newly-constructed card
-@constructs type{*Card} a newly-constructed card
-@ensures the new card will have val `val`, key `key`, and idx `idx`
+ @param optional `val` type{any} default nil
+ @param optional `key` type{any} default nil
+ @param optional `idx` type{int} default -1 no pass-by-reference
+ @returns type{*Card} the newly-constructed card
+ @constructs type{*Card} a newly-constructed card
+ @ensures the new card will have val `val`, key `key`, and idx `idx`
 */
 func MakeCard(variadic ...any) *Card {
 
@@ -28,17 +28,8 @@ func MakeCard(variadic ...any) *Card {
 	card := new(Card)
 	if idx == nil { card.Idx = -1 } else { card.Idx = idx.(int) }
 	
-	if reflect.ValueOf(val).Kind() == reflect.Ptr {
-		card.Val = *val.(*any)
-	} else {
-		card.Val = val
-	}
-
-	if reflect.ValueOf(key).Kind() == reflect.Ptr {
-		card.Key = *key.(*any)
-	} else {
-		card.Key = key
-	}	
+	setCardProps(card, val, true)
+	setCardProps(card, key, false)
 
 	// return
 	return card

@@ -40,7 +40,8 @@ func case_MakeCard(funcName string) {
 	myStr := "Hello"
 	card5 := MakeCard(&myStr)
 	card6 := MakeCard(&myStr)
-	*card6.Val.(*any) = "Hi"
+	card7 := MakeCard(myStr)
+	*card6.Val.(*string) = "Hi"
 
 	// test whether updating fields does so by object
 	card2.Val = "Card 4"
@@ -53,6 +54,7 @@ func case_MakeCard(funcName string) {
 		card4.Idx == 2,
 		card5.Idx == -1,
 		card6.Idx == -1,
+		card7.Idx == -1,
 		
 		card1.Key == nil,
 		card2.Key == nil,
@@ -60,13 +62,15 @@ func case_MakeCard(funcName string) {
 		card4.Key == 8,
 		card5.Key == nil,
 		card6.Key == nil,
+		card7.Key == nil,
 
 		card1.Val == nil,
 		card2.Val == "Card 4",
 		card3.Val == "Card 3",
 		card4.Val == card1,
-		*card5.Val.(*any) == "Hi",
-		*card6.Val.(*any) == "Hi",
+		*card5.Val.(*string) == "Hi",
+		*card6.Val.(*string) == "Hi",
+		card7.Val == "Hello",
 	}
 
 	test_End(funcName, conditions)
