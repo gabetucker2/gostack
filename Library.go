@@ -27,7 +27,6 @@ func MakeCard(variadic ...any) *Card {
 	// initialize and set new Card
 	card := new(Card)
 	if idx == nil { card.Idx = -1 } else { card.Idx = idx.(int) }
-	
 	setCardProps(card, val, true)
 	setCardProps(card, key, false)
 

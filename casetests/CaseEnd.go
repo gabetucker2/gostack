@@ -41,11 +41,11 @@ func case_MakeCard(funcName string) {
 	card5 := MakeCard(&myStr)
 	card6 := MakeCard(&myStr)
 	card7 := MakeCard(myStr)
-	*card6.Val.(*string) = "Hi"
+	gogenerics.SetPointer(card6.Val, "Hi")
 
 	// test whether updating fields does so by object
 	card2.Val = "Card 4"
-	card3.Key = 7
+	card3.Val = 7
 
 	conditions := []bool{
 		card1.Idx == -1,
@@ -58,7 +58,7 @@ func case_MakeCard(funcName string) {
 		
 		card1.Key == nil,
 		card2.Key == nil,
-		card3.Key == 7,
+		card3.Key == card2,
 		card4.Key == 8,
 		card5.Key == nil,
 		card6.Key == nil,
@@ -66,7 +66,7 @@ func case_MakeCard(funcName string) {
 
 		card1.Val == nil,
 		card2.Val == "Card 4",
-		card3.Val == "Card 3",
+		card3.Val == 7,
 		card4.Val == card1,
 		*card5.Val.(*string) == "Hi",
 		*card6.Val.(*string) == "Hi",
@@ -696,7 +696,7 @@ func Run(_showTestText bool) {
 
 	// NON-GENERALIZED FUNCTIONS
 	case_MakeCard("MakeCard") // GOOD
-	// case_card_Equals("card.Equals") // BAD
+	case_card_Equals("card.Equals") // BAD
 	// case_stack_Equals("stack.Equals") // BAD
 	// case_MakeStack("MakeStack") // GOOD
 	// case_MakeStackMatrix("MakeStackMatrix") // BAD
