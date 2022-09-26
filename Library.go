@@ -568,39 +568,58 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...any) *Stack {
  @param optional `pointerTypeKey` type{POINTER} default POINTER_False
  @param optional `pointerTypeVal` type{POINTER} default POINTER_False
  @param optional `compareIdxs` type{COMPARE} default COMPARE_False
+ @param optional `compareKeys` type{COMPARE} default COMPARE_True
+ @param optional `compareVals` type{COMPARE} default COMPARE_True
  @param optional `printType` type{PRINT} default PRINT_False
  @returns type{bool}
  */
 func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
 
 	// unpack variadic into optional parameters
-	var pointerTypeKey, pointerTypeVal, compareIdxs, printType any
-	gogenerics.UnpackVariadic(variadic, &pointerTypeKey, &pointerTypeVal, &compareIdxs, &printType)
+	var pointerTypeKey, pointerTypeVal, compareIdxs, compareKeys, compareVals, printType any
+	gogenerics.UnpackVariadic(variadic, &pointerTypeKey, &pointerTypeVal, &compareIdxs, &compareKeys, &compareVals, &printType)
 	// set default vals
 	setPOINTERDefaultIfNil(&pointerTypeKey)
 	setPOINTERDefaultIfNil(&pointerTypeVal)
 	setCOMPAREDefaultIfNil(&compareIdxs)
+	if compareKeys == nil {
+		compareKeys = COMPARE_True
+	}
+	if compareVals == nil {
+		compareVals = COMPARE_True
+	}
 	setPRINTDefaultIfNil(&printType)
 
-	printIfFalse := func(condition bool, lagCondition *bool, printType any, stringToPrint string) {
-		if printType.(PRINT) == PRINT_True && *lagCondition && !condition {
-			fmt.Printf("-     DETAIL: FAILURE OF CONDITION: %v\n", stringToPrint)
-			*lagCondition = false
+	print := func(printType any, stringToPrint string) {
+		if printType.(PRINT) == PRINT_True {
+			fmt.Printf("-     DETAIL: CONDITION: %v\n", stringToPrint)
 		}
 	}
 
-	lagCondition := true
 	condition := true
 	
-	condition = condition &&
-		((pointerTypeKey == POINTER_False && thisCard.Key == otherCard.Key) || (pointerTypeKey == POINTER_True && &thisCard.Key == &otherCard.Key))
-	printIfFalse(condition, &lagCondition, printType, fmt.Sprintf("(pointerTypeKey == POINTER_False (%v) && thisCard.Key == otherCard.Key (%v)) || (pointerTypeKey == POINTER_True (%v) && &thisCard.Key == &otherCard.Key (%v))", pointerTypeKey == POINTER_False, thisCard.Key == otherCard.Key, pointerTypeKey == POINTER_True, &thisCard.Key == &otherCard.Key))
-	condition = condition &&
-		((pointerTypeVal == POINTER_False && thisCard.Val == otherCard.Val) || (pointerTypeVal == POINTER_True && &thisCard.Val == &otherCard.Val))
-	printIfFalse(condition, &lagCondition, printType, fmt.Sprintf("(pointerTypeVal == POINTER_False (%v) && thisCard.Val == otherCard.Val (%v)) || (pointerTypeVal == POINTER_True (%v) && &thisCard.Val == &otherCard.Val (%v))", pointerTypeVal == POINTER_False, thisCard.Val == otherCard.Val, pointerTypeVal == POINTER_True, &thisCard.Val == &otherCard.Val))
-	condition = condition &&
-		(compareIdxs == COMPARE_False || thisCard.Idx == otherCard.Idx)
-	printIfFalse(condition, &lagCondition, printType, fmt.Sprintf("compareIdxs == COMPARE_False (%v) || thisCard.Idx == otherCard.Idx (%v)", compareIdxs == COMPARE_False, thisCard.Idx == otherCard.Idx))
+	condition = condition && 
+		(compareKeys == COMPARE_False ||
+		(compareKeys == COMPARE_True &&
+			(
+				(pointerTypeKey == POINTER_False && thisCard.Key == otherCard.Key) ||
+				(pointerTypeKey == POINTER_True && thisCard.Key == otherCard.Key) ||
+				(pointerTypeKey == POINTER_True && gogenerics.GetPointer(thisCard.Key) == otherCard.Key) ||
+				(pointerTypeKey == POINTER_True && thisCard.Key == gogenerics.GetPointer(otherCard.Key) ) ) ) )
+	print(printType, fmt.Sprintf("KEY PASSES EQUALITY CHECK: %v: (compareKeys == COMPARE_False [%v] || (compareKeys == COMPARE_True [%v] && ( (pointerTypeKey == POINTER_False [%v] && thisCard.Key == otherCard.Key [%v]) || (pointerTypeKey == POINTER_True [%v] && thisCard.Key == otherCard.Key [%v]) || (pointerTypeKey == POINTER_True [%v] && gogenerics.GetPointer(thisCard.Key) == otherCard.Key [%v]) || (pointerTypeKey == POINTER_True [%v] && thisCard.Key == gogenerics.GetPointer(otherCard.Key) [%v] ) ) ) )", (compareKeys == COMPARE_False || (compareKeys == COMPARE_True && ( (pointerTypeKey == POINTER_False && thisCard.Key == otherCard.Key) || (pointerTypeKey == POINTER_True && thisCard.Key == otherCard.Key) || (pointerTypeKey == POINTER_True && gogenerics.GetPointer(thisCard.Key) == otherCard.Key) || (pointerTypeKey == POINTER_True && thisCard.Key == gogenerics.GetPointer(otherCard.Key) ) ) ) ), compareKeys == COMPARE_False, compareKeys == COMPARE_True, pointerTypeKey == POINTER_False, thisCard.Key == otherCard.Key, pointerTypeKey == POINTER_True, thisCard.Key == otherCard.Key, pointerTypeKey == POINTER_True, gogenerics.GetPointer(thisCard.Key) == otherCard.Key, pointerTypeKey == POINTER_True, thisCard.Key == gogenerics.GetPointer(otherCard.Key)))
+	
+	condition = condition && 
+		(compareVals == COMPARE_False ||
+		(compareVals == COMPARE_True &&
+			(
+				(pointerTypeVal == POINTER_False && thisCard.Val == otherCard.Val) ||
+				(pointerTypeVal == POINTER_True && thisCard.Val == otherCard.Val) ||
+				(pointerTypeVal == POINTER_True && gogenerics.GetPointer(thisCard.Val) == otherCard.Val) ||
+				(pointerTypeVal == POINTER_True && thisCard.Val == gogenerics.GetPointer(otherCard.Val) ) ) ) )
+	print(printType, fmt.Sprintf("VAL PASSES EQUALITY CHECK: %v: (compareVals == COMPARE_False [%v] || (compareVals == COMPARE_True [%v] && ( (pointerTypeVal == POINTER_False [%v] && thisCard.Val == otherCard.Val [%v]) || (pointerTypeVal == POINTER_True [%v] && thisCard.Val == otherCard.Val [%v]) || (pointerTypeVal == POINTER_True [%v] && gogenerics.GetPointer(thisCard.Val) == otherCard.Val [%v]) || (pointerTypeVal == POINTER_True [%v] && thisCard.Val == gogenerics.GetPointer(otherCard.Val) [%v] ) ) ) )", (compareVals == COMPARE_False || (compareVals == COMPARE_True && ( (pointerTypeVal == POINTER_False && thisCard.Val == otherCard.Val) || (pointerTypeVal == POINTER_True && thisCard.Val == otherCard.Val) || (pointerTypeVal == POINTER_True && gogenerics.GetPointer(thisCard.Val) == otherCard.Val) || (pointerTypeVal == POINTER_True && thisCard.Val == gogenerics.GetPointer(otherCard.Val) ) ) ) ), compareVals == COMPARE_False, compareVals == COMPARE_True, pointerTypeVal == POINTER_False, thisCard.Val == otherCard.Val, pointerTypeVal == POINTER_True, thisCard.Val == otherCard.Val, pointerTypeVal == POINTER_True, gogenerics.GetPointer(thisCard.Val) == otherCard.Val, pointerTypeVal == POINTER_True, thisCard.Val == gogenerics.GetPointer(otherCard.Val)))
+
+	condition = condition && (compareIdxs == COMPARE_False || (compareIdxs == COMPARE_True && thisCard.Idx == otherCard.Idx))
+	print(printType, fmt.Sprintf("IDX PASSES EQUALITY CHECK: %v: (compareIdxs == COMPARE_False [%v] || (compareIdxs == COMPARE_True [%v] && thisCard.Idx == otherCard.Idx [%v]))", (compareIdxs == COMPARE_False || (compareIdxs == COMPARE_True && thisCard.Idx == otherCard.Idx)), compareIdxs == COMPARE_False, compareIdxs == COMPARE_True, thisCard.Idx == otherCard.Idx))
 
 	// return whether conditions yield true
 	return condition

@@ -379,6 +379,8 @@
 
 <h3 name = "enums">enums</h3>
 
+Please note that enumerator defaults are default in *most cases*.  However, you should defer to each function's documentation to see the actual argument default values.
+
 <h4 name = "RETURN">RETURN</h4>
 
  This is an enum intended to make it easy for the user to control the output type from a getter function.

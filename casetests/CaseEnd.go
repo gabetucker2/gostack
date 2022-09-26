@@ -435,21 +435,21 @@ func case_stack_Clone(funcName string) {
 	stackAClone.Get(FIND_Last).Val = "New"
 
 	conditions := []bool{
-		test_StackProperties(stackA, []int {2}, 1),
+		test_StackProperties(stackA, []int {2}, 1), // 1
 
-		stackA.Get(FIND_First).Idx == 0,
-		stackA.Get(FIND_Last).Idx == 1,
-		stackA.Get(FIND_First).Key == "Original",
-		stackA.Get(FIND_Last).Key == "Original",
-		stackA.Get(FIND_First).Val == "New",
-		stackA.Get(FIND_Last).Val == "New",
+		stackA.Get(FIND_First).Idx == 0, // 2
+		stackA.Get(FIND_Last).Idx == 1, // 3
+		stackA.Get(FIND_First).Key == "Original", // 4
+		stackA.Get(FIND_Last).Key == "Original", // 5
+		stackA.Get(FIND_First).Val == "New", // 6
+		stackA.Get(FIND_Last).Val == "New", // 7
 
-		stackAClone.Get(FIND_First).Idx == 0,
-		stackAClone.Get(FIND_Last).Idx == 1,
-		stackAClone.Get(FIND_First).Key == "New",
-		stackAClone.Get(FIND_Last).Key == "New",
-		stackAClone.Get(FIND_First).Val == "New",
-		stackAClone.Get(FIND_Last).Val == "New",
+		stackAClone.Get(FIND_First).Idx == 0, // 8
+		stackAClone.Get(FIND_Last).Idx == 1, // 9
+		stackAClone.Get(FIND_First).Key == "New", // 10
+		stackAClone.Get(FIND_Last).Key == "New", // 11
+		stackAClone.Get(FIND_First).Val == "New", // 12
+		stackAClone.Get(FIND_Last).Val == "New", // 13
 	}
 
 	test_End(funcName, conditions)
@@ -467,14 +467,14 @@ func case_stack_Unique(funcName string) {
 	filteredByVal := myStackVals.Clone().Unique(TYPE_Val)
 
 	conditions := []bool{
-		filteredByKey.Size == 3,
-		filteredByVal.Size == 3,
-		filteredByKey.Cards[0].Key == "Person",
-		filteredByKey.Cards[1].Key == "Place",
-		filteredByKey.Cards[2].Key == "Thing",
-		filteredByVal.Cards[0].Val == "Person",
-		filteredByVal.Cards[1].Val == "Place",
-		filteredByVal.Cards[2].Val == "Thing",
+		filteredByKey.Size == 3, // 1
+		filteredByVal.Size == 3, // 2
+		filteredByKey.Cards[0].Key == "Person", // 3
+		filteredByKey.Cards[1].Key == "Place", // 4
+		filteredByKey.Cards[2].Key == "Thing", // 5
+		filteredByVal.Cards[0].Val == "Person", // 6
+		filteredByVal.Cards[1].Val == "Place", // 7
+		filteredByVal.Cards[2].Val == "Thing", // 8
 	}
 
 	test_End(funcName, conditions)
@@ -485,33 +485,64 @@ func case_card_Equals(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	keyVar := "MyKey"
-	valVar := "MyVal"
-
+	// compare parameter tests
 	card1 := MakeCard("MyKey", "MyVal") // Idx == -1
 	card2 := MakeCard("MyKey", "MyVal", 0)
 
-	card3 := MakeCard(keyVar, valVar)
-	card4 := MakeCard(keyVar, valVar)
+	card3 := MakeCard("MyKey", "MyVal1")
+	card4 := MakeCard("MyKey", "MyVal2")
+
+	card5 := MakeCard("MyKey1", "MyVal")
+	card6 := MakeCard("MyKey2", "MyVal")
+
+	// pointerKey parameter tests
+	var keyVar any//lint:ignore S1021 Ignore warning
+	keyVar = "MyKey"
+	cardA := MakeCard(nil, keyVar)
+	cardB := MakeCard(nil, keyVar)
+	cardC := MakeCard(nil, &keyVar)
+	cardD := MakeCard(nil, &keyVar)
+
+	// pointerKey parameter tests
+	var valVar any//lint:ignore S1021 Ignore warning
+	valVar = "MyVal"
+	cardE := MakeCard(valVar)
+	cardF := MakeCard(valVar)
+	cardG := MakeCard(&valVar)
+	cardH := MakeCard(&valVar)
 
 	conditions := []bool{
 
 		// compare by object
-		card1.Equals(card2, nil, nil, nil, PRINT_False),
+		card1.Equals(card2), // 1
 
 		// test whether idx parameter works
-		card1.Equals(card2, nil, nil, COMPARE_False, PRINT_False),
-		!card1.Equals(card2, nil, nil, COMPARE_True, PRINT_False),
+		card1.Equals(card2, nil, nil, COMPARE_False, COMPARE_False, COMPARE_False), // 2
+		!card1.Equals(card2, nil, nil, COMPARE_True, COMPARE_False, COMPARE_False), // 3
 
-		// test whether pointerTypes work
-		card1.Equals(card3, nil, nil, nil, PRINT_False),
-		card1.Equals(card3, POINTER_False, POINTER_False, nil, PRINT_False),
-		!card1.Equals(card3, POINTER_False, POINTER_True, nil, PRINT_False),
-		!card1.Equals(card3, POINTER_True, POINTER_False, nil, PRINT_False),
-		!card1.Equals(card3, POINTER_True, POINTER_True, nil, PRINT_False),
-		card3.Equals(card4, POINTER_False, POINTER_True, nil, PRINT_True),
-		card3.Equals(card4, POINTER_True, POINTER_False, nil, PRINT_False),
-		card3.Equals(card4, POINTER_True, POINTER_True, nil, PRINT_False),
+		// test whether val parameter works
+		card1.Equals(card3, nil, nil, COMPARE_False, COMPARE_False, COMPARE_False), // 4
+		!card1.Equals(card4, nil, nil, COMPARE_False, COMPARE_True, COMPARE_False), // 5
+
+		// test whether key parameter works
+		card1.Equals(card5, nil, nil, COMPARE_False, COMPARE_False, COMPARE_False), // 6
+		!card1.Equals(card6, nil, nil, COMPARE_False, COMPARE_False, COMPARE_True), // 7
+
+		// test whether pointerTypes work for keys
+		cardA.Equals(cardB, POINTER_False), // 8
+		cardA.Equals(cardB, POINTER_True), // 9
+		!cardB.Equals(cardC, POINTER_False), // 10
+		cardB.Equals(cardC, POINTER_True), // 11
+		cardC.Equals(cardD, POINTER_False), // 12
+		cardC.Equals(cardD, POINTER_True), // 13
+
+		// test whether pointerTypes work for vals
+		cardE.Equals(cardF, nil, POINTER_False), // 14
+		cardE.Equals(cardF, nil, POINTER_True), // 15
+		!cardF.Equals(cardG, nil, POINTER_False), // 16
+		cardF.Equals(cardG, nil, POINTER_True), // 17
+		cardG.Equals(cardH, nil, POINTER_False), // 18
+		cardG.Equals(cardH, nil, POINTER_True), // 19
 		
 	}
 
