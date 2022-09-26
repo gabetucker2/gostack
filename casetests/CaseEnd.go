@@ -2,6 +2,7 @@ package casetests
 
 import (
 	"fmt"
+	"reflect"
 
 	"github.com/gabetucker2/gogenerics"
 	. "github.com/gabetucker2/gostack" //lint:ignore ST1001 Ignore warning
@@ -37,10 +38,13 @@ func case_MakeCard(funcName string) {
 	card2 := MakeCard("Card 2")
 	card3 := MakeCard("Card 3", card2)
 	card4 := MakeCard(card1, 8, 2)
-	myStr := "Hello"
+	var myStr any//lint:ignore S1021 Ignore warning
+	myStr = "Hello"
 	card5 := MakeCard(&myStr)
 	card6 := MakeCard(&myStr)
 	card7 := MakeCard(myStr)
+	fmt.Println(reflect.ValueOf(card6.Val).Type())
+	fmt.Println(reflect.ValueOf(card6.Val).Kind())
 	gogenerics.SetPointer(card6.Val, "Hi")
 
 	// test whether updating fields does so by object
