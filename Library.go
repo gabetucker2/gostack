@@ -622,18 +622,20 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
  
  @receiver `thisStack` type{*Stack}
  @param `otherStack` type{*Stack}
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
+ @param optional `depth` type{int} default -1 (deepest)
  @param optional `compareKeys` type{COMPARE} default COMPARE_True
  @param optional `compareVals` type{COMPARE} default COMPARE_True
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int} default -1 (deepest)
- @param optional `pointerTypeStack` type{POINTER} default POINTER_False
-	Checks for if the vals of hidden cards (cards whose vals are substacks) are the same object
-		Set true if and only if updating substack A in `stack` should update the same substack A in `otherStack`
  @param optional `pointerTypeKey` type{POINTER} default POINTER_False
  @param optional `pointerTypeVal` type{POINTER} default POINTER_False
+ @param optional `pointerTypeStack` type{POINTER} default POINTER_False
+	Checks for if the vals of hidden cards (cards whose vals are substacks) are pointers
+		Set true if and only if updating substack 1 in `stack` should update the same substack 1 in `otherStack`
+ @ensures
+	If `stack`.Depth != `otherStack`.Depth and the N-deep comparison finds that they're equal, then return that they're Equal 
  @returns type{bool}
  */
-func (thisStack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
+func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 
 	/*
 
@@ -641,68 +643,95 @@ func (thisStack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 
 	stack.Equals(otherStack) bool
 
-		for each card in this stack
+		set up variadic stuff
 
-			if compareKeys
-				
-				if card holds a substack
+		if depth == -1 || depth > stack.Depth
+			depth = stack.Depth
+		if deepSearchType == FALSE
+			depth = 1
 
-					if substack is 
+		test = depth != 0 || (depth == 0 && stack and otherStack have the same Size)
 
-				else
-					if pointerTypeKey
-						test = 
-					else
+		for each cardA in this stack
+			for each cardB in other stack
+				if cardA corresponds to cardB and test is true and depth != 0
+						
+					if compareKeys is true
+						test = test && cardA.Equals(cardB, [pass in pointer and compare stuff for key])
+						
+						
+					if cards' vals both hold substacks
+						test = test && substackA.Equals(substackB, ..., depth: depth - 1)
+						if pointerTypeStack is true
+							test = test && substackA is same pointer as substackB and both are pointers
 
-			if compareVals
-				
+					else if one holds a substack and the other doesn't
+						test = false
+
+					else if compareKeys is true
+						test = test && cardA.Equals(cardB, [pass in pointer and compare stuff for val])
+
 
 		return test
 
 	*/
-
+	
 	// unpack variadic into optional parameters
-	var compareStacks, compareKeys, compareVals, deepSearchType, depth, pointerTypeStack, pointerTypeKey, pointerTypeVal any
-	gogenerics.UnpackVariadic(variadic, &compareStacks, &compareKeys, &compareVals, &deepSearchType, &depth, &pointerTypeStack, &pointerTypeKey, &pointerTypeVal)
+	var deepSearchType, depth, compareKeys, compareVals, pointerTypeKey, pointerTypeVal, pointerTypeStack any
+	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth, &compareKeys, &compareVals, &pointerTypeKey, &pointerTypeVal, &pointerTypeStack)
 	// set default vals
-	setCOMPAREDefaultIfNil(&compareStacks)
-	if compareKeys == nil {compareKeys = true}
-	if compareVals == nil {compareVals = true}
-	setDEEPSEARCHDefaultIfNil(&deepSearchType)
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_True}
 	setDepthDefaultIfNil(&depth)
+	if compareKeys == nil {compareKeys = COMPARE_True}
+	if compareVals == nil {compareVals = COMPARE_True}
 	setPOINTERDefaultIfNil(&pointerTypeStack)
 	setPOINTERDefaultIfNil(&pointerTypeKey)
 	setPOINTERDefaultIfNil(&pointerTypeVal)
+	
+	if depth == -1 || depth.(int) > stack.Depth { depth = stack.Depth }
+	if deepSearchType == DEEPSEARCH_False { depth = 1 }
+	
+	test = depth != 0 || stack.Size == otherStack.Size
+	
+	for _, cardA := range stack.Cards {
+		for _, cardB := range otherStack.Cards {
+			if cardA.Idx == cardB.Idx && test && depth != 0 {
+				
+				if compareKeys == COMPARE_True {
+					test = test && cardA.Equals(cardB, pointerTypeKey, POINTER_False, COMPARE_False, compareKeys, COMPARE_False)
+				}
 
-	// body
-	matches := true
-	if compareStacks == COMPARE_True {
-		// just test whether the stacks equal one another
-		matches = (pointerTypeStack == POINTER_False && thisStack == otherStack) || (pointerTypeStack == POINTER_True && &thisStack == &otherStack)
-	} else {
-		// test whether the properties of the cards within each stack equal one another (recursively self-call)
-		for i := range thisStack.Cards {
-			thisCard := thisStack.Cards[i]
-			otherCard := gogenerics.IfElse(i < len(otherStack.Cards), thisStack.Cards[i], nil).(*Card)
-			
-			//matches = thisCard.Equals(otherCard, pointerTypeKey, pointerTypeVal, compareIdxs)
-			
-			if matches && deepSearchType == DEEPSEARCH_True && depth != 0 {
-				switch thisCard.Val.(type) { // go deeper if possible, otherwise don't worry
+				oneHoldsSubstack := false
+				bothHoldSubstacks := false
+				switch cardA.Val.(type) {
 				case *Stack:
-					switch otherCard.Val.(type) { // check whether otherCard can go deeper since thisCard can; if not, it's not an equal stack
-					case *Stack:
-						matches = thisCard.Val.(*Stack).Equals(otherCard.Val.(*Stack), compareStacks, pointerTypeStack, deepSearchType, gogenerics.IfElse(depth.(int) == -1, -1, depth.(int)-1).(int), pointerTypeKey, pointerTypeVal, COMPARE_False)
-					default:
-						matches = false
+					oneHoldsSubstack = true
+				}
+				switch cardB.Val.(type) {
+				case *Stack:
+					if oneHoldsSubstack {
+						bothHoldSubstacks = true
+						oneHoldsSubstack = false
+						test = test && cardA.Val.(*Stack).Equals(cardB.Val.(*Stack), deepSearchType, depth.(int) - 1, compareKeys, compareVals, pointerTypeKey, pointerTypeVal, pointerTypeStack)
+						if pointerTypeStack == POINTER_True {
+							test = test && gogenerics.PointersEqual(cardA.Val, cardB.Val)
+						}
+					} else {
+						oneHoldsSubstack = true
 					}
 				}
+				if oneHoldsSubstack {
+					test = false
+				}
+				if !bothHoldSubstacks && !oneHoldsSubstack && compareVals == COMPARE_True {
+					test = test && cardA.Equals(cardB, POINTER_False, pointerTypeVal, COMPARE_False, COMPARE_False, compareVals)
+				}
+
 			}
 		}
-
 	}
 
-	return matches
+	return test
 
 }
 

@@ -205,7 +205,7 @@
 
  Never insert the same card twice into the same stack.  Instead, insert the same value into two different cards.  If you insert two of the same card into the same stack, then the index property will become conflated between the two cards and functions will yield bugs while iterating through stacks.
 
- Stack matrices are assumed to have a uniform shape, meaning they can be modeled by a vector.  stack{{hey}, {stack{hey, hey}}} is an example of a non-uniform shape.  Support is not provided for these cases.
+ While you are technically permitted to have a substack within a card.Key, gostack functions always assume substacks are within card.Val's.  If you choose to do this, you are on your own.
 
  <h2>Naming</h2>
 

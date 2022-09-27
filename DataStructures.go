@@ -131,7 +131,7 @@ func setDEEPSEARCHDefaultIfNil(deepSearchType *any) {
 
 func setDepthDefaultIfNil(depth *any) {
 	if *depth == nil {
-		*depth = 1
+		*depth = -1
 	}
 }
 

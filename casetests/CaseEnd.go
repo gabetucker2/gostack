@@ -562,56 +562,59 @@ func case_card_Equals(funcName string) {
 
 func case_stack_Equals(funcName string) {
 
+	// it is crucial that we do not rely on MakeStackMatrix, since MakeStackMatrix uses this function for testing; we cannot have a reciprocal dependency
+	// this is why we do weird stuff here with MakeStack(MakeStack) rather than doing MakeStackMatrix
+
 	test_Start(funcName, showTestText)
 
-	// since we've already tested the properties of card.Equals(), and stack invokes card.Equals(),
-	// we don't need as thorough of a test for non stack-specific parameters
+	// since we've already tested the compare/pointer key/val parameters in card.Equals(),
+	// and since they're just passed forward in our stack.Equals() function, we don't need to test these again here
 
-	stack1 := MakeStack([]string {"Hello", "Hey"})
-	stack2 := MakeStack([]string {"Hello", "Hey"})
-	stack3 := stack1
-	stack4 := MakeStack([]string {"Hi", "Hey"})
+	// shallow
+	shallow1 := MakeStack([]string {"Hello", "Hey"})
+	shallow2 := MakeStack([]string {"Hello", "Hey"})
+	shallow3 := MakeStack([]string {"Hi", "Hey"})
 	
-	deep1 := MakeStackMatrix([]string {"Hello", "Hey", "Howdy", "Hi"}, nil, []int {2, 2})
-	deep2 := MakeStackMatrix([]string {"Hello", "Hey", "Howdy", "Hi"}, nil, []int {2, 2})
-	deep3 := deep1
-	deep4 := MakeStackMatrix([]string {"Hello", "Hey", "Howdy", "Heyo"}, nil, []int {2, 2})
+	// deep
+	deep1 := MakeStack([]*Stack {MakeStack([]string {"Hello", "Hey"}), MakeStack([]string {"Howdy", "Hi"})})
+	deep2 := MakeStack([]*Stack {MakeStack([]string {"Hello", "Hey"}), MakeStack([]string {"Howdy", "Hi"})})
+	deep3 := MakeStack([]*Stack {MakeStack([]string {"Hello", "Hey"}), MakeStack([]string {"Howdy", "Heyo"})})
 
-	string1 := "Hi"
-	string2 := "Hello"
-	objRefStack1 := MakeStack([]string {"Hi", "Hello"})
-	objRefStack2 := MakeStack([]string {string1, string2})
-
-	deeper1 := MakeStack(objRefStack1)
-	deeper2 := MakeStackMatrix(objRefStack2)
-	deeper3 := MakeStackMatrix(objRefStack2)
+	// stack pointers
+	sub1 := MakeStack([]string {"Hello", "Hey"})
+	sub2 := MakeStack([]string {"Howdy", "Hi"})
+	sub3 := MakeStack([]string {"Howdy", "Heyo"})
+	sub4 := MakeStack([]string {"Howdy", "Hi"})
+	ptrs1 := MakeStack([]*Stack {sub1, sub2})
+	ptrs2 := MakeStack([]*Stack {sub1, sub2})
+	ptrs3 := MakeStack([]*Stack {sub1, sub3})
+	ptrs4 := MakeStack([]*Stack {sub1, sub4})
 
 	conditions := []bool{
 		
-		// test whether stack compare object vs reference works
-		stack1.Equals(stack2, COMPARE_False),
-		stack1.Equals(stack2, COMPARE_True),
-		stack1.Equals(stack2, COMPARE_True, POINTER_False),
-		!stack1.Equals(stack2, COMPARE_True, POINTER_True),
-		stack1.Equals(stack3, COMPARE_True, POINTER_True),
-		!stack1.Equals(stack4, COMPARE_True, POINTER_False),
-		!stack1.Equals(stack4, COMPARE_True, POINTER_True),
+		// test for shallow equality
+		shallow1.Equals(shallow2), // 1
+		shallow2.Equals(shallow1), // 2
+		!shallow1.Equals(shallow3), // 3
 
-		// test whether the same tests hold true for a deepsearch-true equivalent
-		deep1.Equals(deep2, COMPARE_False, nil, DEEPSEARCH_True),
-		deep1.Equals(deep2, COMPARE_True, nil, DEEPSEARCH_True),
-		deep1.Equals(deep2, COMPARE_True, POINTER_False, DEEPSEARCH_True),
-		!deep1.Equals(deep2, COMPARE_True, POINTER_True, DEEPSEARCH_True),
-		deep1.Equals(deep3, COMPARE_True, POINTER_True, DEEPSEARCH_True),
-		!deep1.Equals(deep4, COMPARE_True, POINTER_False, DEEPSEARCH_True),
-		!deep1.Equals(deep4, COMPARE_True, POINTER_True, DEEPSEARCH_True),
+		// test for deep equality
+		deep1.Equals(deep2, DEEPSEARCH_True), // 4
+		deep2.Equals(deep1, DEEPSEARCH_True), // 5
+		!deep1.Equals(deep3, DEEPSEARCH_True), // 6
+		deep1.Equals(deep2, DEEPSEARCH_True, 1), // 7
+		deep1.Equals(deep3, DEEPSEARCH_True, 1), // 8
+		deep1.Equals(deep2, DEEPSEARCH_True, 0), // 9
 
-		// test depth
-		deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, -1),
-		deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, 2),
-		deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, 1),
-		!deeper1.Equals(deeper2, nil, nil, DEEPSEARCH_True, 1, nil, POINTER_True),
-		deeper2.Equals(deeper3, nil, nil, DEEPSEARCH_True, 1, nil, POINTER_True),
+		// test for same shape different val comparison
+		deep1.Equals(deep3, nil, nil, COMPARE_True, COMPARE_False), // 10
+
+		// test for stack pointers
+		ptrs1.Equals(ptrs2, nil, nil, nil, nil, nil, nil, POINTER_True), // 11
+		!ptrs1.Equals(ptrs3, nil, nil, nil, nil, nil, nil, POINTER_True), // 12
+		!ptrs1.Equals(ptrs4, nil, nil, nil, nil, nil, nil, POINTER_True), // 13
+
+		// test for empty equality
+		MakeStack().Equals(MakeStack()), // 14
 
 	}
 
@@ -739,8 +742,8 @@ func Run(_showTestText bool) {
 	// NON-GENERALIZED FUNCTIONS
 	case_MakeCard("MakeCard") // GOOD
 	case_card_Equals("card.Equals") // GOOD
-	// case_stack_Equals("stack.Equals") // BAD
-	// case_MakeStack("MakeStack") // GOOD but needs updated to use .Equals
+	case_MakeStack("MakeStack") // GOOD
+	case_stack_Equals("stack.Equals") // GOOD
 	// case_MakeStackMatrix("MakeStackMatrix") // BAD
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
 	case_stack_ToArray("stack.ToArray") // GOOD
