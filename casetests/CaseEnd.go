@@ -203,13 +203,10 @@ func case_MakeStackMatrix(funcName string) {
 		}
 	}
 
-	stack1.Print()
-	// MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222})}).Print()
-
 	conditions := []bool{
 
 		// deep tests
-		stack1.Equals(MakeStack([]*Stack {MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222})})})) || stack1.Equals(MakeStack([]*Stack {MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Bre", "Alex"}, []int {222, 111})})})), // 2
+		stack1.Equals(MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222})})) || stack1.Equals(MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Bre", "Alex"}, []int {222, 111})})), // 2
 		stack2.Equals(correctStack, COMPARE_False, COMPARE_True), // 2
 		stack3.Equals(correctStack, COMPARE_True, COMPARE_True), // 2
 		stack4.Equals(correctStack, COMPARE_True, COMPARE_False), // 4
@@ -587,6 +584,12 @@ func case_stack_Equals(funcName string) {
 	ptrs3 := MakeStack([]*Stack {sub1, sub3})
 	ptrs4 := MakeStack([]*Stack {sub1, sub4})
 
+	// keys to stacks
+	kts1 := MakeStack([]string {"Stack A", "Stack B"}, []*Stack {sub1, sub2})
+	kts2 := MakeStack([]string {"Stack A", "Stack B"}, []*Stack {sub1, sub2})
+	kts3 := MakeStack([]string {"Stack C", "Stack D"}, []*Stack {sub1, sub2})
+	kts4 := MakeStack([]string {"Stack A", "Stack B"}, []*Stack {sub1, sub3})
+
 	conditions := []bool{
 		
 		// test for shallow equality
@@ -615,6 +618,11 @@ func case_stack_Equals(funcName string) {
 
 		// test for empty equality
 		MakeStack().Equals(MakeStack()), // 14
+
+		// test for keys pointing to stacks
+		kts1.Equals(kts2), // 15
+		!kts1.Equals(kts3), // 16
+		!kts1.Equals(kts4), // 17
 
 	}
 

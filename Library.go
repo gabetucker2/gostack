@@ -188,19 +188,13 @@ func MakeStackMatrix(variadic ...any) *Stack {
 				// IF no `matrixShape` is passed
 				if matrixShape == nil {
 	
-					// turn the map into arrays of keys and vals
-					unpackDeepMapToKeysVals(&input1, keys, vals)
-
 					// unpack the map into matrix of shape `inputx` with corresponding keys and vals
-					stack.makeStackMatrixFromND(keys, vals)
+					stack.makeStackMatrixFromNDMap(input1)
 
 				// ELSEIF `matrixShape` is passed
 				} else {
 
-					for k, v := range gogenerics.UnpackMap(input1) {
-						keys = append(keys, k)
-						vals = append(vals, v)
-					}
+					keys, vals = gogenerics.GetKeysValsFromMap(input1)
 					// unpack the map into matrix of shape `matrixShape` with corresponding keys and vals
 					stack.makeStackMatrixFrom1D(matrixShape.([]int), keys, vals, new(int), false)
 				}

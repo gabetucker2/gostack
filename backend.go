@@ -2,7 +2,6 @@ package gostack
 
 import (
 	"reflect"
-	"fmt"
 
 	"github.com/gabetucker2/gogenerics"
 )
@@ -760,6 +759,32 @@ func (stack *Stack) makeStackMatrixFromND(keys, vals any) (ret *Stack) {
 
 }
 
+/** I am too lazy to write documentation for this right now... TODO: add later
+ */
+ func (stack *Stack) makeStackMatrixFromNDMap(m any) {
+
+	hasSubmap := reflect.TypeOf(m).Elem().Kind() == reflect.Map
+	keys, vals := gogenerics.GetKeysValsFromMap(m)
+
+	for i, k := range keys {
+		c := new(Card)
+		stack.Cards = append(stack.Cards, c)
+
+		c.Key = k
+
+		if hasSubmap {
+			c.Val = MakeStack()
+			c.Val.(*Stack).makeStackMatrixFromNDMap(vals[i])
+		} else {
+			c.Val = vals[i]
+		}
+	}
+
+	// update properties in this layer
+	stack.setStackProperties()
+
+}
+
 /** Updates a stack's Size, Depth, and Card Indices */
 func (stack *Stack) setStackProperties() {
 	stack.Size = len(stack.Cards)
@@ -786,27 +811,4 @@ func setCardProps(c *Card, to any, valNotKey bool) {
 			c.Key = to
 		}
 	}
-}
-
-func unpackDeepMapToKeysVals(input1 *any, keys, vals []any) {
-
-    fmt.Println(reflect.TypeOf(*input1).Key().Kind())
-    fmt.Println(reflect.TypeOf(*input1).Elem().Kind())
-
-	for k, v := range gogenerics.UnpackMap(input1) {
-		switch reflect.TypeOf(*input1).Elem().Kind() {
-		case reflect.Map:
-			newKArr := []any{}
-			newVArr := []any{}
-			keys = append(keys, newKArr)
-			vals = append(keys, newVArr)
-			unpackDeepMapToKeysVals(, newKArr, newVArr)
-	
-		default:
-			keys = append(keys, k)
-			vals = append(vals, v)
-	
-		}
-	}
-
 }
