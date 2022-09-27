@@ -178,20 +178,20 @@ func case_MakeStackMatrix(funcName string) {
         },
     }*/
 
-	//arrDeepKeys := [][]string {{"Alex", "Bre"}, {"Charles", "David"}, {"Elliot", "Ferguson"}}
-	arrDeepVals := []any {[]any {111, 222}, []any {333, 444}, []any {555, 666}}
+	arrDeepKeys := []any {[]any {"Alex", "Bre"}, []string {"Charles", "David"}, []any {"Elliot", "Ferguson"}}
+	arrDeepVals := []any {[]int {111, 222}, []any {333, 444}, []any {555, 666}}
 
 	// to stacks (in order of conditions listed in documentation)
 
 	//TODO: implement overrideCard support
-	//TODO: ensure deep support for nil [][]any's works
+	//TODO: add deeper examples
 	
 	correctStack := MakeStack([]*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222}), MakeStack([]string {"Charles", "David"}, []int {333, 444}), MakeStack([]string {"Elliot", "Ferguson"}, []int {555, 666})})
 
 	//stack1 := MakeStackMatrix(deepMap)
 	stack2 := MakeStackMatrix(arrDeepVals)
 	//stack3 := MakeStackMatrix(arrDeepKeys, arrDeepVals)
-	//stack4 := MakeStackMatrix(nil, arrDeepKeys)
+	stack4 := MakeStackMatrix(nil, arrDeepKeys)
 
 	// shallow stacks
 	stack5 := MakeStackMatrix()
@@ -211,11 +211,9 @@ func case_MakeStackMatrix(funcName string) {
 		}
 	}
 
-	//stack2.Print()
-	//correctStack.Print()
-
 	conditions := []bool{
 		stack2.Equals(correctStack, COMPARE_False, COMPARE_True), // 
+		stack4.Equals(correctStack, COMPARE_True, COMPARE_False), // 
 
 		// shallow tests
 		stack5.Equals(MakeStack()), // 

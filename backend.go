@@ -1,6 +1,8 @@
 package gostack
 
 import (
+	"reflect"
+
 	"github.com/gabetucker2/gogenerics"
 )
 
@@ -714,20 +716,20 @@ func (stack *Stack) makeStackMatrixFromND(keys, vals any) (ret *Stack) {
 	var referenceArr []any
 	// one of these conditions are guaranteed to be true per the ensures clause
 	if keys != nil {
-		referenceArr = keys.([]any)
+		referenceArr = gogenerics.UnpackArray(keys)
 	} else if vals != nil {
-		referenceArr = vals.([]any)
+		referenceArr = gogenerics.UnpackArray(vals)
 	}
 	
 	// main loop
 	for i := range referenceArr {
-		switch referenceArr[i].(type) {
+		switch reflect.TypeOf(referenceArr[i]).Kind() {
 
 		// add substack to stack
-		case []any:
+		case reflect.Slice:
 			var keysForward, valsForward any
-			if keys != nil {keysForward = keys.([]any)[i]} else {keysForward = nil}
-			if keys != nil {valsForward = vals.([]any)[i]} else {valsForward = nil}
+			if keys != nil {keysForward = gogenerics.UnpackArray(keys)[i]} else {keysForward = nil}
+			if vals != nil {valsForward = gogenerics.UnpackArray(vals)[i]} else {valsForward = nil}
 			stack.Cards = append(
 				stack.Cards,
 				MakeCard(MakeStack().makeStackMatrixFromND(
@@ -740,10 +742,10 @@ func (stack *Stack) makeStackMatrixFromND(keys, vals any) (ret *Stack) {
 		default:
 			c := MakeCard()
 			if keys != nil {
-				c.Key = keys.([]any)[i]
+				c.Key = gogenerics.UnpackArray(keys)[i]
 			}
 			if vals != nil {
-				c.Val = vals.([]any)[i]
+				c.Val = gogenerics.UnpackArray(vals)[i]
 			}
 			stack.Cards = append(stack.Cards, c)
 		}
