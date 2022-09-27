@@ -725,11 +725,14 @@ func (stack *Stack) makeStackMatrixFromND(keys, vals any) (ret *Stack) {
 
 		// add substack to stack
 		case []any:
+			var keysForward, valsForward any
+			if keys != nil {keysForward = keys.([]any)[i]} else {keysForward = nil}
+			if keys != nil {valsForward = vals.([]any)[i]} else {valsForward = nil}
 			stack.Cards = append(
 				stack.Cards,
 				MakeCard(MakeStack().makeStackMatrixFromND(
-					gogenerics.IfElse(keys != nil, keys, nil).([]any),
-					gogenerics.IfElse(vals != nil, vals, nil).([]any),
+					keysForward,
+					valsForward,
 				)),
 			)
 

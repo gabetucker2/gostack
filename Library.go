@@ -622,10 +622,10 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
  
  @receiver `thisStack` type{*Stack}
  @param `otherStack` type{*Stack}
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int} default -1 (deepest)
  @param optional `compareKeys` type{COMPARE} default COMPARE_True
  @param optional `compareVals` type{COMPARE} default COMPARE_True
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
+ @param optional `depth` type{int} default -1 (deepest)
  @param optional `pointerTypeKey` type{POINTER} default POINTER_False
  @param optional `pointerTypeVal` type{POINTER} default POINTER_False
  @param optional `pointerTypeStack` type{POINTER} default POINTER_False
@@ -647,10 +647,10 @@ func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 
 		if depth == -1 || depth > stack.Depth
 			depth = stack.Depth
-		if deepSearchType == FALSE
+		if deepSearchType is false
 			depth = 1
 
-		test = depth != 0 || (depth == 0 && stack and otherStack have the same Size)
+		test = (depth != 0 and stack and otherStack have the same Size) or (depth == 0)
 
 		for each cardA in this stack
 			for each cardB in other stack
@@ -677,13 +677,13 @@ func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 	*/
 	
 	// unpack variadic into optional parameters
-	var deepSearchType, depth, compareKeys, compareVals, pointerTypeKey, pointerTypeVal, pointerTypeStack any
-	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth, &compareKeys, &compareVals, &pointerTypeKey, &pointerTypeVal, &pointerTypeStack)
+	var compareKeys, compareVals, deepSearchType, depth, pointerTypeKey, pointerTypeVal, pointerTypeStack any
+	gogenerics.UnpackVariadic(variadic, &compareKeys, &compareVals, &deepSearchType, &depth, &pointerTypeKey, &pointerTypeVal, &pointerTypeStack)
 	// set default vals
-	if deepSearchType == nil {deepSearchType = DEEPSEARCH_True}
-	setDepthDefaultIfNil(&depth)
 	if compareKeys == nil {compareKeys = COMPARE_True}
 	if compareVals == nil {compareVals = COMPARE_True}
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_True}
+	setDepthDefaultIfNil(&depth)
 	setPOINTERDefaultIfNil(&pointerTypeStack)
 	setPOINTERDefaultIfNil(&pointerTypeKey)
 	setPOINTERDefaultIfNil(&pointerTypeVal)
@@ -691,7 +691,7 @@ func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 	if depth == -1 || depth.(int) > stack.Depth { depth = stack.Depth }
 	if deepSearchType == DEEPSEARCH_False { depth = 1 }
 	
-	test = depth != 0 || stack.Size == otherStack.Size
+	test = (depth != 0 && stack.Size == otherStack.Size) || depth == 0
 	
 	for _, cardA := range stack.Cards {
 		for _, cardB := range otherStack.Cards {
@@ -712,7 +712,7 @@ func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 					if oneHoldsSubstack {
 						bothHoldSubstacks = true
 						oneHoldsSubstack = false
-						test = test && cardA.Val.(*Stack).Equals(cardB.Val.(*Stack), deepSearchType, depth.(int) - 1, compareKeys, compareVals, pointerTypeKey, pointerTypeVal, pointerTypeStack)
+						test = test && cardA.Val.(*Stack).Equals(cardB.Val.(*Stack), compareKeys, compareVals, deepSearchType, depth.(int) - 1, pointerTypeKey, pointerTypeVal, pointerTypeStack)
 						if pointerTypeStack == POINTER_True {
 							test = test && gogenerics.PointersEqual(cardA.Val, cardB.Val)
 						}

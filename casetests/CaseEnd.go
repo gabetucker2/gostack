@@ -158,10 +158,6 @@ func case_MakeStackMatrix(funcName string) {
 	shallowMap := map[string]int{
 		"Alex": 111,
 		"Bre": 222,
-		"Charles": 333,
-		"David": 444,
-		"Elliot": 555,
-		"Ferguson": 666,
     }
 
 	arrShallowKeys := []string {"Alex", "Bre", "Charles", "David", "Elliot", "Ferguson"}
@@ -183,26 +179,27 @@ func case_MakeStackMatrix(funcName string) {
     }*/
 
 	//arrDeepKeys := [][]string {{"Alex", "Bre"}, {"Charles", "David"}, {"Elliot", "Ferguson"}}
-	//arrDeepVals := [][]int {{111, 222}, {333, 444}, {555, 666}}
+	arrDeepVals := []any {[]any {111, 222}, []any {333, 444}, []any {555, 666}}
 
 	// to stacks (in order of conditions listed in documentation)
 
-	//TODO: add stackequalsarrayormap tests
-	//TODO: fix map support
-	//TODO: implement deep support
 	//TODO: implement overrideCard support
-	//TODO: ensure cases of irregularly-shaped matrices
+	//TODO: ensure deep support for nil [][]any's works
+	
+	correctStack := MakeStack([]*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222}), MakeStack([]string {"Charles", "David"}, []int {333, 444}), MakeStack([]string {"Elliot", "Ferguson"}, []int {555, 666})})
 
-	//stack1  := MakeStackMatrix(deepMap) // BAD
-	//stack2  := MakeStackMatrix(arrDeepVals) // BAD
-	//stack3  := MakeStackMatrix(arrDeepKeys, arrDeepVals) // BAD
-	//stack4  := MakeStackMatrix(nil, arrDeepKeys) // BAD
-	stack5  := MakeStackMatrix() // GOOD
-	stack6  := MakeStackMatrix(shallowMap, nil, matrixShape) // BAD
-	stack7  := MakeStackMatrix(arrShallowVals, nil, matrixShape) // BAD
-	stack8  := MakeStackMatrix(arrShallowKeys, arrShallowVals, matrixShape) // BAD
-	stack9  := MakeStackMatrix(nil, arrShallowKeys, matrixShape) // BAD
-	stack10 := MakeStackMatrix(nil, nil, matrixShape) // BAD
+	//stack1 := MakeStackMatrix(deepMap)
+	stack2 := MakeStackMatrix(arrDeepVals)
+	//stack3 := MakeStackMatrix(arrDeepKeys, arrDeepVals)
+	//stack4 := MakeStackMatrix(nil, arrDeepKeys)
+
+	// shallow stacks
+	stack5 := MakeStackMatrix()
+	stack6 := MakeStackMatrix(shallowMap, nil, []int {1, 2})
+	stack7 := MakeStackMatrix(arrShallowVals, nil, matrixShape)
+	stack8 := MakeStackMatrix(arrShallowKeys, arrShallowVals, matrixShape)
+	stack9 := MakeStackMatrix(nil, arrShallowKeys, matrixShape)
+	stack10 := MakeStackMatrix(nil, nil, matrixShape)
 
 	stack7Test := MakeStack(nil, nil, 3)
 	for i := 0; i < 3; i++ {
@@ -214,20 +211,19 @@ func case_MakeStackMatrix(funcName string) {
 		}
 	}
 
+	//stack2.Print()
+	//correctStack.Print()
+
 	conditions := []bool{
-		test_IdxsAreGood(stack6),
-		test_IdxsAreGood(stack7),
-		test_IdxsAreGood(stack8),
-		test_IdxsAreGood(stack9),
-		test_IdxsAreGood(stack10),
+		stack2.Equals(correctStack, COMPARE_False, COMPARE_True), // 
 
-		test_StackProperties(stack6, matrixShape, 2),
-		test_StackProperties(stack7, matrixShape, 2),
-		test_StackProperties(stack8, matrixShape, 2),
-		test_StackProperties(stack9, matrixShape, 2),
-		test_StackProperties(stack10, matrixShape, 2),
-
-		test_StackProperties(stack5, []int{0}),
+		// shallow tests
+		stack5.Equals(MakeStack()), // 
+		stack6.Equals(MakeStack([]*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222})})) || stack6.Equals(MakeStack([]*Stack {MakeStack([]string {"Bre", "Alex"}, []int {222, 111})})), // 
+		stack7.Equals(correctStack, COMPARE_False, COMPARE_True), // 
+		stack8.Equals(correctStack, COMPARE_True, COMPARE_True), // 
+		stack9.Equals(correctStack, COMPARE_True, COMPARE_False), // 
+		stack10.Equals(MakeStack([]*Stack {MakeStack(nil, nil, 2), MakeStack(nil, nil, 2), MakeStack(nil, nil, 2)})), // 
 	}
 
 	test_End(funcName, conditions)
@@ -579,6 +575,7 @@ func case_stack_Equals(funcName string) {
 	deep1 := MakeStack([]*Stack {MakeStack([]string {"Hello", "Hey"}), MakeStack([]string {"Howdy", "Hi"})})
 	deep2 := MakeStack([]*Stack {MakeStack([]string {"Hello", "Hey"}), MakeStack([]string {"Howdy", "Hi"})})
 	deep3 := MakeStack([]*Stack {MakeStack([]string {"Hello", "Hey"}), MakeStack([]string {"Howdy", "Heyo"})})
+	deep4 := MakeStack([]*Stack {MakeStack(), MakeStack()})
 
 	// stack pointers
 	sub1 := MakeStack([]string {"Hello", "Hey"})
@@ -593,25 +590,28 @@ func case_stack_Equals(funcName string) {
 	conditions := []bool{
 		
 		// test for shallow equality
-		shallow1.Equals(shallow2), // 1
-		shallow2.Equals(shallow1), // 2
-		!shallow1.Equals(shallow3), // 3
+		shallow1.Equals(shallow2, DEEPSEARCH_False), // 1
+		shallow2.Equals(shallow1, DEEPSEARCH_False), // 2
+		!shallow1.Equals(shallow3, DEEPSEARCH_False), // 3
 
 		// test for deep equality
-		deep1.Equals(deep2, DEEPSEARCH_True), // 4
-		deep2.Equals(deep1, DEEPSEARCH_True), // 5
-		!deep1.Equals(deep3, DEEPSEARCH_True), // 6
-		deep1.Equals(deep2, DEEPSEARCH_True, 1), // 7
-		deep1.Equals(deep3, DEEPSEARCH_True, 1), // 8
-		deep1.Equals(deep2, DEEPSEARCH_True, 0), // 9
+		deep1.Equals(deep2, nil, nil, DEEPSEARCH_True), // 4
+		deep2.Equals(deep1, nil, nil, DEEPSEARCH_True), // 5
+		!deep1.Equals(deep3, nil, nil, DEEPSEARCH_True), // 6
+		deep1.Equals(deep2, nil, nil, DEEPSEARCH_True, 1), // 7
+		deep1.Equals(deep3, nil, nil, DEEPSEARCH_True, 1), // 8
+		deep1.Equals(deep2, nil, nil, DEEPSEARCH_True, 0), // 9
+
+		// test for smaller not auto being equal to larger if stack is missing
+		!deep4.Equals(deep1, nil, nil, DEEPSEARCH_True), // 10
 
 		// test for same shape different val comparison
-		deep1.Equals(deep3, nil, nil, COMPARE_True, COMPARE_False), // 10
+		deep1.Equals(deep3, COMPARE_True, COMPARE_False), // 11
 
 		// test for stack pointers
-		ptrs1.Equals(ptrs2, nil, nil, nil, nil, nil, nil, POINTER_True), // 11
-		!ptrs1.Equals(ptrs3, nil, nil, nil, nil, nil, nil, POINTER_True), // 12
-		!ptrs1.Equals(ptrs4, nil, nil, nil, nil, nil, nil, POINTER_True), // 13
+		ptrs1.Equals(ptrs2, nil, nil, nil, nil, nil, nil, POINTER_True), // 12
+		!ptrs1.Equals(ptrs3, nil, nil, nil, nil, nil, nil, POINTER_True), // 13
+		!ptrs1.Equals(ptrs4, nil, nil, nil, nil, nil, nil, POINTER_True), // 14
 
 		// test for empty equality
 		MakeStack().Equals(MakeStack()), // 14
@@ -744,7 +744,7 @@ func Run(_showTestText bool) {
 	case_card_Equals("card.Equals") // GOOD
 	case_MakeStack("MakeStack") // GOOD
 	case_stack_Equals("stack.Equals") // GOOD
-	// case_MakeStackMatrix("MakeStackMatrix") // BAD
+	case_MakeStackMatrix("MakeStackMatrix") // BAD
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
 	case_stack_ToArray("stack.ToArray") // GOOD
 	case_stack_ToMap("stack.ToMap") // GOOD
