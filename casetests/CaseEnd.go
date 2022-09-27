@@ -99,6 +99,19 @@ func case_MakeStack(funcName string) {
 	stack8 := MakeStack(stack2.Cards, nil, nil, true) // should be a stack of cards pointing to the cards of stack2
 	stack9 := MakeStack()
 
+	// override card support
+	card1 := MakeCard("Hey")
+	card2 := MakeCard(card1)
+	stack10 := MakeStack([]*Card {card1}, nil, nil, false)
+	stack11 := MakeStack([]*Card {card1}, nil, nil, true)
+
+	// pointer storage support
+	var name any//lint:ignore S1021 Ignore warning
+	name = "Josh"
+	stack12 := MakeStack([]any {&name})
+	stack13 := MakeStack([]any {&name})
+	gogenerics.SetPointer(stack12.Cards[0].Val, "Henry")
+
 	// make array of arrVals times three (what stack5 should yield)
 	var arrValsTimesThree []any
 	for i := 0; i < 3; i++ {
@@ -114,34 +127,40 @@ func case_MakeStack(funcName string) {
 	}
 
 	conditions := []bool{
-		test_IdxsAreGood(stack1),
-		test_IdxsAreGood(stack2),
-		test_IdxsAreGood(stack3),
-		test_IdxsAreGood(stack4),
-		test_IdxsAreGood(stack5),
-		test_IdxsAreGood(stack6),
-		test_IdxsAreGood(stack7),
-		test_IdxsAreGood(stack8),
+		test_IdxsAreGood(stack1), // 1
+		test_IdxsAreGood(stack2), // 2
+		test_IdxsAreGood(stack3), // 3
+		test_IdxsAreGood(stack4), // 4
+		test_IdxsAreGood(stack5), // 5
+		test_IdxsAreGood(stack6), // 6
+		test_IdxsAreGood(stack7), // 7
+		test_IdxsAreGood(stack8), // 8
 
-		test_StackProperties(stack1, []int{3}),
-		test_StackProperties(stack2, []int{3}),
-		test_StackProperties(stack3, []int{3}),
-		test_StackProperties(stack4, []int{3}),
-		test_StackProperties(stack5, []int{9}),
-		test_StackProperties(stack6, []int{10}),
-		test_StackProperties(stack7, []int{3}),
-		test_StackProperties(stack8, []int{3}),
+		test_StackProperties(stack1, []int{3}), // 9
+		test_StackProperties(stack2, []int{3}), // 10
+		test_StackProperties(stack3, []int{3}), // 11
+		test_StackProperties(stack4, []int{3}), // 12
+		test_StackProperties(stack5, []int{9}), // 13
+		test_StackProperties(stack6, []int{10}), // 14
+		test_StackProperties(stack7, []int{3}), // 15
+		test_StackProperties(stack8, []int{3}), // 16
 
-		test_StackEqualArrayOrMap(stack1, nil, nil, map1),
-		test_StackEqualArrayOrMap(stack2, arrVals, nil, nil),
-		test_StackEqualArrayOrMap(stack3, arrVals, arrKeys, nil),
-		test_StackEqualArrayOrMap(stack4, nil, arrKeys, nil),
-		test_StackEqualArrayOrMap(stack5, arrValsTimesThree, nil, nil),
-		test_StackEqualArrayOrMap(stack6, nil, nil, nil),
-		test_StackEqualArrayOrMap(stack7, arrVals, nil, nil),
-		test_StackEqualArrayOrMap(stack8, stack2.Cards, nil, nil),
+		test_StackEqualArrayOrMap(stack1, nil, nil, map1), // 17
+		test_StackEqualArrayOrMap(stack2, arrVals, nil, nil), // 18
+		test_StackEqualArrayOrMap(stack3, arrVals, arrKeys, nil), // 19
+		test_StackEqualArrayOrMap(stack4, nil, arrKeys, nil), // 20
+		test_StackEqualArrayOrMap(stack5, arrValsTimesThree, nil, nil), // 21
+		test_StackEqualArrayOrMap(stack6, nil, nil, nil), // 22
+		test_StackEqualArrayOrMap(stack7, arrVals, nil, nil), // 23
+		test_StackEqualArrayOrMap(stack8, stack2.Cards, nil, nil), // 24
 		
-		test_StackProperties(stack9, []int{0}),
+		test_StackProperties(stack9, []int{0}), // 25
+
+		stack10.Cards[0] == card1, // 26
+		stack11.Cards[0].Equals(card2), // 27
+
+		gogenerics.GetPointer(stack12.Cards[0].Val) == "Henry", // 28
+		gogenerics.GetPointer(stack13.Cards[0].Val) == "Henry", // 29
 	}
 	
 	test_End(funcName, conditions)
@@ -176,10 +195,6 @@ func case_MakeStackMatrix(funcName string) {
 	irregularDepth := []any {10, []any {20, 30}, []any {[]int {40, 50}, []any {60, 70}}}
 
 	// to stacks (in order of conditions listed in documentation)
-
-	//TODO: implement overrideCard support
-	//TODO: add deeper examples
-	//TODO: ensure example exists for every case
 	
 	correctStack := MakeStack([]*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222}), MakeStack([]string {"Charles", "David"}, []int {333, 444}), MakeStack([]string {"Elliot", "Ferguson"}, []int {555, 666})})
 
@@ -196,8 +211,8 @@ func case_MakeStackMatrix(funcName string) {
 	stack9 := MakeStackMatrix(nil, arrShallowKeys, matrixShape)
 	stack10 := MakeStackMatrix(nil, nil, matrixShape)
 
-	// other stacks
-	stack11 := MakeStackMatrix(irregularDepth) // irregular depth
+	// irregular depth
+	stack11 := MakeStackMatrix(irregularDepth)
 
 	stack7Test := MakeStack(nil, nil, 3)
 	for i := 0; i < 3; i++ {

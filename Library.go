@@ -126,6 +126,7 @@ func MakeStack(variadic ...any) *Stack {
   * the last int is the container directly containing the inputted cards
  @param optional `overrideCards` type{bool} default false
    By default, if you do MakeStackMatrix([]*Card {cardA}), stack.Cards = []*Card {cardA}.  If you would like your cards to have vals pointing to other cards, where stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }, set this variable to true.
+   This only has an effect when `matrixShape` is passed.
  @returns type{*Stack} a new stack
  @constructs type{*Stack} a new stack with type{*Card} new cards
  @requires
@@ -152,10 +153,7 @@ func MakeStack(variadic ...any) *Stack {
         IF `input1` is a map
           unpack the map into matrix of shape `matrixShape` with corresponding keys and vals
         ELSEIF `input1` is an array and `input2` is not passed/nil
-	      IF `input1` is an array of cards:
-		    set `stack.Cards` to cards in `input1` in matrix of shape `matrixShape`
-		  ELSE:
-            unpack values from `input1` into new cards in matrix of shape `matrixShape`
+          unpack values from `input1` into new cards in matrix of shape `matrixShape`
         ELSEIF `input1` is an array and `input2` is an array
           unpack keys from `input1` and values from `input2` into matrix of shape `matrixShape`
         ELSEIF `input1` is nil and `input2` is an array
@@ -196,7 +194,7 @@ func MakeStackMatrix(variadic ...any) *Stack {
 
 					keys, vals = gogenerics.GetKeysValsFromMap(input1)
 					// unpack the map into matrix of shape `matrixShape` with corresponding keys and vals
-					stack.makeStackMatrixFrom1D(matrixShape.([]int), keys, vals, new(int), false)
+					stack.makeStackMatrixFrom1D(matrixShape.([]int), keys, vals, new(int), overrideCards)
 				}
 			
 			// ELSEIF `input1` is an array (or slice)...
@@ -215,15 +213,9 @@ func MakeStackMatrix(variadic ...any) *Stack {
 					// ELSEIF `matrixShape` is passed
 					} else {
 
-						// IF `input1` is an array of cards:
-						if true {
-							// set `stack.Cards` to cards in `input1` in matrix of shape `matrixShape`
-							stack.makeStackMatrixFrom1D(matrixShape.([]int), nil, input1Array, new(int), overrideCards)
-						// ELSE:
-						} else {
-							// unpack values from `input1` into new cards in matrix of shape `matrixShape`
-							stack.makeStackMatrixFrom1D(matrixShape.([]int), nil, input1Array, new(int), overrideCards)
-						}
+						// set `stack.Cards` to cards in `input1` in matrix of shape `matrixShape`
+						stack.makeStackMatrixFrom1D(matrixShape.([]int), nil, input1Array, new(int), overrideCards)
+
 					}
 
 				// ...and `input2` is an array
@@ -239,7 +231,7 @@ func MakeStackMatrix(variadic ...any) *Stack {
 					// ELSEIF `matrixShape` is passed
 					} else {
 						// unpack keys from `input1` and values from `input2` into matrix of shape `matrixShape`
-						stack.makeStackMatrixFrom1D(matrixShape.([]int), input1Array, input2Array, new(int), false)
+						stack.makeStackMatrixFrom1D(matrixShape.([]int), input1Array, input2Array, new(int), overrideCards)
 					}
 
 				}
@@ -259,7 +251,7 @@ func MakeStackMatrix(variadic ...any) *Stack {
 			// ELSEIF `matrixShape` is passed
 			} else {
 				// unpack keys from `input2` into matrix of shape `matrixShape`
-				stack.makeStackMatrixFrom1D(matrixShape.([]int), input2Array, nil, new(int), false)
+				stack.makeStackMatrixFrom1D(matrixShape.([]int), input2Array, nil, new(int), overrideCards)
 			}
 
 		}
@@ -564,27 +556,26 @@ func (stack *Stack) Unique(typeType TYPE, variadic ...any) *Stack {
  @param optional `compareIdxs` type{COMPARE} default COMPARE_False
  @param optional `compareKeys` type{COMPARE} default COMPARE_True
  @param optional `compareVals` type{COMPARE} default COMPARE_True
- @param optional `printType` type{PRINT} default PRINT_False
  @returns type{bool}
  */
 func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
 
 	// unpack variadic into optional parameters
-	var pointerTypeKey, pointerTypeVal, compareIdxs, compareKeys, compareVals, printType any
-	gogenerics.UnpackVariadic(variadic, &pointerTypeKey, &pointerTypeVal, &compareIdxs, &compareKeys, &compareVals, &printType)
+	var pointerTypeKey, pointerTypeVal, compareIdxs, compareKeys, compareVals any
+	gogenerics.UnpackVariadic(variadic, &pointerTypeKey, &pointerTypeVal, &compareIdxs, &compareKeys, &compareVals)
 	// set default vals
 	setPOINTERDefaultIfNil(&pointerTypeKey)
 	setPOINTERDefaultIfNil(&pointerTypeVal)
 	setCOMPAREDefaultIfNil(&compareIdxs)
 	if compareKeys == nil {compareKeys = COMPARE_True}
 	if compareVals == nil {compareVals = COMPARE_True}
-	setPRINTDefaultIfNil(&printType)
+	/*setPRINTDefaultIfNil(&printType)
 
 	print := func(printType any, stringToPrint string) {
 		if printType.(PRINT) == PRINT_True {
 			fmt.Printf("-     DETAIL: CONDITION: %v\n", stringToPrint)
 		}
-	}
+	}*/
 
 	condition := true
 	
@@ -594,7 +585,7 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
 			(
 				(pointerTypeKey == POINTER_False && thisCard.Key == otherCard.Key) ||
 				(pointerTypeKey == POINTER_True && gogenerics.PointersEqual(thisCard.Key, otherCard.Key) ) ) ) )
-	print(printType, fmt.Sprintf("KEY PASSES EQUALITY CHECK: %v: (compareKeys == COMPARE_False [%v] || (compareKeys == COMPARE_True [%v] && ( (pointerTypeKey == POINTER_False [%v] && thisCard.Key == otherCard.Key [%v]) || (pointerTypeKey == POINTER_True [%v] && gogenerics.PointersEqual(thisCard.Key, otherCard.Key) [%v] ) ) ) )", (compareKeys == COMPARE_False || (compareKeys == COMPARE_True && ( (pointerTypeKey == POINTER_False && thisCard.Key == otherCard.Key) || (pointerTypeKey == POINTER_True && gogenerics.PointersEqual(thisCard.Key, otherCard.Key) ) ) ) ), compareKeys == COMPARE_False, compareKeys == COMPARE_True, pointerTypeKey == POINTER_False, thisCard.Key == otherCard.Key, pointerTypeKey == POINTER_True, gogenerics.PointersEqual(thisCard.Key, otherCard.Key) ))
+	//print(printType, fmt.Sprintf("KEY PASSES EQUALITY CHECK: %v: (compareKeys == COMPARE_False [%v] || (compareKeys == COMPARE_True [%v] && ( (pointerTypeKey == POINTER_False [%v] && thisCard.Key == otherCard.Key [%v]) || (pointerTypeKey == POINTER_True [%v] && gogenerics.PointersEqual(thisCard.Key, otherCard.Key) [%v] ) ) ) )", (compareKeys == COMPARE_False || (compareKeys == COMPARE_True && ( (pointerTypeKey == POINTER_False && thisCard.Key == otherCard.Key) || (pointerTypeKey == POINTER_True && gogenerics.PointersEqual(thisCard.Key, otherCard.Key) ) ) ) ), compareKeys == COMPARE_False, compareKeys == COMPARE_True, pointerTypeKey == POINTER_False, thisCard.Key == otherCard.Key, pointerTypeKey == POINTER_True, gogenerics.PointersEqual(thisCard.Key, otherCard.Key) ))
 	
 	condition = condition && 
 		(compareVals == COMPARE_False ||
@@ -602,10 +593,10 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
 			(
 				(pointerTypeVal == POINTER_False && thisCard.Val == otherCard.Val) ||
 				(pointerTypeVal == POINTER_True && gogenerics.PointersEqual(thisCard.Val, otherCard.Val) ) ) ) )
-	print(printType, fmt.Sprintf("Val PASSES EQUALITY CHECK: %v: (compareVals == COMPARE_False [%v] || (compareVals == COMPARE_True [%v] && ( (pointerTypeVal == POINTER_False [%v] && thisCard.Val == otherCard.Val [%v]) || (pointerTypeVal == POINTER_True [%v] && gogenerics.PointersEqual(thisCard.Val, otherCard.Val) [%v] ) ) ) )", (compareVals == COMPARE_False || (compareVals == COMPARE_True && ( (pointerTypeVal == POINTER_False && thisCard.Val == otherCard.Val) || (pointerTypeVal == POINTER_True && gogenerics.PointersEqual(thisCard.Val, otherCard.Val) ) ) ) ), compareVals == COMPARE_False, compareVals == COMPARE_True, pointerTypeVal == POINTER_False, thisCard.Val == otherCard.Val, pointerTypeVal == POINTER_True, gogenerics.PointersEqual(thisCard.Val, otherCard.Val) ))
+	//print(printType, fmt.Sprintf("Val PASSES EQUALITY CHECK: %v: (compareVals == COMPARE_False [%v] || (compareVals == COMPARE_True [%v] && ( (pointerTypeVal == POINTER_False [%v] && thisCard.Val == otherCard.Val [%v]) || (pointerTypeVal == POINTER_True [%v] && gogenerics.PointersEqual(thisCard.Val, otherCard.Val) [%v] ) ) ) )", (compareVals == COMPARE_False || (compareVals == COMPARE_True && ( (pointerTypeVal == POINTER_False && thisCard.Val == otherCard.Val) || (pointerTypeVal == POINTER_True && gogenerics.PointersEqual(thisCard.Val, otherCard.Val) ) ) ) ), compareVals == COMPARE_False, compareVals == COMPARE_True, pointerTypeVal == POINTER_False, thisCard.Val == otherCard.Val, pointerTypeVal == POINTER_True, gogenerics.PointersEqual(thisCard.Val, otherCard.Val) ))
 
 	condition = condition && (compareIdxs == COMPARE_False || (compareIdxs == COMPARE_True && thisCard.Idx == otherCard.Idx))
-	print(printType, fmt.Sprintf("IDX PASSES EQUALITY CHECK: %v: (compareIdxs == COMPARE_False [%v] || (compareIdxs == COMPARE_True [%v] && thisCard.Idx == otherCard.Idx [%v]))", (compareIdxs == COMPARE_False || (compareIdxs == COMPARE_True && thisCard.Idx == otherCard.Idx)), compareIdxs == COMPARE_False, compareIdxs == COMPARE_True, thisCard.Idx == otherCard.Idx))
+	//print(printType, fmt.Sprintf("IDX PASSES EQUALITY CHECK: %v: (compareIdxs == COMPARE_False [%v] || (compareIdxs == COMPARE_True [%v] && thisCard.Idx == otherCard.Idx [%v]))", (compareIdxs == COMPARE_False || (compareIdxs == COMPARE_True && thisCard.Idx == otherCard.Idx)), compareIdxs == COMPARE_False, compareIdxs == COMPARE_True, thisCard.Idx == otherCard.Idx))
 
 	// return whether conditions yield true
 	return condition
