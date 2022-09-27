@@ -797,11 +797,7 @@ func (card *Card) Print(variadic ...any) {
 	// unpack variadic into optional parameters
 	var depth any
 	gogenerics.UnpackVariadic(variadic, &depth)
-
-	if depth == nil {
-		depth = 0
-	}
-	depth = depth.(int)
+	if depth == nil { depth = 0 }
 
 	// prints
 	fmt.Printf("%v|%vCARD\n", depthPrinter(depth.(int)), gogenerics.IfElse(depth == 0, "gostack: PRINTING ", ""))
@@ -819,29 +815,31 @@ func (card *Card) Print(variadic ...any) {
    This variable only exists for text-indenting purposes to make your terminal output look a bit cleaner.  1 depth => 4 "-" added before the print.
  @updates terminal logs
  */
-func (stack *Stack) Print(depth ...int) {
+func (stack *Stack) Print(variadic ...any) {
 	
-	if depth == nil {
-		depth = []int {0}
+	// unpack variadic into optional parameters
+	var depth, idx, key any
+	gogenerics.UnpackVariadic(variadic, &depth, &idx, &key)
+	if depth == nil { depth = 0 }
+
+	fmt.Printf("%v|%vSTACK\n", depthPrinter(depth.(int)), gogenerics.IfElse(idx == nil, "gostack: PRINTING ", "SUB"))
+	fmt.Printf("%v- &stack:      %v\n", depthPrinter(depth.(int)), &stack)
+	if idx != nil {
+		fmt.Printf("%v- card.Idx:    %v\n", depthPrinter(depth.(int)), idx)
 	}
-	fmt.Printf("%v|%vSTACK\n", depthPrinter(depth[0]), gogenerics.IfElse(len(depth) != 2, "gostack: PRINTING ", "SUB"))
-	fmt.Printf("%v- &stack:      %v\n", depthPrinter(depth[0]), &stack)
-	if len(depth) == 2 {
-		fmt.Printf("%v- card.Idx:    %v\n", depthPrinter(depth[0]), depth[1])
+	if key != nil {
+		fmt.Printf("%v- card.Key:    %v\n", depthPrinter(depth.(int)), key)
 	}
-	fmt.Printf("%v- stack.Size:  %v\n", depthPrinter(depth[0]), stack.Size)
-	fmt.Printf("%v- stack.Depth: %v\n", depthPrinter(depth[0]), stack.Depth)
+	fmt.Printf("%v- stack.Size:  %v\n", depthPrinter(depth.(int)), stack.Size)
+	fmt.Printf("%v- stack.Depth: %v\n", depthPrinter(depth.(int)), stack.Depth)
 	for i := range stack.Cards {
 		c := stack.Cards[i]
 
 		switch c.Val.(type) {
 		case *Stack:
-			if c.Key != nil {
-				fmt.Printf("%v|SUBSTACK KEY: %v\n", depthPrinter(depth[0]+4), c.Key)
-			}
-			c.Val.(*Stack).Print(depth[0]+4, i)
+			c.Val.(*Stack).Print(depth.(int)+4, i, c.Key)
 		default:
-			c.Print(depth[0]+4)
+			c.Print(depth.(int)+4)
 		}
 	}
 	

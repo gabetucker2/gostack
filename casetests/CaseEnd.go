@@ -172,11 +172,14 @@ func case_MakeStackMatrix(funcName string) {
 
 	arrDeepKeys := []any {[]any {"Alex", "Bre"}, []string {"Charles", "David"}, []any {"Elliot", "Ferguson"}}
 	arrDeepVals := []any {[]int {111, 222}, []any {333, 444}, []any {555, 666}}
+	
+	irregularDepth := []any {10, []any {20, 30}, []any {[]int {40, 50}, []any {60, 70}}}
 
 	// to stacks (in order of conditions listed in documentation)
 
 	//TODO: implement overrideCard support
 	//TODO: add deeper examples
+	//TODO: ensure example exists for every case
 	
 	correctStack := MakeStack([]*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222}), MakeStack([]string {"Charles", "David"}, []int {333, 444}), MakeStack([]string {"Elliot", "Ferguson"}, []int {555, 666})})
 
@@ -193,6 +196,9 @@ func case_MakeStackMatrix(funcName string) {
 	stack9 := MakeStackMatrix(nil, arrShallowKeys, matrixShape)
 	stack10 := MakeStackMatrix(nil, nil, matrixShape)
 
+	// other stacks
+	stack11 := MakeStackMatrix(irregularDepth) // irregular depth
+
 	stack7Test := MakeStack(nil, nil, 3)
 	for i := 0; i < 3; i++ {
 		subStack := MakeStack(nil, nil, 2)
@@ -206,9 +212,9 @@ func case_MakeStackMatrix(funcName string) {
 	conditions := []bool{
 
 		// deep tests
-		stack1.Equals(MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222})})) || stack1.Equals(MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Bre", "Alex"}, []int {222, 111})})), // 2
+		stack1.Equals(MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222})})) || stack1.Equals(MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Bre", "Alex"}, []int {222, 111})})), // 1
 		stack2.Equals(correctStack, COMPARE_False, COMPARE_True), // 2
-		stack3.Equals(correctStack, COMPARE_True, COMPARE_True), // 2
+		stack3.Equals(correctStack, COMPARE_True, COMPARE_True), // 3
 		stack4.Equals(correctStack, COMPARE_True, COMPARE_False), // 4
 
 		// shallow tests
@@ -220,6 +226,7 @@ func case_MakeStackMatrix(funcName string) {
 		stack10.Equals(MakeStack([]*Stack {MakeStack(nil, nil, 2), MakeStack(nil, nil, 2), MakeStack(nil, nil, 2)})), // 10
 
 		// other tests
+		stack11.Equals(MakeStack([]any {10, MakeStack([]int {20, 30}), MakeStack([]*Stack {MakeStack([]int {40, 50}), MakeStack([]any {60, 70})} ) } )), // 11
 
 	}
 
