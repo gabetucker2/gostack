@@ -188,8 +188,8 @@ func MakeStackMatrix(variadic ...any) *Stack {
 				// IF no `matrixShape` is passed
 				if matrixShape == nil {
 	
-					// TODO: FIX LATER
-					// unpackDeepMapToKeysVals(input1, keys, vals)
+					// turn the map into arrays of keys and vals
+					unpackDeepMapToKeysVals(&input1, keys, vals)
 
 					// unpack the map into matrix of shape `inputx` with corresponding keys and vals
 					stack.makeStackMatrixFromND(keys, vals)
@@ -842,6 +842,9 @@ func (stack *Stack) Print(depth ...int) {
 
 		switch c.Val.(type) {
 		case *Stack:
+			if c.Key != nil {
+				fmt.Printf("%v|SUBSTACK KEY: %v\n", depthPrinter(depth[0]+4), c.Key)
+			}
 			c.Val.(*Stack).Print(depth[0]+4, i)
 		default:
 			c.Print(depth[0]+4)

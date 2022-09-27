@@ -2,6 +2,7 @@ package gostack
 
 import (
 	"reflect"
+	"fmt"
 
 	"github.com/gabetucker2/gogenerics"
 )
@@ -785,4 +786,27 @@ func setCardProps(c *Card, to any, valNotKey bool) {
 			c.Key = to
 		}
 	}
+}
+
+func unpackDeepMapToKeysVals(input1 *any, keys, vals []any) {
+
+    fmt.Println(reflect.TypeOf(*input1).Key().Kind())
+    fmt.Println(reflect.TypeOf(*input1).Elem().Kind())
+
+	for k, v := range gogenerics.UnpackMap(input1) {
+		switch reflect.TypeOf(*input1).Elem().Kind() {
+		case reflect.Map:
+			newKArr := []any{}
+			newVArr := []any{}
+			keys = append(keys, newKArr)
+			vals = append(keys, newVArr)
+			unpackDeepMapToKeysVals(, newKArr, newVArr)
+	
+		default:
+			keys = append(keys, k)
+			vals = append(vals, v)
+	
+		}
+	}
+
 }

@@ -163,20 +163,12 @@ func case_MakeStackMatrix(funcName string) {
 	arrShallowKeys := []string {"Alex", "Bre", "Charles", "David", "Elliot", "Ferguson"}
 	arrShallowVals := []int {111, 222, 333, 444, 555, 666}
 
-	/*deepMap := map[string]map[string]int{
+	deepMap := map[string]map[string]int{
         "First": {
             "Alex": 111,
             "Bre": 222,
         },
-        "Second": {
-            "Charles": 333,
-            "David": 444,
-        },
-        "Third": {
-            "Elliot": 555,
-            "Ferguson": 666,
-        },
-    }*/
+    }
 
 	arrDeepKeys := []any {[]any {"Alex", "Bre"}, []string {"Charles", "David"}, []any {"Elliot", "Ferguson"}}
 	arrDeepVals := []any {[]int {111, 222}, []any {333, 444}, []any {555, 666}}
@@ -188,9 +180,9 @@ func case_MakeStackMatrix(funcName string) {
 	
 	correctStack := MakeStack([]*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222}), MakeStack([]string {"Charles", "David"}, []int {333, 444}), MakeStack([]string {"Elliot", "Ferguson"}, []int {555, 666})})
 
-	//stack1 := MakeStackMatrix(deepMap)
+	stack1 := MakeStackMatrix(deepMap)
 	stack2 := MakeStackMatrix(arrDeepVals)
-	//stack3 := MakeStackMatrix(arrDeepKeys, arrDeepVals)
+	stack3 := MakeStackMatrix(arrDeepKeys, arrDeepVals)
 	stack4 := MakeStackMatrix(nil, arrDeepKeys)
 
 	// shallow stacks
@@ -211,17 +203,27 @@ func case_MakeStackMatrix(funcName string) {
 		}
 	}
 
+	stack1.Print()
+	// MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222})}).Print()
+
 	conditions := []bool{
-		stack2.Equals(correctStack, COMPARE_False, COMPARE_True), // 
-		stack4.Equals(correctStack, COMPARE_True, COMPARE_False), // 
+
+		// deep tests
+		stack1.Equals(MakeStack([]*Stack {MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222})})})) || stack1.Equals(MakeStack([]*Stack {MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Bre", "Alex"}, []int {222, 111})})})), // 2
+		stack2.Equals(correctStack, COMPARE_False, COMPARE_True), // 2
+		stack3.Equals(correctStack, COMPARE_True, COMPARE_True), // 2
+		stack4.Equals(correctStack, COMPARE_True, COMPARE_False), // 4
 
 		// shallow tests
-		stack5.Equals(MakeStack()), // 
-		stack6.Equals(MakeStack([]*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222})})) || stack6.Equals(MakeStack([]*Stack {MakeStack([]string {"Bre", "Alex"}, []int {222, 111})})), // 
-		stack7.Equals(correctStack, COMPARE_False, COMPARE_True), // 
-		stack8.Equals(correctStack, COMPARE_True, COMPARE_True), // 
-		stack9.Equals(correctStack, COMPARE_True, COMPARE_False), // 
-		stack10.Equals(MakeStack([]*Stack {MakeStack(nil, nil, 2), MakeStack(nil, nil, 2), MakeStack(nil, nil, 2)})), // 
+		stack5.Equals(MakeStack()), // 5
+		stack6.Equals(MakeStack([]*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222})})) || stack6.Equals(MakeStack([]*Stack {MakeStack([]string {"Bre", "Alex"}, []int {222, 111})})), // 6
+		stack7.Equals(correctStack, COMPARE_False, COMPARE_True), // 7
+		stack8.Equals(correctStack, COMPARE_True, COMPARE_True), // 8
+		stack9.Equals(correctStack, COMPARE_True, COMPARE_False), // 9
+		stack10.Equals(MakeStack([]*Stack {MakeStack(nil, nil, 2), MakeStack(nil, nil, 2), MakeStack(nil, nil, 2)})), // 10
+
+		// other tests
+
 	}
 
 	test_End(funcName, conditions)
