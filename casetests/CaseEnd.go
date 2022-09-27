@@ -511,6 +511,12 @@ func case_card_Equals(funcName string) {
 	cardG := MakeCard(&valVar)
 	cardH := MakeCard(&valVar)
 
+	// extra tests to ensure that if it's not a pointer test, then you don't need to use an interface argument input to test
+	nonInfVar1 := "Hey"
+	nonInfVar2 := "Hey"
+	cardUno := MakeCard(nonInfVar1)
+	cardDos := MakeCard(nonInfVar2)
+
 	conditions := []bool{
 
 		// compare by object
@@ -530,19 +536,23 @@ func case_card_Equals(funcName string) {
 
 		// test whether pointerTypes work for keys
 		cardA.Equals(cardB, POINTER_False), // 8
-		cardA.Equals(cardB, POINTER_True), // 9
+		!cardA.Equals(cardB, POINTER_True), // 9
 		!cardB.Equals(cardC, POINTER_False), // 10
-		cardB.Equals(cardC, POINTER_True), // 11
+		!cardB.Equals(cardC, POINTER_True), // 11
 		cardC.Equals(cardD, POINTER_False), // 12
 		cardC.Equals(cardD, POINTER_True), // 13
 
 		// test whether pointerTypes work for vals
 		cardE.Equals(cardF, nil, POINTER_False), // 14
-		cardE.Equals(cardF, nil, POINTER_True), // 15
+		!cardE.Equals(cardF, nil, POINTER_True), // 15
 		!cardF.Equals(cardG, nil, POINTER_False), // 16
-		cardF.Equals(cardG, nil, POINTER_True), // 17
+		!cardF.Equals(cardG, nil, POINTER_True), // 17
 		cardG.Equals(cardH, nil, POINTER_False), // 18
 		cardG.Equals(cardH, nil, POINTER_True), // 19
+		
+		// test whether we can compare not-by-pointer given we set the card keys
+		// with a non-interface (v := "Hey" RATHER THAN var v any; v = "Hey")
+		cardUno.Equals(cardDos), // 20
 		
 	}
 
@@ -555,7 +565,7 @@ func case_stack_Equals(funcName string) {
 	test_Start(funcName, showTestText)
 
 	// since we've already tested the properties of card.Equals(), and stack invokes card.Equals(),
-	// we don't need as thorough of a test for non-stack-specific parameters
+	// we don't need as thorough of a test for non stack-specific parameters
 
 	stack1 := MakeStack([]string {"Hello", "Hey"})
 	stack2 := MakeStack([]string {"Hello", "Hey"})
@@ -728,9 +738,9 @@ func Run(_showTestText bool) {
 
 	// NON-GENERALIZED FUNCTIONS
 	case_MakeCard("MakeCard") // GOOD
-	case_card_Equals("card.Equals") // BAD
+	case_card_Equals("card.Equals") // GOOD
 	// case_stack_Equals("stack.Equals") // BAD
-	// case_MakeStack("MakeStack") // GOOD
+	// case_MakeStack("MakeStack") // GOOD but needs updated to use .Equals
 	// case_MakeStackMatrix("MakeStackMatrix") // BAD
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
 	case_stack_ToArray("stack.ToArray") // GOOD
