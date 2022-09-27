@@ -340,20 +340,20 @@ func case_stack_ToMatrix(funcName string) {
 
 	test_Start(funcName, showTestText)
 	
-	mat1 := test_SampleStackMatrix().ToMatrix(1).([]any)
-	mat2 := test_SampleStackMatrix().ToMatrix(2).([][]any)
-	mat3 := test_SampleStackMatrix().ToMatrix(-1).([][]any)
+	// mat1 := test_SampleStackMatrix().ToMatrix(1)
+	// mat2 := test_SampleStackMatrix().ToMatrix(2)
+	// mat3 := test_SampleStackMatrix().ToMatrix(-1)
 
 	conditions := []bool{
-		len(mat1) == 2,
-		len(mat2) == 2,
-		len(mat3) == 2,
-		len(mat1[0].([]any)) == 0,
-		len(mat1[1].([]any)) == 0,
-		len(mat2[0]) == 2,
-		len(mat2[1]) == 2,
-		len(mat3[0]) == 2,
-		len(mat3[1]) == 2,
+		// len(mat1) == 2,
+		// len(mat2) == 2,
+		// len(mat3) == 2,
+		// len(mat1[0].([]any)) == 0,
+		// len(mat1[1].([]any)) == 0,
+		// len(mat2.([]any)[0]) == 2,
+		// len(mat2[1]) == 2,
+		// len(mat3[0]) == 2,
+		// len(mat3[1]) == 2,
 		// TODO: test using Equals function here
 	}
 
@@ -366,7 +366,7 @@ func case_stack_Empty(funcName string) {
 	test_Start(funcName, showTestText)
 
 	stack1 := test_SampleStack(true).Empty()
-	stack2 := test_SampleStackMatrix().Empty()
+	stack2 := MakeStackMatrix([]int {1, 2, 3, 4, 5, 6}, []string {"Hi", "Hey", "Hoy", "Ciao", "Heyy", "Hiya"}, []int {3, 2}).Empty()
 
 	conditions := []bool{
 		test_StackProperties(stack1, []int {0}, 1),
@@ -389,6 +389,7 @@ func case_card_Clone(funcName string) {
 		cardA.Idx == 3, // 1
 		cardA.Key == "Original", // 2
 		cardA.Val == "Original", // 3
+		
 		cardAClone.Idx == 3, // 4
 		cardAClone.Key == "New", // 5
 		cardAClone.Val == "Original", // 6
@@ -402,30 +403,25 @@ func case_stack_Clone(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	// if card.Clone() works, we expect stack.Clone() to work since it calls card.Clone(), meaning we only need to test for non parameter-related functionality
 	stackA := MakeStack([]string {"Original", "Original"}, []string {"Original", "Original"})
 	stackAClone := stackA.Clone()
-	stackAClone.Get(FIND_First).Key = "New"
-	stackAClone.Get(FIND_Last).Key = "New"
-	stackAClone.Get(FIND_First).Val = "New"
-	stackAClone.Get(FIND_Last).Val = "New"
+	stackAClone.Cards[0].Key = "New"
+	stackAClone.Cards[1].Key = "New"
+	stackAClone.Cards[0].Val = "New"
+
+	stackB := MakeStackMatrix([]string {"Original", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "Original"}, []int{2, 2})
+	stackBClone := stackB.Clone()
+	stackBClone.Cards[0].Val.(*Stack).Cards[0].Key = "New"
+	stackBClone.Cards[1].Val.(*Stack).Cards[1].Val = "New"
+
+	stackB.Print()
+	stackBClone.Print()
 
 	conditions := []bool{
-		test_StackProperties(stackA, []int {2}, 1), // 1
-
-		stackA.Get(FIND_First).Idx == 0, // 2
-		stackA.Get(FIND_Last).Idx == 1, // 3
-		stackA.Get(FIND_First).Key == "Original", // 4
-		stackA.Get(FIND_Last).Key == "Original", // 5
-		stackA.Get(FIND_First).Val == "New", // 6
-		stackA.Get(FIND_Last).Val == "New", // 7
-
-		stackAClone.Get(FIND_First).Idx == 0, // 8
-		stackAClone.Get(FIND_Last).Idx == 1, // 9
-		stackAClone.Get(FIND_First).Key == "New", // 10
-		stackAClone.Get(FIND_Last).Key == "New", // 11
-		stackAClone.Get(FIND_First).Val == "New", // 12
-		stackAClone.Get(FIND_Last).Val == "New", // 13
+		stackA.Equals(MakeStack([]string {"Original", "Original"}, []string {"Original", "Original"})), // 1
+		stackAClone.Equals(MakeStack([]string {"New", "New"}, []string {"New", "Original"})), // 2
+		stackB.Equals(MakeStackMatrix([]string {"Original", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "Original"}, []int{2, 2})), // 3
+		stackBClone.Equals(MakeStackMatrix([]string {"New", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "New"}, []int{2, 2})), // 4
 	}
 
 	test_End(funcName, conditions)
@@ -742,7 +738,7 @@ func Run(_showTestText bool) {
 	// case_stack_ToMatrix("stack.ToMatrix") // BAD
 	case_stack_Empty("stack.Empty") // GOOD
 	case_card_Clone("card.Clone") // GOOD
-	// case_stack_Clone("stack.Clone") // BAD
+	case_stack_Clone("stack.Clone") // BAD
 	// case_stack_Unique("stack.Unique") // BAD
 	// case_stack_Shuffle("stack.Shuffle") // BAD
 	// case_stack_Flip("stack.Flip") // BAD

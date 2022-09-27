@@ -11,12 +11,12 @@ import (
 
 /** Creates a card with inputted val, key, and idx
 
- @param optional `val` type{any} default nil
- @param optional `key` type{any} default nil
- @param optional `idx` type{int} default -1 no pass-by-reference
- @returns type{*Card} the newly-constructed card
- @constructs type{*Card} a newly-constructed card
- @ensures the new card will have val `val`, key `key`, and idx `idx`
+@param optional `val` type{any} default nil
+@param optional `key` type{any} default nil
+@param optional `idx` type{int} default -1 no pass-by-reference
+@returns type{*Card} the newly-constructed card
+@constructs type{*Card} a newly-constructed card
+@ensures the new card will have val `val`, key `key`, and idx `idx`
 */
 func MakeCard(variadic ...any) *Card {
 
@@ -344,7 +344,7 @@ func (stack *Stack) ToArray(variadic ...any) (arr []any) {
 	gogenerics.UnpackVariadic(variadic, &returnType)
 
 	// return
-	return stack.ToMatrix(returnType, 1).([]any)
+	return stack.ToMatrix(returnType, 1)
 
 }
 
@@ -380,15 +380,13 @@ func (stack *Stack) ToMap() (m map[any]any) {
   * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} =>
       []any{[]any{"Hi"}, []any{"Hola", "Hello"}, "Hey"}
  */
-func (stack *Stack) ToMatrix(variadic ...any) any {
+func (stack *Stack) ToMatrix(variadic ...any) (matrix []any) {
 
 	// unpack variadic into optional parameters
 	var returnType, depth any
 	gogenerics.UnpackVariadic(variadic, &returnType, &depth)
 	setRETURNDefaultIfNil(&returnType)
 	
-	var matrix []any
-
 	// update depth
 	if depth == nil {
 		depth = -1
@@ -448,30 +446,34 @@ func (stack *Stack) Empty() *Stack {
  @constructs type{*Card} clone of `card`
 */
 func (card *Card) Clone() *Card {
-
-	// init
-	clone := new(Card)
-	clone.Idx = card.Idx
-	clone.Key = card.Key
-	clone.Val = card.Val
-
+	
 	// return
-	return clone
+	return gogenerics.CloneStruct(card).(*Card)
 
 }
 
 /** Returns a clone of the given stack
 
  @receiver `stack` type{*Stack}
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
+ @param optional `depth` type{int} default -1 (deepest)
  @returns type{*Stack} stack clone
  @constructs type{*Stack} clone of `stack`
 */
-func (stack *Stack) Clone() *Stack {
+func (stack *Stack) Clone(variadic ...any) *Stack {
+
+	// unpack variadic into optional parameters
+	var pointerType, deepSearchType, depth any
+	gogenerics.UnpackVariadic(variadic, &pointerType, &deepSearchType, &depth)
+	// set defaults
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_True}
+	setDepthDefaultIfNil(&depth)
 
 	// init
 	clone := new(Stack)
 	clone.Size = stack.Size
 	clone.Depth = stack.Depth
+	// recursive loop
 	for i := range stack.Cards {
 		clone.Cards = append(clone.Cards, stack.Cards[i].Clone())
 	}

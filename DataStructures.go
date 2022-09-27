@@ -141,8 +141,8 @@ func setCOMPAREDefaultIfNil(compareType *any) {
 	}
 }
 
-func setPRINTDefaultIfNil(compareType *any) {
-	if *compareType == nil {
-		*compareType = PRINT_False
-	}
-}
+// func setPRINTDefaultIfNil(compareType *any) {
+// 	if *compareType == nil {
+// 		*compareType = PRINT_False
+// 	}
+// }
