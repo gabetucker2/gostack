@@ -218,7 +218,7 @@ func getIterator(stack *Stack, lambda func(*Card, *Stack, ...any) bool, deepSear
 	var filteredCards []*Card
 	for i := range subStack.Cards {
 		card := subStack.Cards[i]
-		if lambda(card.Clone(), subStack.Clone(CLONE_True, CLONE_True, CLONE_True)) { // use a clone card and stack
+		if lambda(card.Clone(), subStack.Clone()) { // use a clone card and stack
 			filteredCards = append(filteredCards, card)
 		}
 	}

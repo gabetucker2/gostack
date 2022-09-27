@@ -186,9 +186,6 @@ func Introduction() {
 	// set gottenData to myStack where myStack's first card is placed after its last card
 	gottenData = myStack.Move(FIND_First, ORDER_After, FIND_Last)
 
-	// set gottenData to a clone of myStack where its keys point to clones of old myStack key objects, but its values point to actual myStack val objects
-	gottenData = myStack.Clone(CLONE_True, CLONE_False)
-
 	// set gottenData to a clone of myStack which has another card appended to the end of its stack
 	gottenData = myStack.Clone().Add(MakeCard("Moth", 400), ORDER_After, FIND_Last)
 

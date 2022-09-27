@@ -381,56 +381,17 @@ func case_card_Clone(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	cardA := MakeCard("Original", "Original")
-	cardAClone := cardA.Clone(CLONE_True, CLONE_True)
+	cardA := MakeCard("Original", "Original", 3)
+	cardAClone := cardA.Clone()
 	cardAClone.Key = "New"
-	cardAClone.Val = "New"
-	
-	cardB := MakeCard("Original", "Original")
-	cardBClone := cardB.Clone(CLONE_True, CLONE_False)
-	cardBClone.Key = "New"
-	cardBClone.Val = "New"
-	fmt.Println(cardB.Val)
-	fmt.Println(cardB.Val.(string) == "New")
-	
-	cardC := MakeCard("Original", "Original")
-	cardCClone := cardC.Clone(CLONE_False, CLONE_True)
-	cardCClone.Key = "New"
-	cardCClone.Val = "New"
-	
-	cardD := MakeCard("Original", "Original")
-	cardDClone := cardD.Clone(CLONE_False, CLONE_False)
-	cardDClone.Key = "New"
-	cardDClone.Val = "New"
 
 	conditions := []bool{
-		cardA.Idx == -1,
-		cardA.Key == "Original",
-		cardA.Val == "Original",
-		cardAClone.Idx == -1,
-		cardAClone.Key == "New",
-		cardAClone.Val == "New",
-
-		cardB.Idx == -1,
-		cardB.Key == "Original",
-		cardB.Val == "New",
-		cardBClone.Idx == -1,
-		cardBClone.Key == "New",
-		cardBClone.Val == "New",
-
-		cardC.Idx == -1,
-		cardC.Key == "New",
-		cardC.Val == "Original",
-		cardCClone.Idx == -1,
-		cardCClone.Key == "New",
-		cardCClone.Val == "New",
-
-		cardD.Idx == -1,
-		cardD.Key == "New",
-		cardD.Val == "New",
-		cardDClone.Idx == -1,
-		cardDClone.Key == "New",
-		cardDClone.Val == "New",
+		cardA.Idx == 3, // 1
+		cardA.Key == "Original", // 2
+		cardA.Val == "Original", // 3
+		cardAClone.Idx == 3, // 4
+		cardAClone.Key == "New", // 5
+		cardAClone.Val == "Original", // 6
 	}
 
 	test_End(funcName, conditions)
@@ -443,7 +404,7 @@ func case_stack_Clone(funcName string) {
 
 	// if card.Clone() works, we expect stack.Clone() to work since it calls card.Clone(), meaning we only need to test for non parameter-related functionality
 	stackA := MakeStack([]string {"Original", "Original"}, []string {"Original", "Original"})
-	stackAClone := stackA.Clone(CLONE_True, CLONE_False)
+	stackAClone := stackA.Clone()
 	stackAClone.Get(FIND_First).Key = "New"
 	stackAClone.Get(FIND_Last).Key = "New"
 	stackAClone.Get(FIND_First).Val = "New"
@@ -774,13 +735,13 @@ func Run(_showTestText bool) {
 	case_card_Equals("card.Equals") // GOOD
 	case_MakeStack("MakeStack") // GOOD
 	case_stack_Equals("stack.Equals") // GOOD
-	case_MakeStackMatrix("MakeStackMatrix") // BAD
+	case_MakeStackMatrix("MakeStackMatrix") // GOOD
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
 	case_stack_ToArray("stack.ToArray") // GOOD
 	case_stack_ToMap("stack.ToMap") // GOOD
 	// case_stack_ToMatrix("stack.ToMatrix") // BAD
 	case_stack_Empty("stack.Empty") // GOOD
-	// case_card_Clone("card.Clone") // BAD
+	case_card_Clone("card.Clone") // GOOD
 	// case_stack_Clone("stack.Clone") // BAD
 	// case_stack_Unique("stack.Unique") // BAD
 	// case_stack_Shuffle("stack.Shuffle") // BAD

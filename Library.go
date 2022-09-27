@@ -442,38 +442,18 @@ func (stack *Stack) Empty() *Stack {
 }
 
 /** Returns a clone of the given card
- NOTE: Memory address of Key/Val in new card will be different even if CLONE_False, but updating one will update the other
 
  @receiver `card` type{*Card}
- @param optional `cloneKey` type{CLONE} default CLONE_False
- @param optional `cloneVal` type{CLONE} default CLONE_False
  @returns type{*Card} card clone
  @constructs type{*Card} clone of `card`
 */
-func (card *Card) Clone(variadic ...any) *Card {
-
-	// unpack variadic into optional parameters
-	var cloneKey, cloneVal any
-	gogenerics.UnpackVariadic(variadic, &cloneKey, &cloneVal)
-	// set default vals
-	setCLONEDefaultIfNil(&cloneKey)
-	setCLONEDefaultIfNil(&cloneVal)
+func (card *Card) Clone() *Card {
 
 	// init
 	clone := new(Card)
 	clone.Idx = card.Idx
-	if cloneKey == CLONE_True {
-		clone.Key = gogenerics.CloneInterface(&card.Key)
-	} else {
-		clone.Key = reflect.ValueOf(&card.Key).Elem().Interface()
-		card.Key = reflect.ValueOf(&clone.Key).Elem().Interface()
-	}
-	if cloneVal == CLONE_True {
-		clone.Val = gogenerics.CloneInterface(&card.Val)
-	} else {
-		clone.Val = reflect.ValueOf(&card.Val).Elem().Interface()
-		card.Val = reflect.ValueOf(&clone.Val).Elem().Interface()
-	}
+	clone.Key = card.Key
+	clone.Val = card.Val
 
 	// return
 	return clone
@@ -483,28 +463,17 @@ func (card *Card) Clone(variadic ...any) *Card {
 /** Returns a clone of the given stack
 
  @receiver `stack` type{*Stack}
- @optional param `cloneKeys` type{CLONE} default CLONE_True
- @optional param `cloneVals` type{CLONE} default CLONE_True
  @returns type{*Stack} stack clone
  @constructs type{*Stack} clone of `stack`
- @ensures
-  * the stack clone has the same card pointers as `stack`
-  * `cloneCards` => each Card in the stack clone is cloned
-  * `cloneKeys` => each Card in the stack's Key is cloned
-  * `cloneVals` => each Card in the stack's Val is cloned
 */
-func (stack *Stack) Clone(variadic ...any) *Stack {
-
-	// unpack variadic into optional parameters
-	var cloneKeys, cloneVals any
-	gogenerics.UnpackVariadic(variadic, &cloneKeys, &cloneVals)
+func (stack *Stack) Clone() *Stack {
 
 	// init
 	clone := new(Stack)
 	clone.Size = stack.Size
 	clone.Depth = stack.Depth
 	for i := range stack.Cards {
-		clone.Cards = append(clone.Cards, stack.Cards[i].Clone(cloneKeys, cloneVals))
+		clone.Cards = append(clone.Cards, stack.Cards[i].Clone())
 	}
 
 	// return
