@@ -488,21 +488,15 @@ func case_stack_Unique(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	myStackKeys := MakeStack(nil, []string {"Person", "Place", "Person", "Thing", "Person"})
-	myStackVals := MakeStack([]string {"Person", "Place", "Person", "Thing", "Person"})
-
-	filteredByKey := myStackKeys.Clone().Unique(TYPE_Key)
-	filteredByVal := myStackVals.Clone().Unique(TYPE_Val)
+	// test for type conditions
+	myStackKeys := MakeStack(nil, []string {"Person", "Place", "Person", "Thing", "Person"}).Unique(TYPE_Key)
+	myStackVals := MakeStack([]string {"Person", "Place", "Person", "Thing", "Person"}).Unique(TYPE_Val)
+	myStackBoth := MakeStack([]string {"Person", "Place", "Person", "Thing", "Person"}, []string {"Person", "Place", "Person", "Thing", "Person"}).Unique(TYPE_Val)
 
 	conditions := []bool{
-		filteredByKey.Size == 3, // 1
-		filteredByVal.Size == 3, // 2
-		filteredByKey.Cards[0].Key == "Person", // 3
-		filteredByKey.Cards[1].Key == "Place", // 4
-		filteredByKey.Cards[2].Key == "Thing", // 5
-		filteredByVal.Cards[0].Val == "Person", // 6
-		filteredByVal.Cards[1].Val == "Place", // 7
-		filteredByVal.Cards[2].Val == "Thing", // 8
+		myStackKeys.Equals(MakeStack(nil, []string {"Person", "Place", "Thing"})), // 1
+		myStackVals.Equals(MakeStack([]string {"Person", "Place", "Thing"})), // 2
+		myStackBoth.Equals(MakeStack([]string {"Person", "Place", "Thing"}, []string {"Person", "Place", "Thing"})), // 3
 	}
 
 	test_End(funcName, conditions)
@@ -672,11 +666,21 @@ func case_stack_Shuffle(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	
+	// if there's no issue, there's a 1/10! chance of a false positive
+	// test for probable shuffle
+	stackA := MakeStack([]int {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}).Shuffle()
+
+	// if there's an issue, you will have to output a few times to catch it
+	// test for definite shuffle
+	stackB := MakeStack([]int {1, 2}).Shuffle(true)
 
 	conditions := []bool{
 		
-		
+		// test for probable shuffle
+		!stackA.Equals(MakeStack([]int {1, 2, 3, 4, 5, 6, 7, 8, 9, 10})), // 1
+
+		// test for definite shuffle
+		stackB.Equals(MakeStack([]int {2, 1})), // 2
 
 	}
 
@@ -797,8 +801,7 @@ func Run(_showTestText bool) {
 	case_stack_Empty("stack.Empty") // GOOD
 	case_card_Clone("card.Clone") // GOOD
 	case_stack_Clone("stack.Clone") // GOOD
-	// case_stack_Unique("stack.Unique") // BAD
-	// case_stack_Shuffle("stack.Shuffle") // BAD
+	case_stack_Shuffle("stack.Shuffle") // GOOD
 	case_card_Print("card.Print") // GOOD
 	case_stack_Print("stack.Print") // GOOD
 	// case_stack_Lambda("stack.Lambda") // BAD
@@ -821,5 +824,6 @@ func Run(_showTestText bool) {
 	// NON-GENERALIZED FUNCTIONS (DEPENDENT ON GENERALIZED FUNCTIONS)
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD - update to just use the get() function
 	// case_stack_Inverse("stack.Inverse") // BAD
+	// case_stack_Unique("stack.Unique") // BAD
 
 }

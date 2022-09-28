@@ -522,33 +522,16 @@ func (stack *Stack) Clone(variadic ...any) *Stack {
  Stack{"Hi", "Hey", "Hello", "Hi", "Hey", "Howdy"}.Unique(TYPE_Val) => Stack{"Hi", "Hey", "Hello", "Howdy"}
 
  @receiver `stack` type{*Stack}
- @param `typeType` type{TYPE}
- @param optional `pointerType` type{POINTER} default POINTER_False
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int} default -1 (deepest)
+ @param `uniqueType` type{TYPE}
  @returns `stack`
- @updates `stack` to have no repeating values between field `typeType`
- @requires `stack.Clone()` has been implemented
- @ensures
-  * IF no deepSearch
-      removes repeat cards from stack
-    ELSE
-	  removes cards matching other cards within the scope of each substack
-	    For instance, Stack{Stack{1, 2, 1}, Stack{1, 2}}.Unique => Stack{Stack{1, 2}, Stack{1, 2}}
+ @updates `stack` to have no repeating values between field `uniqueType`
  */
-func (stack *Stack) Unique(typeType TYPE, variadic ...any) *Stack {
+func (stack *Stack) Unique(uniqueType TYPE) *Stack {
 
-	// unpack variadic into optional parameters
-	var pointerType, deepSearchType, depth, uniqueType any
-	gogenerics.UnpackVariadic(variadic, &pointerType, &deepSearchType, &depth, &uniqueType)
-
-	// allow deepSearchHandler to handle Unique
-	*stack = *stack.deepSearchHandler("Unique", false, FIND_All, nil, nil, pointerType, deepSearchType, depth, typeType, uniqueType, nil, nil, nil, nil, nil, nil, nil, nil, nil)
-
-	// set properties
-	stack.setStackProperties()
-
-	return stack
+	return stack.RemoveMany(FIND_Lambda, func(card *Card) bool {
+		// TODO: manage working memory to add every card to the stack for which no previous card has the same uniqueType value; have nested for-loop structure
+		return true
+	})
 
 }
 
@@ -750,7 +733,6 @@ func (stack *Stack) Shuffle(variadic ...any) *Stack {
 		// pseudo-randomize seed
 		rand.Seed(time.Now().UnixNano())
 
-		////////////////////////////////////// NEED A DEEP IMPLEMENTATION
 		// shuffle
 		rand.Shuffle(stack.Size, func(i, j int) { stack.Cards[i], stack.Cards[j] = stack.Cards[j], stack.Cards[i] })
 		
@@ -900,8 +882,8 @@ func (stack *Stack) Lambda(lambda any, variadic ...any) (ret any) {
 			add to `stack` from `insert.Cards`
 		else if `overrideStackConversion`:
 			add the `insert` stack to `stack` as the val of a card
- @returns `stack` if cards were added OR nil if no cards were added (due to invalid find)
  @updates `stack` to have new cards before/after each designated position
+ @returns `stack` if cards were added OR nil if no cards were added (due to invalid find)
  @requires `stack.Clone()` has been implemented
  */
 func (stack *Stack) Add(insert any, variadic ...any) *Stack {
@@ -932,6 +914,7 @@ func (stack *Stack) Add(insert any, variadic ...any) *Stack {
  @param optional `deepSearchType_to` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth_from` type{int} default -1 (deepest)
  @param optional `depth_to` type{int} default -1 (deepest)
+ @updates `stack` if move was performed
  @returns `stack` if moved OR nil if no move occurred (due to bad find)
  @requires you are not moving a stack to a location within that own stack
  @ensures a stack of cards, or individual cards, can be targeted
@@ -943,15 +926,13 @@ func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, 
 	gogenerics.UnpackVariadic(variadic, &findData_from, &findData_to, &pointerType_from, &pointerType_to, &deepSearchType_from, &deepSearchType_to, &depth_from, &depth_to)
 
 	// 1) Get the cards to move
-	from := stack.ExtractMany(findType_from, findData_from, pointerType_from, RETURN_Cards, deepSearchType_from, depth_from)
+	from := stack.Clone().ExtractMany(findType_from, findData_from, pointerType_from, RETURN_Cards, deepSearchType_from, depth_from)
+
 	// 2) Get the card to put froms before/after depending on whether before or after
 	var toCard *Card
 	toStack := stack.GetMany(findType_to, findData_to, RETURN_Cards, pointerType_to, CLONE_False, CLONE_False, CLONE_False, deepSearchType_to, depth_to)
-	if orderType == ORDER_After {
-		toCard = toStack.Get(FIND_Last)
-	} else if orderType == ORDER_Before {
-		toCard = toStack.Get(FIND_First)
-	}
+	toCard = gogenerics.IfElse(orderType == ORDER_After, toStack.Get(FIND_Last), toStack.Get(FIND_First)).(*Card)
+	
 	// 3) Insert 2 to 1 (works since to.Idx is procedurally updated by ExtractMany())
 	stack.Add(from, orderType, FIND_Idx, toCard.Idx, pointerType_to, deepSearchType_to, depth_to)
 
@@ -973,8 +954,8 @@ func (stack *Stack) Move(findType_from FIND, orderType ORDER, findType_to FIND, 
  @param optional `deepSearchType_second` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth_first` type{int} default -1 (deepest)
  @param optional `depth_second` type{int} default -1 (deepest)
- @updates `stack`
  @returns `stack` if moved OR nil if no move occurred (due second bad find)
+ @updates `stack`
  @requires you are not swapping a stack with a location within that own stack
  @ensures a stack of cards, or individual cards, can be targeted
  */
@@ -1114,7 +1095,7 @@ func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
  @returns type{*Card} a clone of extracted card OR nil if found no cards
- @updates first found card to `replaceData`
+ @updates first found card to `replaceData` in `stack`
  @requires `stack.Get()` has been implemented
  @ensures IF `replaceData` is nil and `replaceType is REPLACE_Card`, the card will be removed from `stack`
  */
@@ -1156,7 +1137,7 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceData any, findType FIND,
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
  @returns type{*Stack} a stack whose values are the extracted cards pre-update (if find fails, then an empty stack)
- @updates all found cards to `replaceData`
+ @updates all found cards to `replaceData` in `stack`
  @requires `stack.GetMany()` has been implemented
  @ensures IF `replaceData` is nil and `replaceType is REPLACE_Card`, the cards found will be removed from `stack`
  */
@@ -1226,7 +1207,7 @@ func (stack *Stack) Update(replaceType REPLACE, replaceData any, findType FIND, 
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
  @returns `stack`
- @updates  the found cards in `stack`
+ @updates the found cards in `stack`
  @requires `stack.ReplaceMany()` has been implemented
  @ensures IF `replaceData` is nil and `replaceType is REPLACE_Card`, the cards found will be removed from `stack`
  */
