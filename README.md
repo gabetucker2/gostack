@@ -88,6 +88,8 @@
  >>>
  >>>> [stack.ToMatrix(...)](#ToMatrix)
  >>>
+ >>>> [stack.Duplicate(...)](#Duplicate)
+ >>>
  >>>> [stack.Empty()](#Empty)
  >>>
  >>>> [card.Clone(...)](#Clone)
@@ -314,6 +316,7 @@
  * **stack.ToArray()**
  * **stack.ToMap()**
  * **stack.ToMatrix(...depth)**
+ * **stack.Duplicate()**
  * **stack.Empty()**
  * **card.Clone(...cloneKey, ...cloneVal)**
  * **stack.Clone(...cloneCards, ...cloneKeys, ...cloneVals)**
@@ -710,6 +713,19 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
   * new map keys and values correspond to `stack` keys and values
   * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} =>
       []any{[]any{"Hi"}, []any{"Hola", "Hello"}, "Hey"}
+ ```
+ 
+<h3 name = "Duplicate">Duplicate</h3>
+ 
+ `stack.Duplicate(n ...int)`
+ ```
+ Adds the cards in `stack` to itself `n` - 1 times
+  (duplicate 4 means 3 duplicates made; duplicate 1 means don't duplicate; duplicate 0 means empty)
+ 
+ @receiver `stack` type{*Stack}
+ @param optional `n` type{int} default 2
+ @updates `stack`
+ @returns `stack`
  ```
  
 <h3 name = "Empty">Empty</h3>

@@ -53,7 +53,8 @@ func MakeCard(variadic ...any) *Card {
       |`input1`| == |`input2`|
  @ensures
   * repeats the function filling `repeats` (or, if nil or under 0, 1) amount of times
-  * IF `input1` is passed
+  * assuming all mentions of array are interchangeable with *Stack:
+    IF `input1` is passed
       IF `input1` is a map
         unpack the map into new cards with corresponding keys and vals
       ELSEIF `input1` is an array and `input2` is not passed/nil
@@ -94,12 +95,18 @@ func MakeStack(variadic ...any) *Stack {
 			if input2 == nil {
 				matrixShape = 1
 			} else {
-				matrixShape = len(gogenerics.UnpackArray(input2))
+				if reflect.ValueOf(input2).Kind() == reflect.Ptr {
+					matrixShape = input2.(*Stack).Size
+				} else {
+					matrixShape = len(gogenerics.UnpackArray(input2))
+				}
 			}
 		} else {
 			switch reflect.ValueOf(input1).Kind() {
 			case reflect.Map:
 				matrixShape = len(gogenerics.UnpackMap(input1))
+			case reflect.Ptr:
+				matrixShape = input1.(*Stack).Size
 			default: // reflect.Array OR reflect.Slice
 				matrixShape = len(gogenerics.UnpackArray(input1))
 			}
@@ -134,7 +141,8 @@ func MakeStack(variadic ...any) *Stack {
   * IF `input1` and `input2` are both passed as arguments
       |`input1`| == |`input2`|
  @ensures
-  * IF no `matrixShape` is passed
+  * assuming all mentions of array are interchangeable with *Stack:
+    IF no `matrixShape` is passed
       treating `input1`/`input2` as matrices/a map of matrices:
       IF `input1` is passed
         IF `input1` is a map
@@ -200,7 +208,14 @@ func MakeStackMatrix(variadic ...any) *Stack {
 			// ELSEIF `input1` is an array (or slice)...
 			default:
 
-				input1Array := gogenerics.UnpackArray(input1)
+				var input1Array []any
+				if reflect.ValueOf(input1).Kind() == reflect.Ptr {
+					for _, c := range input1.(*Stack).Cards {
+						input1Array = append(input1Array, c.Val)
+					}
+				} else {
+					input1Array = gogenerics.UnpackArray(input1)
+				}
 
 				// ...and `input2` is not passed
 				if input2 == nil {
@@ -208,7 +223,7 @@ func MakeStackMatrix(variadic ...any) *Stack {
 					// IF no `matrixShape` is passed
 					if matrixShape == nil {
 						// unpack values from `input1` into matrix of shape `inputx`
-						stack.makeStackMatrixFromND(nil, input1)
+						stack.makeStackMatrixFromND(nil, input1Array)
 					
 					// ELSEIF `matrixShape` is passed
 					} else {
@@ -221,12 +236,19 @@ func MakeStackMatrix(variadic ...any) *Stack {
 				// ...and `input2` is an array
 				} else {
 
-					input2Array := gogenerics.UnpackArray(input2)
+					var input2Array []any
+					if reflect.ValueOf(input2).Kind() == reflect.Ptr {
+						for _, c := range input2.(*Stack).Cards {
+							input2Array = append(input2Array, c.Val)
+						}
+					} else {
+						input2Array = gogenerics.UnpackArray(input2)
+					}
 					
 					// IF no `matrixShape` is passed
 					if matrixShape == nil {
 						// unpack keys from `input1` and values from `input2` into matrix of shape `inputx`
-						stack.makeStackMatrixFromND(input1, input2)
+						stack.makeStackMatrixFromND(input1Array, input2Array)
 						
 					// ELSEIF `matrixShape` is passed
 					} else {
@@ -241,12 +263,19 @@ func MakeStackMatrix(variadic ...any) *Stack {
 		// ELSEIF `input1` is nil and `input2` is an array
 		} else {
 
-			input2Array := gogenerics.UnpackArray(input2)
+			var input2Array []any
+			if reflect.ValueOf(input2).Kind() == reflect.Ptr {
+				for _, c := range input2.(*Stack).Cards {
+					input2Array = append(input2Array, c.Val)
+				}
+			} else {
+				input2Array = gogenerics.UnpackArray(input2)
+			}
 			
 			// IF no `matrixShape` is passed
 			if matrixShape == nil {
 				// unpack keys from `input2` into matrix of shape `inputx`
-				stack.makeStackMatrixFromND(input2, nil)
+				stack.makeStackMatrixFromND(input2Array, nil)
 
 			// ELSEIF `matrixShape` is passed
 			} else {
@@ -429,13 +458,44 @@ func (stack *Stack) ToMatrix(variadic ...any) (matrix []any) {
 
 }
 
+/** Adds the cards in `stack` to itself `n` - 1 times
+  (duplicate 4 means 3 duplicates made; duplicate 1 means don't duplicate; duplicate 0 means empty)
+ 
+ @receiver `stack` type{*Stack}
+ @param optional `n` type{int} default 2
+ @updates `stack`
+ @returns `stack`
+ */
+ func (stack *Stack) Duplicate(variadic ...any) *Stack {
+
+	// unpack variadic into optional parameters
+	var n any
+	gogenerics.UnpackVariadic(variadic, &n)
+	if n == nil {
+		n = 2
+	}
+
+	var cardsSave []*Card
+	cardsSave = append(cardsSave, stack.Cards...)
+	stack.Cards = []*Card {}
+
+	for i := 0; i < n.(int); i++ {
+		stack.Cards = append(stack.Cards, cardsSave...)
+	}
+
+	stack.setStackProperties()
+
+	return stack
+
+ }
+
 /** Makes a card with inputted vals and keys
 
  @receiver `stack` type{*Stack}
  @returns `stack`
  @updates `stack` to be empty
 */
-func (stack *Stack) Empty() *Stack {
+ func (stack *Stack) Empty() *Stack {
 
 	// clear stack.Cards
 	stack.Size = 0

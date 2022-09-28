@@ -112,6 +112,9 @@ func case_MakeStack(funcName string) {
 	stack13 := MakeStack([]any {&name})
 	gogenerics.SetPointer(stack12.Cards[0].Val, "Henry")
 
+	// stack input to stack tests
+	stack14 := MakeStack(MakeStack([]string {"Hi1"}, []string {"Hello1"}), MakeStack([]string {"Hi2"}, []string {"Hello2"}))
+
 	// make array of arrVals times three (what stack5 should yield)
 	var arrValsTimesThree []any
 	for i := 0; i < 3; i++ {
@@ -161,6 +164,9 @@ func case_MakeStack(funcName string) {
 
 		gogenerics.GetPointer(stack12.Cards[0].Val) == "Henry", // 28
 		gogenerics.GetPointer(stack13.Cards[0].Val) == "Henry", // 29
+
+		stack14.Cards[0].Key == "Hello1", // 30
+		stack14.Cards[0].Val == "Hello2", // 31
 	}
 	
 	test_End(funcName, conditions)
@@ -214,16 +220,6 @@ func case_MakeStackMatrix(funcName string) {
 	// irregular depth
 	stack11 := MakeStackMatrix(irregularDepth)
 
-	stack7Test := MakeStack(nil, nil, 3)
-	for i := 0; i < 3; i++ {
-		subStack := MakeStack(nil, nil, 2)
-		stack7Test.Cards[i].Val = subStack
-		for j := 0; j < 2; j++ {
-			c := subStack.Cards[j]
-			c.Val = arrShallowVals[i*2 + j]
-		}
-	}
-
 	conditions := []bool{
 
 		// deep tests
@@ -240,7 +236,7 @@ func case_MakeStackMatrix(funcName string) {
 		stack9.Equals(correctStack, COMPARE_True, COMPARE_False), // 9
 		stack10.Equals(MakeStack([]*Stack {MakeStack(nil, nil, 2), MakeStack(nil, nil, 2), MakeStack(nil, nil, 2)})), // 10
 
-		// other tests
+		// irregular depth
 		stack11.Equals(MakeStack([]any {10, MakeStack([]int {20, 30}), MakeStack([]*Stack {MakeStack([]int {40, 50}), MakeStack([]any {60, 70})} ) } )), // 11
 
 	}
@@ -395,6 +391,24 @@ func case_stack_ToMatrix(funcName string) {
 		MakeStackMatrix(matIdxs).Equals(MakeStackMatrix(matIdxsCorrect)), // 7
 		MakeStackMatrix(matCards).Equals(MakeStackMatrix(matCardsCorrect)), // 8
 		
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_Duplicate(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	stack1 := MakeStack([]string {"Hey", "Hi"}).Duplicate(0)
+	stack2 := MakeStack([]string {"Hey", "Hi"}).Duplicate(1)
+	stack3 := MakeStack([]string {"Hey", "Hi"}).Duplicate(2)
+
+	conditions := []bool{
+		stack1.Equals(MakeStack()), // 1
+		stack2.Equals(MakeStack([]string {"Hey", "Hi"})), // 2
+		stack3.Equals(MakeStack([]string {"Hey", "Hi", "Hey", "Hi"})), // 3
 	}
 
 	test_End(funcName, conditions)
@@ -798,6 +812,7 @@ func Run(_showTestText bool) {
 	case_stack_ToArray("stack.ToArray") // GOOD
 	case_stack_ToMap("stack.ToMap") // GOOD
 	case_stack_ToMatrix("stack.ToMatrix") // GOOD
+	case_stack_Duplicate("stack.Duplicate") // BAD
 	case_stack_Empty("stack.Empty") // GOOD
 	case_card_Clone("card.Clone") // GOOD
 	case_stack_Clone("stack.Clone") // GOOD
