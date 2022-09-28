@@ -458,6 +458,34 @@ func (stack *Stack) ToMatrix(variadic ...any) (matrix []any) {
 
 }
 
+/** Returns the shape of this stackMatrix, or nil if irregular shape
+
+ @receiver `stack` type{*Stack}
+ @returns type{[]int}
+ */
+ func (stack *Stack) Shape() (shape []int) {
+
+	// body
+	if stack.IsRegular() {
+
+		shape = append(shape, stack.Size)
+
+		if stack.Size > 0 {
+			_, hasSubstack := stack.Cards[0].Val.(*Stack)
+			if hasSubstack {
+				shape = append(shape, stack.Cards[0].Val.(*Stack).Shape()...)
+			}
+		}
+
+	} else {
+		shape = nil
+	}
+
+	// return
+	return shape
+
+}
+
 /** Returns whether the matrix is of a regular shape
 
  @receiver `stack` type{*Stack}
@@ -472,10 +500,13 @@ func (stack *Stack) ToMatrix(variadic ...any) (matrix []any) {
  */
  func (stack *Stack) IsRegular() bool {
 
+	// init
 	test := true
 	normDepth := -1
 	normSize := -1
 	normSubstack := -1
+
+	// body
 	for _, c := range stack.Cards {
 		substack, hasSubstack := c.Val.(*Stack)
 

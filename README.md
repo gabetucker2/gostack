@@ -86,15 +86,9 @@
  >>>
  >>>> [stack.ToMatrix(...)](#ToMatrix)
  >>>
- >>>> [card.ToPointer(...)](#ToPointer)
- >>>>
- >>>> [stack.ToPointer(...)](#ToPointer)
- >>>
- >>>> [card.ToObject(...)](#ToObject)
- >>>>
- >>>> [stack.ToObject(...)](#ToObject)
- >>>
  >>>> [stack.IsRegular()](#IsRegular)
+ >>>
+ >>>> [stack.Shape()](#Shape)
  >>>
  >>>> [stack.Duplicate(...)](#Duplicate)
  >>>
@@ -320,11 +314,8 @@
  * **stack.ToArray()**
  * **stack.ToMap()**
  * **stack.ToMatrix(...depth)**
- * **card.ToPointer(.....todo: add)**
- * **stack.ToPointer(.....todo: add)**
- * **card.ToObject(.....todo: add)**
- * **stack.ToObject(.....todo: add)**
  * **stack.IsRegular()**
+ * **stack.Shape()**
  * **stack.Duplicate(...n)**
  * **stack.Empty()**
  * **card.Clone(...cloneKey, ...cloneVal)**
@@ -714,30 +705,6 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
       []any{[]any{"Hi"}, []any{"Hola", "Hello"}, "Hey"}
  ```
  
-<h3 name = "ToPointer">ToPointer</h3>
- 
- `card.ToPointer()`
- ```
-
- ```
- 
- `stack.ToPointer()`
- ```
-
- ```
- 
-<h3 name = "ToObject">ToObject</h3>
- 
- `card.ToObject()`
- ```
-
- ```
- 
- `stack.ToObject()`
- ```
-
- ```
- 
 <h3 name = "IsRegular">IsRegular</h3>
  
  `stack.IsRegular()`
@@ -753,6 +720,13 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
        {{1, 2}, {3, 4}} == regular/true
 	   {1, 3} == regular/true
 	   {} == regular/true
+ ```
+ 
+<h3 name = "Shape">Shape</h3>
+ 
+ `stack.Shape()`
+ ```
+
  ```
  
 <h3 name = "Duplicate">Duplicate</h3>

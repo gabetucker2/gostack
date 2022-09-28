@@ -396,6 +396,24 @@ func case_stack_ToMatrix(funcName string) {
 	
 }
 
+func case_stack_Shape(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	stack1 := MakeStackMatrix([]int {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, nil, []int {2, 2, 5})
+	stack2 := MakeStack()
+	stack3 := MakeStack([]string {"Hi", "Hey"})
+
+	conditions := []bool{
+		gogenerics.SlicesEqual(stack1.Shape(), []int {2, 2, 5}), // 1
+		gogenerics.SlicesEqual(stack2.Shape(), []int {0}), // 2
+		gogenerics.SlicesEqual(stack3.Shape(), []int {2}), // 3
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
 func case_stack_IsRegular(funcName string) {
 
 	test_Start(funcName, showTestText)
@@ -818,7 +836,7 @@ func case_stack_Lambda(funcName string) {
 func Run(_showTestText bool) {
 
 	showTestText = _showTestText
-	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Inverse, case_card_Print, case_stack_Print, case_stack_Lambda)
+	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Inverse, case_card_Print, case_stack_Print, case_stack_Lambda)
 
 	fmt.Println("- BEGINNING TESTS (fix failures/errors in descending order)")
 
@@ -832,6 +850,7 @@ func Run(_showTestText bool) {
 	case_stack_ToMap("stack.ToMap") // GOOD
 	case_stack_ToMatrix("stack.ToMatrix") // GOOD
 	case_stack_IsRegular("stack.IsRegular") // GOOD
+	case_stack_Shape("stack.Shape") // GOOD
 	case_stack_Duplicate("stack.Duplicate") // GOOD
 	case_stack_Empty("stack.Empty") // GOOD
 	case_card_Clone("card.Clone") // GOOD
