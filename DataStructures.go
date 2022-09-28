@@ -21,7 +21,8 @@ type POINTER int
 type CLONE int
 type DEEPSEARCH int
 type COMPARE int
-type PRINT int
+type CONVERT int
+//type PRINT int
 
 const (
 	RETURN_Idxs RETURN = iota
@@ -89,9 +90,14 @@ const (
 )
 
 const (
+	CONVERT_False CONVERT = iota
+	CONVERT_True
+)
+
+/*const (
 	PRINT_False PRINT = iota
 	PRINT_True
-)
+)*/
 
 func setRETURNDefaultIfNil(returnType *any) {
 	if *returnType == nil {

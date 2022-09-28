@@ -70,8 +70,6 @@
  >>>>> [DEEPSEARCH](#DEEPSEARCH)
  >>>>
  >>>>> [COMPARE](#COMPARE)
- >>>>
- >>>>> [PRINT](#PRINT)
  >>>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
  >>>> [MakeCard(...)](#MakeCard)
@@ -88,6 +86,14 @@
  >>>
  >>>> [stack.ToMatrix(...)](#ToMatrix)
  >>>
+ >>>> [card.ToPointer(...)](#ToPointer)
+ >>>>
+ >>>> [stack.ToPointer(...)](#ToPointer)
+ >>>
+ >>>> [card.ToObject(...)](#ToObject)
+ >>>>
+ >>>> [stack.ToObject(...)](#ToObject)
+ >>>
  >>>> [stack.IsRegular()](#IsRegular)
  >>>
  >>>> [stack.Duplicate(...)](#Duplicate)
@@ -95,13 +101,13 @@
  >>>> [stack.Empty()](#Empty)
  >>>
  >>>> [card.Clone(...)](#Clone)
- >>>
+ >>>>
  >>>> [stack.Clone(...)](#Clone)
  >>>
  >>>> [stack.Unique(...)](#Unique)
  >>>
  >>>> [card.Equals(...)](#Equals)
- >>>
+ >>>>
  >>>> [stack.Equals(...)](#Equals)
  >>>
  >>>> [stack.Shuffle()](#Shuffle)
@@ -109,7 +115,7 @@
  >>>> [stack.Inverse()](#Inverse)
  >>>
  >>>> [card.Print()](#Print)
- >>>
+ >>>>
  >>>> [stack.Print()](#Print)
  >>>
  >>>> [stack.Lambda(...)](#Lambda)
@@ -305,10 +311,6 @@
  > * COMPARE_True
  > * COMPARE_False
 
- > **PRINT**
- > * PRINT_True
- > * PRINT_False
-
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
  * **MakeCard(...idx, ...key, ...val)**
@@ -318,6 +320,10 @@
  * **stack.ToArray()**
  * **stack.ToMap()**
  * **stack.ToMatrix(...depth)**
+ * **card.ToPointer(.....todo: add)**
+ * **stack.ToPointer(.....todo: add)**
+ * **card.ToObject(.....todo: add)**
+ * **stack.ToObject(.....todo: add)**
  * **stack.IsRegular()**
  * **stack.Duplicate(...n)**
  * **stack.Empty()**
@@ -562,16 +568,6 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
  >> COMPARE_False
  >>> default
 
-<h4 name = "PRINT">PRINT</h4>
-
- This is an enum intended to make it easy to enable terminal printing to debug errors using certain gostack functions.
-
- > ***PRINT***
- >> PRINT_True
- >>
- >> PRINT_False
- >>> default
-
 <h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>
 
 <h3 name = "MakeCard">MakeCard</h3>
@@ -716,6 +712,30 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
   * new map keys and values correspond to `stack` keys and values
   * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} =>
       []any{[]any{"Hi"}, []any{"Hola", "Hello"}, "Hey"}
+ ```
+ 
+<h3 name = "ToPointer">ToPointer</h3>
+ 
+ `card.ToPointer()`
+ ```
+
+ ```
+ 
+ `stack.ToPointer()`
+ ```
+
+ ```
+ 
+<h3 name = "ToObject">ToObject</h3>
+ 
+ `card.ToObject()`
+ ```
+
+ ```
+ 
+ `stack.ToObject()`
+ ```
+
  ```
  
 <h3 name = "IsRegular">IsRegular</h3>
