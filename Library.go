@@ -458,6 +458,57 @@ func (stack *Stack) ToMatrix(variadic ...any) (matrix []any) {
 
 }
 
+/** Returns whether the matrix is of a regular shape
+
+ @receiver `stack` type{*Stack}
+ @returns type{bool}
+ @ensures
+   * example:
+       {{1, 2}, 3} == irregular/false
+       {{1, 2}, {3}} == irregular/false
+       {{1, 2}, {3, 4}} == regular/true
+	   {1, 3} == regular/true
+	   {} == regular/true
+ */
+ func (stack *Stack) IsRegular() bool {
+
+	test := true
+	normDepth := -1
+	normSize := -1
+	normSubstack := -1
+	for _, c := range stack.Cards {
+		substack, hasSubstack := c.Val.(*Stack)
+
+		if hasSubstack {
+			if normDepth == -1 {
+				normDepth = substack.Depth
+			} else if normDepth != substack.Depth {
+				test = false
+			}
+			if normSize == -1 {
+				normSize = substack.Size
+			} else if normSize != substack.Size {
+				test = false
+			}
+			if normSubstack == -1 {
+				normSubstack = 0
+			} else if normSubstack != 0 {
+				test = false
+			}
+			test = test && substack.IsRegular()
+		} else {
+			if normSubstack == -1 {
+				normSubstack = 1
+			} else if normSubstack != 1 {
+				test = false
+			}
+		}
+	}
+
+	return test
+
+}
+
 /** Adds the cards in `stack` to itself `n` - 1 times
   (duplicate 4 means 3 duplicates made; duplicate 1 means don't duplicate; duplicate 0 means empty)
  
@@ -487,7 +538,7 @@ func (stack *Stack) ToMatrix(variadic ...any) (matrix []any) {
 
 	return stack
 
- }
+}
 
 /** Makes a card with inputted vals and keys
 

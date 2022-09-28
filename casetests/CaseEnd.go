@@ -397,6 +397,37 @@ func case_stack_ToMatrix(funcName string) {
 	
 }
 
+func case_stack_IsRegular(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// {{1, 2}, 3} == irregular/false
+	stack1 := MakeStackMatrix([]any {[]any {1, 2}, 3})
+
+	// {{1, 2}, {3}} == irregular/false
+	stack2 := MakeStackMatrix([]any {[]any {1, 2}, []any {3}})
+
+	// {{1, 2}, {3, 4}} == regular/true
+	stack3 := MakeStackMatrix([]any {[]any {1, 2}, []any {3, 4}})
+
+	// {1, 3} == regular/true
+	stack4 := MakeStackMatrix([]any {1, 3})
+
+	// {} == regular/true
+	stack5 := MakeStackMatrix([]any {})
+
+	conditions := []bool{
+		!stack1.IsRegular(), // 1
+		!stack2.IsRegular(), // 2
+		stack3.IsRegular(), // 3
+		stack4.IsRegular(), // 4
+		stack5.IsRegular(), // 5
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
 func case_stack_Duplicate(funcName string) {
 
 	test_Start(funcName, showTestText)
@@ -788,8 +819,7 @@ func case_stack_Lambda(funcName string) {
 func Run(_showTestText bool) {
 
 	showTestText = _showTestText
-	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_Duplicate, case_stack_Empty,
-		case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Inverse, case_card_Print, case_stack_Print, case_stack_Lambda)
+	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Inverse, case_card_Print, case_stack_Print, case_stack_Lambda)
 
 	fmt.Println("- BEGINNING TESTS (fix failures/errors in descending order)")
 
@@ -802,7 +832,8 @@ func Run(_showTestText bool) {
 	case_stack_ToArray("stack.ToArray") // GOOD
 	case_stack_ToMap("stack.ToMap") // GOOD
 	case_stack_ToMatrix("stack.ToMatrix") // GOOD
-	case_stack_Duplicate("stack.Duplicate") // BAD
+	case_stack_IsRegular("stack.IsRegular") // GOOD
+	case_stack_Duplicate("stack.Duplicate") // GOOD
 	case_stack_Empty("stack.Empty") // GOOD
 	case_card_Clone("card.Clone") // GOOD
 	case_stack_Clone("stack.Clone") // GOOD

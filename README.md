@@ -88,6 +88,8 @@
  >>>
  >>>> [stack.ToMatrix(...)](#ToMatrix)
  >>>
+ >>>> [stack.IsRegular()](#IsRegular)
+ >>>
  >>>> [stack.Duplicate(...)](#Duplicate)
  >>>
  >>>> [stack.Empty()](#Empty)
@@ -316,6 +318,7 @@
  * **stack.ToArray()**
  * **stack.ToMap()**
  * **stack.ToMatrix(...depth)**
+ * **stack.IsRegular()**
  * **stack.Duplicate(...n)**
  * **stack.Empty()**
  * **card.Clone(...cloneKey, ...cloneVal)**
@@ -713,6 +716,13 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
   * new map keys and values correspond to `stack` keys and values
   * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} =>
       []any{[]any{"Hi"}, []any{"Hola", "Hello"}, "Hey"}
+ ```
+ 
+<h3 name = "IsRegular">IsRegular</h3>
+ 
+ `stack.IsRegular()`
+ ```
+
  ```
  
 <h3 name = "Duplicate">Duplicate</h3>
