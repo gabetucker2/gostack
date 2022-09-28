@@ -722,7 +722,17 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
  
  `stack.IsRegular()`
  ```
+ Returns whether the matrix is of a regular shape
 
+ @receiver `stack` type{*Stack}
+ @returns type{bool}
+ @ensures
+   * example:
+       {{1, 2}, 3} == irregular/false
+       {{1, 2}, {3}} == irregular/false
+       {{1, 2}, {3, 4}} == regular/true
+	   {1, 3} == regular/true
+	   {} == regular/true
  ```
  
 <h3 name = "Duplicate">Duplicate</h3>
