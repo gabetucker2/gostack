@@ -446,9 +446,23 @@ func (stack *Stack) Empty() *Stack {
  @constructs type{*Card} clone of `card`
 */
 func (card *Card) Clone() *Card {
+
+	// init
+	clone := gogenerics.CloneObject(card).(*Card)
+	clone.Idx = card.Idx
+	if gogenerics.IsPointer(card.Key) {
+		clone.Key = gogenerics.CloneObject(card.Key)
+	} else {
+		clone.Key = card.Key
+	}
+	if gogenerics.IsPointer(card.Val) {
+		clone.Val = gogenerics.CloneObject(card.Val)
+	} else {
+		clone.Val = card.Val
+	}
 	
 	// return
-	return gogenerics.CloneStruct(card).(*Card)
+	return clone
 
 }
 
@@ -463,11 +477,13 @@ func (card *Card) Clone() *Card {
 func (stack *Stack) Clone(variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var pointerType, deepSearchType, depth any
-	gogenerics.UnpackVariadic(variadic, &pointerType, &deepSearchType, &depth)
+	var deepSearchType, depth any
+	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth)
 	// set defaults
-	if deepSearchType == nil {deepSearchType = DEEPSEARCH_True}
 	setDepthDefaultIfNil(&depth)
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_True}
+	if depth == -1 || depth.(int) > stack.Depth { depth = stack.Depth }
+	if deepSearchType == DEEPSEARCH_False { depth = 1 }
 
 	// init
 	clone := new(Stack)
@@ -475,7 +491,17 @@ func (stack *Stack) Clone(variadic ...any) *Stack {
 	clone.Depth = stack.Depth
 	// recursive loop
 	for i := range stack.Cards {
-		clone.Cards = append(clone.Cards, stack.Cards[i].Clone())
+		newCard := stack.Cards[i].Clone()
+		switch stack.Cards[i].Val.(type) {
+		case *Stack:
+			newCard.Val = stack.Cards[i].Val.(*Stack)
+			if deepSearchType == DEEPSEARCH_True && depth.(int) > 1 {
+				 // forwardpropagate if and only if parameters tell you to go deeper
+				 // (don't go deeper for depth = 1 because .Clone() already clones layer 1 in stack)
+				newCard.Val = newCard.Val.(*Stack).Clone(deepSearchType, depth.(int) - 1)
+			}
+		}
+		clone.Cards = append(clone.Cards, newCard)
 	}
 
 	// return

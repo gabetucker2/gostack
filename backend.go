@@ -120,10 +120,10 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 						insertCard = insertCard.Clone()
 					}
 					if cloneType2 == CLONE_True {
-						insertCard.Key = gogenerics.CloneStruct(insertCard.Key)
+						insertCard.Key = gogenerics.CloneObject(insertCard.Key)
 					}
 					if cloneType3 == CLONE_True {
-						insertCard.Val = gogenerics.CloneStruct(insertCard.Val)
+						insertCard.Val = gogenerics.CloneObject(insertCard.Val)
 					}
 
 				case RETURN_Idxs:
@@ -131,7 +131,7 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 					insertCard = new(Card)
 					insertCard.Val = i
 					if cloneType1 == CLONE_True {
-						insertCard.Val = gogenerics.CloneStruct(insertCard.Val)
+						insertCard.Val = gogenerics.CloneObject(insertCard.Val)
 					}
 
 				case RETURN_Keys:
@@ -139,7 +139,7 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 					insertCard = new(Card)
 					insertCard.Val = targetCard.Key
 					if cloneType1 == CLONE_True {
-						insertCard.Val = gogenerics.CloneStruct(insertCard.Val)
+						insertCard.Val = gogenerics.CloneObject(insertCard.Val)
 					}
 
 				case RETURN_Vals:
@@ -147,7 +147,7 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 					insertCard = new(Card)
 					insertCard.Val = targetCard.Val
 					if cloneType1 == CLONE_True {
-						insertCard.Val = gogenerics.CloneStruct(insertCard.Val)
+						insertCard.Val = gogenerics.CloneObject(insertCard.Val)
 					}
 
 				}

@@ -403,25 +403,41 @@ func case_stack_Clone(funcName string) {
 
 	test_Start(funcName, showTestText)
 
+	// shallow cloning
 	stackA := MakeStack([]string {"Original", "Original"}, []string {"Original", "Original"})
 	stackAClone := stackA.Clone()
 	stackAClone.Cards[0].Key = "New"
 	stackAClone.Cards[1].Key = "New"
 	stackAClone.Cards[0].Val = "New"
 
+	// deep cloning
 	stackB := MakeStackMatrix([]string {"Original", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "Original"}, []int{2, 2})
 	stackBClone := stackB.Clone()
 	stackBClone.Cards[0].Val.(*Stack).Cards[0].Key = "New"
 	stackBClone.Cards[1].Val.(*Stack).Cards[1].Val = "New"
 
-	stackB.Print()
-	stackBClone.Print()
+	// shallow clone stackmatrix
+	stackC := MakeStackMatrix([]string {"Original", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "Original"}, []int{2, 2})
+	stackCClone := stackC.Clone(DEEPSEARCH_False)
+	stackCClone2 := stackC.Clone(DEEPSEARCH_True, 1) // should equal stackCClone since deepsearchfalse <=> deepsearchtrue | depth: 1
+	stackCClone.Cards[0].Val.(*Stack).Cards[0].Key = "New"
+	stackCClone.Cards[1].Val.(*Stack).Cards[1].Val = "New"
 
 	conditions := []bool{
+
+		// shallow cloning
 		stackA.Equals(MakeStack([]string {"Original", "Original"}, []string {"Original", "Original"})), // 1
 		stackAClone.Equals(MakeStack([]string {"New", "New"}, []string {"New", "Original"})), // 2
+		
+		// deep cloning
 		stackB.Equals(MakeStackMatrix([]string {"Original", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "Original"}, []int{2, 2})), // 3
 		stackBClone.Equals(MakeStackMatrix([]string {"New", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "New"}, []int{2, 2})), // 4
+
+		// shallow clone stackmatrix
+		stackC.Equals(MakeStackMatrix([]string {"New", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "New"}, []int{2, 2})), // 5
+		stackCClone.Equals(MakeStackMatrix([]string {"New", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "New"}, []int{2, 2})), // 6
+		stackCClone2.Equals(stackCClone), // 7
+
 	}
 
 	test_End(funcName, conditions)
@@ -603,6 +619,9 @@ func case_stack_Equals(funcName string) {
 		!kts1.Equals(kts3), // 16
 		!kts1.Equals(kts4), // 17
 
+		// test that deepsearchfalse <=> deepsearchtrue | depth: 1
+		shallow1.Equals(shallow2, DEEPSEARCH_True, 1), // 18
+
 	}
 
 	test_End(funcName, conditions)
@@ -738,7 +757,7 @@ func Run(_showTestText bool) {
 	// case_stack_ToMatrix("stack.ToMatrix") // BAD
 	case_stack_Empty("stack.Empty") // GOOD
 	case_card_Clone("card.Clone") // GOOD
-	case_stack_Clone("stack.Clone") // BAD
+	case_stack_Clone("stack.Clone") // GOOD
 	// case_stack_Unique("stack.Unique") // BAD
 	// case_stack_Shuffle("stack.Shuffle") // BAD
 	// case_stack_Flip("stack.Flip") // BAD
