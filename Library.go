@@ -998,21 +998,24 @@ func (stack *Stack) Print(variadic ...any) {
  
  @receiver `stack` type{*Stack}
  @param `lambda` type{func(*Card, *Stack, (returnVal) any, ...any)}
+ @param optional `onlyGetDeepest` type{bool} default true
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (deepest)
  @returns (returnVal) type{any}
  @ensures
-  * Each card in `stack` is passed into your lambda function
+  * Each card in `stack`, based on depth, is passed into your lambda function
   * `stack` is the first argument passed into your variadic parameter on the first call
  */
 func (stack *Stack) Lambda(lambda any, variadic ...any) (ret any) {
 
 	// unpack variadic into optional parameters
-	var deepSearchType, depth any
-	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth)
+	var onlyGetDeepest, deepSearchType, depth any
+	gogenerics.UnpackVariadic(variadic, &onlyGetDeepest, &deepSearchType, &depth)
+	if onlyGetDeepest == nil {onlyGetDeepest = true}
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_True}
 	
 	// main
-	generalIterator(stack, lambda.(func(*Card, *Stack, any, ...any)), deepSearchType.(DEEPSEARCH), depth.(int), ret, nil) // TODO: replace nil final value
+	generalIterator(stack, lambda.(func(*Card, *Stack, any, ...any)), onlyGetDeepest.(bool), deepSearchType.(DEEPSEARCH), depth.(int), &ret)
 
 	return ret
 
