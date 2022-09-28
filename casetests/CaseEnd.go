@@ -340,21 +340,61 @@ func case_stack_ToMatrix(funcName string) {
 
 	test_Start(funcName, showTestText)
 	
-	// mat1 := test_SampleStackMatrix().ToMatrix(1)
-	// mat2 := test_SampleStackMatrix().ToMatrix(2)
-	// mat3 := test_SampleStackMatrix().ToMatrix(-1)
+	// test for shallow on shallow
+	matA := MakeStack([]string {"Hi", "Hello", "Hey"}).ToMatrix()
+	matACorrect := []any {"Hi", "Hello", "Hey"}
+
+	// test for deep on deep
+	matB := MakeStackMatrix([]string {"Hi", "Hey", "Hoy", "Hiya"}, nil, []int {2, 2}).ToMatrix()
+	matBCorrect := []any {[]any {"Hi", "Hey"}, []any {"Hoy", "Hiya"}}
+
+	// test for shallow on deep
+	matC := MakeStackMatrix([]string {"Hi", "Hey", "Hoy", "Hiya"}, nil, []int {2, 2}).ToMatrix(nil, DEEPSEARCH_False)
+	matCCorrect := []any {[]any {}, []any {}}
+
+	// test for irregular deep
+	matD := MakeStack([]any {"Hi", MakeStack([]string {"Hoy", "Hiya"})}).ToMatrix()
+	matDCorrect := []any {"Hi", []any {"Hoy", "Hiya"}}
+
+	// test for deepsearchfalse <=> deepsearchtrue | depth: 1
+	matE := MakeStackMatrix([]string {"Hi", "Hey", "Hoy", "Hiya"}, nil, []int {2, 2}).ToMatrix(nil, DEEPSEARCH_True, 1)
+	matECorrect := []any {[]any {}, []any {}}
+
+	// test for different return types
+	matKeys := MakeStack([]string {"Hi", "Hello", "Hey"}, []string {"Hi", "He", "H"}).ToMatrix(RETURN_Keys)
+	matKeysCorrect := []any {"Hi", "Hello", "Hey"}
+	
+	matIdxs := MakeStack([]string {"Hi", "He", "H"}, []string {"Hi", "Hello", "Hey"}).ToMatrix(RETURN_Idxs)
+	matIdxsCorrect := []any {0, 1, 2}
+	
+	c1 := MakeCard("Hey")
+	c2 := MakeCard("Hoy")
+	matCards := MakeStack([]*Card {c1, c2}).ToMatrix(RETURN_Cards)
+	matCardsCorrect := []any {c1, c2}
+
 
 	conditions := []bool{
-		// len(mat1) == 2,
-		// len(mat2) == 2,
-		// len(mat3) == 2,
-		// len(mat1[0].([]any)) == 0,
-		// len(mat1[1].([]any)) == 0,
-		// len(mat2.([]any)[0]) == 2,
-		// len(mat2[1]) == 2,
-		// len(mat3[0]) == 2,
-		// len(mat3[1]) == 2,
-		// TODO: test using Equals function here
+
+		// test for shallow on shallow
+		MakeStackMatrix(matA).Equals(MakeStackMatrix(matACorrect)), // 1
+
+		// test for deep on deep
+		MakeStackMatrix(matB).Equals(MakeStackMatrix(matBCorrect)), // 2
+
+		// test for shallow on deep
+		MakeStackMatrix(matC).Equals(MakeStackMatrix(matCCorrect)), // 3
+
+		// test for irregular deep
+		MakeStackMatrix(matD).Equals(MakeStackMatrix(matDCorrect)), // 4
+
+		// test for deepsearchfalse <=> deepsearchtrue | depth: 1
+		MakeStackMatrix(matE).Equals(MakeStackMatrix(matECorrect)), // 5
+		
+		// test for different return types
+		MakeStackMatrix(matKeys).Equals(MakeStackMatrix(matKeysCorrect)), // 6
+		MakeStackMatrix(matIdxs).Equals(MakeStackMatrix(matIdxsCorrect)), // 7
+		MakeStackMatrix(matCards).Equals(MakeStackMatrix(matCardsCorrect)), // 8
+		
 	}
 
 	test_End(funcName, conditions)
@@ -644,7 +684,7 @@ func case_stack_Shuffle(funcName string) {
 	
 }
 
-func case_stack_Flip(funcName string) {
+func case_stack_Inverse(funcName string) {
 
 	test_Start(funcName, showTestText)
 
@@ -696,12 +736,12 @@ func case_stack_Lambda(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	stackToFlip := MakeStack([]int {1, 2, 3, 4})
+	stackToInverse := MakeStack([]int {1, 2, 3, 4})
 	stackToCountKeysOver30 := MakeStack(nil, []int {5, 10, 20, 25, 50})
 	stackToAdd := MakeStack([]int {1, 2, 3, 4})
 
-	// flipper
-	stackToFlip.Lambda(func(card *Card, stack *Stack, _ ...any) {
+	// inverseper
+	stackToInverse.Lambda(func(card *Card, stack *Stack, _ ...any) {
 		// moves each card, from first to last, to the first position in the stack
 		newCards := []*Card {card}
 		for _, c := range stack.Cards {
@@ -727,7 +767,7 @@ func case_stack_Lambda(funcName string) {
 	})
 	
 	conditions := []bool{
-		stackToFlip.Equals(MakeStack([]int {4, 3, 2, 1})),
+		stackToInverse.Equals(MakeStack([]int {4, 3, 2, 1})),
 		keyCount == 4,
 		stackToAdd.Equals(MakeStack(1, 3, 6, 10)),
 	}
@@ -741,26 +781,24 @@ func Run(_showTestText bool) {
 
 	showTestText = _showTestText
 	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_Empty, case_card_Clone,
-								 case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Flip, case_card_Print, case_stack_Print, case_stack_Lambda)
+								 case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Inverse, case_card_Print, case_stack_Print, case_stack_Lambda)
 
 	fmt.Println("- BEGINNING TESTS (fix failures/errors in descending order)")
 
-	// NON-GENERALIZED FUNCTIONS
+	// NON-GENERALIZED FUNCTIONS (NOT DEPENDENT ON GENERALIZED FUNCTIONS)
 	case_MakeCard("MakeCard") // GOOD
 	case_card_Equals("card.Equals") // GOOD
 	case_MakeStack("MakeStack") // GOOD
 	case_stack_Equals("stack.Equals") // GOOD
 	case_MakeStackMatrix("MakeStackMatrix") // GOOD
-	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD
 	case_stack_ToArray("stack.ToArray") // GOOD
 	case_stack_ToMap("stack.ToMap") // GOOD
-	// case_stack_ToMatrix("stack.ToMatrix") // BAD
+	case_stack_ToMatrix("stack.ToMatrix") // GOOD
 	case_stack_Empty("stack.Empty") // GOOD
 	case_card_Clone("card.Clone") // GOOD
 	case_stack_Clone("stack.Clone") // GOOD
 	// case_stack_Unique("stack.Unique") // BAD
 	// case_stack_Shuffle("stack.Shuffle") // BAD
-	// case_stack_Flip("stack.Flip") // BAD
 	case_card_Print("card.Print") // GOOD
 	case_stack_Print("stack.Print") // GOOD
 	// case_stack_Lambda("stack.Lambda") // BAD
@@ -779,5 +817,9 @@ func Run(_showTestText bool) {
 	// case_stack_ExtractMany("stack.ExtractMany") // BAD
 	// case_stack_Remove("stack.Remove") // BAD
 	// case_stack_RemoveMany("stack.RemoveMany") // BAD
+	
+	// NON-GENERALIZED FUNCTIONS (DEPENDENT ON GENERALIZED FUNCTIONS)
+	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD - update to just use the get() function
+	// case_stack_Inverse("stack.Inverse") // BAD
 
 }

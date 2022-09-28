@@ -9,7 +9,7 @@ import (
 	"math"
 
 	"github.com/gabetucker2/gogenerics"
-	. "github.com/gabetucker2/gostack"//lint:ignore ST1001 Ignore warning
+	. "github.com/gabetucker2/gostack" //lint:ignore ST1001 Ignore warning
 )
 
 func lambda_ValInRange(card *Card) bool {
@@ -223,7 +223,7 @@ func Lambda() {
 	 	if you wanted to sort a stack in a certain order?  This would require you to update
 		the position of cards relative to other cards, which our core functions do not allow
 		you to do.  So this is where our Lambda function comes into play.  Below is a behind-
-		the-curtain example of how the Flip function, which reverses the order of cards in
+		the-curtain example of how the Inverse function, which reverses the order of cards in
 		a stack, was implemented (using the Lambda function):*/
 
 	makeSampleStack().Lambda(func(card *Card, stack *Stack) {

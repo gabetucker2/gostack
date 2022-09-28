@@ -7,8 +7,8 @@ package tutorials
 import (
 	"fmt"
 
-	. "github.com/gabetucker2/gostack" //lint:ignore ST1001 Ignore warning
 	"github.com/gabetucker2/gogenerics"
+	. "github.com/gabetucker2/gostack" //lint:ignore ST1001 Ignore warning
 )
 
 func Introduction() {
@@ -195,8 +195,8 @@ func Introduction() {
 	// set gottenData to a clone of myStack where the first card and the second card are switched
 	gottenData = myStack.Clone().Swap(FIND_First, FIND_Idx, nil, 1)
 
-	// set gotten data to a clone of myStack which is put into a random order, flipped in the opposite order, and with any cards who have the same value as other cards removed
-	gottenData = myStack.Clone().Shuffle().Flip().Unique(TYPE_Val)
+	// set gotten data to a clone of myStack which is put into a random order, inverseped in the opposite order, and with any cards who have the same value as other cards removed
+	gottenData = myStack.Clone().Shuffle().Inverse().Unique(TYPE_Val)
 
 	/**
 	 There are many more functions than the ones displayed here that you are welcome

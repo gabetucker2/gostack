@@ -290,6 +290,8 @@ func MakeStackMatrix(variadic ...any) *Stack {
  */
 func (stack *Stack) StripStackMatrix(variadic ...any) *Stack {
 
+	// TODO: update to just use the Get() function
+
 	// unpack variadic into optional parameters
 	var firstSelection any
 	gogenerics.UnpackVariadic(variadic, &firstSelection)
@@ -368,29 +370,30 @@ func (stack *Stack) ToMap() (m map[any]any) {
 
 }
 
-/** Creates a new matrix from a stack by depth.  For instance, if depth = 2, then returns the stacks inside stack as an [][]any
+/** Creates a new matrix from a stack
 
  @receiver `stack` type{*Stack}
- @parameter optional `returnType` type{RETURN} default RETURN_Vals
+ @param optional `returnType` type{RETURN} default RETURN_Vals
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `depth` type{int} default -1 (deepest)
- @returns type{[]any, [][]any, ..., []...[]any}
+ @returns type{ []any {., ..., .}, []any {[]any {., ..., .}, []any {., ..., .}, ...}, ..., []any { []any {...{ []any{., ..., .}, ... }, ... }, ... } }
  @ensures
-  * -1 depth means it will go as deep as it can
-  * new map keys and values correspond to `stack` keys and values
-  * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} =>
+  * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} | deepsearchtrue =>
       []any{[]any{"Hi"}, []any{"Hola", "Hello"}, "Hey"}
+  * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} | deepsearchfalse =>
+      []any{[]any{}, []any{}, "Hey"}
  */
 func (stack *Stack) ToMatrix(variadic ...any) (matrix []any) {
 
 	// unpack variadic into optional parameters
-	var returnType, depth any
-	gogenerics.UnpackVariadic(variadic, &returnType, &depth)
+	var returnType, deepSearchType, depth any
+	gogenerics.UnpackVariadic(variadic, &returnType, &deepSearchType, &depth)
+	// set defaults
 	setRETURNDefaultIfNil(&returnType)
-	
-	// update depth
-	if depth == nil {
-		depth = -1
-	}
+	setDepthDefaultIfNil(&depth)
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_True}
+	if depth == -1 || depth.(int) > stack.Depth { depth = stack.Depth }
+	if deepSearchType == DEEPSEARCH_False { depth = 1 }
 
 	// break recursion at depth == 0
 	if depth.(int) != 0 {
@@ -399,8 +402,13 @@ func (stack *Stack) ToMatrix(variadic ...any) (matrix []any) {
 			c := stack.Cards[i]
 			// if this Card's val is a Stack
 			subStack, isStack := c.Val.(*Stack)
+			
 			if isStack {
-				matrix = append(matrix, subStack.ToMatrix(depth.(int) - 1))
+				if depth.(int) > 1 {
+					matrix = append(matrix, subStack.ToMatrix(returnType, deepSearchType, depth.(int) - 1))
+				} else {
+					matrix = append(matrix, []any {})
+				}
 			} else {
 				switch returnType {
 				case RETURN_Vals:
@@ -415,7 +423,7 @@ func (stack *Stack) ToMatrix(variadic ...any) (matrix []any) {
 			}
 		}
 	}
-
+	
 	// return
 	return matrix
 
@@ -756,16 +764,35 @@ func (stack *Stack) Shuffle(variadic ...any) *Stack {
 
 }
 
-/** Flips the ordering of `stack.Cards`
+/** Inverses the ordering of `stack.Cards`
+  Conceptually, this performs the transverse function assuming maximum depth.
  
  @receiver `stack` type{*Stack}
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
+ @param optional `depth` type{int} default -1 (deepest)
  @returns `stack`
  @updates `stack` to have its ordering reversed
  */
-func (stack *Stack) Flip() *Stack {
+func (stack *Stack) Inverse(variadic ...any) *Stack {
 
+	// unpack variadic into optional parameters
+	var deepSearchType, depth any
+	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth)
+	// set defaults
+	setDepthDefaultIfNil(&depth)
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_True}
+	if depth == -1 || depth.(int) > stack.Depth { depth = stack.Depth }
+	if deepSearchType == DEEPSEARCH_False { depth = 1 }
+
+	// body
 	stack.Lambda(func(card *Card, stack *Stack, _ ...any) {
 		stack.Move(FIND_Card, ORDER_Before, FIND_Idx, card, 0)
+		switch card.Val.(type) {
+		case *Stack:
+			if depth.(int) > 1 { // forwardpropagate
+				card.Val.(*Stack).Inverse(deepSearchType, depth)
+			}
+		}
 	})
 
 	// return
