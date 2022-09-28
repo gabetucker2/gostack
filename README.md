@@ -726,7 +726,10 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
  
  `stack.Shape()`
  ```
+ Returns the shape of this stackMatrix, or nil if irregular shape
 
+ @receiver `stack` type{*Stack}
+ @returns type{[]int}
  ```
  
 <h3 name = "Duplicate">Duplicate</h3>
