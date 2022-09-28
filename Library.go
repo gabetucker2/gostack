@@ -858,10 +858,20 @@ func (card *Card) Print(variadic ...any) {
 
 	// prints
 	fmt.Printf("%v|%vCARD\n", depthPrinter(depth.(int)), gogenerics.IfElse(depth == 0, "gostack: PRINTING ", ""))
-	fmt.Printf("%v- &card:    %v\n", depthPrinter(depth.(int)), &card)
-	fmt.Printf("%v- card.Idx: %v\n", depthPrinter(depth.(int)), card.Idx)
-	fmt.Printf("%v- card.Key: %v\n", depthPrinter(depth.(int)), card.Key)
-	fmt.Printf("%v- card.Val: %v\n", depthPrinter(depth.(int)), card.Val)
+	fmt.Printf("%v- &card:     %v\n", depthPrinter(depth.(int)), &card)
+	fmt.Printf("%v- card.Idx:  %v\n", depthPrinter(depth.(int)), card.Idx)
+	if gogenerics.IsPointer(card.Key) {
+		fmt.Printf("%v- &card.Key: %v\n", depthPrinter(depth.(int)), &card.Key)
+		fmt.Printf("%v- card.Key:  (%v) %v\n", depthPrinter(depth.(int)), reflect.TypeOf(card.Key), reflect.ValueOf(card.Key).Elem())
+	} else {
+		fmt.Printf("%v- card.Key:  %v\n", depthPrinter(depth.(int)), card.Key)
+	}
+	if gogenerics.IsPointer(card.Val) {
+		fmt.Printf("%v- &card.Val: %v\n", depthPrinter(depth.(int)), &card.Val)
+		fmt.Printf("%v- card.Val:  (%v) %v\n", depthPrinter(depth.(int)), reflect.TypeOf(card.Val), reflect.ValueOf(card.Val).Elem())
+	} else {
+		fmt.Printf("%v- card.Val:  %v\n", depthPrinter(depth.(int)), card.Val)
+	}
 
 }
 

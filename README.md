@@ -316,7 +316,7 @@
  * **stack.ToArray()**
  * **stack.ToMap()**
  * **stack.ToMatrix(...depth)**
- * **stack.Duplicate()**
+ * **stack.Duplicate(...n)**
  * **stack.Empty()**
  * **card.Clone(...cloneKey, ...cloneVal)**
  * **stack.Clone(...cloneCards, ...cloneKeys, ...cloneVals)**

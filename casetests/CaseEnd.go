@@ -708,7 +708,7 @@ func case_stack_Inverse(funcName string) {
 
 	conditions := []bool{
 		
-		
+		false, // temp
 
 	}
 
@@ -719,11 +719,6 @@ func case_stack_Inverse(funcName string) {
 func case_card_Print(funcName string) {
 
 	test_Start(funcName, showTestText)
-
-	// comment out to clean up console:
-
-	// MakeCard("CardKey", "CardVal", 420).Print()
-	// MakeCard("CardKey", "CardVal", 420).Print(2)
 	
 	conditions := []bool{
 		true, // unfortunately, we have to check manually
@@ -736,11 +731,6 @@ func case_card_Print(funcName string) {
 func case_stack_Print(funcName string) {
 
 	test_Start(funcName, showTestText)
-
-	// comment out to clean up console:
-
-	// MakeStack([]string {"ShallowKeyFirst", "ShallowKeySecond"}, []string {"ShallowValFirst", "ShallowValSecond"}).Print()
-	// MakeStackMatrix([]string {"DeepKeyFirst", "DeepKeySecond", "DeepKeyThird", "DeepKeyFourth"}, []string {"DeepValFirst", "DeepValSecond", "DeepValThird", "DeepValFourth"}, []int {2, 2}).Print()
 	
 	conditions := []bool{
 		true, // unfortunately, we have to check manually
@@ -798,8 +788,8 @@ func case_stack_Lambda(funcName string) {
 func Run(_showTestText bool) {
 
 	showTestText = _showTestText
-	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_Empty, case_card_Clone,
-								 case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Inverse, case_card_Print, case_stack_Print, case_stack_Lambda)
+	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_Duplicate, case_stack_Empty,
+		case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Inverse, case_card_Print, case_stack_Print, case_stack_Lambda)
 
 	fmt.Println("- BEGINNING TESTS (fix failures/errors in descending order)")
 
