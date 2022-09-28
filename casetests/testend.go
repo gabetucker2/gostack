@@ -9,25 +9,6 @@ import (
 	. "github.com/gabetucker2/gostack" //lint:ignore ST1001 — we would like to dot import gostack
 )
 
-// test variables (test with these variables only after MakeCard's test)
-
-var testCardA *Card
-var testCardB *Card
-var testCardC *Card
-var testCardD *Card
-
-/** Initialize test variables */
-func test_Setup() {
-
-	testCardA = MakeCard("Card A", "Key1") // in sample stack
-	testCardB = MakeCard("Card B", "Key2") // in sample stack
-	testCardC = MakeCard("Card C", "Key3") // in sample stack
-	testCardD = MakeCard("Card D", "Key4") // out of sample stack
-
-	gogenerics.RemoveUnusedError(testCardA, testCardB, testCardC, testCardD)
-
-}
-
 /** Test whether stack equals array or map
  (Incomplete documentation)
 
@@ -188,7 +169,7 @@ func test_Start(funcName string, showTestText bool) {
 		fmt.Println("-   TESTING " + funcName + "()")
 	}
 
-	test_Setup()
+	// test_Setup()
 
 }
 
@@ -215,46 +196,5 @@ func test_End(funcName string, conditions []bool) {
 
 	// print all the data together
 	fmt.Println(out + " " + funcName + "()")
-
-}
-
-/** Make a sample stack of cards */
-func test_SampleStack(clone bool) *Stack {
-
-	// make a sample stack of form <"Card A", "Card B", "Card C">
-	stack := MakeStack()
-
-	// create stack (don't use .Add() function, or else you'll have to case test)
-	if clone {
-		stack.Cards = append(stack.Cards, testCardA.Clone())
-		stack.Cards = append(stack.Cards, testCardB.Clone())
-		stack.Cards = append(stack.Cards, testCardC.Clone())
-	} else {
-		stack.Cards = append(stack.Cards, testCardA)
-		stack.Cards = append(stack.Cards, testCardB)
-		stack.Cards = append(stack.Cards, testCardC)
-	}
-	
-	return stack
-
-}
-
-/** Make a sample StackMatrix of cards */
-func test_SampleStackMatrix() *Stack {
-
-	// make a sample stack of form <"Card A", "Card B", "Card C">
-	stack := MakeStack()
-
-	// create stack (don't use .Add() function, or else you'll have to case test)
-	stack.Cards = append(stack.Cards, MakeCard(MakeStack()))
-	stack.Cards = append(stack.Cards, MakeCard(MakeStack()))
-
-	stack.Cards[0].Val.(*Stack).Cards = append(stack.Cards[0].Val.(*Stack).Cards, testCardA.Clone())
-	stack.Cards[0].Val.(*Stack).Cards = append(stack.Cards[0].Val.(*Stack).Cards, testCardB.Clone())
-
-	stack.Cards[1].Val.(*Stack).Cards = append(stack.Cards[0].Val.(*Stack).Cards, testCardC.Clone())
-	stack.Cards[1].Val.(*Stack).Cards = append(stack.Cards[0].Val.(*Stack).Cards, testCardD.Clone())
-	
-	return stack
 
 }

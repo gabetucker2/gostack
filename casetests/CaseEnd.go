@@ -249,24 +249,10 @@ func case_stack_StripStackMatrix(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	stackMatrix := test_SampleStackMatrix()
-	// fmt.Println("this is stackMatrix")
-	// stackMatrix.Print()
+	// stuff
 
-	// fmt.Println("this is STRIPstackMatrix")
-	// stackMatrix.StripStackMatrix().Print()
 	conditions := []bool{
-		stackMatrix.StripStackMatrix() == stackMatrix,
-		stackMatrix.StripStackMatrix(0, 0).Cards[0] == testCardA,
-		stackMatrix.StripStackMatrix(0, 1).Cards[0] == testCardB,
-		stackMatrix.StripStackMatrix(1, 0).Cards[0] == testCardC,
-		stackMatrix.StripStackMatrix(1, 1).Cards[0] == testCardD,
-		stackMatrix.StripStackMatrix(0) == MakeStack([]*Card {testCardA, testCardB}),
-		stackMatrix.StripStackMatrix(1) == MakeStack([]*Card {testCardC, testCardD}),
-		stackMatrix.StripStackMatrix(0, []int {0, 1}) == MakeStack([]*Card {testCardA, testCardB}),
-		stackMatrix.StripStackMatrix(1, []int {0, 1}) == MakeStack([]*Card {testCardC, testCardD}),
-		stackMatrix.StripStackMatrix([]int {0, 1}, 0) == MakeStack([]*Card {testCardA, testCardC}),
-		stackMatrix.StripStackMatrix([]int {0, 1}, 1) == MakeStack([]*Card {testCardB, testCardD}),
+		false, // temp
 	}
 
 	test_End(funcName, conditions)
@@ -277,38 +263,46 @@ func case_stack_ToArray(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	arrayVals1 := test_SampleStack(true).ToArray()
-	arrayVals2 := test_SampleStack(true).ToArray(RETURN_Vals)
-	arrayKeys := test_SampleStack(true).ToArray(RETURN_Keys)
-	arrayIdxs := test_SampleStack(true).ToArray(RETURN_Idxs)
-	arrayCards := test_SampleStack(false).ToArray(RETURN_Cards)
+	testCardA := MakeCard("Card A", "Key1")
+	testCardB := MakeCard("Card B", "Key2")
+	testCardC := MakeCard("Card C", "Key3")
+
+	sampleStack := func() *Stack {
+		return MakeStack([]*Card {testCardA.Clone(), testCardB.Clone(), testCardC.Clone()})
+	}
+
+	arrayVals1 := sampleStack().ToArray()
+	arrayVals2 := sampleStack().ToArray(RETURN_Vals)
+	arrayKeys := sampleStack().ToArray(RETURN_Keys)
+	arrayIdxs := sampleStack().ToArray(RETURN_Idxs)
+	arrayCards := MakeStack([]*Card {testCardA, testCardB, testCardC}).ToArray(RETURN_Cards)
 	
 	conditions := []bool{
-		len(arrayVals1) == 3,
-		len(arrayVals2) == 3,
-		len(arrayKeys) == 3,
-		len(arrayIdxs) == 3,
-		len(arrayCards) == 3,
+		len(arrayVals1) == 3, // 1
+		len(arrayVals2) == 3, // 2
+		len(arrayKeys) == 3, // 3
+		len(arrayIdxs) == 3, // 4
+		len(arrayCards) == 3, // 5
 
-		arrayVals1[0] == testCardA.Val,
-		arrayVals1[1] == testCardB.Val,
-		arrayVals1[2] == testCardC.Val,
+		arrayVals1[0] == testCardA.Val, // 6
+		arrayVals1[1] == testCardB.Val, // 7
+		arrayVals1[2] == testCardC.Val, // 8
 
-		arrayVals2[0] == testCardA.Val,
-		arrayVals2[1] == testCardB.Val,
-		arrayVals2[2] == testCardC.Val,
+		arrayVals2[0] == testCardA.Val, // 9
+		arrayVals2[1] == testCardB.Val, // 10
+		arrayVals2[2] == testCardC.Val, // 11
 
-		arrayKeys[0] == testCardA.Key,
-		arrayKeys[1] == testCardB.Key,
-		arrayKeys[2] == testCardC.Key,
+		arrayKeys[0] == testCardA.Key, // 12
+		arrayKeys[1] == testCardB.Key, // 13
+		arrayKeys[2] == testCardC.Key, // 14
 
-		arrayIdxs[0] == testCardA.Idx,
-		arrayIdxs[1] == testCardB.Idx,
-		arrayIdxs[2] == testCardC.Idx,
+		arrayIdxs[0] == testCardA.Idx, // 15
+		arrayIdxs[1] == testCardB.Idx, // 16
+		arrayIdxs[2] == testCardC.Idx, // 17
 
-		arrayCards[0].(*Card) == testCardA,
-		arrayCards[1].(*Card) == testCardB,
-		arrayCards[2].(*Card) == testCardC,
+		arrayCards[0].(*Card) == testCardA, // 18
+		arrayCards[1].(*Card) == testCardB, // 19
+		arrayCards[2].(*Card) == testCardC, // 20
 	}
 
 	test_End(funcName, conditions)
@@ -319,13 +313,18 @@ func case_stack_ToMap(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	m := test_SampleStack(true).ToMap()
+	testCardA := MakeCard("Card A", "Key1")
+	testCardB := MakeCard("Card B", "Key2")
+	testCardC := MakeCard("Card C", "Key3")
+
+	m := MakeStack([]*Card {testCardA.Clone(), testCardB.Clone(), testCardC.Clone()}).ToMap()
 
 	conditions := []bool{
-		len(m) == 3,
-		m["Key1"] == "Card A",
-		m["Key2"] == "Card B",
-		m["Key3"] == "Card C",
+		len(m) == 3, // 1
+		m["Key1"] == "Card A", // 2
+		m["Key2"] == "Card B", // 3
+		m["Key3"] == "Card C", // 4
+		m["Key4"] == nil, // 5
 	}
 
 	test_End(funcName, conditions)
@@ -450,7 +449,7 @@ func case_stack_Empty(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	stack1 := test_SampleStack(true).Empty()
+	stack1 := MakeStack([]string {"Hey", "Hi", "gdjifjgdfoigj"}).Empty()
 	stack2 := MakeStackMatrix([]int {1, 2, 3, 4, 5, 6}, []string {"Hi", "Hey", "Hoy", "Ciao", "Heyy", "Hiya"}, []int {3, 2}).Empty()
 
 	conditions := []bool{
