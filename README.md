@@ -106,7 +106,7 @@
  >>>
  >>>> [stack.Shuffle()](#Shuffle)
  >>>
- >>>> [stack.Inverse()](#Inverse)
+ >>>> [stack.Transpose()](#Transpose)
  >>>
  >>>> [card.Print()](#Print)
  >>>>
@@ -324,7 +324,7 @@
  * **card.Equals(Card, ...pointerTypeKey, ...pointerTypeVal, ...compareIdxs, ...printType)**
  * **stack.Equals(Stack, ...compareStacks, ...pointerTypeStack, ...deepSearchType, ...depth, ...pointerTypeKey, ...pointerTypeVal)**
  * **stack.Shuffle()**
- * **stack.Inverse()**
+ * **stack.Transpose()**
  * **card.Print()**
  * **stack.Print()**
  * **stack.Lambda(lambda function, ...deepSearchType, ...depth)**
@@ -833,11 +833,11 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
   * rand.Seed is updated to time.Now().UnixNano()
  ```
  
-<h3 name = "Inverse">Inverse</h3>
+<h3 name = "Transpose">Transpose</h3>
  
- `stack.Inverse()`
+ `stack.Transpose()`
  ```
- Inverses the ordering of `stack.Cards`
+ Transposes the ordering of `stack.Cards`
  
  @receiver `stack` type{*Stack}
  @returns `stack`

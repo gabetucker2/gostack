@@ -11,13 +11,13 @@ import (
 
 /** Creates a card with inputted val, key, and idx
 
- @param optional `val` type{any} default nil
- @param optional `key` type{any} default nil
- @param optional `idx` type{int} default -1
- @returns type{*Card} the newly-constructed card
- @constructs type{*Card} a newly-constructed card
- @ensures the new card will have val `val`, key `key`, and idx `idx`
- */
+@param optional `val` type{any} default nil
+@param optional `key` type{any} default nil
+@param optional `idx` type{int} default -1
+@returns type{*Card} the newly-constructed card
+@constructs type{*Card} a newly-constructed card
+@ensures the new card will have val `val`, key `key`, and idx `idx`
+*/
  func MakeCard(variadic ...any) *Card {
 
 	// unpack variadic into optional parameters
@@ -888,7 +888,7 @@ func (stack *Stack) Shuffle(variadic ...any) *Stack {
 
 }
 
-/** Inverses the ordering of `stack.Cards`
+/** Transposes the ordering of `stack.Cards`
   Conceptually, this performs the transverse function assuming maximum depth.
  
  @receiver `stack` type{*Stack}
@@ -897,7 +897,7 @@ func (stack *Stack) Shuffle(variadic ...any) *Stack {
  @returns `stack`
  @updates `stack` to have its ordering reversed
  */
-func (stack *Stack) Inverse(variadic ...any) *Stack {
+func (stack *Stack) Transpose(variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
 	var deepSearchType, depth any
@@ -914,7 +914,7 @@ func (stack *Stack) Inverse(variadic ...any) *Stack {
 		switch card.Val.(type) {
 		case *Stack:
 			if depth.(int) > 1 { // forwardpropagate
-				card.Val.(*Stack).Inverse(deepSearchType, depth)
+				card.Val.(*Stack).Transpose(deepSearchType, depth)
 			}
 		}
 	})

@@ -69,8 +69,8 @@ func case_MakeCard(funcName string) {
 		card2.Val == "Card 4",
 		card3.Val == 7,
 		card4.Val == card1,
-		*card5.Val.(*any) == "Hi",
-		*card6.Val.(*any) == "Hi",
+		gogenerics.GetPointer(card5.Val) == "Hi",
+		gogenerics.GetPointer(card6.Val) == "Hi",
 		card7.Val == "Hello",
 	}
 
@@ -750,7 +750,7 @@ func case_stack_Shuffle(funcName string) {
 	
 }
 
-func case_stack_Inverse(funcName string) {
+func case_stack_Transpose(funcName string) {
 
 	test_Start(funcName, showTestText)
 
@@ -792,12 +792,12 @@ func case_stack_Lambda(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	stackToInverse := MakeStack([]int {1, 2, 3, 4})
+	stackToTranspose := MakeStack([]int {1, 2, 3, 4})
 	stackToCountKeysOver30 := MakeStack(nil, []int {5, 10, 20, 25, 50})
 	stackToAdd := MakeStack([]int {1, 2, 3, 4})
 
-	// inverseper
-	stackToInverse.Lambda(func(card *Card, stack *Stack, _ ...any) {
+	// transposeper
+	stackToTranspose.Lambda(func(card *Card, stack *Stack, _ ...any) {
 		// moves each card, from first to last, to the first position in the stack
 		newCards := []*Card {card}
 		for _, c := range stack.Cards {
@@ -823,7 +823,7 @@ func case_stack_Lambda(funcName string) {
 	})
 	
 	conditions := []bool{
-		stackToInverse.Equals(MakeStack([]int {4, 3, 2, 1})),
+		stackToTranspose.Equals(MakeStack([]int {4, 3, 2, 1})),
 		keyCount == 4,
 		stackToAdd.Equals(MakeStack(1, 3, 6, 10)),
 	}
@@ -836,7 +836,7 @@ func case_stack_Lambda(funcName string) {
 func Run(_showTestText bool) {
 
 	showTestText = _showTestText
-	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Inverse, case_card_Print, case_stack_Print, case_stack_Lambda)
+	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambda)
 
 	fmt.Println("- BEGINNING TESTS (fix failures/errors in descending order)")
 
@@ -877,7 +877,7 @@ func Run(_showTestText bool) {
 	
 	// NON-GENERALIZED FUNCTIONS (DEPENDENT ON GENERALIZED FUNCTIONS)
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD - update to just use the get() function
-	// case_stack_Inverse("stack.Inverse") // BAD
+	// case_stack_Transpose("stack.Transpose") // BAD
 	// case_stack_Unique("stack.Unique") // BAD
 
 }
