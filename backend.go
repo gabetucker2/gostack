@@ -252,10 +252,12 @@ func generalIterator(stack *Stack, lambda func(*Card, *Stack, any, ...any), only
  */
 func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, pointerType POINTER, deepSearchType DEEPSEARCH, depth int) (targetIdxs [][]int, targetCards []*Card, targetStacks []*Stack) {
 
-	// setup main by deepening iteratively
+	// setup for main by deepening iteratively
 	if deepSearchType == DEEPSEARCH_False { depth = 1 }
 	workingCards := []*Card {}
 	currentCards := []*Card {}
+
+
 	for i := 0; i < depth; i++ {
 
 		// first iteration
@@ -280,6 +282,8 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, poi
 			currentCards = workingCards
 		}
 	}
+
+	fmt.Println(targetIdxs)
 
 	// main
 	for i := range targetIdxs {

@@ -812,7 +812,7 @@ func case_stack_Add(funcName string) {
 	test_Start(funcName, showTestText)
 
 	//stack1 := MakeStack([]int {1, 2, 3}).Add(4, ORDER_After, FIND_Last)
-	MakeStack([]int {1, 2, 3}).Add(4, ORDER_After, FIND_Last)
+	MakeStack([]int {3, 2, 1}).Add(4)
 	
 	conditions := []bool{
 		false,//stack1.Equals(MakeStack([]int {1, 2, 3, 4})),
