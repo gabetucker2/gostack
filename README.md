@@ -203,6 +203,8 @@
 
  <h2>General</h2>
 
+ If depth is inputted as type{int}, then every substack and card down to that int will be considered.  If depth is inputted as type{[]int}, then only the levels as deep down from the top as each int will be considered.  For instance, if you wanted to test for all things in the first, second, and third layer from the outer stack, then you would do depth = 3.  If you only wanted to test the first and the third, however, then you would do depth = []int {1, 3}.
+
  Executing `go run executive/executive.go` in a terminal in the main directory, or executing `go run .` in the `executive` directory, will run whichever file(s) are being called by `executive.go`.
 
  **Generalized Functions** refer to functions that have a `findType` and `findData` parameter, meaning they perform a search through the stack for upon where to act.
@@ -307,9 +309,9 @@
  > * COMPARE_True
  > * COMPARE_False
 
- > **TESTSUBSTACK**
- > * TESTSUBSTACK_True
- > * TESTSUBSTACK_False
+ > **SUBSTACKKEYS**
+ > * SUBSTACKKEYS_True
+ > * SUBSTACKKEYS_False
 
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
@@ -562,18 +564,18 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
 
  > ***COMPARE***
  >> COMPARE_True
+ >>> default
  >>
  >> COMPARE_False
- >>> default
 
-<h4 name = "TESTSUBSTACK">TESTSUBSTACK</h4>
+<h4 name = "SUBSTACKKEYS">SUBSTACKKEYS</h4>
 
- This is an enum intended to make it easy to determine whether you are considering substacks in your deep search.  For instance, if you want to look for substacks with certain keys, then you would enable this.  Otherwise, if you just wanted to look for cards within substacks, then you would keep this disabled.
+ This is an enum intended to make it easy to determine whether you are considering substacks' keys in your deep search.  For instance, if you want to look for substacks with certain keys ("Stack A"), then you would enable this.  Otherwise, if you just wanted to look for cards within substacks, then you would keep this disabled.
 
- > ***TESTSUBSTACK***
- >> TESTSUBSTACK_True
+ > ***SUBSTACKKEYS***
+ >> SUBSTACKKEYS_True
  >>
- >> TESTSUBSTACK_False
+ >> SUBSTACKKEYS_False
  >>> default
 
 <h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>

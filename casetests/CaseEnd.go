@@ -520,10 +520,22 @@ func case_stack_Clone(funcName string) {
 
 	// shallow clone stackmatrix
 	stackC := MakeStackMatrix([]string {"Original", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "Original"}, []int{2, 2})
-	stackCClone := stackC.Clone(DEEPSEARCH_False)
-	stackCClone2 := stackC.Clone(DEEPSEARCH_True, 1) // should equal stackCClone since deepsearchfalse <=> deepsearchtrue | depth: 1
-	stackCClone.Cards[0].Val.(*Stack).Cards[0].Key = "New"
-	stackCClone.Cards[1].Val.(*Stack).Cards[1].Val = "New"
+	stackCClone1 := stackC.Clone(DEEPSEARCH_False)
+	stackCClone2 := stackC.Clone(DEEPSEARCH_True, nil, 1) // should equal stackCClone since deepsearchfalse <=> deepsearchtrue | depth: 1
+	stackCClone2.Cards[0].Val.(*Stack).Cards[0].Key = "New"
+	stackCClone2.Cards[1].Val.(*Stack).Cards[1].Val = "New"
+
+	// substack key testing
+	stackD := MakeStack([]string {"Stack A", "Stack B"}, []*Stack {MakeStack("Original"), MakeStack("Original")})
+	stackDClone1 := stackD.Clone(DEEPSEARCH_True, SUBSTACKKEYS_True)
+	stackDClone2 := stackD.Clone(DEEPSEARCH_True, SUBSTACKKEYS_False)
+
+	// shallow clone stackmatrix equivalent using cloneSubstacksType
+	stackE := MakeStackMatrix([]string {"Original", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "Original"}, []int{2, 2})
+	stackEClone1 := stackE.Clone(DEEPSEARCH_True, nil, nil, CLONE_True)
+	stackEClone2 := stackE.Clone(DEEPSEARCH_True, nil, nil, CLONE_False)
+	stackEClone2.Cards[0].Val.(*Stack).Cards[0].Key = "New"
+	stackEClone2.Cards[1].Val.(*Stack).Cards[1].Val = "New"
 
 	conditions := []bool{
 
@@ -537,8 +549,16 @@ func case_stack_Clone(funcName string) {
 
 		// shallow clone stackmatrix
 		stackC.Equals(MakeStackMatrix([]string {"New", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "New"}, []int{2, 2})), // 5
-		stackCClone.Equals(MakeStackMatrix([]string {"New", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "New"}, []int{2, 2})), // 6
-		stackCClone2.Equals(stackCClone), // 7
+		stackCClone1.Equals(MakeStackMatrix([]string {"New", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "New"}, []int{2, 2})), // 6
+		stackCClone2.Equals(stackCClone1), // 7
+
+		// substack key testing
+		stackDClone1.Equals(MakeStack([]string {"Stack A", "Stack B"}, []*Stack {MakeStack("Original"), MakeStack("Original")})), // 8
+		stackDClone2.Equals(MakeStack([]any {nil, nil}, []*Stack {MakeStack("Original"), MakeStack("Original")})), // 9
+
+		// shallow clone stackmatrix equivalent using cloneSubstacksType
+		stackEClone1.Equals(MakeStackMatrix([]string {"Original", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "Original"}, []int{2, 2})), // 10
+		stackEClone2.Equals(MakeStackMatrix([]string {"New", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "New"}, []int{2, 2})), // 11
 
 	}
 
@@ -651,72 +671,179 @@ func case_stack_Equals(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	// since we've already tested the compare/pointer key/val parameters in card.Equals(),
-	// and since they're just passed forward in our stack.Equals() function, we don't need to test these again here
+	// since we already tested pointer comparisons in card.Equals, and since our POINTER parameters merely implement those in card.Equals, we need not test our POINTER parameters here
 
-	// shallow
-	shallow1 := MakeStack([]string {"Hello", "Hey"})
-	shallow2 := MakeStack([]string {"Hello", "Hey"})
-	shallow3 := MakeStack([]string {"Hi", "Hey"})
-	
-	// deep
-	deep1 := MakeStack([]*Stack {MakeStack([]string {"Hello", "Hey"}), MakeStack([]string {"Howdy", "Hi"})})
-	deep2 := MakeStack([]*Stack {MakeStack([]string {"Hello", "Hey"}), MakeStack([]string {"Howdy", "Hi"})})
-	deep3 := MakeStack([]*Stack {MakeStack([]string {"Hello", "Hey"}), MakeStack([]string {"Howdy", "Heyo"})})
-	deep4 := MakeStack([]*Stack {MakeStack(), MakeStack()})
+	// test for shallow-on-shallow equality
+	sos1 := MakeStack([]string {"Hello", "Hey"})
+	sos2 := MakeStack([]string {"Hello", "Hey"})
+	sos3 := MakeStack([]string {"Hi", "Hey"})
 
-	// stack pointers
-	sub1 := MakeStack([]string {"Hello", "Hey"})
-	sub2 := MakeStack([]string {"Howdy", "Hi"})
-	sub3 := MakeStack([]string {"Howdy", "Heyo"})
-	sub4 := MakeStack([]string {"Howdy", "Hi"})
-	ptrs1 := MakeStack([]*Stack {sub1, sub2})
-	ptrs2 := MakeStack([]*Stack {sub1, sub2})
-	ptrs3 := MakeStack([]*Stack {sub1, sub3})
-	ptrs4 := MakeStack([]*Stack {sub1, sub4})
+	// test for deep-on-deep equality
+	dod1 := MakeStack([]*Stack {MakeStack([]string {"Hi1", "Hi2"}), MakeStack([]string {"Hi3", "Hi4"})})
+	dod2 := MakeStack([]*Stack {MakeStack([]string {"Hi1", "Hi2"}), MakeStack([]string {"Hi3", "Hi4"})})
+	dod3 := MakeStack([]*Stack {MakeStack([]string {"Hi1", "Hello2"}), MakeStack([]string {"Hi3", "Hi4"})})
 
-	// keys to stacks
-	kts1 := MakeStack([]string {"Stack A", "Stack B"}, []*Stack {sub1, sub2})
-	kts2 := MakeStack([]string {"Stack A", "Stack B"}, []*Stack {sub1, sub2})
-	kts3 := MakeStack([]string {"Stack C", "Stack D"}, []*Stack {sub1, sub2})
-	kts4 := MakeStack([]string {"Stack A", "Stack B"}, []*Stack {sub1, sub3})
+	// test for shallow-on-deep equality
+	sod1 := MakeStack([]*Stack {MakeStack([]string {"Hi1", "Hi2"}), MakeStack([]string {"Hi3", "Hi4"})})
+	sod2 := MakeStack([]*Stack {MakeStack([]string {"Hi1", "Hello2"}), MakeStack([]string {"Hi3", "Hi4"})})
+	sod3 := MakeStack([]*Stack {MakeStack([]string {"Hi1"}), MakeStack([]string {"Hi3", "Hi4"})})
+	sod4 := MakeStack([]*Stack {MakeStack([]string {"Hi1"})})
+
+	// test for compare card filters
+	ccf1 := MakeStack([]string {"Hi"}, []int {4})
+	ccf2 := MakeStack([]string {"Hi"}, []int {4})
+	ccf3 := MakeStack([]string {"Hey"}, []int {4})
+	ccf4 := MakeStack([]string {"Hi"}, []int {2})
+	ccf5 := MakeStack([]string {"Hey"}, []int {2})
+
+	// test for compare substack filters
+	csfStack1 := MakeStack([]string {"Hi1", "Hi2"})
+	csfStack2 := MakeStack([]string {"Hi3", "Hi4"})
+	csf1 := MakeStack([]string {"StackA", "StackB"}, []*Stack {csfStack1, csfStack2})
+	csf2 := MakeStack([]string {"StackA", "StackB"}, []*Stack {csfStack1, csfStack2})
+	csf3 := MakeStack([]string {"Stack420", "StackB"}, []*Stack {csfStack1, csfStack2})
+	csf4 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]string {"Hi1", "Hello2"}), csfStack2})
+	csf5 := MakeStack([]string {"Stack420", "StackB"}, []*Stack {MakeStack([]string {"Hi1", "Hello2"}), csfStack2})
+
+	// test for depth search filters
+	dsf1 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]string {"Hi1", "Hi2"}), MakeStack([]string {"Hi3", "Hi4"})})
+	dsf2 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]string {"Hi1", "Hi2"}), MakeStack([]string {"Hi3", "Hi4"})})
+	dsf3 := MakeStack([]string {"Stack420", "StackB"}, []*Stack {MakeStack([]string {"Hi1", "Hi2"}), MakeStack([]string {"Hi3", "Hi4"})})
+	dsf4 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]string {"Hi1", "Hello2"}), MakeStack([]string {"Hi3", "Hi4"})})
+	dsf5 := MakeStack([]string {"Stack420", "StackB"}, []*Stack {MakeStack([]string {"Hi1", "Hello2"}), MakeStack([]string {"Hi3", "Hi4"})})
+	dsf6 := MakeStack([]string {"StackA"}, []*Stack {MakeStack([]string {"Hi1", "Hi2"})})
+
+	// csf1.Print()
+	// csf4.Print()
 
 	conditions := []bool{
 		
-		// test for shallow equality
-		shallow1.Equals(shallow2, DEEPSEARCH_False), // 1
-		shallow2.Equals(shallow1, DEEPSEARCH_False), // 2
-		!shallow1.Equals(shallow3, DEEPSEARCH_False), // 3
+		// test for shallow-on-shallow equality
+		sos1.Equals(sos2, DEEPSEARCH_False), // 1
+		!sos1.Equals(sos3, DEEPSEARCH_False), // 2
 
-		// test for deep equality
-		deep1.Equals(deep2, nil, nil, DEEPSEARCH_True), // 4
-		deep2.Equals(deep1, nil, nil, DEEPSEARCH_True), // 5
-		!deep1.Equals(deep3, nil, nil, DEEPSEARCH_True), // 6
-		deep1.Equals(deep2, nil, nil, DEEPSEARCH_True, 1), // 7
-		deep1.Equals(deep3, nil, nil, DEEPSEARCH_True, 1), // 8
-		deep1.Equals(deep2, nil, nil, DEEPSEARCH_True, 0), // 9
+		// test for deep-on-deep equality
+		dod1.Equals(dod2, DEEPSEARCH_True), // 3
+		!dod1.Equals(dod3, DEEPSEARCH_True), // 4
 
-		// test for smaller not auto being equal to larger if stack is missing
-		!deep4.Equals(deep1, nil, nil, DEEPSEARCH_True), // 10
+		// test for shallow-on-deep equality
+		sod1.Equals(sod2, DEEPSEARCH_False), // 5
+		sod1.Equals(sod3, DEEPSEARCH_False), // 6
+		!sod1.Equals(sod4, DEEPSEARCH_False), // 7
 
-		// test for same shape different val comparison
-		deep1.Equals(deep3, COMPARE_True, COMPARE_False), // 11
+		// test for compare card filters
+		ccf1.Equals(ccf2, nil, nil, COMPARE_True, COMPARE_True), // 8
+		ccf1.Equals(ccf2, nil, nil, COMPARE_False, COMPARE_True), // 9
+		ccf1.Equals(ccf2, nil, nil, COMPARE_True, COMPARE_False), // 10
+		ccf1.Equals(ccf2, nil, nil, COMPARE_False, COMPARE_False), // 11
 
-		// test for stack pointers
-		ptrs1.Equals(ptrs2, nil, nil, nil, nil, nil, nil, POINTER_True), // 12
-		!ptrs1.Equals(ptrs3, nil, nil, nil, nil, nil, nil, POINTER_True), // 13
-		!ptrs1.Equals(ptrs4, nil, nil, nil, nil, nil, nil, POINTER_True), // 14
+		!ccf1.Equals(ccf3, nil, nil, COMPARE_True, COMPARE_True), // 12
+		ccf1.Equals(ccf3, nil, nil, COMPARE_False, COMPARE_True), // 13
+		!ccf1.Equals(ccf3, nil, nil, COMPARE_True, COMPARE_False), // 14
+		ccf1.Equals(ccf3, nil, nil, COMPARE_False, COMPARE_False), // 15
 
-		// test for empty equality
-		MakeStack().Equals(MakeStack()), // 14
+		!ccf1.Equals(ccf4, nil, nil, COMPARE_True, COMPARE_True), // 16
+		!ccf1.Equals(ccf4, nil, nil, COMPARE_False, COMPARE_True), // 17
+		ccf1.Equals(ccf4, nil, nil, COMPARE_True, COMPARE_False), // 18
+		ccf1.Equals(ccf4, nil, nil, COMPARE_False, COMPARE_False), // 19
 
-		// test for keys pointing to stacks
-		kts1.Equals(kts2), // 15
-		!kts1.Equals(kts3), // 16
-		!kts1.Equals(kts4), // 17
+		!ccf1.Equals(ccf5, nil, nil, COMPARE_True, COMPARE_True), // 20
+		!ccf1.Equals(ccf5, nil, nil, COMPARE_False, COMPARE_True), // 21
+		!ccf1.Equals(ccf5, nil, nil, COMPARE_True, COMPARE_False), // 22
+		ccf1.Equals(ccf5, nil, nil, COMPARE_False, COMPARE_False), // 23
 
-		// test that deepsearchfalse <=> deepsearchtrue | depth: 1
-		shallow1.Equals(shallow2, DEEPSEARCH_True, 1), // 18
+		// test for compare substack filters
+		csf1.Equals(csf2, nil, nil, nil, nil, COMPARE_True, COMPARE_True), // 24
+		csf1.Equals(csf2, nil, nil, nil, nil, COMPARE_False, COMPARE_True), // 25
+		csf1.Equals(csf2, nil, nil, nil, nil, COMPARE_True, COMPARE_False), // 26
+		csf1.Equals(csf2, nil, nil, nil, nil, COMPARE_False, COMPARE_False), // 27
+
+		!csf1.Equals(csf3, nil, nil, nil, nil, COMPARE_True, COMPARE_True), // 28
+		csf1.Equals(csf3, nil, nil, nil, nil, COMPARE_False, COMPARE_True), // 29
+		!csf1.Equals(csf3, nil, nil, nil, nil, COMPARE_True, COMPARE_False), // 30
+		csf1.Equals(csf3, nil, nil, nil, nil, COMPARE_False, COMPARE_False), // 31
+
+		!csf1.Equals(csf4, nil, nil, nil, nil, COMPARE_True, COMPARE_True), // 32
+		!csf1.Equals(csf4, nil, nil, nil, nil, COMPARE_False, COMPARE_True), // 33
+		csf1.Equals(csf4, nil, nil, nil, nil, COMPARE_True, COMPARE_False), // 34
+		csf1.Equals(csf4, nil, nil, nil, nil, COMPARE_False, COMPARE_False), // 35
+
+		!csf1.Equals(csf5, nil, nil, nil, nil, COMPARE_True, COMPARE_True), // 36
+		!csf1.Equals(csf5, nil, nil, nil, nil, COMPARE_False, COMPARE_True), // 37
+		!csf1.Equals(csf5, nil, nil, nil, nil, COMPARE_True, COMPARE_False), // 38
+		csf1.Equals(csf5, nil, nil, nil, nil, COMPARE_False, COMPARE_False), // 39
+
+		// test for depth search filters
+		dsf1.Equals(dsf2, nil, 0), // 40
+
+		dsf1.Equals(dsf2, nil, -1), // 41
+		dsf2.Equals(dsf1, nil, -1), // 42
+		dsf1.Equals(dsf2, nil, 2), // 43
+		dsf1.Equals(dsf2, nil, 3), // 44
+		dsf1.Equals(dsf2, nil, []int {1, 2}), // 45
+
+		dsf1.Equals(dsf2, DEEPSEARCH_False), // 46
+		dsf1.Equals(dsf2, nil, []int {1}), // 47
+		dsf1.Equals(dsf2, nil, 1), // 48
+		
+		dsf1.Equals(dsf2, nil, []int {2}), // 49
+		
+		
+		dsf1.Equals(dsf3, nil, 0), // 50
+
+		!dsf1.Equals(dsf3, nil, -1), // 51
+		!dsf1.Equals(dsf3, nil, 2), // 52
+		!dsf1.Equals(dsf3, nil, 3), // 53
+		!dsf1.Equals(dsf3, nil, []int {1, 2}), // 54
+
+		!dsf1.Equals(dsf3, DEEPSEARCH_False), // 55
+		!dsf1.Equals(dsf3, nil, []int {1}), // 56
+		!dsf1.Equals(dsf3, nil, 1), // 57
+
+		dsf1.Equals(dsf3, nil, []int {2}), // 58
+		
+		
+		dsf1.Equals(dsf4, nil, 0), // 59
+
+		!dsf1.Equals(dsf4, nil, -1), // 60
+		!dsf1.Equals(dsf4, nil, 2), // 61
+ 		!dsf1.Equals(dsf4, nil, 3), // 62
+		!dsf1.Equals(dsf4, nil, []int {1, 2}), // 63
+
+		dsf1.Equals(dsf4, DEEPSEARCH_False), // 64
+		dsf1.Equals(dsf4, nil, []int {1}), // 65
+		dsf1.Equals(dsf4, nil, 1), // 66
+		
+		!dsf1.Equals(dsf4, nil, []int {2}), // 67
+		
+		
+		dsf1.Equals(dsf5, nil, 0), // 68
+
+		!dsf1.Equals(dsf5, nil, -1), // 69
+		!dsf1.Equals(dsf5, nil, 2), // 70
+		!dsf1.Equals(dsf5, nil, 3), // 71
+		!dsf1.Equals(dsf5, nil, []int {1, 2}), // 72
+
+		!dsf1.Equals(dsf5, DEEPSEARCH_False), // 73
+		!dsf1.Equals(dsf5, nil, []int {1}), // 74
+		!dsf1.Equals(dsf5, nil, 1), // 75
+		
+		!dsf1.Equals(dsf5, nil, []int {2}), // 76
+		
+		
+		dsf1.Equals(dsf6, nil, 0), // 77
+
+		!dsf1.Equals(dsf6, nil, -1), // 78
+		!dsf6.Equals(dsf1, nil, -1), // 79
+		!dsf1.Equals(dsf6, nil, 2), // 80
+		!dsf1.Equals(dsf6, nil, 3), // 81
+		!dsf1.Equals(dsf6, nil, []int {1, 2}), // 82
+
+		!dsf1.Equals(dsf6, DEEPSEARCH_False), // 83
+		!dsf1.Equals(dsf6, nil, []int {1}), // 84
+		!dsf1.Equals(dsf6, nil, 1), // 85
+		
+		!dsf1.Equals(dsf6, nil, []int {2}), // 86
 
 	}
 
@@ -752,7 +879,7 @@ func case_stack_Shuffle(funcName string) {
 
 func case_stack_Transpose(funcName string) {
 
-	// TODO: implement testSubstackType
+	// TODO: implement substackKeysType
 
 	test_Start(funcName, showTestText)
 
@@ -837,22 +964,23 @@ func Run(_showTestText bool) {
 	case_card_Equals("card.Equals") // GOOD
 	case_MakeStack("MakeStack") // GOOD
 	case_stack_Equals("stack.Equals") // GOOD
-	case_MakeStackMatrix("MakeStackMatrix") // GOOD
-	case_stack_ToArray("stack.ToArray") // GOOD
-	case_stack_ToMap("stack.ToMap") // GOOD
-	case_stack_ToMatrix("stack.ToMatrix") // GOOD
-	case_stack_IsRegular("stack.IsRegular") // GOOD
-	case_stack_Shape("stack.Shape") // GOOD
-	case_stack_Duplicate("stack.Duplicate") // GOOD
-	case_stack_Empty("stack.Empty") // GOOD
-	case_card_Clone("card.Clone") // GOOD
-	case_stack_Clone("stack.Clone") // GOOD
-	case_stack_Shuffle("stack.Shuffle") // GOOD
-	case_card_Print("card.Print") // GOOD
-	case_stack_Print("stack.Print") // GOOD
+	// case_MakeStackMatrix("MakeStackMatrix") // GOOD
+	// case_stack_Lambda("stack.Lambda") // BAD
+	// case_stack_ToArray("stack.ToArray") // GOOD
+	// case_stack_ToMap("stack.ToMap") // GOOD
+	// case_stack_ToMatrix("stack.ToMatrix") // GOOD
+	// case_stack_IsRegular("stack.IsRegular") // GOOD
+	// case_stack_Shape("stack.Shape") // GOOD
+	// case_stack_Duplicate("stack.Duplicate") // GOOD
+	// case_stack_Empty("stack.Empty") // GOOD
+	// case_card_Clone("card.Clone") // GOOD
+	// case_stack_Clone("stack.Clone") // GOOD
+	// case_stack_Shuffle("stack.Shuffle") // GOOD
+	// case_card_Print("card.Print") // GOOD
+	// case_stack_Print("stack.Print") // GOOD
 	
 	// GENERALIZED FUNCTIONS
-	case_stack_Add("stack.Add") // BAD
+	// case_stack_Add("stack.Add") // BAD
 	// case_stack_AddMany("stack.AddMany") // BAD
 	// case_stack_Move("stack.Move") // BAD
 	// case_stack_Has("stack.Has") // BAD
@@ -868,7 +996,6 @@ func Run(_showTestText bool) {
 	// case_stack_RemoveMany("stack.RemoveMany") // BAD
 	
 	// NON-GENERALIZED FUNCTIONS (DEPENDENT ON GENERALIZED FUNCTIONS)
-	// case_stack_Lambda("stack.Lambda") // BAD
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD - update, see function documentation
 	// case_stack_Transpose("stack.Transpose") // BAD
 	// case_stack_Unique("stack.Unique") // BAD

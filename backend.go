@@ -54,13 +54,13 @@ func getIterator(stack *Stack, lambda func(*Card, *Stack, ...any) bool, deepSear
  
  @param `stack` type{*Stack}
  @param `lambda` type{func(*Card, *Stack, ret any, ...workingMem any)}
- @param `testSubstackType` type{bool}
+ @param `substackKeysType` type{bool}
  @param `deepSearchType` type{DEEPSEARCH}
  @param `depth` type{int}
  @param `ret` type{&any}
  @updates `stack.Cards` to whatever the `lambda` function specifies
  */
-func generalIterator(stack *Stack, lambda func(*Card, *Stack, any, ...any), testSubstackType bool, deepSearchType DEEPSEARCH, depth int, ret any) {
+func generalIterator(stack *Stack, lambda func(*Card, *Stack, any, ...any), substackKeysType bool, deepSearchType DEEPSEARCH, depth int, ret any) {
 	
 	// initialize
 	if depth == -1 || depth > stack.Depth { depth = stack.Depth }
@@ -68,13 +68,13 @@ func generalIterator(stack *Stack, lambda func(*Card, *Stack, any, ...any), test
 
 	workingMem := []any {}
 	for _, c := range stack.Cards {
-		if (!testSubstackType && depth != 0) || (testSubstackType && depth == 1) {
+		if (!substackKeysType && depth != 0) || (substackKeysType && depth == 1) {
 			lambda(c, stack, ret, workingMem...)
 			stack.setStackProperties()
 		}
 		subStack, hasSubstack := c.Val.(*Stack)
 		if hasSubstack && deepSearchType == DEEPSEARCH_True && depth > 1 {
-			generalIterator(subStack, lambda, testSubstackType, deepSearchType, depth - 1, ret) // forwardpropagate
+			generalIterator(subStack, lambda, substackKeysType, deepSearchType, depth - 1, ret) // forwardpropagate
 		}
 	}
 	stack.setStackProperties()
