@@ -792,40 +792,30 @@ func case_stack_Lambda(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	stackToTranspose := MakeStack([]int {1, 2, 3, 4})
-	stackToCountKeysOver30 := MakeStack(nil, []int {5, 10, 20, 25, 50})
-	stackToAdd := MakeStack([]int {1, 2, 3, 4})
-
-	// transposeper
-	stackToTranspose.Lambda(func(card *Card, stack *Stack, _ ...any) {
-		// moves each card, from first to last, to the first position in the stack
-		newCards := []*Card {card}
-		for _, c := range stack.Cards {
-			if c != card {
-				newCards = append(newCards, c)
-			}
+	stack1 := MakeStack([]int {1, 5, 20, 41, 92, 4104}).Lambda(func(card *Card, stack *Stack, retAdr any, _ ...any) {
+		gogenerics.SetPointer(retAdr, stack)
+		if !(5 < card.Val.(int) && card.Val.(int) < 4104) {
+			stack.Remove(FIND_Card, card)
 		}
-		stack.Cards = newCards
-	})
-
-	// get amount of cards with keys under 30
-	keyCount := stackToCountKeysOver30.Lambda(func(card *Card, stack *Stack, ret any) {
-		if card.Key.(int) < 30 { ret = ret.(int) + 1 }
-	})
-
-	// add each card by its previous value
-	stackToAdd.Lambda(func(card *Card, stack *Stack, _ any, workingMem ...any) {
-		var previousVal any
-		gogenerics.UnpackVariadic(workingMem, &previousVal)
-		
-		card.Val = card.Val.(int) + previousVal.(int)
-		previousVal = card.Val
-	})
+	}).(*Stack)
 	
 	conditions := []bool{
-		stackToTranspose.Equals(MakeStack([]int {4, 3, 2, 1})),
-		keyCount == 4,
-		stackToAdd.Equals(MakeStack(1, 3, 6, 10)),
+		stack1.Equals(MakeStack([]int {20, 41, 92})),
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_Add(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	//stack1 := MakeStack([]int {1, 2, 3}).Add(4, ORDER_After, FIND_Last)
+	MakeStack([]int {1, 2, 3}).Add(4, ORDER_After, FIND_Last)
+	
+	conditions := []bool{
+		false,//stack1.Equals(MakeStack([]int {1, 2, 3, 4})),
 	}
 
 	test_End(funcName, conditions)
@@ -858,10 +848,10 @@ func Run(_showTestText bool) {
 	case_stack_Shuffle("stack.Shuffle") // GOOD
 	case_card_Print("card.Print") // GOOD
 	case_stack_Print("stack.Print") // GOOD
-	// case_stack_Lambda("stack.Lambda") // BAD
 	
 	// GENERALIZED FUNCTIONS
-	// case_stack_Add("stack.Add") // BAD
+	case_stack_Add("stack.Add") // BAD
+	// case_stack_AddMany("stack.AddMany") // BAD
 	// case_stack_Move("stack.Move") // BAD
 	// case_stack_Has("stack.Has") // BAD
 	// case_stack_Get("stack.Get") // BAD
@@ -876,6 +866,7 @@ func Run(_showTestText bool) {
 	// case_stack_RemoveMany("stack.RemoveMany") // BAD
 	
 	// NON-GENERALIZED FUNCTIONS (DEPENDENT ON GENERALIZED FUNCTIONS)
+	// case_stack_Lambda("stack.Lambda") // BAD
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD - update to just use the get() function
 	// case_stack_Transpose("stack.Transpose") // BAD
 	// case_stack_Unique("stack.Unique") // BAD

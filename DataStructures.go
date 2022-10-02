@@ -131,7 +131,7 @@ func setCLONEDefaultIfNil(cloneType *any) {
 
 func setDEEPSEARCHDefaultIfNil(deepSearchType *any) {
 	if *deepSearchType == nil {
-		*deepSearchType = DEEPSEARCH_False
+		*deepSearchType = DEEPSEARCH_True
 	}
 }
 

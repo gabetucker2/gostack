@@ -420,7 +420,7 @@ func (stack *Stack) ToMatrix(variadic ...any) (matrix []any) {
 	// set defaults
 	setRETURNDefaultIfNil(&returnType)
 	setDepthDefaultIfNil(&depth)
-	if deepSearchType == nil {deepSearchType = DEEPSEARCH_True}
+	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	if depth == -1 || depth.(int) > stack.Depth { depth = stack.Depth }
 	if deepSearchType == DEEPSEARCH_False { depth = 1 }
 
@@ -631,7 +631,7 @@ func (stack *Stack) Clone(variadic ...any) *Stack {
 	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth)
 	// set defaults
 	setDepthDefaultIfNil(&depth)
-	if deepSearchType == nil {deepSearchType = DEEPSEARCH_True}
+	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	if depth == -1 || depth.(int) > stack.Depth { depth = stack.Depth }
 	if deepSearchType == DEEPSEARCH_False { depth = 1 }
 
@@ -797,7 +797,7 @@ func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 	// set default vals
 	if compareKeys == nil {compareKeys = COMPARE_True}
 	if compareVals == nil {compareVals = COMPARE_True}
-	if deepSearchType == nil {deepSearchType = DEEPSEARCH_True}
+	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	setDepthDefaultIfNil(&depth)
 	setPOINTERDefaultIfNil(&pointerTypeStack)
 	setPOINTERDefaultIfNil(&pointerTypeKey)
@@ -904,7 +904,7 @@ func (stack *Stack) Transpose(variadic ...any) *Stack {
 	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth)
 	// set defaults
 	setDepthDefaultIfNil(&depth)
-	if deepSearchType == nil {deepSearchType = DEEPSEARCH_True}
+	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	if depth == -1 || depth.(int) > stack.Depth { depth = stack.Depth }
 	if deepSearchType == DEEPSEARCH_False { depth = 1 }
 
@@ -999,7 +999,7 @@ func (stack *Stack) Print(variadic ...any) {
  @receiver `stack` type{*Stack}
  @param `lambda` type{func(*Card, *Stack, (returnVal) any, ...any)}
  @param optional `onlyGetDeepest` type{bool} default true
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `depth` type{int} default -1 (deepest)
  @returns (returnVal) type{any}
  @ensures
@@ -1012,7 +1012,8 @@ func (stack *Stack) Lambda(lambda any, variadic ...any) (ret any) {
 	var onlyGetDeepest, deepSearchType, depth any
 	gogenerics.UnpackVariadic(variadic, &onlyGetDeepest, &deepSearchType, &depth)
 	if onlyGetDeepest == nil {onlyGetDeepest = true}
-	if deepSearchType == nil {deepSearchType = DEEPSEARCH_True}
+	setDEEPSEARCHDefaultIfNil(&deepSearchType)
+	setDepthDefaultIfNil(&depth)
 	
 	// main
 	generalIterator(stack, lambda.(func(*Card, *Stack, any, ...any)), onlyGetDeepest.(bool), deepSearchType.(DEEPSEARCH), depth.(int), &ret)
@@ -1024,7 +1025,7 @@ func (stack *Stack) Lambda(lambda any, variadic ...any) (ret any) {
 /** Adds to a stack of cards or a cards at (each) position(s) and returns `stack`
  
  @receiver `stack` type{*Stack}
- @param `insert` type{Card, Stack}
+ @param `insert` type{Card, Stack, val (any)}
  @param optional `orderType` type{ORDER} default ORDER_Before
  @param optional `findType` type{FIND} default FIND_First
  @param optional `findData` type{any} default nil
@@ -1048,7 +1049,41 @@ func (stack *Stack) Add(insert any, variadic ...any) *Stack {
 	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &pointerType, &deepSearchType, &depth, &overrideStackConversion)
 
 	// allow deepSearchHandler to handle function
-	*stack = *stack.deepSearchHandler("Add", true, findType, findData, nil, pointerType, deepSearchType, depth, nil, nil, insert, orderType, nil, nil, nil, nil, nil, nil, overrideStackConversion)
+	stack = stack.deepSearchHandler("Add", true, findType, findData, nil, pointerType, deepSearchType, depth, nil, nil, insert, orderType, nil, nil, nil, nil, nil, nil, overrideStackConversion)
+
+	// allow deepSearchHandler to take care of function
+	return stack
+
+}
+
+/** Adds to a stack of cards or a cards at (each) position(s) and returns `stack`
+ 
+ @receiver `stack` type{*Stack}
+ @param `insert` type{Card, Stack, val (any)}
+ @param optional `orderType` type{ORDER} default ORDER_Before
+ @param optional `findType` type{FIND} default FIND_First
+ @param optional `findData` type{any} default nil
+ @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `depth` type{int} default -1 (deepest)
+ @param optional `overrideStackConversion` type{bool} default false
+	if `insert` is of type{Stack}:
+		if not `overrideStackConversion`:
+			add to `stack` from `insert.Cards`
+		else if `overrideStackConversion`:
+			add the `insert` stack to `stack` as the val of a card
+ @updates `stack` to have new cards before/after each designated position
+ @returns `stack` if cards were added OR nil if no cards were added (due to invalid find)
+ @requires `stack.Clone()` has been implemented
+ */
+func (stack *Stack) AddMany(insert any, variadic ...any) *Stack {
+
+	// unpack variadic into optional parameters
+	var orderType, findType, findData, pointerType, deepSearchType, depth, overrideStackConversion any
+	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &pointerType, &deepSearchType, &depth, &overrideStackConversion)
+
+	// allow deepSearchHandler to handle function
+	stack = stack.deepSearchHandler("Add", false, findType, findData, nil, pointerType, deepSearchType, depth, nil, nil, insert, orderType, nil, nil, nil, nil, nil, nil, overrideStackConversion)
 
 	// allow deepSearchHandler to take care of function
 	return stack

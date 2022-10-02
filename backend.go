@@ -2,13 +2,14 @@ package gostack
 
 import (
 	"reflect"
+	"fmt"
 
 	"github.com/gabetucker2/gogenerics"
 )
 
 /** Performs the function using a uniform framework for performing deepSearches
 
-@shorthand Just pass the proper variables (or nil) into this function from Library.go, and this function will handle the rest
+ @shorthand Just pass the proper variables (or nil) into this function from Library.go, and this function will handle the rest
 */
 func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, findData, returnType, pointerType, deepSearchType, depth, typeType, uniqueType, insert, orderType, findData_to, findType_to, pointerType_to, cloneType1, cloneType2, cloneType3, overrideStackConversion any) (ret *Stack) {
 
@@ -35,6 +36,9 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 	// 2) get position data from clone
 	targetIndices, targetCards, targetStacks := stackClone.getPositions(getFirst, findType.(FIND), findData, pointerType.(POINTER), deepSearchType.(DEEPSEARCH), depth.(int))
 	
+	stackClone.Print()
+	fmt.Println(len(targetCards))
+	
 	// 3) iterate through each card in targetCards
 	if !(getFirst && len(targetCards) == 0) {
 		for i := range targetCards {
@@ -47,27 +51,6 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 			targetCard := targetStack.Cards[targetLocalIdx]
 
 			switch callFrom {
-			case "Unique":
-
-				// where newCards is uniqueCards
-				newCards = targetStack.Cards
-				for i, newCard := range newCards {
-					if (typeType == TYPE_Key &&
-						(pointerType == POINTER_False && targetCard.Key == newCard.Key) ||
-						(pointerType == POINTER_True && &targetCard.Key == &newCard.Key) ) ||
-						(typeType == TYPE_Val &&
-						(pointerType == POINTER_False && targetCard.Val == newCard.Val) ||
-						(pointerType == POINTER_True && &targetCard.Val == &newCard.Val) ) {
-							
-							// target already exists in the card array, so remove it from the output card array
-							removeIdx(newCards, i)
-							break
-
-					}
-				}
-
-				// set the local stack to the new stack after setting newCards
-				targetStack.Cards = newCards
 
 			case "Add":
 
@@ -82,15 +65,18 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 				if orderType == ORDER_After { newCards = append(newCards, targetCard) }
 
 				// add insert Card(s) before/after targetCard
+				//lint:ignore S1034 ignore warning
 				switch insert.(type) {
-				case Card:
+				case *Card:
 					newCards = append(newCards, insert.(*Card))
-				case Stack:
+				case *Stack:
 					if overrideStackConversion.(bool) {
 						newCards = append(newCards, MakeCard(insert.(*Stack)))
 					} else {
 						newCards = append(newCards, insert.(*Stack).Cards...)
 					}
+				default:
+					newCards = append(newCards, MakeCard(insert))
 				}
 
 				// add the targetCard after insert if insert is Order_BEFORE (insert ordered before targetCard)
@@ -166,7 +152,7 @@ func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, 
 	} else {
 		ret = nil
 	}
-	
+	fmt.Println(ret)
 	// 5) return nil if performing function on one card and failed to find any targets on which to perform that function, else return stackClone
 	return
 
@@ -182,25 +168,6 @@ func setIndices(cards []*Card) {
 		cards[i].Idx = i
 	}
 }
-
-/** Removes an element at the index within an array (only works for cards)
-
- @param `arr` type{[]*Card{}}
- @param `idx` type{int}
- @returns new arr
- @constructs new arr
-*/
-func removeIdx(arr []*Card, idx int) []*Card {
-	var newArr []*Card
-	for i := range arr {
-		if i != idx {
-			newArr = append(newArr, arr[i])
-		}
-	}
-	return newArr
-}
-
-
 
 /** Removes the cards from a stack for which lambda(card) is false, updating to a new 1D stack
  
@@ -230,7 +197,7 @@ func getIterator(stack *Stack, lambda func(*Card, *Stack, ...any) bool, deepSear
 /** Passes each card into the lambda function iteratively
  
  @param `stack` type{*Stack}
- @param `lambda` type{func(*Card, *Stack, any, ...workingMem)}
+ @param `lambda` type{func(*Card, *Stack, ret any, ...workingMem any)}
  @param `onlyGetDeepest` type{bool}
  @param `deepSearchType` type{DEEPSEARCH}
  @param `depth` type{int}
@@ -284,12 +251,6 @@ func generalIterator(stack *Stack, lambda func(*Card, *Stack, any, ...any), only
      return an array of all found elements
  */
 func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, pointerType POINTER, deepSearchType DEEPSEARCH, depth int) (targetIdxs [][]int, targetCards []*Card, targetStacks []*Stack) {
-
-	/** Returns a bool for whether the pointer yields a true result */
-	comparePointer := func(x1, x2 any) bool {
-		return (pointerType == POINTER_False    &&  x1 ==  x2) ||
-			   (pointerType == POINTER_True && &x1 == &x2)
-	}
 
 	// setup main by deepening iteratively
 	if deepSearchType == DEEPSEARCH_False { depth = 1 }
@@ -361,7 +322,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, poi
 		case FIND_Key:
 			for i := range stack.Cards {
 				testKey := stack.Cards[i].Key
-				if comparePointer(testKey, findData) {
+				if gogenerics.PointersEqual(testKey, findData) {
 					filteredList = append(filteredList, i)
 					if getFirst { break }
 				}
@@ -373,7 +334,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, poi
 				testKey := stack.Cards[i].Key
 				for j := range keyArray {
 					targetKey := keyArray[j]
-					if comparePointer(testKey, targetKey) {
+					if gogenerics.PointersEqual(testKey, targetKey) {
 						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}
@@ -386,7 +347,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, poi
 				testKey := stack.Cards[i].Key
 				for j := range keyStack.Cards {
 					targetKey := keyStack.Cards[j].Val
-					if comparePointer(testKey, targetKey) {
+					if gogenerics.PointersEqual(testKey, targetKey) {
 						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}
@@ -396,7 +357,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, poi
 		case FIND_Val:
 			for i := range stack.Cards {
 				testVal := stack.Cards[i].Val
-				if comparePointer(testVal, findData) {
+				if gogenerics.PointersEqual(testVal, findData) {
 					filteredList = append(filteredList, i)
 					if getFirst { break }
 				}
@@ -408,7 +369,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, poi
 				testVal := stack.Cards[i].Val
 				for j := range valArray {
 					targetVal := valArray[j]
-					if comparePointer(testVal, targetVal) {
+					if gogenerics.PointersEqual(testVal, targetVal) {
 						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}
@@ -421,7 +382,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, poi
 				testVal := stack.Cards[i].Val
 				for j := range valStack.Cards {
 					targetVal := valStack.Cards[j].Val
-					if comparePointer(testVal, targetVal) {
+					if gogenerics.PointersEqual(testVal, targetVal) {
 						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}
@@ -431,7 +392,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, poi
 		case FIND_Card:
 			for i := range stack.Cards {
 				testCard := stack.Cards[i]
-				if comparePointer(testCard, findData.(*Card)) {
+				if gogenerics.PointersEqual(testCard, findData.(*Card)) {
 					filteredList = append(filteredList, i)
 					if getFirst { break }
 				}
@@ -443,7 +404,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, poi
 				testCard := stack.Cards[i]
 				for j := range cardStack.Cards {
 					targetCard := cardStack.Cards[j]
-					if comparePointer(testCard, targetCard) {
+					if gogenerics.PointersEqual(testCard, targetCard) {
 						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}
@@ -456,7 +417,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, poi
 				testCard := stack.Cards[i]
 				for j := range cardStack.Cards {
 					targetCard := cardStack.Cards[j].Val
-					if comparePointer(testCard, targetCard) {
+					if gogenerics.PointersEqual(testCard, targetCard) {
 						filteredList = append(filteredList, i)
 						if getFirst { break }
 					}

@@ -116,6 +116,8 @@
  >>>
  >>> [Generalized Functions](#generalizedFunctions)
  >>>> [stack.Add(...)](#Add)
+ >>>>
+ >>>> [stack.AddMany(...)](#AddMany)
  >>>
  >>>> [stack.Move(...)](#Move)
  >>>
@@ -332,6 +334,7 @@
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
  * **stack.Add(insert, ...orderType, ...findType, ...findData, ...pointerType, ...deepSearchType, ...depth, ...overrideStackConversion)**
+ * **stack.AddMany(insert, ...orderType, ...findType, ...findData, ...pointerType, ...deepSearchType, ...depth, ...overrideStackConversion)**
  * **stack.Move(findType_from, orderType, findType_to, ...findData_from, ...findData_to, ...pointerType_from, ...pointerType_to, ...deepSearchType, ...depth)**
  * **stack.Swap(findType_from, findType_to, ...findData_from, ...findData_to, ...pointerType_from, ...pointerType_to, ...deepSearchType, ...depth)**
  * **stack.Has(returnType, findType, ...findData, ...pointerType, ...deepSearchType, ...depth)**
@@ -545,9 +548,9 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
 
  > ***DEEPSEARCH***
  >> DEEPSEARCH_True
+ >>> default
  >>
  >> DEEPSEARCH_False
- >>> default
 
 <h4 name = "COMPARE">COMPARE</h4>
 
@@ -901,6 +904,13 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
  @returns `stack` if cards were added OR nil if no cards were added (due to invalid find)
  @updates `stack` to have new cards before/after each designated position
  @requires `stack.Clone()` has been implemented
+ ```
+ 
+<h3 name = "AddMany">AddMany</h3>
+ 
+ `stack.AddMany(insert, ...orderType, ...findType, ...findData, ...pointerType, ...deepSearchType, ...depth, ...overrideStackConversion)`
+ ```
+TODO: Add
  ```
  
 <h3 name = "Move">Move</h3>
