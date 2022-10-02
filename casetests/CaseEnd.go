@@ -752,6 +752,8 @@ func case_stack_Shuffle(funcName string) {
 
 func case_stack_Transpose(funcName string) {
 
+	// TODO: implement testSubstackType
+
 	test_Start(funcName, showTestText)
 
 	conditions := []bool{
@@ -867,7 +869,7 @@ func Run(_showTestText bool) {
 	
 	// NON-GENERALIZED FUNCTIONS (DEPENDENT ON GENERALIZED FUNCTIONS)
 	// case_stack_Lambda("stack.Lambda") // BAD
-	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD - update to just use the get() function
+	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD - update, see function documentation
 	// case_stack_Transpose("stack.Transpose") // BAD
 	// case_stack_Unique("stack.Unique") // BAD
 

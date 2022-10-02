@@ -22,6 +22,8 @@ type CLONE int
 type DEEPSEARCH int
 type COMPARE int
 type CONVERT int
+type TESTSUBSTACKS int
+
 //type PRINT int
 
 const (
@@ -94,6 +96,11 @@ const (
 	CONVERT_True
 )
 
+const (
+	TESTSUBSTACKS_False CONVERT = iota
+	TESTSUBSTACKS_True
+)
+
 /*const (
 	PRINT_False PRINT = iota
 	PRINT_True
@@ -144,6 +151,12 @@ func setDepthDefaultIfNil(depth *any) {
 func setCOMPAREDefaultIfNil(compareType *any) {
 	if *compareType == nil {
 		*compareType = COMPARE_False
+	}
+}
+
+func setTESTSUBSTACKSDefaultIfNil(testSubstackType *any) {
+	if *testSubstackType == nil {
+		*testSubstackType = TESTSUBSTACKS_False
 	}
 }
 

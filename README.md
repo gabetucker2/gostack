@@ -307,6 +307,10 @@
  > * COMPARE_True
  > * COMPARE_False
 
+ > **TESTSUBSTACK**
+ > * TESTSUBSTACK_True
+ > * TESTSUBSTACK_False
+
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
  * **MakeCard(...idx, ...key, ...val)**
@@ -560,6 +564,16 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
  >> COMPARE_True
  >>
  >> COMPARE_False
+ >>> default
+
+<h4 name = "TESTSUBSTACK">TESTSUBSTACK</h4>
+
+ This is an enum intended to make it easy to determine whether you are considering substacks in your deep search.  For instance, if you want to look for substacks with certain keys, then you would enable this.  Otherwise, if you just wanted to look for cards within substacks, then you would keep this disabled.
+
+ > ***TESTSUBSTACK***
+ >> TESTSUBSTACK_True
+ >>
+ >> TESTSUBSTACK_False
  >>> default
 
 <h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>

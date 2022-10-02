@@ -1,162 +1,18 @@
 package gostack
 
 import (
-	"reflect"
 	"fmt"
+	"reflect"
 
 	"github.com/gabetucker2/gogenerics"
 )
 
-/** Performs the function using a uniform framework for performing deepSearches
+/**
 
- @shorthand Just pass the proper variables (or nil) into this function from Library.go, and this function will handle the rest
-*/
-func (stack *Stack) deepSearchHandler(callFrom string, getFirst bool, findType, findData, returnType, pointerType, deepSearchType, depth, typeType, uniqueType, insert, orderType, findData_to, findType_to, pointerType_to, cloneType1, cloneType2, cloneType3, overrideStackConversion any) (ret *Stack) {
+ */
+ func decodeOutputs() {
 
-	// 0) set defaults
-	setORDERDefaultIfNil(&orderType)
-	setFINDDefaultIfNil(&findType)
-	setPOINTERDefaultIfNil(&returnType)
-	setPOINTERDefaultIfNil(&pointerType)
-	setDEEPSEARCHDefaultIfNil(&deepSearchType)
-	setDepthDefaultIfNil(&depth)
-	setCLONEDefaultIfNil(&cloneType1)
-	setCLONEDefaultIfNil(&cloneType2)
-	setCLONEDefaultIfNil(&cloneType3)
-	if overrideStackConversion == nil {overrideStackConversion = false}
-
-	// 1) clone the stack
-	var stackClone *Stack
-	if callFrom == "Get" || callFrom == "GetMany" {
-		stackClone = new(Stack)
-	} else {
-		stackClone = stack.Clone()
-	}
-
-	// 2) get position data from clone
-	targetIndices, targetCards, targetStacks := stackClone.getPositions(getFirst, findType.(FIND), findData, pointerType.(POINTER), deepSearchType.(DEEPSEARCH), depth.(int))
-	
-	stackClone.Print()
-	fmt.Println(len(targetCards))
-	
-	// 3) iterate through each card in targetCards
-	if !(getFirst && len(targetCards) == 0) {
-		for i := range targetCards {
-			// 4) perform function on found card contingent on the caller function type, treating stackClone or targetStack (within stackClone) as the output in this function
-
-			currentIdxSet := targetIndices[i] // current set of indices to get to target from stackClone
-			targetStack := targetStacks[i] // parent stacks of each target
-			var newCards []*Card // set of cards with which to replace targetStack.Cards (original stack)
-			targetLocalIdx := currentIdxSet[len(currentIdxSet)-1]
-			targetCard := targetStack.Cards[targetLocalIdx]
-
-			switch callFrom {
-
-			case "Add":
-
-				//// CARDS < targetLocalIdx
-				// add the cards before targetCard
-				for j := 0; j < targetLocalIdx; j++ {
-					newCards = append(newCards, targetStack.Cards[j])
-				}
-
-				//// CARDS == targetLocalIdx
-				// add the targetCard before insert if insert is Order_AFTER (insert ordered after targetCard)
-				if orderType == ORDER_After { newCards = append(newCards, targetCard) }
-
-				// add insert Card(s) before/after targetCard
-				//lint:ignore S1034 ignore warning
-				switch insert.(type) {
-				case *Card:
-					newCards = append(newCards, insert.(*Card))
-				case *Stack:
-					if overrideStackConversion.(bool) {
-						newCards = append(newCards, MakeCard(insert.(*Stack)))
-					} else {
-						newCards = append(newCards, insert.(*Stack).Cards...)
-					}
-				default:
-					newCards = append(newCards, MakeCard(insert))
-				}
-
-				// add the targetCard after insert if insert is Order_BEFORE (insert ordered before targetCard)
-				if orderType == ORDER_Before { newCards = append(newCards, targetCard) }
-
-				//// CARDS > targetLocalIdx
-				// add the cards after targetCard
-				for j := targetLocalIdx+1; j < len(targetStack.Cards); j++ {
-					newCards = append(newCards, targetStack.Cards[j])
-				}
-
-				// set the local stack to the new stack after setting newCards
-				targetStack.Cards = newCards
-
-			case "Get":
-
-				var insertCard *Card
-
-				switch returnType {
-				case RETURN_Cards:
-
-					// card which we will transform (if necessary) to insert
-					insertCard = targetCard
-
-					// clone if necessary
-					if cloneType1 == CLONE_True {
-						insertCard = insertCard.Clone()
-					}
-					if cloneType2 == CLONE_True {
-						insertCard.Key = gogenerics.CloneObject(insertCard.Key)
-					}
-					if cloneType3 == CLONE_True {
-						insertCard.Val = gogenerics.CloneObject(insertCard.Val)
-					}
-
-				case RETURN_Idxs:
-
-					insertCard = new(Card)
-					insertCard.Val = i
-					if cloneType1 == CLONE_True {
-						insertCard.Val = gogenerics.CloneObject(insertCard.Val)
-					}
-
-				case RETURN_Keys:
-
-					insertCard = new(Card)
-					insertCard.Val = targetCard.Key
-					if cloneType1 == CLONE_True {
-						insertCard.Val = gogenerics.CloneObject(insertCard.Val)
-					}
-
-				case RETURN_Vals:
-
-					insertCard = new(Card)
-					insertCard.Val = targetCard.Val
-					if cloneType1 == CLONE_True {
-						insertCard.Val = gogenerics.CloneObject(insertCard.Val)
-					}
-
-				}
-
-				// get targeted card OR nil
-				stackClone.Cards = append(stackClone.Cards, insertCard)
-				
-			}
-
-		}
-		
-		// finalize stackClone in preparation for return
-		stackClone.setStackProperties()
-		ret = stackClone
-
-	} else {
-		ret = nil
-	}
-	fmt.Println(ret)
-	// 5) return nil if performing function on one card and failed to find any targets on which to perform that function, else return stackClone
-	return
-
-}
+ }
 
 /** Sets every card's index in an array to a new index
 
@@ -198,13 +54,13 @@ func getIterator(stack *Stack, lambda func(*Card, *Stack, ...any) bool, deepSear
  
  @param `stack` type{*Stack}
  @param `lambda` type{func(*Card, *Stack, ret any, ...workingMem any)}
- @param `onlyGetDeepest` type{bool}
+ @param `testSubstackType` type{bool}
  @param `deepSearchType` type{DEEPSEARCH}
  @param `depth` type{int}
  @param `ret` type{&any}
  @updates `stack.Cards` to whatever the `lambda` function specifies
  */
-func generalIterator(stack *Stack, lambda func(*Card, *Stack, any, ...any), onlyGetDeepest bool, deepSearchType DEEPSEARCH, depth int, ret any) {
+func generalIterator(stack *Stack, lambda func(*Card, *Stack, any, ...any), testSubstackType bool, deepSearchType DEEPSEARCH, depth int, ret any) {
 	
 	// initialize
 	if depth == -1 || depth > stack.Depth { depth = stack.Depth }
@@ -212,13 +68,13 @@ func generalIterator(stack *Stack, lambda func(*Card, *Stack, any, ...any), only
 
 	workingMem := []any {}
 	for _, c := range stack.Cards {
-		if (!onlyGetDeepest && depth != 0) || (onlyGetDeepest && depth == 1) {
+		if (!testSubstackType && depth != 0) || (testSubstackType && depth == 1) {
 			lambda(c, stack, ret, workingMem...)
 			stack.setStackProperties()
 		}
 		subStack, hasSubstack := c.Val.(*Stack)
 		if hasSubstack && deepSearchType == DEEPSEARCH_True && depth > 1 {
-			generalIterator(subStack, lambda, onlyGetDeepest, deepSearchType, depth - 1, ret) // forwardpropagate
+			generalIterator(subStack, lambda, testSubstackType, deepSearchType, depth - 1, ret) // forwardpropagate
 		}
 	}
 	stack.setStackProperties()
