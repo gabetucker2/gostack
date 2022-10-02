@@ -625,52 +625,77 @@ func (card *Card) Clone() *Card {
 
  @receiver `stack` type{*Stack}
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `substackKeysType` type{SUBSTACKKEYS} default SUBSTACKKEYS_True
-	whether to clone the substack keys
  @param optional `depth` type{int} default -1 (deepest)
- @param optional `cloneSubstacksType` type{CLONE} default CLONE_True
+ @param optional `cloneCardKeys` type{CLONE} default CLONE_True
+ @param optional `cloneCardVals` type{CLONE} default CLONE_True
+ @param optional `cloneSubstackKeys` type{CLONE} default CLONE_True
+ @param optional `cloneSubstackVals` type{CLONE} default CLONE_True
+	only set to false if you want all cards containing substacks to erase those substacks, replacing them with nils, preserving their space in the stack as cards with nil values
+      (will only work on the first layer)
  @returns type{*Stack} stack clone
  @constructs type{*Stack} clone of `stack`
+ @ensures
+   * if you set clone to false, then that property will be cloned as nil
+   * if you shallow clone a deep stack and cloneSubstackVals is true, then the original substacks will be held in the clone
 */
 func (stack *Stack) Clone(variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var deepSearchType, substackKeysType, depth, cloneSubstacksType any
-	gogenerics.UnpackVariadic(variadic, &deepSearchType, &substackKeysType, &depth, &cloneSubstacksType)
+	var deepSearchType, depth, cloneCardKeys, cloneCardVals, cloneSubstackKeys, cloneSubstackVals any
+	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth, &cloneCardKeys, &cloneCardVals, &cloneSubstackKeys, &cloneSubstackVals)
 	// set defaults
 	setDEEPSEARCHDefaultIfNil(&deepSearchType)
-	setSUBSTACKKEYSDefaultIfNil(&substackKeysType)
 	setDepthDefaultIfNil(&depth)
-	setCLONEDefaultIfNil(&cloneSubstacksType)
+	setCLONEDefaultIfNil(&cloneCardKeys)
+	setCLONEDefaultIfNil(&cloneCardVals)
+	setCLONEDefaultIfNil(&cloneSubstackKeys)
+	setCLONEDefaultIfNil(&cloneSubstackVals)
 	if depth == -1 || depth.(int) > stack.Depth { depth = stack.Depth }
 	if deepSearchType == DEEPSEARCH_False { depth = 1 }
 
 	// init
 	clone := new(Stack)
-	clone.Size = stack.Size
-	clone.Depth = stack.Depth
 	// recursive loop
-	for i := range stack.Cards {
-		newCard := stack.Cards[i]
-		switch stack.Cards[i].Val.(type) {
-		case *Stack:
-			if cloneSubstacksType == CLONE_True {
-				newCard = newCard.Clone() // if cloneSubstacks is false, then preserve the original stack
-			}
-			newCard.Val = stack.Cards[i].Val.(*Stack)
-			if deepSearchType == DEEPSEARCH_True && depth.(int) > 1 {
-				 // forwardpropagate if and only if parameters tell you to go deeper
-				 // (don't go deeper for depth = 1 because .Clone() already clones layer 1 in stack)
-				newCard.Val = newCard.Val.(*Stack).Clone(deepSearchType, substackKeysType, depth.(int) - 1)
-			}
-			if substackKeysType == SUBSTACKKEYS_True {
-				newCard.Key = stack.Cards[i].Key
-			}
-		default:
-			newCard = newCard.Clone()
-		}
+	for _, originalCard := range stack.Cards {
+
+		// set up new card
+		newCard := MakeCard()
 		clone.Cards = append(clone.Cards, newCard)
+
+		// set card properties depending on whether it's a substack
+		substack, isSubstack := originalCard.Val.(*Stack)
+		if isSubstack {
+
+			if cloneSubstackKeys == CLONE_True {
+				newCard.Key = originalCard.Key
+			}
+			if cloneSubstackVals == CLONE_True {
+
+				// forwardpropagate if depth > 1 and we're deepsearching
+				if deepSearchType == DEEPSEARCH_True && depth.(int) > 1 {
+					newCard.Val = substack.Clone(deepSearchType, depth.(int) - 1, cloneCardKeys, cloneCardVals, cloneSubstackKeys, cloneSubstackVals)
+				} else {
+					newCard.Val = substack
+				}
+
+			}
+
+		} else { // is non-substack card
+
+			if cloneCardKeys == CLONE_True {
+				newCard.Key = originalCard.Key
+			}
+			if cloneCardVals == CLONE_True {
+				newCard.Val = originalCard.Val
+			}
+
+		}
+
+
 	}
+
+	// set depth and size
+	clone.setStackProperties()
 
 	// return
 	return clone
@@ -963,7 +988,7 @@ func (stack *Stack) Shuffle(variadic ...any) *Stack {
 	// body
 	initClone := stack.Clone()
 
-	for ok := true; ok; ok = (newOrder.(bool) && stack.Size > 1 && initClone.Equals(stack, COMPARE_False, nil, DEEPSEARCH_True)) { // emulate a do-while loop
+	for ok := true; ok; ok = (newOrder.(bool) && stack.Size > 1 && initClone.Equals(stack)) { // emulate a do-while loop
 		
 		// pseudo-randomize seed
 		rand.Seed(time.Now().UnixNano())
@@ -994,6 +1019,7 @@ func (stack *Stack) Shuffle(variadic ...any) *Stack {
 func (stack *Stack) Transpose(variadic ...any) *Stack {
 
 	// TODO: implement substackKeysType
+	// TODO: ensure depth works
 
 	// unpack variadic into optional parameters
 	var deepSearchType, substackKeysType, depth any
@@ -1113,7 +1139,7 @@ func (stack *Stack) Print(variadic ...any) {
  @param `lambda` type{func(*Card, *Stack, (returnVal) any, ...any)}
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `substackKeysType` type{SUBSTACKKEYS} default SUBSTACKKEYS_False
- @param optional `depth` type{int} default -1 (deepest)
+ @param optional `depth` type{int, []int} default -1 (deepest)
  @returns (returnVal) type{any}
  @ensures
   * Each card in `stack`, based on depth, is passed into your lambda function

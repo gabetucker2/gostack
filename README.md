@@ -203,7 +203,7 @@
 
  <h2>General</h2>
 
- If depth is inputted as type{int}, then every substack and card down to that int will be considered.  If depth is inputted as type{[]int}, then only the levels as deep down from the top as each int will be considered.  For instance, if you wanted to test for all things in the first, second, and third layer from the outer stack, then you would do depth = 3.  If you only wanted to test the first and the third, however, then you would do depth = []int {1, 3}.
+ If depth is inputted as type{int}, then every substack and card down to that int will be considered.  If depth is inputted as type{[]int} (only allowed to be inputted this way in some functions, defined in their respective documentation), then only the levels as deep down from the top as each int will be considered.  For instance, if you wanted to test for all things in the first, second, and third layer from the outer stack, then you would do depth = 3.  If you only wanted to test the first and the third, however, then you would do depth = []int {1, 3}.
 
  Executing `go run executive/executive.go` in a terminal in the main directory, or executing `go run .` in the `executive` directory, will run whichever file(s) are being called by `executive.go`.
 
@@ -308,10 +308,6 @@
  > **COMPARE**
  > * COMPARE_True
  > * COMPARE_False
-
- > **SUBSTACKKEYS**
- > * SUBSTACKKEYS_True
- > * SUBSTACKKEYS_False
 
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
@@ -544,9 +540,9 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
 
  > ***POINTER***
  >> CLONE_True
+ >>> default
  >>
  >> CLONE_False
- >>> default
 
 <h4 name = "DEEPSEARCH">DEEPSEARCH</h4>
 

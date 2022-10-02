@@ -7,13 +7,6 @@ import (
 	"github.com/gabetucker2/gogenerics"
 )
 
-/**
-
- */
- func decodeOutputs() {
-
- }
-
 /** Sets every card's index in an array to a new index
 
  @param `cards` type{[]*Card}

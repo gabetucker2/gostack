@@ -224,16 +224,16 @@ func case_MakeStackMatrix(funcName string) {
 
 		// deep tests
 		stack1.Equals(MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222})})) || stack1.Equals(MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Bre", "Alex"}, []int {222, 111})})), // 1
-		stack2.Equals(correctStack, COMPARE_False, COMPARE_True), // 2
-		stack3.Equals(correctStack, COMPARE_True, COMPARE_True), // 3
-		stack4.Equals(correctStack, COMPARE_True, COMPARE_False), // 4
+		stack2.Equals(correctStack, nil, nil, COMPARE_False, COMPARE_True), // 2
+		stack3.Equals(correctStack, nil, nil, COMPARE_True, COMPARE_True), // 3
+		stack4.Equals(correctStack, nil, nil, COMPARE_True, COMPARE_False), // 4
 
 		// shallow tests
 		stack5.Equals(MakeStack()), // 5
 		stack6.Equals(MakeStack([]*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222})})) || stack6.Equals(MakeStack([]*Stack {MakeStack([]string {"Bre", "Alex"}, []int {222, 111})})), // 6
-		stack7.Equals(correctStack, COMPARE_False, COMPARE_True), // 7
-		stack8.Equals(correctStack, COMPARE_True, COMPARE_True), // 8
-		stack9.Equals(correctStack, COMPARE_True, COMPARE_False), // 9
+		stack7.Equals(correctStack, nil, nil, COMPARE_False, COMPARE_True), // 7
+		stack8.Equals(correctStack, nil, nil, COMPARE_True, COMPARE_True), // 8
+		stack9.Equals(correctStack, nil, nil, COMPARE_True, COMPARE_False), // 9
 		stack10.Equals(MakeStack([]*Stack {MakeStack(nil, nil, 2), MakeStack(nil, nil, 2), MakeStack(nil, nil, 2)})), // 10
 
 		// irregular depth
@@ -520,22 +520,16 @@ func case_stack_Clone(funcName string) {
 
 	// shallow clone stackmatrix
 	stackC := MakeStackMatrix([]string {"Original", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "Original"}, []int{2, 2})
-	stackCClone1 := stackC.Clone(DEEPSEARCH_False)
-	stackCClone2 := stackC.Clone(DEEPSEARCH_True, nil, 1) // should equal stackCClone since deepsearchfalse <=> deepsearchtrue | depth: 1
-	stackCClone2.Cards[0].Val.(*Stack).Cards[0].Key = "New"
-	stackCClone2.Cards[1].Val.(*Stack).Cards[1].Val = "New"
+	stackCClone := stackC.Clone(DEEPSEARCH_False)
+	stackCClone.Cards[0].Val.(*Stack).Cards[0].Key = "New"
+	stackCClone.Cards[1].Val.(*Stack).Cards[1].Val = "New"
 
-	// substack key testing
-	stackD := MakeStack([]string {"Stack A", "Stack B"}, []*Stack {MakeStack("Original"), MakeStack("Original")})
-	stackDClone1 := stackD.Clone(DEEPSEARCH_True, SUBSTACKKEYS_True)
-	stackDClone2 := stackD.Clone(DEEPSEARCH_True, SUBSTACKKEYS_False)
-
-	// shallow clone stackmatrix equivalent using cloneSubstacksType
-	stackE := MakeStackMatrix([]string {"Original", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "Original"}, []int{2, 2})
-	stackEClone1 := stackE.Clone(DEEPSEARCH_True, nil, nil, CLONE_True)
-	stackEClone2 := stackE.Clone(DEEPSEARCH_True, nil, nil, CLONE_False)
-	stackEClone2.Cards[0].Val.(*Stack).Cards[0].Key = "New"
-	stackEClone2.Cards[1].Val.(*Stack).Cards[1].Val = "New"
+	// test no cloning
+	stackD := MakeStack([]string {"StackAKey", "StackBKey"}, []*Stack {MakeStack([]string {"Hey", "Hey"}, []string {"Original", "Original"}), MakeStack([]string {"Hey", "Hey"}, []string {"Original", "Original"})})
+	stackDClone1 := stackD.Clone(nil, nil, CLONE_False, CLONE_True, CLONE_True, CLONE_True)
+	stackDClone2 := stackD.Clone(nil, nil, CLONE_True, CLONE_False, CLONE_True, CLONE_True)
+	stackDClone3 := stackD.Clone(nil, nil, CLONE_True, CLONE_True, CLONE_False, CLONE_True)
+	stackDClone4 := stackD.Clone(nil, nil, CLONE_True, CLONE_True, CLONE_True, CLONE_False)
 
 	conditions := []bool{
 
@@ -548,17 +542,13 @@ func case_stack_Clone(funcName string) {
 		stackBClone.Equals(MakeStackMatrix([]string {"New", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "New"}, []int{2, 2})), // 4
 
 		// shallow clone stackmatrix
-		stackC.Equals(MakeStackMatrix([]string {"New", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "New"}, []int{2, 2})), // 5
-		stackCClone1.Equals(MakeStackMatrix([]string {"New", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "New"}, []int{2, 2})), // 6
-		stackCClone2.Equals(stackCClone1), // 7
+		stackC.Equals(stackCClone), // 5
 
-		// substack key testing
-		stackDClone1.Equals(MakeStack([]string {"Stack A", "Stack B"}, []*Stack {MakeStack("Original"), MakeStack("Original")})), // 8
-		stackDClone2.Equals(MakeStack([]any {nil, nil}, []*Stack {MakeStack("Original"), MakeStack("Original")})), // 9
-
-		// shallow clone stackmatrix equivalent using cloneSubstacksType
-		stackEClone1.Equals(MakeStackMatrix([]string {"Original", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "Original"}, []int{2, 2})), // 10
-		stackEClone2.Equals(MakeStackMatrix([]string {"New", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "New"}, []int{2, 2})), // 11
+		// test no cloning
+		stackDClone1.Equals(MakeStack([]string {"StackAKey", "StackBKey"}, []*Stack {MakeStack([]string {"Original", "Original"}), MakeStack([]string {"Original", "Original"})})), // 6
+		stackDClone2.Equals(MakeStack([]string {"StackAKey", "StackBKey"}, []*Stack {MakeStack(nil, []string {"Hey", "Hey"}), MakeStack(nil, []string {"Hey", "Hey"})})), // 7
+		stackDClone3.Equals(MakeStack([]*Stack {MakeStack([]string {"Hey", "Hey"}, []string {"Original", "Original"}), MakeStack([]string {"Hey", "Hey"}, []string {"Original", "Original"})})), // 8
+		stackDClone4.Equals(MakeStack([]string {"StackAKey", "StackBKey"}, []any {nil, nil})), // 9
 
 	}
 
@@ -961,20 +951,20 @@ func Run(_showTestText bool) {
 	case_card_Equals("card.Equals") // GOOD
 	case_MakeStack("MakeStack") // GOOD
 	case_stack_Equals("stack.Equals") // GOOD
-	// case_MakeStackMatrix("MakeStackMatrix") // GOOD
+	case_MakeStackMatrix("MakeStackMatrix") // GOOD
 	// case_stack_Lambda("stack.Lambda") // BAD
-	// case_stack_ToArray("stack.ToArray") // GOOD
-	// case_stack_ToMap("stack.ToMap") // GOOD
-	// case_stack_ToMatrix("stack.ToMatrix") // GOOD
-	// case_stack_IsRegular("stack.IsRegular") // GOOD
-	// case_stack_Shape("stack.Shape") // GOOD
-	// case_stack_Duplicate("stack.Duplicate") // GOOD
-	// case_stack_Empty("stack.Empty") // GOOD
-	// case_card_Clone("card.Clone") // GOOD
-	// case_stack_Clone("stack.Clone") // GOOD
-	// case_stack_Shuffle("stack.Shuffle") // GOOD
-	// case_card_Print("card.Print") // GOOD
-	// case_stack_Print("stack.Print") // GOOD
+	case_stack_ToArray("stack.ToArray") // GOOD
+	case_stack_ToMap("stack.ToMap") // GOOD
+	case_stack_ToMatrix("stack.ToMatrix") // GOOD
+	case_stack_IsRegular("stack.IsRegular") // GOOD
+	case_stack_Shape("stack.Shape") // GOOD
+	case_stack_Duplicate("stack.Duplicate") // GOOD
+	case_stack_Empty("stack.Empty") // GOOD
+	case_card_Clone("card.Clone") // GOOD
+	case_stack_Clone("stack.Clone") // GOOD
+	case_stack_Shuffle("stack.Shuffle") // GOOD
+	case_card_Print("card.Print") // GOOD
+	case_stack_Print("stack.Print") // GOOD
 	
 	// GENERALIZED FUNCTIONS
 	// case_stack_Add("stack.Add") // BAD

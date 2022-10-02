@@ -22,8 +22,6 @@ type CLONE int
 type DEEPSEARCH int
 type COMPARE int
 type CONVERT int
-type SUBSTACKKEYS int
-
 //type PRINT int
 
 const (
@@ -96,11 +94,6 @@ const (
 	CONVERT_True
 )
 
-const (
-	SUBSTACKKEYS_False CONVERT = iota
-	SUBSTACKKEYS_True
-)
-
 /*const (
 	PRINT_False PRINT = iota
 	PRINT_True
@@ -132,7 +125,7 @@ func setPOINTERDefaultIfNil(pointerType *any) {
 
 func setCLONEDefaultIfNil(cloneType *any) {
 	if *cloneType == nil {
-		*cloneType = CLONE_False
+		*cloneType = CLONE_True
 	}
 }
 
@@ -151,12 +144,6 @@ func setDepthDefaultIfNil(depth *any) {
 func setCOMPAREDefaultIfNil(compareType *any) {
 	if *compareType == nil {
 		*compareType = COMPARE_True
-	}
-}
-
-func setSUBSTACKKEYSDefaultIfNil(substackKeysType *any) {
-	if *substackKeysType == nil {
-		*substackKeysType = SUBSTACKKEYS_False
 	}
 }
 
