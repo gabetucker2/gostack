@@ -713,9 +713,6 @@ func case_stack_Equals(funcName string) {
 	dsf5 := MakeStack([]string {"Stack420", "StackB"}, []*Stack {MakeStack([]string {"Hi1", "Hello2"}), MakeStack([]string {"Hi3", "Hi4"})})
 	dsf6 := MakeStack([]string {"StackA"}, []*Stack {MakeStack([]string {"Hi1", "Hi2"})})
 
-	// csf1.Print()
-	// csf4.Print()
-
 	conditions := []bool{
 		
 		// test for shallow-on-shallow equality
@@ -763,15 +760,15 @@ func case_stack_Equals(funcName string) {
 		!csf1.Equals(csf3, nil, nil, nil, nil, COMPARE_True, COMPARE_False), // 30
 		csf1.Equals(csf3, nil, nil, nil, nil, COMPARE_False, COMPARE_False), // 31
 
-		!csf1.Equals(csf4, nil, nil, nil, nil, COMPARE_True, COMPARE_True), // 32
-		!csf1.Equals(csf4, nil, nil, nil, nil, COMPARE_False, COMPARE_True), // 33
-		csf1.Equals(csf4, nil, nil, nil, nil, COMPARE_True, COMPARE_False), // 34
-		csf1.Equals(csf4, nil, nil, nil, nil, COMPARE_False, COMPARE_False), // 35
+		!csf1.Equals(csf4, nil, nil, nil, COMPARE_False, COMPARE_True, COMPARE_True), // 32
+		!csf1.Equals(csf4, nil, nil, nil, COMPARE_False, COMPARE_False, COMPARE_True), // 33
+		csf1.Equals(csf4, nil, nil, nil, COMPARE_False, COMPARE_True, COMPARE_False), // 34
+		csf1.Equals(csf4, nil, nil, nil, COMPARE_False, COMPARE_False, COMPARE_False), // 35
 
-		!csf1.Equals(csf5, nil, nil, nil, nil, COMPARE_True, COMPARE_True), // 36
-		!csf1.Equals(csf5, nil, nil, nil, nil, COMPARE_False, COMPARE_True), // 37
-		!csf1.Equals(csf5, nil, nil, nil, nil, COMPARE_True, COMPARE_False), // 38
-		csf1.Equals(csf5, nil, nil, nil, nil, COMPARE_False, COMPARE_False), // 39
+		!csf1.Equals(csf5, nil, nil, nil, COMPARE_False, COMPARE_True, COMPARE_True), // 36
+		!csf1.Equals(csf5, nil, nil, nil, COMPARE_False, COMPARE_False, COMPARE_True), // 37
+		!csf1.Equals(csf5, nil, nil, nil, COMPARE_False, COMPARE_True, COMPARE_False), // 38
+		csf1.Equals(csf5, nil, nil, nil, COMPARE_False, COMPARE_False, COMPARE_False), // 39
 
 		// test for depth search filters
 		dsf1.Equals(dsf2, nil, 0), // 40

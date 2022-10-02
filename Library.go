@@ -801,21 +801,22 @@ func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 
 		for each cardA in this stack
 			for each cardB in other stack
-				if cardA corresponds to cardB and test and testLayer
+				if cardA corresponds to cardB and test and depth != 0
 					
 					if cardA.Val and cardB.Val is a substack
 
 						// compare substack properties
-						if compareSubstackKeys
-							if pointerSubstackKeys
-								test = test && compare substack keys as pointers
-							else
-								test = test && compare substack keys regularly
-						if compareSubstackVals
-							if pointerSubstackVals
-								test = test && compare substack vals as pointers
-							else
-								test = test && compare substack vals regularly
+						if testLayer
+							if compareSubstackKeys
+								if pointerSubstackKeys
+									test = test && compare substack keys as pointers
+								else
+									test = test && compare substack keys regularly
+							if compareSubstackVals
+								if pointerSubstackVals
+									test = test && compare substack vals as pointers
+								else
+									test = test && compare substack vals regularly
 						
 						// forwardpropagate
 						test = test && substackA.Equals(substackB, ..., depth = depth - 1 OR depth[] = depth[i - 1, ..., n - 1])
@@ -826,8 +827,8 @@ func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 					else if neither are substacks and they are both just cards
 						
 						// compare card properties
-						test = test && cardA.Equals(cardB, [pass in pointer and compare stuff for key])
-						test = test && cardA.Equals(cardB, [pass in pointer and compare stuff for val])
+						if testLayer
+							test = test && cardA.Equals(cardB, [pass in pointer and compare stuff for key and val])
 
 		// backpropagate
 		return test
@@ -884,7 +885,7 @@ func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 
 	for _, cardA := range stack.Cards {
 		for _, cardB := range otherStack.Cards {
-			if cardA.Idx == cardB.Idx && test && testLayer {
+			if cardA.Idx == cardB.Idx && test && depth != 0 {
 
 				substackA, cardAIsSubstack := cardA.Val.(*Stack)
 				substackB, cardBIsSubstack := cardB.Val.(*Stack)
@@ -892,18 +893,20 @@ func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 				if cardAIsSubstack && cardBIsSubstack {
 
 					// compare substack properties
-					if compareSubstackKeys == COMPARE_True {
-						if pointerSubstackKeys == POINTER_True {
-							test = test && gogenerics.PointersEqual(cardA.Key, cardB.Key)
-						} else {
-							test = test && cardA.Key == cardB.Key
+					if testLayer {
+						if compareSubstackKeys == COMPARE_True {
+							if pointerSubstackKeys == POINTER_True {
+								test = test && gogenerics.PointersEqual(cardA.Key, cardB.Key)
+							} else {
+								test = test && cardA.Key == cardB.Key
+							}
 						}
-					}
-					if compareSubstackVals == COMPARE_True {
-						if pointerSubstackVals == POINTER_True {
-							test = test && gogenerics.PointersEqual(cardA.Val, cardB.Val)
-						} else {
-							test = test && cardA.Val == cardB.Val
+						if compareSubstackVals == COMPARE_True {
+							if pointerSubstackVals == POINTER_True {
+								test = test && gogenerics.PointersEqual(cardA.Val, cardB.Val)
+							} else {
+								test = test && cardA.Val == cardB.Val
+							}
 						}
 					}
 					
@@ -926,8 +929,9 @@ func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 				} else { // neither are substacks and they are both just cards
 
 					// compare card properties
-					test = test && cardA.Equals(cardB, pointerCardKeys, POINTER_False, COMPARE_False, compareCardKeys, COMPARE_False)
-					test = test && cardA.Equals(cardB, POINTER_False, pointerCardVals, COMPARE_False, COMPARE_False, compareCardVals)
+					if testLayer {
+						test = test && cardA.Equals(cardB, pointerCardKeys, pointerCardVals, COMPARE_False, compareCardKeys, compareCardVals)
+					}
 
 				}
 			}
@@ -1032,19 +1036,27 @@ func (card *Card) Print(variadic ...any) {
 
 	// prints
 	fmt.Printf("%v|%vCARD\n", depthPrinter(depth.(int)), gogenerics.IfElse(depth == 0, "gostack: PRINTING ", ""))
-	fmt.Printf("%v- &card:     %v\n", depthPrinter(depth.(int)), &card)
-	fmt.Printf("%v- card.Idx:  %v\n", depthPrinter(depth.(int)), card.Idx)
+	fmt.Printf("%v- &card:         %v\n", depthPrinter(depth.(int)), &card)
+	fmt.Printf("%v- card.Idx:      %v\n", depthPrinter(depth.(int)), card.Idx)
 	if gogenerics.IsPointer(card.Key) {
-		fmt.Printf("%v- &card.Key: %v (points to a %v)\n", depthPrinter(depth.(int)), card.Key, reflect.TypeOf(reflect.ValueOf(card.Key).Elem().Interface()))
-		fmt.Printf("%v- card.Key:  %v\n", depthPrinter(depth.(int)), reflect.ValueOf(card.Key).Elem())
+		fmt.Printf("%v- &card.Key:     %v\n", depthPrinter(depth.(int)), card.Key)
+		fmt.Printf("%v- card.Key:      %v\n", depthPrinter(depth.(int)), reflect.ValueOf(card.Key).Elem())
+		fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(reflect.ValueOf(card.Key).Elem().Interface()))
 	} else {
-		fmt.Printf("%v- card.Key:  %v\n", depthPrinter(depth.(int)), card.Key)
+		fmt.Printf("%v- card.Key:      %v\n", depthPrinter(depth.(int)), card.Key)
+		if card.Key != nil {
+			fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(card.Key))
+		}
 	}
 	if gogenerics.IsPointer(card.Val) {
-		fmt.Printf("%v- &card.Val: %v (points to a %v)\n", depthPrinter(depth.(int)), card.Val, reflect.TypeOf(reflect.ValueOf(card.Val).Elem().Interface()))
-		fmt.Printf("%v- card.Val:  %v\n", depthPrinter(depth.(int)), reflect.ValueOf(card.Val).Elem())
+		fmt.Printf("%v- &card.Val:     %v\n", depthPrinter(depth.(int)), card.Val)
+		fmt.Printf("%v- card.Val:      %v\n", depthPrinter(depth.(int)), reflect.ValueOf(card.Val).Elem())
+		fmt.Printf("%v- card.Val.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(reflect.ValueOf(card.Val).Elem().Interface()))
 	} else {
-		fmt.Printf("%v- card.Val:  %v\n", depthPrinter(depth.(int)), card.Val)
+		fmt.Printf("%v- card.Val:      %v\n", depthPrinter(depth.(int)), card.Val)
+		if card.Val != nil {
+			fmt.Printf("%v- card.Val.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(card.Val))
+		}
 	}
 
 }
@@ -1064,20 +1076,24 @@ func (stack *Stack) Print(variadic ...any) {
 	if depth == nil { depth = 0 }
 
 	fmt.Printf("%v|%vSTACK\n", depthPrinter(depth.(int)), gogenerics.IfElse(idx == nil, "gostack: PRINTING ", "SUB"))
-	fmt.Printf("%v- &stack:      %v\n", depthPrinter(depth.(int)), &stack)
+	fmt.Printf("%v- &stack:        %v\n", depthPrinter(depth.(int)), &stack)
 	if idx != nil {
-		fmt.Printf("%v- card.Idx:    %v\n", depthPrinter(depth.(int)), idx)
+		fmt.Printf("%v- card.Idx:      %v\n", depthPrinter(depth.(int)), idx)
 	}
 	if key != nil {
 		if gogenerics.IsPointer(key) {
-			fmt.Printf("%v- &card.Key: %v (points to a %v)\n", depthPrinter(depth.(int)), key, reflect.TypeOf(reflect.ValueOf(key).Elem().Interface()))
-			fmt.Printf("%v- card.Key:  %v\n", depthPrinter(depth.(int)), reflect.ValueOf(key).Elem())
+			fmt.Printf("%v- &card.Key:     %v\n", depthPrinter(depth.(int)), key)
+			fmt.Printf("%v- card.Key:      %v\n", depthPrinter(depth.(int)), reflect.ValueOf(key).Elem())
+			fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(reflect.ValueOf(key).Elem().Interface()))
 		} else {
-			fmt.Printf("%v- card.Key:  %v\n", depthPrinter(depth.(int)), key)
+			fmt.Printf("%v- card.Key:      %v\n", depthPrinter(depth.(int)), key)
+			if key != nil {
+				fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(key))
+			}
 		}
 	}
-	fmt.Printf("%v- stack.Size:  %v\n", depthPrinter(depth.(int)), stack.Size)
-	fmt.Printf("%v- stack.Depth: %v\n", depthPrinter(depth.(int)), stack.Depth)
+	fmt.Printf("%v- stack.Size:    %v\n", depthPrinter(depth.(int)), stack.Size)
+	fmt.Printf("%v- stack.Depth:   %v\n", depthPrinter(depth.(int)), stack.Depth)
 	for i := range stack.Cards {
 		c := stack.Cards[i]
 
