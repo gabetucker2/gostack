@@ -70,6 +70,8 @@
  >>>>> [DEEPSEARCH](#DEEPSEARCH)
  >>>>
  >>>>> [COMPARE](#COMPARE)
+ >>>>
+ >>>>> [PASS](#PASS)
  >>>
  >>> [Non-Generalized Functions](#nonGeneralizedFunctions)
  >>>> [MakeCard(...)](#MakeCard)
@@ -308,6 +310,10 @@
  > **COMPARE**
  > * COMPARE_True
  > * COMPARE_False
+
+ > **PASS**
+ > * PASS_True
+ > * PASS_False
 
 <h2 name = "nonGeneralizedFunctionsBrief">Non-Generalized Functions</h2>
 
@@ -564,15 +570,15 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
  >>
  >> COMPARE_False
 
-<h4 name = "SUBSTACKKEYS">SUBSTACKKEYS</h4>
+<h4 name = "PASS">PASS</h4>
 
- This is an enum intended to make it easy to determine whether you are considering substacks' keys in your deep search.  For instance, if you want to look for substacks with certain keys ("Stack A"), then you would enable this.  Otherwise, if you just wanted to look for cards within substacks, then you would keep this disabled.
+ This is an enum intended to make it easy to determine whether you are considering substacks or cards in the Lambda function.
 
- > ***SUBSTACKKEYS***
- >> SUBSTACKKEYS_True
- >>
- >> SUBSTACKKEYS_False
+ > ***PASS***
+ >> PASS_True
  >>> default
+ >>
+ >> PASS_False
 
 <h2 name = "nonGeneralizedFunctions">Non-Generalized Functions</h2>
 

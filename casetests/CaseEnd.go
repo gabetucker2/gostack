@@ -908,15 +908,82 @@ func case_stack_Lambda(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	stack1 := MakeStack([]int {1, 5, 20, 41, 92, 4104}).Lambda(func(card *Card, stack *Stack, retAdr any, _ ...any) {
-		gogenerics.SetPointer(retAdr, stack)
-		if !(5 < card.Val.(int) && card.Val.(int) < 4104) {
-			stack.Remove(FIND_Card, card)
+	// test stack updating, multiply each by 5
+	stack1, _, _, _ := MakeStack([]int {1, 5, 20}).Lambda(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {
+		card.Val = card.Val.(int) * 5
+	})
+
+	// test retStack output, get all in range
+	_, stack2, _, _ := MakeStack([]int {1, 5, 20, 41, 92, 4104}).Lambda(func(card *Card, _ *Stack, _ bool, retStack *Stack, _ *Card, _ any, _ ...any) {
+		if 5 < card.Val.(int) && card.Val.(int) < 4104 {
+			retStack.Cards = append(retStack.Cards, card.Clone())
 		}
-	}).(*Stack)
+	})
+
+	// test retCard output, get last in range
+	_, _, card1, _ := MakeStack([]int {1, 5, 20, 41, 92, 4104}).Lambda(func(card *Card, _ *Stack, _ bool, _ *Stack, retCard *Card, _ any, _ ...any) {
+		if 5 < card.Val.(int) && card.Val.(int) < 4104 {
+			*retCard = *card
+		}
+	})
+
+	// test retOther output, get max
+	_, _, _, maxAdr := MakeStack([]int {50, 2, 45, 140, 42}).Lambda(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, maxAdr any, _ ...any) {
+		if gogenerics.GetPointer(maxAdr).(int) < card.Val.(int) {
+			gogenerics.SetPointer(maxAdr, card.Val)
+		}
+	}, nil, nil, 0) // initialize max to 0
+
+	// test workingMemAdr, get all which are under or equal to 15 away from stack average
+	_, stack3, _, _ := MakeStack([]int {50, 2, 45, 140, 42}).Lambda(func(card *Card, stack *Stack, _ bool, retStack *Stack, _ *Card, _ any, wmadrs ...any) {
+		if wmadrs[0] == nil {
+			sum := gogenerics.MakeInterface(0)
+			for _, c := range stack.Cards {
+				sum = sum.(int) + c.Val.(int)
+			}
+			sum = sum.(int) / stack.Size
+			wmadrs[0] = &sum
+		}
+		avg := gogenerics.GetPointer(wmadrs[0]).(int)
+		if avg - 15 <= card.Val.(int) && card.Val.(int) <= avg + 15 {
+			retStack.Cards = append(retStack.Cards, card.Clone())
+		}
+	})
+
+	// test deepStacks, multiply each by 5
+	stack4, _, _, _ := MakeStackMatrix([]int {1, 5, 20, 2}, nil, []int {2, 2}).Lambda(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {
+		card.Val = card.Val.(int) * 5
+	})
+
+	// test passSubstacks true passCards false, multiply each stack.Key by 5
+	stack5, _, _, _ := MakeStack([]int {4, 7}, []*Stack {MakeStack([]int {1, 5}), MakeStack([]int {20, 2})}).Lambda(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {
+		card.Key = card.Key.(int) * 5
+	}, nil, nil, nil, nil, nil, nil, PASS_True, PASS_False)
+
 	
 	conditions := []bool{
-		stack1.Equals(MakeStack([]int {20, 41, 92})),
+
+		// test stack updating, multiply each by 5
+		stack1.Equals(MakeStack([]int {5, 25, 100})), // 1
+
+		// test retStack output, get all in range
+		stack2.Equals(MakeStack([]int {20, 41, 92})), // 2
+
+		// test retCard output, get last in range
+		card1.Equals(MakeCard(92)), // 3
+
+		// test retOther output, get max
+		gogenerics.GetPointer(maxAdr) == 140, // 4
+
+		// test workingMemAdr, get average and return all in average's range
+		stack3.Equals(MakeStack([]int {50, 45, 42})), // 5
+
+		// test deepStacks, multiply each by 5
+		stack4.Equals(MakeStackMatrix([]int {5, 25, 100, 10}, nil, []int {2, 2})), // 6
+
+		// test passSubstacks true passCards false, multiply each stack.Key by 5
+		stack5.Equals(MakeStack([]int {20, 35}, []*Stack {MakeStack([]int {1, 5}), MakeStack([]int {20, 2})})), // 7
+
 	}
 
 	test_End(funcName, conditions)
@@ -942,7 +1009,7 @@ func case_stack_Add(funcName string) {
 func Run(_showTestText bool) {
 
 	showTestText = _showTestText
-	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambda)
+	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambda, case_stack_Add)
 
 	fmt.Println("- BEGINNING TESTS (fix failures/errors in descending order)")
 
@@ -952,7 +1019,7 @@ func Run(_showTestText bool) {
 	case_MakeStack("MakeStack") // GOOD
 	case_stack_Equals("stack.Equals") // GOOD
 	case_MakeStackMatrix("MakeStackMatrix") // GOOD
-	// case_stack_Lambda("stack.Lambda") // BAD
+	case_stack_Lambda("stack.Lambda") // BAD
 	case_stack_ToArray("stack.ToArray") // GOOD
 	case_stack_ToMap("stack.ToMap") // GOOD
 	case_stack_ToMatrix("stack.ToMatrix") // GOOD

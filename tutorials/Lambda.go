@@ -226,18 +226,18 @@ func Lambda() {
 		the-curtain example of how the Transpose function, which reverses the order of cards in
 		a stack, was implemented (using the Lambda function):*/
 
-	makeSampleStack().Lambda(func(card *Card, stack *Stack) {
+	/*makeSampleStack().Lambda(func(card *Card, stack *Stack) {
 		// moves each card, from first to last, to the first position in the stack
 		stack.Move(FIND_Card, ORDER_Before, FIND_Idx, card, 0)
-	})
+	})*/
 
 	/**
 	 What if we wanted to merely return a value using the Lambda function, e.g., to return
 	 	the number of cards with keys less than 30?:*/
 
-	makeSampleStack().Lambda(func(card *Card, stack *Stack, ret any) {
+	/*makeSampleStack().Lambda(func(card *Card, stack *Stack, ret any) {
 		if card.Key.(int) < 30 { ret = ret.(int) + 1 }
-	}) // returns 4
+	}) // returns 4*/
 
 	/**
 	 (Keep in mind we can manage workingMemory with Lambda in the same way as we did in
@@ -246,7 +246,7 @@ func Lambda() {
 	 For a more complex example of using the Lambda function, e.g., to sort in descending
 	 	order by each card's int value:*/
 
-	 makeSampleStack().Lambda(func(card *Card, stack *Stack) {
+	/*makeSampleStack().Lambda(func(card *Card, stack *Stack) {
 		thisVal := card.Val.(int) // the current card
 		for i := card.Idx+1; i < stack.Size; i++ {
 			otherCard := stack.Cards[i] // the card being compared
@@ -257,7 +257,7 @@ func Lambda() {
 				stack.Swap(FIND_Card, FIND_Card, card, otherCard)
 			}
 		}
-	})
+	})*/
 
 	/**
 	 That's all you need to know about lambda support in gostack!  If this tutorial could

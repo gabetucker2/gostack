@@ -7,72 +7,6 @@ import (
 	"github.com/gabetucker2/gogenerics"
 )
 
-/** Sets every card's index in an array to a new index
-
- @param `cards` type{[]*Card}
- @updates `cards`
- */
-func setIndices(cards []*Card) {
-	for i := range cards {
-		cards[i].Idx = i
-	}
-}
-
-/** Removes the cards from a stack for which lambda(card) is false, updating to a new 1D stack
- 
- @param `stack` type{*Stack}
- @param `lambda` type{func(*Card, *Stack, workingMem) bool}
- @param `deepSearchType` type{DEEPSEARCH}
- @param `depth` type{int}
- @returns `stack`
- @updates `stack.Cards` to a new set of Cards filtered using `lambda`
- @ensures each card in `stack.Cards` will not be affected by lambda updates
- @requires `stack.GetMany()` is implemented
- */
-func getIterator(stack *Stack, lambda func(*Card, *Stack, ...any) bool, deepSearchType DEEPSEARCH, depth int) {
-	subStack := stack.GetMany(FIND_All, nil, nil, nil, nil, nil, nil, deepSearchType, depth)
-	var filteredCards []*Card
-	for i := range subStack.Cards {
-		card := subStack.Cards[i]
-		if lambda(card.Clone(), subStack.Clone()) { // use a clone card and stack
-			filteredCards = append(filteredCards, card)
-		}
-	}
-	stack.Cards = filteredCards
-	stack.setStackProperties()
-
-}
-
-/** Passes each card into the lambda function iteratively
- 
- @param `stack` type{*Stack}
- @param `lambda` type{func(*Card, *Stack, ret any, ...workingMem any)}
- @param `substackKeysType` type{bool}
- @param `deepSearchType` type{DEEPSEARCH}
- @param `depth` type{int}
- @param `ret` type{&any}
- @updates `stack.Cards` to whatever the `lambda` function specifies
- */
-func generalIterator(stack *Stack, lambda func(*Card, *Stack, any, ...any), substackKeysType bool, deepSearchType DEEPSEARCH, depth int, ret any) {
-	
-	// initialize
-	if depth == -1 || depth > stack.Depth { depth = stack.Depth }
-	if deepSearchType == DEEPSEARCH_False { depth = 1 }
-
-	workingMem := []any {}
-	for _, c := range stack.Cards {
-		if (!substackKeysType && depth != 0) || (substackKeysType && depth == 1) {
-			lambda(c, stack, ret, workingMem...)
-			stack.setStackProperties()
-		}
-		subStack, hasSubstack := c.Val.(*Stack)
-		if hasSubstack && deepSearchType == DEEPSEARCH_True && depth > 1 {
-			generalIterator(subStack, lambda, substackKeysType, deepSearchType, depth - 1, ret) // forwardpropagate
-		}
-	}
-	stack.setStackProperties()
-}
-
 /** Returns an [][]int of index vertices representing the order of indices needed to access targeted position(s) in `stack`, with []*Card for pure card values
  
  @param `getFirst` type{bool}
@@ -296,7 +230,7 @@ func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, poi
 	
 		case FIND_Lambda:
 			filterStack := stack.Clone() // so that no changes can be made to the original stack from FIND_Lambda functions
-			getIterator(filterStack, findData.(func(*Card, *Stack, ...any) bool), deepSearchType, depth)
+			//getIterator(filterStack, findData.(func(*Card, *Stack, ...any) bool), deepSearchType, depth)
 			for i := range filterStack.Cards {
 				filteredList = append(filteredList, i)	
 				if getFirst { break }
@@ -614,7 +548,9 @@ func (stack *Stack) makeStackMatrixFromND(keys, vals any) (ret *Stack) {
 func (stack *Stack) setStackProperties() {
 	stack.Size = len(stack.Cards)
 	stack.Depth = stack.getStackDepth()
-	setIndices(stack.Cards)
+	for i := range stack.Cards {
+		stack.Cards[i].Idx = i
+	}
 }
 
 /** Prints some number of - outputs based on depth. */

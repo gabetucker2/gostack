@@ -21,7 +21,7 @@ type POINTER int
 type CLONE int
 type DEEPSEARCH int
 type COMPARE int
-type CONVERT int
+type PASS int
 //type PRINT int
 
 const (
@@ -90,8 +90,8 @@ const (
 )
 
 const (
-	CONVERT_False CONVERT = iota
-	CONVERT_True
+	PASS_False PASS = iota
+	PASS_True
 )
 
 /*const (

@@ -802,7 +802,7 @@ func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 	/*
 	PSEUDOCODE OUTLINE:
 
-	stack.Equals(otherStack) bool
+	stack.Equals(otherStack, ...variadic) bool
 
 		set up variadic stuff
 
@@ -997,7 +997,7 @@ func (stack *Stack) Shuffle(variadic ...any) *Stack {
 		rand.Shuffle(stack.Size, func(i, j int) { stack.Cards[i], stack.Cards[j] = stack.Cards[j], stack.Cards[i] })
 		
 		// set indices
-		setIndices(stack.Cards)
+		stack.setStackProperties()
 
 	}
 
@@ -1031,6 +1031,7 @@ func (stack *Stack) Transpose(variadic ...any) *Stack {
 	if deepSearchType == DEEPSEARCH_False { depth = 1 }
 
 	// body
+	/*
 	stack.Lambda(func(card *Card, stack *Stack, _ ...any) {
 		stack.Move(FIND_Card, ORDER_Before, FIND_Idx, card, 0)
 		switch card.Val.(type) {
@@ -1040,6 +1041,7 @@ func (stack *Stack) Transpose(variadic ...any) *Stack {
 			}
 		}
 	})
+	*/
 
 	// return
 	return stack
@@ -1136,28 +1138,150 @@ func (stack *Stack) Print(variadic ...any) {
 /** Iterate through a stack calling your lambda function on each card
  
  @receiver `stack` type{*Stack}
- @param `lambda` type{func(*Card, *Stack, (returnVal) any, ...any)}
+ @param `lambda` type{func(*Card, *Stack, isSubstack bool, retStack *Stack, retCard *Card, retOtherAdr any, workingMemAdrs ...any)}
+ @param optional `retStack` type{*Stack} default empty stack
+ @param optional `retCard` type{*Card} default empty card
+ @param optional `retOtherAdr` type{any} default nil
+ @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `substackKeysType` type{SUBSTACKKEYS} default SUBSTACKKEYS_False
  @param optional `depth` type{int, []int} default -1 (deepest)
- @returns (returnVal) type{any}
- @ensures
-  * Each card in `stack`, based on depth, is passed into your lambda function
-  * `stack` is the first argument passed into your variadic parameter on the first call
+ @param optional `passSubstacks` type{PASS} default PASS_False
+ @param optional `passCards` type{PASS} default PASS_True
+ @returns `stack` type{*Stack}
+ @returns `retStack` type{*Stack}
+ @returns `retCard` type{*Card}
+ @returns `retOtherAdr` type{any}
  */
-func (stack *Stack) Lambda(lambda any, variadic ...any) (ret any) {
+func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, ...any), variadic ...any) (*Stack, *Stack, *Card, any) {
+
+	/**
+	PSEUDOCODE OUTLINE:
+
+	(stack) Lambda(lambda, ...variadic) (retAdr any)
+
+		set up variadic stuff
+
+		passLayer = true
+		if deepSearchType is false
+			if depth == -1 // first input
+				depth = 1
+			else
+				depth = 0
+				passLayer = false
+		else
+			if depth is an int && (depth == -1 || depth > stack.Depth)
+				depth = stack.Depth
+			else if depth is an []int
+				if []depth does not have an element == 1
+					passLayer = false
+			if depth == 0
+				passLayer = false
+		
+		for each card in this stack
+			
+			if card is substack
+
+				if passSubstacks and passLayer
+					pass substack into lambda(isSubstack = true)
+
+				if depth > 1 or depth[] has an element == 1 // forwardpropagate
+					substack.Lambda(..., depth = depth - 1 OR depth[] = depth[i - 1, ..., n - 1])
+
+			else if card is not substack
+
+				if passCards and passLayer
+					pass card into lambda(isSubstack = false)
+
+		return *retAdr.(*any)
+
+	*/
 
 	// unpack variadic into optional parameters
-	var deepSearchType, substackKeysType, depth any
-	gogenerics.UnpackVariadic(variadic, &substackKeysType, &deepSearchType, &depth)
-	if substackKeysType == nil {substackKeysType = false}
+	var retStack, retCard, retOtherAdr, workingMemAdrs, deepSearchType, depth, passSubstacks, passCards any
+	gogenerics.UnpackVariadic(variadic, &retStack, &retCard, &retOtherAdr, &workingMemAdrs, &deepSearchType, &depth, &passSubstacks, &passCards)
+	if retStack == nil {retStack = MakeStack()}
+	if retCard == nil {retCard = MakeCard()}
+	if retOtherAdr == nil {var o any; retOtherAdr = &o;}
+	if workingMemAdrs == nil {workingMemAdrs = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	setDepthDefaultIfNil(&depth)
+	if passSubstacks == nil {passSubstacks = PASS_False}
+	if passCards == nil {passCards = PASS_True}
 	
 	// main
-	generalIterator(stack, lambda.(func(*Card, *Stack, any, ...any)), substackKeysType.(bool), deepSearchType.(DEEPSEARCH), depth.(int), &ret)
+	passLayer := true
+	has1 := false
+	_, depthIsInt := depth.(int)
+	if deepSearchType == DEEPSEARCH_False {
+		if depth == -1 {// first input
+			depth = 1
+		} else {
+			depth = 0
+			passLayer = false
+		}
+	} else {
+		if depthIsInt && (depth == -1 || depth.(int) > stack.Depth) {
+			depth = stack.Depth
+		} else if !depthIsInt { // depth is an []int
+			for _, d := range depth.([]int) {
+				if d == 1 {
+					has1 = true
+					break
+				}
+			}
+			if !has1 {
+				passLayer = false
+			}
+		}
+		if depth == 0 {
+			passLayer = false
+		}
+	}
+	
+	for _, card := range stack.Cards {
+		
+		substack, isSubstack := card.Val.(*Stack)
+		if isSubstack {
 
-	return ret
+			if passSubstacks == PASS_True && passLayer {
+				lambda(card, stack, true, retStack.(*Stack), retCard.(*Card), &retOtherAdr, workingMemAdrs.([]any)...)
+
+				// update properties
+				stack.setStackProperties()
+				retStack.(*Stack).setStackProperties()
+			}
+
+			// forwardpropagate
+			if (depthIsInt && depth.(int) > 1) || has1 {
+				var transformedDepth any
+				if depthIsInt {
+					transformedDepth = depth.(int) - 1
+				} else {
+					transformedDepth = []int {}
+					for i := range depth.([]int) {
+						transformedDepth = append(transformedDepth.([]int), depth.([]int)[i] - 1)
+					}
+				}
+
+				substack.Lambda(lambda, retStack, retCard, retOtherAdr, workingMemAdrs, deepSearchType, transformedDepth, passSubstacks, passCards)
+			}
+
+		} else { // card is not substack
+
+			if passCards == PASS_True && passLayer {
+				lambda(card, stack, false, retStack.(*Stack), retCard.(*Card), &retOtherAdr, workingMemAdrs.([]any)...)
+
+				// update properties
+				stack.setStackProperties()
+				retStack.(*Stack).setStackProperties()
+			}
+
+		}
+
+	}
+
+	return stack, retStack.(*Stack), retCard.(*Card), retOtherAdr
 
 }
 
