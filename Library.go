@@ -750,7 +750,7 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
 		}
 	}*/
 
-	condition := true
+	condition := thisCard != nil && otherCard != nil
 	
 	condition = condition && 
 		(compareKeys == COMPARE_False ||
@@ -822,7 +822,7 @@ func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 			if depth == 0
 				testLayer = false
 		
-		test = depth == 0 || stack.Size == otherStack.Size // backpropagate if not considering this layer; or, if you are considering this layer, ensure each stack has the same size
+		test = neither stack is nil && (depth == 0 || stack.Size == otherStack.Size) // backpropagate if not considering this layer; or, if you are considering this layer, ensure each stack has the same size
 
 		for each cardA in this stack
 			for each cardB in other stack
@@ -906,7 +906,7 @@ func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 		}
 	}
 	
-	test = depth == 0 || stack.Size == otherStack.Size
+	test = stack != nil && otherStack != nil && (depth == 0 || stack.Size == otherStack.Size)
 
 	for _, cardA := range stack.Cards {
 		for _, cardB := range otherStack.Cards {
@@ -1063,26 +1063,30 @@ func (card *Card) Print(variadic ...any) {
 
 	// prints
 	fmt.Printf("%v|%vCARD\n", depthPrinter(depth.(int)), gogenerics.IfElse(depth == 0, "gostack: PRINTING ", ""))
-	fmt.Printf("%v- &card:         %v\n", depthPrinter(depth.(int)), &card)
-	fmt.Printf("%v- card.Idx:      %v\n", depthPrinter(depth.(int)), card.Idx)
-	if gogenerics.IsPointer(card.Key) {
-		fmt.Printf("%v- &card.Key:     %v\n", depthPrinter(depth.(int)), card.Key)
-		fmt.Printf("%v- card.Key:      %v\n", depthPrinter(depth.(int)), reflect.ValueOf(card.Key).Elem())
-		fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(reflect.ValueOf(card.Key).Elem().Interface()))
+	if card == nil {
+		fmt.Printf("%v- card:          %v\n", depthPrinter(depth.(int)), nil)
 	} else {
-		fmt.Printf("%v- card.Key:      %v\n", depthPrinter(depth.(int)), card.Key)
-		if card.Key != nil {
-			fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(card.Key))
+		fmt.Printf("%v- &card:         %v\n", depthPrinter(depth.(int)), &card)
+		fmt.Printf("%v- card.Idx:      %v\n", depthPrinter(depth.(int)), card.Idx)
+		if gogenerics.IsPointer(card.Key) {
+			fmt.Printf("%v- &card.Key:     %v\n", depthPrinter(depth.(int)), card.Key)
+			fmt.Printf("%v- card.Key:      %v\n", depthPrinter(depth.(int)), reflect.ValueOf(card.Key).Elem())
+			fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(reflect.ValueOf(card.Key).Elem().Interface()))
+		} else {
+			fmt.Printf("%v- card.Key:      %v\n", depthPrinter(depth.(int)), card.Key)
+			if card.Key != nil {
+				fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(card.Key))
+			}
 		}
-	}
-	if gogenerics.IsPointer(card.Val) {
-		fmt.Printf("%v- &card.Val:     %v\n", depthPrinter(depth.(int)), card.Val)
-		fmt.Printf("%v- card.Val:      %v\n", depthPrinter(depth.(int)), reflect.ValueOf(card.Val).Elem())
-		fmt.Printf("%v- card.Val.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(reflect.ValueOf(card.Val).Elem().Interface()))
-	} else {
-		fmt.Printf("%v- card.Val:      %v\n", depthPrinter(depth.(int)), card.Val)
-		if card.Val != nil {
-			fmt.Printf("%v- card.Val.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(card.Val))
+		if gogenerics.IsPointer(card.Val) {
+			fmt.Printf("%v- &card.Val:     %v\n", depthPrinter(depth.(int)), card.Val)
+			fmt.Printf("%v- card.Val:      %v\n", depthPrinter(depth.(int)), reflect.ValueOf(card.Val).Elem())
+			fmt.Printf("%v- card.Val.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(reflect.ValueOf(card.Val).Elem().Interface()))
+		} else {
+			fmt.Printf("%v- card.Val:      %v\n", depthPrinter(depth.(int)), card.Val)
+			if card.Val != nil {
+				fmt.Printf("%v- card.Val.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(card.Val))
+			}
 		}
 	}
 
@@ -1103,32 +1107,36 @@ func (stack *Stack) Print(variadic ...any) {
 	if depth == nil { depth = 0 }
 
 	fmt.Printf("%v|%vSTACK\n", depthPrinter(depth.(int)), gogenerics.IfElse(idx == nil, "gostack: PRINTING ", "SUB"))
-	fmt.Printf("%v- &stack:        %v\n", depthPrinter(depth.(int)), &stack)
-	if idx != nil {
-		fmt.Printf("%v- card.Idx:      %v\n", depthPrinter(depth.(int)), idx)
-	}
-	if key != nil {
-		if gogenerics.IsPointer(key) {
-			fmt.Printf("%v- &card.Key:     %v\n", depthPrinter(depth.(int)), key)
-			fmt.Printf("%v- card.Key:      %v\n", depthPrinter(depth.(int)), reflect.ValueOf(key).Elem())
-			fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(reflect.ValueOf(key).Elem().Interface()))
-		} else {
-			fmt.Printf("%v- card.Key:      %v\n", depthPrinter(depth.(int)), key)
-			if key != nil {
-				fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(key))
+	if stack == nil {
+		fmt.Printf("%v- stack:         %v\n", depthPrinter(depth.(int)), nil)
+	} else {
+		fmt.Printf("%v- &stack:        %v\n", depthPrinter(depth.(int)), &stack)
+		if idx != nil {
+			fmt.Printf("%v- card.Idx:      %v\n", depthPrinter(depth.(int)), idx)
+		}
+		if key != nil {
+			if gogenerics.IsPointer(key) {
+				fmt.Printf("%v- &card.Key:     %v\n", depthPrinter(depth.(int)), key)
+				fmt.Printf("%v- card.Key:      %v\n", depthPrinter(depth.(int)), reflect.ValueOf(key).Elem())
+				fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(reflect.ValueOf(key).Elem().Interface()))
+			} else {
+				fmt.Printf("%v- card.Key:      %v\n", depthPrinter(depth.(int)), key)
+				if key != nil {
+					fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(depth.(int)), reflect.TypeOf(key))
+				}
 			}
 		}
-	}
-	fmt.Printf("%v- stack.Size:    %v\n", depthPrinter(depth.(int)), stack.Size)
-	fmt.Printf("%v- stack.Depth:   %v\n", depthPrinter(depth.(int)), stack.Depth)
-	for i := range stack.Cards {
-		c := stack.Cards[i]
-
-		switch c.Val.(type) {
-		case *Stack:
-			c.Val.(*Stack).Print(depth.(int)+4, i, c.Key)
-		default:
-			c.Print(depth.(int)+4)
+		fmt.Printf("%v- stack.Size:    %v\n", depthPrinter(depth.(int)), stack.Size)
+		fmt.Printf("%v- stack.Depth:   %v\n", depthPrinter(depth.(int)), stack.Depth)
+		for i := range stack.Cards {
+			c := stack.Cards[i]
+	
+			switch c.Val.(type) {
+			case *Stack:
+				c.Val.(*Stack).Print(depth.(int)+4, i, c.Key)
+			default:
+				c.Print(depth.(int)+4)
+			}
 		}
 	}
 	
@@ -1138,8 +1146,8 @@ func (stack *Stack) Print(variadic ...any) {
  
  @receiver `stack` type{*Stack}
  @param `lambda` type{func(*Card, *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMemAdrs ...any)}
- @param optional `retStack` type{*Stack} default empty stack
- @param optional `retCard` type{*Card} default empty card
+ @param optional `retStack` type{*Stack} default nil
+ @param optional `retCard` type{*Card} default nil
  @param optional `retVarAdr` type{any} default nil
  @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
 	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
@@ -1244,11 +1252,13 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 		if isSubstack {
 
 			if passSubstacks == PASS_True && passLayer {
-				lambda(card, stack, true, retStack.(*Stack), retCard.(*Card), &retVarAdr, workingMemAdrs.([]any)...)
+				lambda(card, stack, true, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, workingMemAdrs.([]any)...)
 
 				// update properties
 				stack.setStackProperties()
-				retStack.(*Stack).setStackProperties()
+				if retStack != nil {
+					retStack.(*Stack).setStackProperties()
+				}
 			}
 
 			// forwardpropagate
@@ -1269,18 +1279,20 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 		} else { // card is not substack
 
 			if passCards == PASS_True && passLayer {
-				lambda(card, stack, false, retStack.(*Stack), retCard.(*Card), &retVarAdr, workingMemAdrs.([]any)...)
+				lambda(card, stack, false, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, workingMemAdrs.([]any)...)
 
 				// update properties
 				stack.setStackProperties()
-				retStack.(*Stack).setStackProperties()
+				if retStack != nil {
+					retStack.(*Stack).setStackProperties()
+				}
 			}
 
 		}
 
 	}
 
-	return stack, retStack.(*Stack), retCard.(*Card), retVarAdr
+	return stack, toTypeStack(retStack), toTypeCard(retCard), retVarAdr
 
 }
 
@@ -1288,8 +1300,8 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
  
  @receiver `stack` type{*Stack}
  @param `lambda` type{func(*Card, *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMemAdrs ...any)}
- @param optional `retStack` type{*Stack} default empty stack
- @param optional `retCard` type{*Card} default empty card
+ @param optional `retStack` type{*Stack} default nil
+ @param optional `retCard` type{*Card} default nil
  @param optional `retVarAdr` type{any} default nil
  @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
 	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
@@ -1308,8 +1320,8 @@ func (stack *Stack) LambdaThis(lambda func(*Card, *Stack, bool, *Stack, *Card, a
  
  @receiver `stack` type{*Stack}
  @param `lambda` type{func(*Card, *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMemAdrs ...any)}
- @param optional `retStack` type{*Stack} default empty stack
- @param optional `retCard` type{*Card} default empty card
+ @param optional `retStack` type{*Stack} default nil
+ @param optional `retCard` type{*Card} default nil
  @param optional `retVarAdr` type{any} default nil
  @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
 	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
@@ -1328,8 +1340,8 @@ func (stack *Stack) LambdaStack(lambda func(*Card, *Stack, bool, *Stack, *Card, 
  
  @receiver `stack` type{*Stack}
  @param `lambda` type{func(*Card, *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMemAdrs ...any)}
- @param optional `retStack` type{*Stack} default empty stack
- @param optional `retCard` type{*Card} default empty card
+ @param optional `retStack` type{*Stack} default nil
+ @param optional `retCard` type{*Card} default nil
  @param optional `retVarAdr` type{any} default nil
  @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
 	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
@@ -1348,8 +1360,8 @@ func (stack *Stack) LambdaCard(lambda func(*Card, *Stack, bool, *Stack, *Card, a
  
  @receiver `stack` type{*Stack}
  @param `lambda` type{func(*Card, *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMemAdrs ...any)}
- @param optional `retStack` type{*Stack} default empty stack
- @param optional `retCard` type{*Card} default empty card
+ @param optional `retStack` type{*Stack} default nil
+ @param optional `retCard` type{*Card} default nil
  @param optional `retVarAdr` type{any} default nil
  @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
 	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
@@ -1368,36 +1380,35 @@ func (stack *Stack) LambdaVarAdr(lambda func(*Card, *Stack, bool, *Stack, *Card,
  
  @receiver `stack` type{*Stack}
  @param `insert` type{Card, Stack, val (any)}
- @param optional `orderType` type{ORDER} default ORDER_Before
- @param optional `findType` type{FIND} default FIND_First
+ @param optional `orderType` type{ORDER} default ORDER_After
+ @param optional `findType` type{FIND} default FIND_Last
  @param optional `findData` type{any} default nil
- @param optional `pointerType` type{POINTER} default POINTER_False
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `depth` type{int} default -1 (deepest)
- @param optional `overrideStackConversion` type{bool} default false
-	if `insert` is of type{Stack}:
-		if not `overrideStackConversion`:
-			add to `stack` from `insert.Cards`
-		else if `overrideStackConversion`:
-			add the `insert` stack to `stack` as the val of a card
+ @param optional `pointerType` type{POINTER} default POINTER_False
+   If `findType` == FIND_Key OR FIND_Val, then treat the keys/vals as memory addresses, and compare `findData` against the object stored at their memory addresses
  @updates `stack` to have new cards before/after each designated position
  @returns `stack` if cards were added OR nil if no cards were added (due to invalid find)
  */
 func (stack *Stack) Add(insert any, variadic ...any) *Stack {
 
 	// unpack variadic into optional parameters
-	var orderType, findType, findData, pointerType, deepSearchType, depth, overrideStackConversion any
-	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &pointerType, &deepSearchType, &depth, &overrideStackConversion)
+	var orderType, findType, findData, pointerType, deepSearchType, depth any
+	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &pointerType, &deepSearchType, &depth)
+	setORDERDefaultIfNil(&orderType)
 	setFINDDefaultIfNil(&findType)
+	setPOINTERDefaultIfNil(&pointerType)
+
+	// TODO: just reference AddMany, get idx[0] of it
 
 	// main
-	return stack.LambdaThis(func(card *Card, stack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) {
+	return stack/*.LambdaThis(func(card *Card, stack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) {
 		
 		if selectCard(findType.(FIND), findData, card, stack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) {
 			card.Val = "hehe replace me later"
 		}
 
-	}, nil, nil, nil, nil, deepSearchType, depth)
+	}, nil, nil, nil, nil, deepSearchType, depth)*/
 
 }
 
@@ -1565,29 +1576,38 @@ func (stack *Stack) Has(variadic ...any) bool {
 /** Gets a card from specified parameters in a stack, or nil if does not exist
 
  @receiver `stack` type{*Stack}
- @param optional `findType` type{FIND} default FIND_First
+ @param optional `findType` type{FIND} default FIND_Last
  @param optional `findData` type{any} default nil
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `depth` type{int, []int} default -1 (deepest)
  @param optional `pointerType` type{POINTER} default POINTER_False
- @param optional `clonesType_card` type{CLONES} default CLONE_False
- @param optional `clonesType_keys` type{CLONES} default CLONE_False
- @param optional `clonesType_vals` type{CLONES} default CLONE_False
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int} default -1 (deepest)
+ @param optional `passSubstacks` type{PASS} default PASS_True
+ @param optional `passCards` type{PASS} default PASS_True
  @returns type{*Card} the found card OR nil (if invalid find)
- @ensures
-  * CLONE_True for `clonesType_card` means the returned card object itself is a clone
-  * CLONE_True for `clonesType_key` means the returned card key is a clone
-  * CLONE_True for `clonesType_val` means the returned card val is a clone
  */
 func (stack *Stack) Get(variadic ...any) (ret *Card) {
-
+	
 	// unpack variadic into optional parameters
-	var findType, findData, pointerType, clonesType_card, clonesType_key, clonesType_val, deepSearchType, depth any
-	gogenerics.UnpackVariadic(variadic, &findType, &findData, &pointerType, &clonesType_card, &clonesType_key, &clonesType_val, &deepSearchType, &depth)
+	var findType, findData, deepSearchType, depth, pointerType, passSubstacks, passCards any
+	gogenerics.UnpackVariadic(variadic, &findType, &findData, &deepSearchType, &depth, &pointerType, &passSubstacks, &passCards)
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
+	if passSubstacks == nil {passSubstacks = PASS_True}
 
-	// allow deepSearchHandler to take care of function
-	//return stack.deepSearchHandler("Get", true, findType, findData, nil, pointerType, deepSearchType, depth, nil, nil, nil, nil, nil, nil, nil, clonesType_card, clonesType_key, clonesType_val, nil).Cards[0]
-	return new(Card)
+	// get card
+	card := stack.LambdaCard(func(card *Card, stack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) {
+		
+		if selectCard(findType, findData, pointerType, card, stack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && retCard.Idx == -1 {
+			*retCard = *card
+		}
+
+	}, nil, nil, nil, nil, deepSearchType, depth, passSubstacks, passCards)
+
+	// return nil if no card found, else return card
+	if card.Idx == -1 {
+		return nil
+	} else {
+		return card
+	}
 
 }
 

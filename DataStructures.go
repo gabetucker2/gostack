@@ -38,6 +38,7 @@ const (
 	FIND_Key
 	FIND_Val
 	FIND_Card
+	FIND_Stack
 	FIND_Size
 	FIND_Depth
 	FIND_Slice
@@ -101,13 +102,13 @@ func setRETURNDefaultIfNil(returnType *any) {
 
 func setFINDDefaultIfNil(findType *any) {
 	if *findType == nil {
-		*findType = FIND_First
+		*findType = FIND_Last
 	}
 }
 
 func setORDERDefaultIfNil(orderType *any) {
 	if *orderType == nil {
-		*orderType = ORDER_Before
+		*orderType = ORDER_After
 	}
 }
 
