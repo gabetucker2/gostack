@@ -117,6 +117,7 @@
  >>>> [stack.Lambda(...)](#Lambda)
  >>>>
  >>>> [stack.LambdaThis(...)](#Lambda)
+ >>>>>
  >>>>> [stack.LambdaStack(...)](#Lambda)
  >>>>>
  >>>>> [stack.LambdaCard(...)](#Lambda)
