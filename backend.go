@@ -1,321 +1,81 @@
 package gostack
 
 import (
-	"fmt"
 	"reflect"
 
 	"github.com/gabetucker2/gogenerics"
 )
 
-/** Returns an [][]int of index vertices representing the order of indices needed to access targeted position(s) in `stack`, with []*Card for pure card values
- 
- @param `getFirst` type{bool}
- @param `stack` type{*Stack} no pass-by-reference
- @param `findType` type{FIND}
- @param `findData` type{any}
- @param `pointerType` type{POINTER} no pass-by-reference
- @param `deepSearchType` type{DEEPSEARCH}
- @param `depth` type{int}
- @returns 3 arrays of data pertaining to the found cards:
-  * type{[][]int} int array representing path to card from root stack
-  * type{[]*Card} the card pointer itself
-  * type{[]*Stack} the stack which is the direct parent of that card
- @constructor creates a new []int
- @requires
-  * `MakeStack()` and `MakeCard()` have been implemented
-  * Inputted `findData` is of expected type (see documentation on FIND) 
- @ensures
-   IF search finds no cards in `stack`
-     return [][]int {}
-   
-   IF `getFirst`
-     return an array of the first found element
-   ELSE
-     return an array of all found elements
- */
-func (stack *Stack) getPositions(getFirst bool, findType FIND, findData any, pointerType POINTER, deepSearchType DEEPSEARCH, depth int) (targetIdxs [][]int, targetCards []*Card, targetStacks []*Stack) {
+func selectCard(findType FIND, findData any, card *Card, stack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) bool {
 
-	// setup for main by deepening iteratively
-	if deepSearchType == DEEPSEARCH_False { depth = 1 }
-	workingCards := []*Card {}
-	currentCards := []*Card {}
-
-
-	for i := 0; i < depth; i++ {
-
-		// first iteration
-		if i == 0 {
-			// fill first layer with ints representing indices
-			for j := range stack.Cards {
-				currentCards = stack.Cards
-				targetIdxs = append(targetIdxs, []int{j})
+	needleInHaystack := func(needle any, haystack []any) bool {
+		for _, hay := range haystack {
+			if needle == hay {
+				return true
 			}
+		}
+		return false
+	}
 
-		// next iterations
+	getType := func(in any) string {
+		_, isStack := in.(*Stack)
+		if isStack {
+			return "stack"
 		} else {
-			for j, indexList := range targetIdxs {
-				c := currentCards[indexList[i]]
-				// if there is another stack within this stack, deepen
-				switch c.Val.(type) {
-				case *Stack:
-					workingCards = append(workingCards, c)
-					targetIdxs[j] = append(targetIdxs[j], j)
-				}
+			isArr := reflect.TypeOf(in).Kind() == reflect.Array
+			if isArr {
+				return "array"
+			} else {
+				return "element"
 			}
-			currentCards = workingCards
 		}
 	}
 
-	fmt.Println(targetIdxs)
-
-	// main
-	for i := range targetIdxs {
-		filteredList := []int{}
-		//subStack
-		targetIdxs = append(targetIdxs, filteredList)
-
-		switch findType {
-
-		case FIND_First:
-			if stack.Size > 0 {filteredList = append(filteredList, 0)}
-	
-		case FIND_Last:
-			if stack.Size > 0 {filteredList = append(filteredList, stack.Size - 1)}
-	
-		case FIND_Idx:
-			thisIdx := findData.(int)
-			if stack.Size > thisIdx {filteredList = append(filteredList, thisIdx)}
-	
-		case FIND_Idxs:
-			theseIdxs := findData.([]int)
-			for testI := range stack.Cards {
-				for _, targetI := range theseIdxs {
-					if testI == targetI {
-						filteredList = append(filteredList, testI)
-						if getFirst { break }
-					}
-				}
-			}
-	
-		case FIND_IdxsStack:
-			if getFirst {
-				filteredList = append(filteredList, findData.(*Stack).Cards[0].Val.(int))
-			} else {
-				for _, c := range findData.(*Stack).Cards {
-					filteredList = append(filteredList, c.Val.(int))
-				}
-			}
-	
-		case FIND_Key:
-			for i := range stack.Cards {
-				testKey := stack.Cards[i].Key
-				if gogenerics.PointersEqual(testKey, findData) {
-					filteredList = append(filteredList, i)
-					if getFirst { break }
-				}
-			}
-	
-		case FIND_Keys:
-			keyArray := findData.([]any)
-			for i := range stack.Cards {
-				testKey := stack.Cards[i].Key
-				for j := range keyArray {
-					targetKey := keyArray[j]
-					if gogenerics.PointersEqual(testKey, targetKey) {
-						filteredList = append(filteredList, i)
-						if getFirst { break }
-					}
-				}
-			}
-	
-		case FIND_KeysStack:
-			keyStack := findData.(*Stack)
-			for i := range stack.Cards {
-				testKey := stack.Cards[i].Key
-				for j := range keyStack.Cards {
-					targetKey := keyStack.Cards[j].Val
-					if gogenerics.PointersEqual(testKey, targetKey) {
-						filteredList = append(filteredList, i)
-						if getFirst { break }
-					}
-				}
-			}
-	
-		case FIND_Val:
-			for i := range stack.Cards {
-				testVal := stack.Cards[i].Val
-				if gogenerics.PointersEqual(testVal, findData) {
-					filteredList = append(filteredList, i)
-					if getFirst { break }
-				}
-			}
-	
-		case FIND_Vals:
-			valArray := findData.([]any)
-			for i := range stack.Cards {
-				testVal := stack.Cards[i].Val
-				for j := range valArray {
-					targetVal := valArray[j]
-					if gogenerics.PointersEqual(testVal, targetVal) {
-						filteredList = append(filteredList, i)
-						if getFirst { break }
-					}
-				}
-			}
-	
-		case FIND_ValsStack:
-			valStack := findData.(*Stack)
-			for i := range stack.Cards {
-				testVal := stack.Cards[i].Val
-				for j := range valStack.Cards {
-					targetVal := valStack.Cards[j].Val
-					if gogenerics.PointersEqual(testVal, targetVal) {
-						filteredList = append(filteredList, i)
-						if getFirst { break }
-					}
-				}
-			}
-	
-		case FIND_Card:
-			for i := range stack.Cards {
-				testCard := stack.Cards[i]
-				if gogenerics.PointersEqual(testCard, findData.(*Card)) {
-					filteredList = append(filteredList, i)
-					if getFirst { break }
-				}
-			}
-	
-		case FIND_Cards:
-			cardStack := findData.(*Stack)
-			for i := range stack.Cards {
-				testCard := stack.Cards[i]
-				for j := range cardStack.Cards {
-					targetCard := cardStack.Cards[j]
-					if gogenerics.PointersEqual(testCard, targetCard) {
-						filteredList = append(filteredList, i)
-						if getFirst { break }
-					}
-				}
-			}
-	
-		case FIND_CardsStack:
-			cardStack := findData.(*Stack)
-			for i := range stack.Cards {
-				testCard := stack.Cards[i]
-				for j := range cardStack.Cards {
-					targetCard := cardStack.Cards[j].Val
-					if gogenerics.PointersEqual(testCard, targetCard) {
-						filteredList = append(filteredList, i)
-						if getFirst { break }
-					}
-				}
-			}
-	
-		case FIND_Slice:
-			slice := findData.([2]int)
-			if stack.Size > 0 && 0 <= slice[0] && 0 <= slice[1] && slice[0] < stack.Size && slice[1] < stack.Size {
-				filteredList = append(filteredList, slice[0])
-				if !getFirst {
-					for i := 0; i < slice[1] - slice[0]; {
-						filteredList = append(filteredList, i+slice[0])
-						i = gogenerics.IfElse(slice[1] > slice[0], i+1, i-1).(int)
-					}
-				}
-			}
-	
-		case FIND_All:
-			for i := range stack.Cards {
-				filteredList = append(filteredList, i)
-			}
-	
-		case FIND_Lambda:
-			filterStack := stack.Clone() // so that no changes can be made to the original stack from FIND_Lambda functions
-			//getIterator(filterStack, findData.(func(*Card, *Stack, ...any) bool), deepSearchType, depth)
-			for i := range filterStack.Cards {
-				filteredList = append(filteredList, i)	
-				if getFirst { break }
-			}
-	
+	match := func(needle any, haystack any) bool {
+		switch getType(findData) {
+		case "element":
+			return needle == haystack
+		case "array":
+			return needleInHaystack(needle, gogenerics.UnpackArray(haystack))
+		case "stack":
+			return needleInHaystack(needle, gogenerics.UnpackArray(haystack.(*Stack).ToArray()))
+		default:
+			return false
 		}
-
-		targetIdxs[i] = filteredList
-
-		for _, indexList := range targetIdxs {
-			substack := stack
-			target := substack.Cards[indexList[0]]
-			for j := 1; j < len(indexList); j++ {
-				substack = target.Val.(*Stack)
-				target = substack.Cards[j]
-			}
-			targetCards = append(targetCards, target)
-			targetStacks = append(targetStacks, substack)
-		}
-
 	}
 
-	return
-
-}
-
-/** Updates a target's field or value to new values based on replaceType
-
- @param setStack type{*Stack}
- @param replaceType type{REPLACE}
- @param replaceData type{any}
- @param target type{*Card}
- @updates `setStack` or `target`
- @ensures if `replaceData` is nil and `replaceType is REPLACE_Card`, the card will be removed from `stack`
- */
-func (setStack *Stack) updateRespectiveField(replaceType REPLACE, replaceData any, target *Card) {
-
-	switch replaceType {
-
-	case REPLACE_Key:
-		target.Key = replaceData
-
-	case REPLACE_Val:
-		target.Val = replaceData
-
-	case REPLACE_Card:
-		if replaceData == nil {
-			// remove
-			var newCards []*Card
-			for i := range setStack.Cards {
-				c := setStack.Cards[i]
-				if c != target {
-					newCards = append(newCards, c)
-				}
-			}
-			setStack.Cards = newCards
-		} else {
-			*target = replaceData.(Card)
+	switch findType {
+	case FIND_First:
+		return card.Idx == 0
+	case FIND_Last:
+		return card.Idx == stack.Size - 1
+	case FIND_Idx:
+		return match(card.Idx, findData)
+	case FIND_Key:
+		return match(card.Key, findData)
+	case FIND_Card:
+		return match(card, findData)
+	case FIND_Size:
+		return match(card.Val.(*Stack).Size, findData)
+	case FIND_Depth:
+		return match(card.Val.(*Stack).Depth, findData)
+	case FIND_Slice:
+		test := false
+		for _, idx := range findData.([]int) {
+			test = match(card.Idx, idx)
+			if !test {break}
 		}
-
-	case REPLACE_Stack:
-		// replace with new set of cards
-		var newCards []*Card
-		for i := range setStack.Cards {
-			c := setStack.Cards[i]
-			if c != target {
-				newCards = append(newCards, c)
-			} else {
-				cardsIn := replaceData.(*Stack).Cards
-				for j := range cardsIn {
-					newCards = append(newCards, cardsIn[j])
-				}
-			}
-		}
-		setStack.Cards = newCards
-
-	case REPLACE_Lambda:
-		 // DEEPSEARCH_False since targeting cards that have already been filtered using Get()
-		///// TODO: fix generalIterator(setStack, replaceData.(func(*Card, *Stack, any, ...any)), DEEPSEARCH_False, -1, nil)
-
+		return test
+	case FIND_All:
+		return true
+	case FIND_Lambda:
+		return findData.(func(*Card, *Stack, bool, *Stack, *Card, any, ...any) (bool)) (card, stack, isSubstack, retStack, retCard, &retVarAdr, wmadrs...)
+	default:
+		return false
 	}
 
 }
 
-// TODO: FIX LATER
 /** Returns, from any map type, a version of that map which is converted to type deep map[any]any...
 
  @param `arr` type{any}
@@ -336,34 +96,6 @@ func (setStack *Stack) updateRespectiveField(replaceType REPLACE, replaceData an
 	}
 	return m
 }*/
-
-/** Assuming normally-shaped matrix, returns the depth of this stack */
-func (stack *Stack) getStackDepth() (depth int) {
-	
-	if stack.Size > 0 {
-
-		c := stack.Cards[0]
-
-		isStack := false
-		switch c.Val.(type) {
-		case *Stack:
-			isStack = true
-			depth = c.Val.(*Stack).getStackDepth() + 1
-		}
-
-		if !isStack {
-			depth = 1
-		}
-
-	}
-
-	if depth == 0 {
-		depth = 1
-	}
-
-	return
-
-}
 
 /** Recursively add elements from 1D array to stack of matrix shape resembling `matrixShape`
  
@@ -547,7 +279,37 @@ func (stack *Stack) makeStackMatrixFromND(keys, vals any) (ret *Stack) {
 /** Updates a stack's Size, Depth, and Card Indices */
 func (stack *Stack) setStackProperties() {
 	stack.Size = len(stack.Cards)
-	stack.Depth = stack.getStackDepth()
+	
+
+	/** Assuming normally-shaped matrix, returns the depth of this stack */
+	var getStackDepth func (stack *Stack) (depth int) // so that it can be recursive and nested
+	getStackDepth = func (stack *Stack) (depth int) {
+		
+		if stack.Size > 0 {
+
+			c := stack.Cards[0]
+
+			isStack := false
+			switch c.Val.(type) {
+			case *Stack:
+				isStack = true
+				depth = getStackDepth(c.Val.(*Stack)) + 1
+			}
+
+			if !isStack {
+				depth = 1
+			}
+
+		}
+
+		if depth == 0 {
+			depth = 1
+		}
+
+		return
+
+	}
+	stack.Depth = getStackDepth(stack)
 	for i := range stack.Cards {
 		stack.Cards[i].Idx = i
 	}

@@ -157,7 +157,7 @@ func Introduction() {
 
 	// to get all cards whose vals are either 20 or 340
 	gottenData = myStack.GetMany(FIND_Val, []int {20, 340}) // Butterfly, Ant
-	gottenData = myStack.GetMany(FIND_ValsStack, MakeStack([]int {20, 340})) // Butterfly, Ant
+	gottenData = myStack.GetMany(FIND_Val, MakeStack([]int {20, 340})) // Butterfly, Ant
 
 	// to get all cards whose vals are under 30 (read more on this type of functionality in Lambda.go)
 	gottenData = myStack.GetMany(FIND_Lambda, func(card *Card) bool {

@@ -272,17 +272,23 @@
  > * FIND_Last *NONE*
  > * FIND_Idx *int*
  > * FIND_Idxs *ints*
- > * FIND_Idxs Stack *stack whose vals are ints*
+ > * FIND_IdxsStack *stack whose vals are ints*
  > * FIND_Key *any*
  > * FIND_Keys *anys*
- > * FIND_Keys Stack *stack whose vals are keys*
+ > * FIND_KeysStack *stack whose vals are keys*
  > * FIND_Val *any*
  > * FIND_Vals *anys*
- > * FIND_Vals Stack *stack whose vals are vals*
+ > * FIND_ValsStack *stack whose vals are vals*
  > * FIND_Card *Card*
  > * FIND_Cards *Stack*
- > * FIND_Cards Stack *stack whose vals are cards*
- > * FIND_Slice *[2]int*
+ > * FIND_CardsStack *stack whose vals are cards*
+ > * FIND_Size *Card*
+ > * FIND_Sizes *Stack*
+ > * FIND_SizesStack *stack whose vals are sizes*
+ > * FIND_Depth *Card*
+ > * FIND_Depths *Stack*
+ > * FIND_DepthsStack *stack whose vals are depths*
+ > * FIND_Slice *[2]int representing all between idx range*
  > * FIND_All *NONE*
  > * FIND_Lambda *lambda function*
 

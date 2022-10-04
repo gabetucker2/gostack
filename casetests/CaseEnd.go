@@ -1002,11 +1002,16 @@ func case_stack_Add(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	//stack1 := MakeStack([]int {1, 2, 3}).Add(4, ORDER_After, FIND_Last)
-	MakeStack([]int {3, 2, 1}).Add(4)
+	// test base functionality
+	stack1 := MakeStack([]int {3, 2, 1}).Add(4)
 	
 	conditions := []bool {
-		false,//stack1.Equals(MakeStack([]int {1, 2, 3, 4})),
+
+		// test base functionality
+		stack1.Equals(MakeStack([]int {4, 3, 2, 1})), // 1
+
+		false, // temp
+
 	}
 
 	test_End(funcName, conditions)
@@ -1042,7 +1047,7 @@ func Run(_showTestText bool) {
 	case_stack_Print("stack.Print") // GOOD
 	
 	// GENERALIZED FUNCTIONS
-	// case_stack_Add("stack.Add") // BAD
+	case_stack_Add("stack.Add") // BAD
 	// case_stack_AddMany("stack.AddMany") // BAD
 	// case_stack_Move("stack.Move") // BAD
 	// case_stack_Has("stack.Has") // BAD

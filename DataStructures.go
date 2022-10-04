@@ -35,17 +35,11 @@ const (
 	FIND_First FIND = iota
 	FIND_Last
 	FIND_Idx
-	FIND_Idxs
-	FIND_IdxsStack
 	FIND_Key
-	FIND_Keys
-	FIND_KeysStack
 	FIND_Val
-	FIND_Vals
-	FIND_ValsStack
 	FIND_Card
-	FIND_Cards
-	FIND_CardsStack
+	FIND_Size
+	FIND_Depth
 	FIND_Slice
 	FIND_All
 	FIND_Lambda
