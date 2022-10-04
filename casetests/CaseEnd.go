@@ -19,7 +19,7 @@ func case_MyFunction(funcName string) {
 
 	// YOUR STUFF HERE
 
-	conditions := []bool{
+	conditions := []bool {
 		
 	}
 
@@ -48,7 +48,7 @@ func case_MakeCard(funcName string) {
 	card2.Val = "Card 4"
 	card3.Val = 7
 
-	conditions := []bool{
+	conditions := []bool {
 		card1.Idx == -1,
 		card2.Idx == -1,
 		card3.Idx == -1,
@@ -129,7 +129,7 @@ func case_MakeStack(funcName string) {
 		arrCardToVals[i].Idx = i
 	}
 
-	conditions := []bool{
+	conditions := []bool {
 		test_IdxsAreGood(stack1), // 1
 		test_IdxsAreGood(stack2), // 2
 		test_IdxsAreGood(stack3), // 3
@@ -220,7 +220,7 @@ func case_MakeStackMatrix(funcName string) {
 	// irregular depth
 	stack11 := MakeStackMatrix(irregularDepth)
 
-	conditions := []bool{
+	conditions := []bool {
 
 		// deep tests
 		stack1.Equals(MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222})})) || stack1.Equals(MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Bre", "Alex"}, []int {222, 111})})), // 1
@@ -251,7 +251,7 @@ func case_stack_StripStackMatrix(funcName string) {
 
 	// stuff
 
-	conditions := []bool{
+	conditions := []bool {
 		false, // temp
 	}
 
@@ -277,7 +277,7 @@ func case_stack_ToArray(funcName string) {
 	arrayIdxs := sampleStack().ToArray(RETURN_Idxs)
 	arrayCards := MakeStack([]*Card {testCardA, testCardB, testCardC}).ToArray(RETURN_Cards)
 	
-	conditions := []bool{
+	conditions := []bool {
 		len(arrayVals1) == 3, // 1
 		len(arrayVals2) == 3, // 2
 		len(arrayKeys) == 3, // 3
@@ -319,7 +319,7 @@ func case_stack_ToMap(funcName string) {
 
 	m := MakeStack([]*Card {testCardA.Clone(), testCardB.Clone(), testCardC.Clone()}).ToMap()
 
-	conditions := []bool{
+	conditions := []bool {
 		len(m) == 3, // 1
 		m["Key1"] == "Card A", // 2
 		m["Key2"] == "Card B", // 3
@@ -368,7 +368,7 @@ func case_stack_ToMatrix(funcName string) {
 	matCardsCorrect := []any {c1, c2}
 
 
-	conditions := []bool{
+	conditions := []bool {
 
 		// test for shallow on shallow
 		MakeStackMatrix(matA).Equals(MakeStackMatrix(matACorrect)), // 1
@@ -404,7 +404,7 @@ func case_stack_Shape(funcName string) {
 	stack2 := MakeStack()
 	stack3 := MakeStack([]string {"Hi", "Hey"})
 
-	conditions := []bool{
+	conditions := []bool {
 		gogenerics.SlicesEqual(stack1.Shape(), []int {2, 2, 5}), // 1
 		gogenerics.SlicesEqual(stack2.Shape(), []int {0}), // 2
 		gogenerics.SlicesEqual(stack3.Shape(), []int {2}), // 3
@@ -433,7 +433,7 @@ func case_stack_IsRegular(funcName string) {
 	// {} == regular/true
 	stack5 := MakeStackMatrix([]any {})
 
-	conditions := []bool{
+	conditions := []bool {
 		!stack1.IsRegular(), // 1
 		!stack2.IsRegular(), // 2
 		stack3.IsRegular(), // 3
@@ -453,7 +453,7 @@ func case_stack_Duplicate(funcName string) {
 	stack2 := MakeStack([]string {"Hey", "Hi"}).Duplicate(1)
 	stack3 := MakeStack([]string {"Hey", "Hi"}).Duplicate(2)
 
-	conditions := []bool{
+	conditions := []bool {
 		stack1.Equals(MakeStack()), // 1
 		stack2.Equals(MakeStack([]string {"Hey", "Hi"})), // 2
 		stack3.Equals(MakeStack([]string {"Hey", "Hi", "Hey", "Hi"})), // 3
@@ -470,7 +470,7 @@ func case_stack_Empty(funcName string) {
 	stack1 := MakeStack([]string {"Hey", "Hi", "gdjifjgdfoigj"}).Empty()
 	stack2 := MakeStackMatrix([]int {1, 2, 3, 4, 5, 6}, []string {"Hi", "Hey", "Hoy", "Ciao", "Heyy", "Hiya"}, []int {3, 2}).Empty()
 
-	conditions := []bool{
+	conditions := []bool {
 		test_StackProperties(stack1, []int {0}, 1),
 		test_StackProperties(stack2, []int {0}, 1),
 	}
@@ -487,7 +487,7 @@ func case_card_Clone(funcName string) {
 	cardAClone := cardA.Clone()
 	cardAClone.Key = "New"
 
-	conditions := []bool{
+	conditions := []bool {
 		cardA.Idx == 3, // 1
 		cardA.Key == "Original", // 2
 		cardA.Val == "Original", // 3
@@ -531,7 +531,7 @@ func case_stack_Clone(funcName string) {
 	stackDClone3 := stackD.Clone(nil, nil, CLONE_True, CLONE_True, CLONE_False, CLONE_True)
 	stackDClone4 := stackD.Clone(nil, nil, CLONE_True, CLONE_True, CLONE_True, CLONE_False)
 
-	conditions := []bool{
+	conditions := []bool {
 
 		// shallow cloning
 		stackA.Equals(MakeStack([]string {"Original", "Original"}, []string {"Original", "Original"})), // 1
@@ -565,7 +565,7 @@ func case_stack_Unique(funcName string) {
 	myStackVals := MakeStack([]string {"Person", "Place", "Person", "Thing", "Person"}).Unique(TYPE_Val)
 	myStackBoth := MakeStack([]string {"Person", "Place", "Person", "Thing", "Person"}, []string {"Person", "Place", "Person", "Thing", "Person"}).Unique(TYPE_Val)
 
-	conditions := []bool{
+	conditions := []bool {
 		myStackKeys.Equals(MakeStack(nil, []string {"Person", "Place", "Thing"})), // 1
 		myStackVals.Equals(MakeStack([]string {"Person", "Place", "Thing"})), // 2
 		myStackBoth.Equals(MakeStack([]string {"Person", "Place", "Thing"}, []string {"Person", "Place", "Thing"})), // 3
@@ -611,7 +611,7 @@ func case_card_Equals(funcName string) {
 	cardUno := MakeCard(nonInfVar1)
 	cardDos := MakeCard(nonInfVar2)
 
-	conditions := []bool{
+	conditions := []bool {
 
 		// compare by object
 		card1.Equals(card2), // 1
@@ -703,7 +703,7 @@ func case_stack_Equals(funcName string) {
 	dsf5 := MakeStack([]string {"Stack420", "StackB"}, []*Stack {MakeStack([]string {"Hi1", "Hello2"}), MakeStack([]string {"Hi3", "Hi4"})})
 	dsf6 := MakeStack([]string {"StackA"}, []*Stack {MakeStack([]string {"Hi1", "Hi2"})})
 
-	conditions := []bool{
+	conditions := []bool {
 		
 		// test for shallow-on-shallow equality
 		sos1.Equals(sos2, DEEPSEARCH_False), // 1
@@ -850,7 +850,7 @@ func case_stack_Shuffle(funcName string) {
 	// test for definite shuffle
 	stackB := MakeStack([]int {1, 2}).Shuffle(true)
 
-	conditions := []bool{
+	conditions := []bool {
 		
 		// test for probable shuffle
 		!stackA.Equals(MakeStack([]int {1, 2, 3, 4, 5, 6, 7, 8, 9, 10})), // 1
@@ -870,7 +870,7 @@ func case_stack_Transpose(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	conditions := []bool{
+	conditions := []bool {
 		
 		false, // temp
 
@@ -884,7 +884,7 @@ func case_card_Print(funcName string) {
 
 	test_Start(funcName, showTestText)
 	
-	conditions := []bool{
+	conditions := []bool {
 		true, // unfortunately, we have to check manually
 	}
 
@@ -896,7 +896,7 @@ func case_stack_Print(funcName string) {
 
 	test_Start(funcName, showTestText)
 	
-	conditions := []bool{
+	conditions := []bool {
 		true, // unfortunately, we have to check manually
 	}
 
@@ -956,12 +956,14 @@ func case_stack_Lambdas(funcName string) {
 	})
 
 	// test passSubstacks true passCards false, multiply each stack.Key by 5
-	stack5, _, _, _ := MakeStack([]int {4, 7}, []*Stack {MakeStack([]int {1, 5}), MakeStack([]int {20, 2})}).Lambda(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {
+	stack5 := MakeStack([]int {4, 7}, []*Stack {MakeStack([]int {1, 5}), MakeStack([]int {20, 2})}).LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {
 		card.Key = card.Key.(int) * 5
 	}, nil, nil, nil, nil, nil, nil, PASS_True, PASS_False)
 
+	// test that all init values work
+	this, stack, card, varAdr := MakeStack([]string {"Heyy"}).Lambda(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {}, MakeStack([]int {666}), MakeCard("Howdy"), 420)
 	
-	conditions := []bool{
+	conditions := []bool {
 
 		// test stack updating, multiply each by 5
 		stack1.Equals(MakeStack([]int {5, 25, 100})), // 1
@@ -984,6 +986,12 @@ func case_stack_Lambdas(funcName string) {
 		// test passSubstacks true passCards false, multiply each stack.Key by 5
 		stack5.Equals(MakeStack([]int {20, 35}, []*Stack {MakeStack([]int {1, 5}), MakeStack([]int {20, 2})})), // 7
 
+		// test that all init values work
+		this.Equals(MakeStack([]string {"Heyy"})), // 8
+		stack.Equals(MakeStack([]int {666})), // 9
+		card.Equals(MakeCard("Howdy")), // 10
+		gogenerics.GetPointer(varAdr) == 420, // 11
+
 	}
 
 	test_End(funcName, conditions)
@@ -997,7 +1005,7 @@ func case_stack_Add(funcName string) {
 	//stack1 := MakeStack([]int {1, 2, 3}).Add(4, ORDER_After, FIND_Last)
 	MakeStack([]int {3, 2, 1}).Add(4)
 	
-	conditions := []bool{
+	conditions := []bool {
 		false,//stack1.Equals(MakeStack([]int {1, 2, 3, 4})),
 	}
 
@@ -1019,7 +1027,7 @@ func Run(_showTestText bool) {
 	case_MakeStack("MakeStack") // GOOD
 	case_stack_Equals("stack.Equals") // GOOD
 	case_MakeStackMatrix("MakeStackMatrix") // GOOD
-	case_stack_Lambdas("stack.Lambda*") // BAD
+	case_stack_Lambdas("stack.Lambdas") // BAD
 	case_stack_ToArray("stack.ToArray") // GOOD
 	case_stack_ToMap("stack.ToMap") // GOOD
 	case_stack_ToMatrix("stack.ToMatrix") // GOOD

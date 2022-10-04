@@ -907,6 +907,50 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
   * Each card in `stack` is passed into your lambda function
   * `stack` is the first argument passed into your variadic parameter on the first call
  ```
+ 
+ `stack.LambdaThis(lambda function, ...deepSearchType, ...depth)`
+ ```
+ Iterate through a stack calling your lambda function on each card
+ 
+ @receiver `stack` type{*Stack}
+ @param `lambda` type{func(*Card, ...any)}
+ @ensures
+  * Each card in `stack` is passed into your lambda function
+  * `stack` is the first argument passed into your variadic parameter on the first call
+ ```
+ 
+ `stack.LambdaStack(lambda function, ...deepSearchType, ...depth)`
+ ```
+ Iterate through a stack calling your lambda function on each card
+ 
+ @receiver `stack` type{*Stack}
+ @param `lambda` type{func(*Card, ...any)}
+ @ensures
+  * Each card in `stack` is passed into your lambda function
+  * `stack` is the first argument passed into your variadic parameter on the first call
+ ```
+ 
+ `stack.LambdaCard(lambda function, ...deepSearchType, ...depth)`
+ ```
+ Iterate through a stack calling your lambda function on each card
+ 
+ @receiver `stack` type{*Stack}
+ @param `lambda` type{func(*Card, ...any)}
+ @ensures
+  * Each card in `stack` is passed into your lambda function
+  * `stack` is the first argument passed into your variadic parameter on the first call
+ ```
+ 
+ `stack.LambdaVarAdr(lambda function, ...deepSearchType, ...depth)`
+ ```
+ Iterate through a stack calling your lambda function on each card
+ 
+ @receiver `stack` type{*Stack}
+ @param `lambda` type{func(*Card, ...any)}
+ @ensures
+  * Each card in `stack` is passed into your lambda function
+  * `stack` is the first argument passed into your variadic parameter on the first call
+ ```
 
 <h2 name = "generalizedFunctions">Generalized Functions</h2>
  
