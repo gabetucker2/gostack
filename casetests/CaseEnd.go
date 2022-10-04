@@ -904,38 +904,38 @@ func case_stack_Print(funcName string) {
 	
 }
 
-func case_stack_Lambda(funcName string) {
+func case_stack_Lambdas(funcName string) {
 
 	test_Start(funcName, showTestText)
 
 	// test stack updating, multiply each by 5
-	stack1, _, _, _ := MakeStack([]int {1, 5, 20}).Lambda(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {
+	stack1 := MakeStack([]int {1, 5, 20}).LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {
 		card.Val = card.Val.(int) * 5
 	})
 
 	// test retStack output, get all in range
-	_, stack2, _, _ := MakeStack([]int {1, 5, 20, 41, 92, 4104}).Lambda(func(card *Card, _ *Stack, _ bool, retStack *Stack, _ *Card, _ any, _ ...any) {
+	stack2 := MakeStack([]int {1, 5, 20, 41, 92, 4104}).LambdaStack(func(card *Card, _ *Stack, _ bool, retStack *Stack, _ *Card, _ any, _ ...any) {
 		if 5 < card.Val.(int) && card.Val.(int) < 4104 {
 			retStack.Cards = append(retStack.Cards, card.Clone())
 		}
 	})
 
 	// test retCard output, get last in range
-	_, _, card1, _ := MakeStack([]int {1, 5, 20, 41, 92, 4104}).Lambda(func(card *Card, _ *Stack, _ bool, _ *Stack, retCard *Card, _ any, _ ...any) {
+	card1 := MakeStack([]int {1, 5, 20, 41, 92, 4104}).LambdaCard(func(card *Card, _ *Stack, _ bool, _ *Stack, retCard *Card, _ any, _ ...any) {
 		if 5 < card.Val.(int) && card.Val.(int) < 4104 {
 			*retCard = *card
 		}
 	})
 
 	// test retOther output, get max
-	_, _, _, maxAdr := MakeStack([]int {50, 2, 45, 140, 42}).Lambda(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, maxAdr any, _ ...any) {
+	maxAdr := MakeStack([]int {50, 2, 45, 140, 42}).LambdaVarAdr(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, maxAdr any, _ ...any) {
 		if gogenerics.GetPointer(maxAdr).(int) < card.Val.(int) {
 			gogenerics.SetPointer(maxAdr, card.Val)
 		}
 	}, nil, nil, 0) // initialize max to 0
 
 	// test workingMemAdr, get all which are under or equal to 15 away from stack average
-	_, stack3, _, _ := MakeStack([]int {50, 2, 45, 140, 42}).Lambda(func(card *Card, stack *Stack, _ bool, retStack *Stack, _ *Card, _ any, wmadrs ...any) {
+	stack3 := MakeStack([]int {50, 2, 45, 140, 42}).LambdaStack(func(card *Card, stack *Stack, _ bool, retStack *Stack, _ *Card, _ any, wmadrs ...any) {
 		if wmadrs[0] == nil {
 			sum := gogenerics.MakeInterface(0)
 			for _, c := range stack.Cards {
@@ -951,7 +951,7 @@ func case_stack_Lambda(funcName string) {
 	})
 
 	// test deepStacks, multiply each by 5
-	stack4, _, _, _ := MakeStackMatrix([]int {1, 5, 20, 2}, nil, []int {2, 2}).Lambda(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {
+	stack4 := MakeStackMatrix([]int {1, 5, 20, 2}, nil, []int {2, 2}).LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {
 		card.Val = card.Val.(int) * 5
 	})
 
@@ -1009,7 +1009,7 @@ func case_stack_Add(funcName string) {
 func Run(_showTestText bool) {
 
 	showTestText = _showTestText
-	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambda, case_stack_Add)
+	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambdas, case_stack_Add)
 
 	fmt.Println("- BEGINNING TESTS (fix failures/errors in descending order)")
 
@@ -1019,7 +1019,7 @@ func Run(_showTestText bool) {
 	case_MakeStack("MakeStack") // GOOD
 	case_stack_Equals("stack.Equals") // GOOD
 	case_MakeStackMatrix("MakeStackMatrix") // GOOD
-	case_stack_Lambda("stack.Lambda") // BAD
+	case_stack_Lambdas("stack.Lambda*") // BAD
 	case_stack_ToArray("stack.ToArray") // GOOD
 	case_stack_ToMap("stack.ToMap") // GOOD
 	case_stack_ToMatrix("stack.ToMatrix") // GOOD

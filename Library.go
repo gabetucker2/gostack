@@ -1138,10 +1138,10 @@ func (stack *Stack) Print(variadic ...any) {
 /** Iterate through a stack calling your lambda function on each card
  
  @receiver `stack` type{*Stack}
- @param `lambda` type{func(*Card, *Stack, isSubstack bool, retStack *Stack, retCard *Card, retOtherAdr any, workingMemAdrs ...any)}
+ @param `lambda` type{func(*Card, *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMemAdrs ...any)}
  @param optional `retStack` type{*Stack} default empty stack
  @param optional `retCard` type{*Card} default empty card
- @param optional `retOtherAdr` type{any} default nil
+ @param optional `retVarAdr` type{any} default nil
  @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
 	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
@@ -1151,7 +1151,7 @@ func (stack *Stack) Print(variadic ...any) {
  @returns `stack` type{*Stack}
  @returns `retStack` type{*Stack}
  @returns `retCard` type{*Card}
- @returns `retOtherAdr` type{any}
+ @returns `retVarAdr` type{any}
  */
 func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, ...any), variadic ...any) (*Stack, *Stack, *Card, any) {
 
@@ -1198,11 +1198,11 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 	*/
 
 	// unpack variadic into optional parameters
-	var retStack, retCard, retOtherAdr, workingMemAdrs, deepSearchType, depth, passSubstacks, passCards any
-	gogenerics.UnpackVariadic(variadic, &retStack, &retCard, &retOtherAdr, &workingMemAdrs, &deepSearchType, &depth, &passSubstacks, &passCards)
+	var retStack, retCard, retVarAdr, workingMemAdrs, deepSearchType, depth, passSubstacks, passCards any
+	gogenerics.UnpackVariadic(variadic, &retStack, &retCard, &retVarAdr, &workingMemAdrs, &deepSearchType, &depth, &passSubstacks, &passCards)
 	if retStack == nil {retStack = MakeStack()}
 	if retCard == nil {retCard = MakeCard()}
-	if retOtherAdr == nil {var o any; retOtherAdr = &o;}
+	if retVarAdr == nil {var o any; retVarAdr = &o;}
 	if workingMemAdrs == nil {workingMemAdrs = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	setDepthDefaultIfNil(&depth)
@@ -1245,7 +1245,7 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 		if isSubstack {
 
 			if passSubstacks == PASS_True && passLayer {
-				lambda(card, stack, true, retStack.(*Stack), retCard.(*Card), &retOtherAdr, workingMemAdrs.([]any)...)
+				lambda(card, stack, true, retStack.(*Stack), retCard.(*Card), &retVarAdr, workingMemAdrs.([]any)...)
 
 				// update properties
 				stack.setStackProperties()
@@ -1264,13 +1264,13 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 					}
 				}
 
-				substack.Lambda(lambda, retStack, retCard, retOtherAdr, workingMemAdrs, deepSearchType, transformedDepth, passSubstacks, passCards)
+				substack.Lambda(lambda, retStack, retCard, retVarAdr, workingMemAdrs, deepSearchType, transformedDepth, passSubstacks, passCards)
 			}
 
 		} else { // card is not substack
 
 			if passCards == PASS_True && passLayer {
-				lambda(card, stack, false, retStack.(*Stack), retCard.(*Card), &retOtherAdr, workingMemAdrs.([]any)...)
+				lambda(card, stack, false, retStack.(*Stack), retCard.(*Card), &retVarAdr, workingMemAdrs.([]any)...)
 
 				// update properties
 				stack.setStackProperties()
@@ -1281,8 +1281,88 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 
 	}
 
-	return stack, retStack.(*Stack), retCard.(*Card), retOtherAdr
+	return stack, retStack.(*Stack), retCard.(*Card), retVarAdr
 
+}
+
+/** Iterate through a stack calling your lambda function on each card, returning only `stack`
+ 
+ @receiver `stack` type{*Stack}
+ @param `lambda` type{func(*Card, *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMemAdrs ...any)}
+ @param optional `retStack` type{*Stack} default empty stack
+ @param optional `retCard` type{*Card} default empty card
+ @param optional `retVarAdr` type{any} default nil
+ @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
+ @param optional `depth` type{int, []int} default -1 (deepest)
+ @param optional `passSubstacks` type{PASS} default PASS_False
+ @param optional `passCards` type{PASS} default PASS_True
+ @returns `stack` type{*Stack}
+ */
+func (stack *Stack) LambdaThis(lambda func(*Card, *Stack, bool, *Stack, *Card, any, ...any), variadic ...any) *Stack {
+	stack.Lambda(lambda, variadic...)
+	return stack
+}
+
+/** Iterate through a stack calling your lambda function on each card, returning only `retStack`
+ 
+ @receiver `stack` type{*Stack}
+ @param `lambda` type{func(*Card, *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMemAdrs ...any)}
+ @param optional `retStack` type{*Stack} default empty stack
+ @param optional `retCard` type{*Card} default empty card
+ @param optional `retVarAdr` type{any} default nil
+ @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
+ @param optional `depth` type{int, []int} default -1 (deepest)
+ @param optional `passSubstacks` type{PASS} default PASS_False
+ @param optional `passCards` type{PASS} default PASS_True
+ @returns `retStack` type{*Stack}
+ */
+func (stack *Stack) LambdaStack(lambda func(*Card, *Stack, bool, *Stack, *Card, any, ...any), variadic ...any) *Stack {
+	_, thisStack, _, _ := stack.Lambda(lambda, variadic...)
+	return thisStack
+}
+
+/** Iterate through a stack calling your lambda function on each card, returning only `retCard`
+ 
+ @receiver `stack` type{*Stack}
+ @param `lambda` type{func(*Card, *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMemAdrs ...any)}
+ @param optional `retStack` type{*Stack} default empty stack
+ @param optional `retCard` type{*Card} default empty card
+ @param optional `retVarAdr` type{any} default nil
+ @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
+ @param optional `depth` type{int, []int} default -1 (deepest)
+ @param optional `passSubstacks` type{PASS} default PASS_False
+ @param optional `passCards` type{PASS} default PASS_True
+ @returns `retCard` type{*Card}
+ */
+func (stack *Stack) LambdaCard(lambda func(*Card, *Stack, bool, *Stack, *Card, any, ...any), variadic ...any) *Card {
+	_, _, thisCard, _ := stack.Lambda(lambda, variadic...)
+	return thisCard
+}
+
+/** Iterate through a stack calling your lambda function on each card, returning only `retVarAdr`
+ 
+ @receiver `stack` type{*Stack}
+ @param `lambda` type{func(*Card, *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMemAdrs ...any)}
+ @param optional `retStack` type{*Stack} default empty stack
+ @param optional `retCard` type{*Card} default empty card
+ @param optional `retVarAdr` type{any} default nil
+ @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
+ @param optional `depth` type{int, []int} default -1 (deepest)
+ @param optional `passSubstacks` type{PASS} default PASS_False
+ @param optional `passCards` type{PASS} default PASS_True
+ @returns `retVarAdr` type{any}
+ */
+func (stack *Stack) LambdaVarAdr(lambda func(*Card, *Stack, bool, *Stack, *Card, any, ...any), variadic ...any) any {
+	_, _, _, retVarAdr := stack.Lambda(lambda, variadic...)
+	return retVarAdr
 }
 
 /** Adds to a stack of cards or a cards at (each) position(s) and returns `stack`

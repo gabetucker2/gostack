@@ -115,6 +115,13 @@
  >>>> [stack.Print()](#Print)
  >>>
  >>>> [stack.Lambda(...)](#Lambda)
+ >>>>
+ >>>> [stack.LambdaThis(...)](#Lambda)
+ >>>>> [stack.LambdaStack(...)](#Lambda)
+ >>>>>
+ >>>>> [stack.LambdaCard(...)](#Lambda)
+ >>>>>
+ >>>>> [stack.LambdaVarAdr(...)](#Lambda)
  >>>
  >>> [Generalized Functions](#generalizedFunctions)
  >>>> [stack.Add(...)](#Add)
@@ -338,6 +345,10 @@
  * **card.Print()**
  * **stack.Print()**
  * **stack.Lambda(lambda function, ...deepSearchType, ...depth)**
+ * **stack.LambdaThis(lambda function, ...deepSearchType, ...depth)**
+ * **stack.LambdaStack(lambda function, ...deepSearchType, ...depth)**
+ * **stack.LambdaCard(lambda function, ...deepSearchType, ...depth)**
+ * **stack.LambdaVarAdr(lambda function, ...deepSearchType, ...depth)**
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
