@@ -115,8 +115,7 @@
  >>>> [stack.Print()](#Print)
  >>>
  >>>> [stack.Lambda(...)](#Lambda)
- >>>>
- >>>> [stack.LambdaThis(...)](#Lambda)
+ >>>>> [stack.LambdaThis(...)](#Lambda)
  >>>>>
  >>>>> [stack.LambdaStack(...)](#Lambda)
  >>>>>
