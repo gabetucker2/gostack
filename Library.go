@@ -724,7 +724,7 @@ func (stack *Stack) Unique(variadic ...any) *Stack {
 		if workingStack.Size == 0 {
 			return true
 		} else {
-			switch wm[0].(TYPE) {
+			switch uniqueType.(TYPE) {
 			case TYPE_Key:
 				return !workingStack.Has(FIND_Key, card.Key)
 			case TYPE_Val:
@@ -732,7 +732,7 @@ func (stack *Stack) Unique(variadic ...any) *Stack {
 			}
 			return false // just so it compiles
 		}
-	}, nil, nil, nil, nil, nil, nil, nil, []any {uniqueType})
+	})
 
 }
 
@@ -1449,17 +1449,13 @@ func (stack *Stack) Add(insert any, variadic ...any) *Stack {
 	// add card
 	cardAddedAdr := stack.LambdaVarAdr(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) {
 		
-		actionType := wmadrs[4].(ACTION)
 		// only do add to the first match if ACTION_First, otherwise do for every match
-		if (selectCard(findType, findData, pointerType, wmadrs[0].(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs[5:]...)) && actionType == ACTION_All || (actionType == ACTION_First && !gogenerics.GetPointer(retVarAdr).(bool)) {
+		if (selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...)) && actionType == ACTION_All || (actionType == ACTION_First && !gogenerics.GetPointer(retVarAdr).(bool)) {
 
 			// update variable to show that we have successfully found a card to whom's stack we will add before or after
 			gogenerics.SetPointer(retVarAdr, true)
 
 			// initialize variables
-			insert := wmadrs[1]
-			orderType := wmadrs[2].(ORDER)
-			overrideCards := wmadrs[3].(OVERRIDE)
 			insertArr := []any {}
 			insertCards := []*Card {}
 
@@ -1502,7 +1498,7 @@ func (stack *Stack) Add(insert any, variadic ...any) *Stack {
 			
 		}
 
-	}, nil, nil, false, append([]any{findCompareRaw, insert, orderType, overrideCards, actionType}, workingMem.([]any)...), deepSearchType, depth, passSubstacks, passCards)
+	}, nil, nil, false, workingMem.([]any), deepSearchType, depth, passSubstacks, passCards)
 
 	// return nil if no add was made, else return card
 	if !gogenerics.GetPointer(cardAddedAdr).(bool) {
@@ -1672,11 +1668,11 @@ func (stack *Stack) Has(variadic ...any) bool {
 	// get card
 	out := stack.LambdaCard(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) {
 		
-		if selectCard(findType, findData, pointerType, wmadrs[0].(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs[1:]...) && retCard.Idx == -1 {
+		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && retCard.Idx == -1 {
 			*retCard = *card
 		}
 
-	}, nil, nil, nil, append([]any{findCompareRaw}, workingMem.([]any)...), deepSearchType, depth, passSubstacks, passCards)
+	}, nil, nil, nil, workingMem.([]any), deepSearchType, depth, passSubstacks, passCards)
 
 	// return nil if no card found, else return card
 	if out.Idx == -1 {
@@ -1720,7 +1716,7 @@ func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
 	// make new stack and return
 	return stack.LambdaStack(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) {
 		
-		if selectCard(findType, findData, pointerType, wmadrs[0].(COMPARE), "stack", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs[1:]...) {
+		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "stack", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) {
 
 			var outCard *Card
 			switch returnType {
@@ -1737,7 +1733,7 @@ func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
 			
 		}
 
-	}, nil, nil, nil, append([]any{findCompareRaw}, workingMem.([]any)...), deepSearchType, depth, passSubstacks, passCards)
+	}, nil, nil, nil, workingMem.([]any), deepSearchType, depth, passSubstacks, passCards)
 
 }
 
@@ -1752,6 +1748,7 @@ func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
  @param optional `overrideCards` type{OVERRIDE} default OVERRIDE_False
    By default, if you do stack.Add(cardA), stack = {cardA}.  If you instead desire stack = {Card {val = cardA}}, do true
+ @param optional `returnType` type{RETURN} default RETURN_Cards
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int, []int} default -1 (deepest)
  @param optional `pointerType` type{POINTER} default POINTER_False
@@ -1764,16 +1761,17 @@ func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
 func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, variadic ...any) *Card {
 
 	// unpack variadic into optional parameters
-	var findType, findData, findCompareRaw, overrideCards, deepSearchType, depth, pointerType, passSubstacks, passCards, workingMem any
-	gogenerics.UnpackVariadic(variadic, &findType, &findData, &findCompareRaw, &overrideCards, &deepSearchType, &depth, &pointerType, &passSubstacks, &passCards, &workingMem)
+	var findType, findData, findCompareRaw, overrideCards, returnType, deepSearchType, depth, pointerType, passSubstacks, passCards, workingMem any
+	gogenerics.UnpackVariadic(variadic, &findType, &findData, &findCompareRaw, &overrideCards, &returnType, &deepSearchType, &depth, &pointerType, &passSubstacks, &passCards, &workingMem)
 	setOVERRIDEDefaultIfNil(&overrideCards)
+	if returnType == nil {returnType = RETURN_Cards}
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
 	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
 	if passSubstacks == nil {passSubstacks = PASS_True}
 
 	// main
-	return stack.LambdaCard(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) {
+	initCard := stack.LambdaCard(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) {
 		
 		if selectCard(findType, findData, pointerType, wmadrs[0].(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs[4:]...) && retCard.Idx == -1 {
 
@@ -1844,6 +1842,20 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, variadic ...an
 		}
 
 	}, nil, nil, false, append([]any{findCompareRaw, replaceType, replaceWith, overrideCards}, workingMem.([]any)...), deepSearchType, depth, passSubstacks, passCards)
+	
+	// return card with appropriate properties
+	var outCard *Card
+	switch returnType {
+	case RETURN_Keys:
+		outCard = MakeCard(initCard.Key)
+	case RETURN_Vals:
+		outCard = MakeCard(initCard.Val)
+	case RETURN_Idxs:
+		outCard = MakeCard(initCard.Idx)
+	case RETURN_Cards:
+		outCard = initCard
+	}
+	return outCard
 
 }
 

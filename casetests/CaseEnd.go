@@ -1129,6 +1129,9 @@ func case_stack_GetMany(funcName string) {
 	cardA := MakeCard("Hey")
 	stack10 := MakeStack([]*Card {cardA}).GetMany(FIND_Card, cardA)
 	stack11 := MakeStack([]*Card {cardA}).GetMany(FIND_Card, MakeCard("Hey"))
+	stack12 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3}).GetMany(FIND_All, nil, nil, RETURN_Idxs)
+	stack13 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3}).GetMany(FIND_All, nil, nil, RETURN_Vals)
+	stack14 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3}).GetMany(FIND_All, nil, nil, RETURN_Keys)
 	
 	conditions := []bool {
 
@@ -1150,6 +1153,9 @@ func case_stack_GetMany(funcName string) {
 		stack9.Equals(MakeStack([]int {1, 6})), // 9
 		stack10.Equals(MakeStack([]*Card {cardA})), // 10
 		!stack11.Equals(MakeStack([]string {"Hey"})), // 11
+		stack12.Equals(MakeStack([]int {0, 1, 2})), // 12
+		stack13.Equals(MakeStack([]int {1, 2, 3})), // 13
+		stack14.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyC"})), // 14
 
 	}
 
