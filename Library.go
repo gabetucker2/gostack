@@ -707,16 +707,30 @@ func (stack *Stack) Clone(variadic ...any) *Stack {
  Stack{"Hi", "Hey", "Hello", "Hi", "Hey", "Howdy"}.Unique(TYPE_Val) => Stack{"Hi", "Hey", "Hello", "Howdy"}
 
  @receiver `stack` type{*Stack}
- @param `uniqueType` type{TYPE}
+ @param `unique optionalType` type{TYPE} default TYPE_Val
  @returns `stack`
  @updates `stack` to have no repeating values between field `uniqueType`
  */
-func (stack *Stack) Unique(uniqueType TYPE) *Stack {
+func (stack *Stack) Unique(variadic ...any) *Stack {
+	
+	// unpack variadic into optional parameters
+	var uniqueType any
+	gogenerics.UnpackVariadic(variadic, &uniqueType)
+	if uniqueType == nil { uniqueType = TYPE_Val }
 
-	return stack.RemoveMany(FIND_Lambda, func(card *Card) bool {
-		// TODO: manage working memory to add every card to the stack for which no previous card has the same uniqueType value; have nested for-loop structure
-		return true
-	})
+	return stack.GetMany(FIND_Lambda, func(card *Card, _ *Stack, _ bool, workingStack *Stack, wm ...any) (bool) {
+		if workingStack.Size == 0 {
+			return true
+		} else {
+			switch wm[0].(TYPE) {
+			case TYPE_Key:
+				return !workingStack.Has(FIND_Key, card.Key)
+			case TYPE_Val:
+				return !workingStack.Has(FIND_Val, card.Val)
+			}
+			return false // just so it compiles
+		}
+	}, nil, nil, nil, nil, nil, nil, []any {uniqueType})
 
 }
 
@@ -1154,12 +1168,12 @@ func (stack *Stack) Print(variadic ...any) {
 /** Iterate through a stack calling your lambda function on each card
  
  @receiver `stack` type{*Stack}
- @param `lambda` type{func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMemAdrs ...any)}
+ @param `lambda` type{func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMem ...any)}
  @param optional `retStack` type{*Stack} default nil
  @param optional `retCard` type{*Card} default nil
  @param optional `retVarAdr` type{any} default nil
- @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
+ @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `depth` type{int, []int} default -1 (deepest)
  @param optional `passSubstacks` type{PASS} default PASS_False
@@ -1216,12 +1230,12 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 	*/
 
 	// unpack variadic into optional parameters
-	var retStack, retCard, retVarAdr, workingMemAdrs, deepSearchType, depth, passSubstacks, passCards any
-	gogenerics.UnpackVariadic(variadic, &retStack, &retCard, &retVarAdr, &workingMemAdrs, &deepSearchType, &depth, &passSubstacks, &passCards)
+	var retStack, retCard, retVarAdr, workingMem, deepSearchType, depth, passSubstacks, passCards any
+	gogenerics.UnpackVariadic(variadic, &retStack, &retCard, &retVarAdr, &workingMem, &deepSearchType, &depth, &passSubstacks, &passCards)
 	if retStack == nil {retStack = MakeStack()}
 	if retCard == nil {retCard = MakeCard()}
 	if retVarAdr == nil {var o any; retVarAdr = &o;}
-	if workingMemAdrs == nil {workingMemAdrs = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
+	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	setDepthDefaultIfNil(&depth)
 	if passSubstacks == nil {passSubstacks = PASS_False}
@@ -1272,7 +1286,7 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 		if isSubstack {
 
 			if passSubstacks == PASS_True && passLayer {
-				lambda(card, stack, true, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, workingMemAdrs.([]any)...)
+				lambda(card, stack, true, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, workingMem.([]any)...)
 
 				// update properties
 				stack.setStackProperties()
@@ -1293,13 +1307,13 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 					}
 				}
 
-				substack.Lambda(lambda, retStack, retCard, retVarAdr, workingMemAdrs, deepSearchType, transformedDepth, passSubstacks, passCards)
+				substack.Lambda(lambda, retStack, retCard, retVarAdr, workingMem, deepSearchType, transformedDepth, passSubstacks, passCards)
 			}
 
 		} else { // card is not substack
 
 			if passCards == PASS_True && passLayer {
-				lambda(card, stack, false, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, workingMemAdrs.([]any)...)
+				lambda(card, stack, false, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, workingMem.([]any)...)
 
 				// update properties
 				stack.setStackProperties()
@@ -1319,12 +1333,12 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 /** Iterate through a stack calling your lambda function on each card, returning only `stack`
  
  @receiver `stack` type{*Stack}
- @param `lambda` type{func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMemAdrs ...any)}
+ @param `lambda` type{func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMem ...any)}
  @param optional `retStack` type{*Stack} default nil
  @param optional `retCard` type{*Card} default nil
  @param optional `retVarAdr` type{any} default nil
- @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
+ @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `depth` type{int, []int} default -1 (deepest)
  @param optional `passSubstacks` type{PASS} default PASS_False
@@ -1339,12 +1353,12 @@ func (stack *Stack) LambdaThis(lambda func(*Card, *Stack, bool, *Stack, *Card, a
 /** Iterate through a stack calling your lambda function on each card, returning only `retStack`
  
  @receiver `stack` type{*Stack}
- @param `lambda` type{func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMemAdrs ...any)}
+ @param `lambda` type{func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMem ...any)}
  @param optional `retStack` type{*Stack} default nil
  @param optional `retCard` type{*Card} default nil
  @param optional `retVarAdr` type{any} default nil
- @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
+ @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `depth` type{int, []int} default -1 (deepest)
  @param optional `passSubstacks` type{PASS} default PASS_False
@@ -1359,12 +1373,12 @@ func (stack *Stack) LambdaStack(lambda func(*Card, *Stack, bool, *Stack, *Card, 
 /** Iterate through a stack calling your lambda function on each card, returning only `retCard`
  
  @receiver `stack` type{*Stack}
- @param `lambda` type{func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMemAdrs ...any)}
+ @param `lambda` type{func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMem ...any)}
  @param optional `retStack` type{*Stack} default nil
  @param optional `retCard` type{*Card} default nil
  @param optional `retVarAdr` type{any} default nil
- @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
+ @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `depth` type{int, []int} default -1 (deepest)
  @param optional `passSubstacks` type{PASS} default PASS_False
@@ -1379,12 +1393,12 @@ func (stack *Stack) LambdaCard(lambda func(*Card, *Stack, bool, *Stack, *Card, a
 /** Iterate through a stack calling your lambda function on each card, returning only `retVarAdr`
  
  @receiver `stack` type{*Stack}
- @param `lambda` type{func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMemAdrs ...any)}
+ @param `lambda` type{func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, workingMem ...any)}
  @param optional `retStack` type{*Stack} default nil
  @param optional `retCard` type{*Card} default nil
  @param optional `retVarAdr` type{any} default nil
- @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
+ @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `depth` type{int, []int} default -1 (deepest)
  @param optional `passSubstacks` type{PASS} default PASS_False
@@ -1572,25 +1586,26 @@ func (stack *Stack) Swap(findType_first FIND, findType_second FIND, variadic ...
 
 }
 
-/** Returns a boolean representing whether a search exists in the stack
+/** Returns a bool for whether a card can be found in a stack
 
  @receiver `stack` type{*Stack}
- @param optional `findType` type{FIND} default FIND_First
+ @param optional `findType` type{FIND} default FIND_Last
  @param optional `findData` type{any} default nil
+ @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
+   By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true.
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `depth` type{int, []int} default -1 (deepest)
  @param optional `pointerType` type{POINTER} default POINTER_False
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int} default -1 (deepest)
- @returns true IF successful search, false IF unsuccessful search
- @requires `stack.Get()` has been implemented
+ @param optional `passSubstacks` type{PASS} default PASS_True
+ @param optional `passCards` type{PASS} default PASS_True
+ @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+ @returns type{bool}
  */
 func (stack *Stack) Has(variadic ...any) bool {
 
-	// unpack variadic into optional parameters
-	var findType, findData, pointerType, deepSearchType, depth any
-	gogenerics.UnpackVariadic(variadic, &findType, &findData, &pointerType, &deepSearchType, &depth)
-
 	// return
-	return stack.Get(findType, findData, pointerType, nil, nil, nil, deepSearchType, depth) != nil
+	return stack.Get(variadic...) != nil
+
 }
 
 /** Gets the first card from specified parameters in a stack, or nil if does not exist
@@ -1605,17 +1620,17 @@ func (stack *Stack) Has(variadic ...any) bool {
  @param optional `pointerType` type{POINTER} default POINTER_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
- @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMemAdrs with an []any argument with n variables
+ @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns type{*Card} the found card OR nil (if invalid find)
-    IF `find` is FIND_Lambda, `findData` is of type{ func(card *Card, parentStack *Stack, isSubstack bool, workingMemAdrs ...any) (bool) }
+    IF `find` is FIND_Lambda, `findData` is of type{ func(card *Card, parentStack *Stack, isSubstack bool, workingMem ...any) (bool) }
 */
  func (stack *Stack) Get(variadic ...any) (ret *Card) {
 	
 	// unpack variadic into optional parameters
-	var findType, findData, findCompareRaw, deepSearchType, depth, pointerType, passSubstacks, passCards, workingMemAdrs any
-	gogenerics.UnpackVariadic(variadic, &findType, &findData, &findCompareRaw, &deepSearchType, &depth, &pointerType, &passSubstacks, &passCards, &workingMemAdrs)
-	if workingMemAdrs == nil {workingMemAdrs = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
+	var findType, findData, findCompareRaw, deepSearchType, depth, pointerType, passSubstacks, passCards, workingMem any
+	gogenerics.UnpackVariadic(variadic, &findType, &findData, &findCompareRaw, &deepSearchType, &depth, &pointerType, &passSubstacks, &passCards, &workingMem)
+	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
 	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
 	if passSubstacks == nil {passSubstacks = PASS_True}
@@ -1627,7 +1642,7 @@ func (stack *Stack) Has(variadic ...any) bool {
 			*retCard = *card
 		}
 
-	}, nil, nil, nil, append([]any{findCompareRaw}, workingMemAdrs.([]any)...), deepSearchType, depth, passSubstacks, passCards)
+	}, nil, nil, nil, append([]any{findCompareRaw}, workingMem.([]any)...), deepSearchType, depth, passSubstacks, passCards)
 
 	// return nil if no card found, else return card
 	if card.Idx == -1 {
@@ -1650,18 +1665,18 @@ func (stack *Stack) Has(variadic ...any) bool {
  @param optional `pointerType` type{POINTER} default POINTER_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
- @param optional `workingMemAdrs` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+ @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
  @constructs a new stack
  @returns type{*Stack} the new stack
  @requires
-   IF `find` is FIND_Lambda, `findData` is of type{ func(card *Card, parentStack *Stack, isSubstack bool, workingStack *Stack, workingMemAdrs ...any) (bool) }
+   IF `find` is FIND_Lambda, `findData` is of type{ func(card *Card, parentStack *Stack, isSubstack bool, workingStack *Stack, workingMem ...any) (bool) }
  */
 func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
 	
 	// unpack variadic into optional parameters
-	var findData, findCompareRaw, deepSearchType, depth, pointerType, passSubstacks, passCards, workingMemAdrs any
-	gogenerics.UnpackVariadic(variadic, &findData, &findCompareRaw, &deepSearchType, &depth, &pointerType, &passSubstacks, &passCards, &workingMemAdrs)
-	if workingMemAdrs == nil {workingMemAdrs = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
+	var findData, findCompareRaw, deepSearchType, depth, pointerType, passSubstacks, passCards, workingMem any
+	gogenerics.UnpackVariadic(variadic, &findData, &findCompareRaw, &deepSearchType, &depth, &pointerType, &passSubstacks, &passCards, &workingMem)
+	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
 	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
 	if passSubstacks == nil {passSubstacks = PASS_True}
@@ -1673,7 +1688,7 @@ func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
 			retStack.Cards = append(retStack.Cards, card.Clone())
 		}
 
-	}, nil, nil, nil, append([]any{findCompareRaw}, workingMemAdrs.([]any)...), deepSearchType, depth, passSubstacks, passCards)
+	}, nil, nil, nil, append([]any{findCompareRaw}, workingMem.([]any)...), deepSearchType, depth, passSubstacks, passCards)
 
 }
 

@@ -1124,9 +1124,12 @@ func case_stack_GetMany(funcName string) {
 			return workingStack.Cards[workingStack.Size - 1].Val.(int) * 2 == card.Val
 		}
 	}, nil, DEEPSEARCH_True, nil, nil, PASS_False)
-	
+
 	// other
 	stack9 := MakeStack([]int {1, 2, 3, 4, 5, 6}).GetMany(FIND_Idx, []int {0, -1})
+	cardA := MakeCard("Hey")
+	stack10 := MakeStack([]*Card {cardA}).GetMany(FIND_Card, cardA)
+	stack11 := MakeStack([]*Card {cardA}).GetMany(FIND_Card, MakeCard("Hey"))
 	
 	conditions := []bool {
 
@@ -1146,6 +1149,8 @@ func case_stack_GetMany(funcName string) {
 
 		// test other
 		stack9.Equals(MakeStack([]int {1, 6})), // 9
+		stack10.Equals(MakeStack([]*Card {cardA})), // 10
+		!stack11.Equals(MakeStack([]string {"Hey"})), // 11
 
 	}
 
@@ -1173,11 +1178,36 @@ func case_stack_Add(funcName string) {
 	
 }
 
+func case_stack_Has(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// don't need to test all cases like you did for Get since Has 100% implements Get
+	cardA := MakeCard("Hey")
+	stack1 := MakeStack([]*Card {cardA})
+	
+	conditions := []bool {
+
+		// test base functionality
+		MakeStack([]int {1, 5, 9}).Has(FIND_Val, 1), // 1
+		MakeStack([]int {1, 5, 9}).Has(FIND_Val, 5), // 2
+		MakeStack([]int {1, 5, 9}).Has(FIND_Val, 9), // 3
+		!MakeStack([]int {1, 5, 9}).Has(FIND_Val, 10), // 4
+		!MakeStack().Has(), // 5
+		MakeStack([]int {1}).Has(), // 6
+		stack1.Has(FIND_Card, cardA), // 7
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
 /** Executes all case tests */
 func Run(_showTestText bool) {
 
 	showTestText = _showTestText
-	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambdas, case_stack_Get, case_stack_GetMany, case_stack_Add)
+	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambdas, case_stack_Get, case_stack_GetMany, case_stack_Add, case_stack_Has)
 
 	fmt.Println("- BEGINNING TESTS (fix failures/errors in descending order)")
 
@@ -1187,7 +1217,7 @@ func Run(_showTestText bool) {
 	case_MakeStack("MakeStack") // GOOD
 	case_stack_Equals("stack.Equals") // GOOD
 	case_MakeStackMatrix("MakeStackMatrix") // GOOD
-	case_stack_Lambdas("stack.Lambdas") // BAD
+	case_stack_Lambdas("stack.Lambdas") // GOOD
 	case_stack_ToArray("stack.ToArray") // GOOD
 	case_stack_ToMap("stack.ToMap") // GOOD
 	case_stack_ToMatrix("stack.ToMatrix") // GOOD
@@ -1204,10 +1234,10 @@ func Run(_showTestText bool) {
 	// GENERALIZED FUNCTIONS
 	case_stack_Get("stack.Get") // GOOD
 	case_stack_GetMany("stack.GetMany") // GOOD
-	// case_stack_AddMany("stack.AddMany") // BAD
 	// case_stack_Add("stack.Add") // BAD
+	// case_stack_AddMany("stack.AddMany") // BAD
 	// case_stack_Move("stack.Move") // BAD
-	// case_stack_Has("stack.Has") // BAD
+	case_stack_Has("stack.Has") // GOOD
 	// case_stack_Replace("stack.Replace") // BAD
 	// case_stack_ReplaceMany("stack.ReplaceMany") // BAD
 	// case_stack_Update("stack.Update") // BAD
@@ -1220,6 +1250,6 @@ func Run(_showTestText bool) {
 	// NON-GENERALIZED FUNCTIONS (DEPENDENT ON GENERALIZED FUNCTIONS)
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD - update, see function documentation
 	// case_stack_Transpose("stack.Transpose") // BAD
-	// case_stack_Unique("stack.Unique") // BAD
+	case_stack_Unique("stack.Unique") // GOOD
 
 }
