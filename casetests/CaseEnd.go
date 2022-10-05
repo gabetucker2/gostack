@@ -870,13 +870,17 @@ func case_stack_Shuffle(funcName string) {
 
 func case_stack_Transpose(funcName string) {
 
-	// TODO: implement substackKeysType
-
 	test_Start(funcName, showTestText)
+
+	// main cases
+	stack1 := MakeStack([]int {1, 2, 3}).Transpose()
+	stack2 := MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}).Transpose()
 
 	conditions := []bool {
 		
-		false, // temp
+		// main cases
+		stack1.Equals(MakeStack([]int {3, 2, 1})), // 1
+		stack2.Equals(MakeStackMatrix([]int {4, 3, 2, 1}, nil, []int {2, 2})), // 2
 
 	}
 
@@ -1241,6 +1245,12 @@ func case_stack_Replace(funcName string) {
 	test_Start(funcName, showTestText)
 
 	// MakeStack([]int {1, 2, 3}).Move()
+
+	// test REPLACE_Vals
+	// test REPLACE_Keys
+	// test REPLACE_Cards
+	// test REPLACE_Cards nil
+	// test REPLACE_Lambda
 	
 	conditions := []bool {
 
@@ -1297,7 +1307,7 @@ func Run(_showTestText bool) {
 	
 	// NON-GENERALIZED FUNCTIONS (DEPENDENT ON GENERALIZED FUNCTIONS)
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD - update, see function documentation
-	// case_stack_Transpose("stack.Transpose") // BAD
+	case_stack_Transpose("stack.Transpose") // BAD
 	case_stack_Unique("stack.Unique") // GOOD
 
 }

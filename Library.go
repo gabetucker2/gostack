@@ -1031,44 +1031,32 @@ func (stack *Stack) Shuffle(variadic ...any) *Stack {
 
 }
 
-/** Transposes the ordering of `stack.Cards`
-  Conceptually, this performs the transverse function assuming maximum depth.
+/** Flips the order of all stacks and substacks' cards
  
  @receiver `stack` type{*Stack}
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int} default -1 (deepest)
  @returns `stack`
  @updates `stack` to have its ordering reversed
  */
-func (stack *Stack) Transpose(variadic ...any) *Stack {
+func (stack *Stack) Transpose() *Stack {
 
-	// TODO: implement substackKeysType
-	// TODO: ensure depth works
-
-	// unpack variadic into optional parameters
-	var deepSearchType, depth any
-	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth)
-	// set defaults
-	setDepthDefaultIfNil(&depth)
-	setDEEPSEARCHDefaultIfNil(&deepSearchType)
-	if depth == -1 || depth.(int) > stack.Depth { depth = stack.Depth }
-	if deepSearchType == DEEPSEARCH_False { depth = 1 }
-
-	// body
-	/*
-	stack.Lambda(func(card *Card, parentStack *Stack, _ ...any) {
-		stack.Move(FIND_Card, ORDER_Before, FIND_Idx, card, 0)
-		switch card.Val.(type) {
-		case *Stack:
-			if depth.(int) > 1 { // forwardpropagate
-				card.Val.(*Stack).Transpose(deepSearchType, depth)
-			}
+	flipper := func(thisStack *Stack) {
+		newCardsArr := []*Card {}
+		for i := range thisStack.Cards {
+			newCardsArr = append(newCardsArr, thisStack.Cards[thisStack.Size - 1 - i])
 		}
-	})
-	*/
+		thisStack.Cards = newCardsArr
+		thisStack.setStackProperties()
+	}
 
-	// return
-	return stack
+	// flip the root stack
+	flipper(stack)
+
+	// main
+	return stack.LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {
+
+		flipper(card.Val.(*Stack))
+
+	}, nil, nil, nil, nil, nil, nil, PASS_True, PASS_False)
 
 }
 
@@ -1756,6 +1744,8 @@ func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
 	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+ @ensures
+   * REPLACE_Card with nil as input ensures the card is removed
  @returns type{*Card}
  */
 func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, variadic ...any) *Card {
@@ -1825,17 +1815,19 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, variadic ...an
 	
 				parentStack.Cards = []*Card {}
 				parentStack.Cards = append(parentStack.Cards, beginningSegment...)
-				parentStack.Cards = append(parentStack.Cards, insertCards...)
+				if !(len(insertArr) == 1 && insertArr[0] == nil) {
+					parentStack.Cards = append(parentStack.Cards, insertCards...)
+				}
 				parentStack.Cards = append(parentStack.Cards, endSegment...)
 
 			case REPLACE_Lambda:
 
-				/*switch returnType {
+				switch returnType {
 				case "card":
-					return findData.(func(*Card, *Stack, bool, ...any) (bool)) (card, stack, isSubstack, wmadrs...)
+					findData.(func(*Card, *Stack, bool, ...any)) (card, stack, isSubstack, wmadrs...)
 				case "stack":
-					return findData.(func(*Card, *Stack, bool, *Stack, ...any) (bool)) (card, stack, isSubstack, retStack, wmadrs...)
-				}*/
+					findData.(func(*Card, *Stack, bool, *Stack, ...any)) (card, stack, isSubstack, retStack, wmadrs...)
+				}
 
 			}
 
