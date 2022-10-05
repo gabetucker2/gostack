@@ -38,7 +38,6 @@ const (
 	FIND_Key
 	FIND_Val
 	FIND_Card
-	FIND_Stack
 	FIND_Size
 	FIND_Depth
 	FIND_Slice

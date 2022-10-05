@@ -832,6 +832,11 @@ func case_stack_Equals(funcName string) {
 		
 		!dsf1.Equals(dsf6, nil, []int {2}), // 86
 
+
+		// test Stack depths
+		dsf1.Equals(dsf2, nil, MakeStack([]int {1, 2})), // 87
+		!dsf1.Equals(dsf6, nil, MakeStack([]int {1, 2})), // 88
+
 	}
 
 	test_End(funcName, conditions)
@@ -962,6 +967,13 @@ func case_stack_Lambdas(funcName string) {
 
 	// test that all init values work
 	this, stack, card, varAdr := MakeStack([]string {"Heyy"}).Lambda(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {}, MakeStack([]int {666}), MakeCard("Howdy"), 420)
+
+	// test that various deepStack depth options work
+	stack6 := MakeStackMatrix([]int {1, 5, 20, 2}, nil, []int {2, 2}).LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {
+		if card.Idx == 0 {
+			card.Key = "Marker"	
+		}
+	}, nil, nil, nil, nil, nil, []int {2}, PASS_True)
 	
 	conditions := []bool {
 
@@ -992,6 +1004,9 @@ func case_stack_Lambdas(funcName string) {
 		card.Equals(MakeCard("Howdy")), // 10
 		gogenerics.GetPointer(varAdr) == 420, // 11
 
+		// test that various deepStack depth options work
+		stack6.Equals(MakeStackMatrix([]any {"Marker", nil, "Marker", nil}, []int {1, 5, 20, 2}, []int {2, 2})), // 12
+
 	}
 
 	test_End(funcName, conditions)
@@ -1002,7 +1017,7 @@ func case_stack_Get(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	// test base functionality
+	// expansively test functionality
 	card1 := MakeStack([]int {1, 2, 3}).Get()
 	card2 := MakeStack([]int {1, 2, 3}).Get(FIND_First)
 	card3 := MakeStack([]int {1, 2, 3}).Get(FIND_Idx, 1)
@@ -1014,13 +1029,36 @@ func case_stack_Get(funcName string) {
 	cardA := MakeCard(2)
 	card9 := MakeStack([]*Card {MakeCard(1), cardA, MakeCard(3)}).Get(FIND_Card, cardA)
 	card10 := MakeStack([]*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).Get().Val.(*Stack).Get()
+	card11 := MakeStack([]*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).Get(nil, nil, nil, DEEPSEARCH_True, nil, nil, PASS_False)
 	stackA := MakeStack([]int {3, 6})
-	card11 := MakeStack([]*Stack {stackA, MakeStack([]int {9, 12})}).Get(FIND_Stack, stackA)
-	card11.Print()
+	card12 := MakeStack([]*Stack {stackA, MakeStack([]int {9, 12})}).Get(FIND_Val, stackA, COMPARE_True)
+	card13 := MakeStack([]*Stack {stackA, MakeStack([]int {9, 12})}).Get(FIND_Val, MakeStack([]int {3, 6}), COMPARE_True)
+	intValA := gogenerics.MakeInterface(1)
+	intValB := gogenerics.MakeInterface(2)
+	intValC := gogenerics.MakeInterface(3)
+	card14 := MakeStack([]any {&intValA, &intValB, &intValC}).Get(FIND_Val, &intValB)
+	card15 := MakeStack([]any {&intValA, &intValB, &intValC}).Get(FIND_Val, intValB, COMPARE_True, nil, nil, POINTER_True)
+	card16 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).Get(FIND_All, nil, nil, DEEPSEARCH_True, []int {1})
+	card17 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).Get(FIND_All, nil, nil, DEEPSEARCH_True, []int {2})
+	card18 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).Get(FIND_All, nil, nil, DEEPSEARCH_True, 2)
+	card19 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).Get(FIND_All, nil, nil, DEEPSEARCH_True, []int {1, 2})
+	card20 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).Get(FIND_All, nil, nil, DEEPSEARCH_True, MakeStack([]int {1, 2}))
+	card21 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).Get(FIND_Lambda, func(card *Card, _ *Stack, _ bool, _ ...any) (bool) {
+		return card.Val == 6
+	}, nil, DEEPSEARCH_True)
+	card22 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).Get(FIND_Lambda, func(card *Card, stack *Stack, isSubstack bool, _ ...any) (bool) {
+		return !isSubstack && card.Val.(int) < stack.Size*2
+	}, nil, DEEPSEARCH_True)
+	initVal := gogenerics.MakeInterface(0)
+	card23 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]int {4, 7}), MakeStack([]int {10, 14})}).Get(FIND_Lambda, func(card *Card, stack *Stack, isSubstack bool, wmadrs ...any) (bool) {
+		test := gogenerics.GetPointer(wmadrs[0]).(int) + 3 == card.Clone().Val
+		gogenerics.SetPointer(wmadrs[0], card.Val)
+		return test
+	}, nil, DEEPSEARCH_True, nil, nil, PASS_False, nil, []any {&initVal})
 
 	conditions := []bool {
 
-		// test base functionality
+		// expansively test functionality
 		card1.Equals(MakeCard(3, nil, 2), nil, nil, COMPARE_True), // 1
 		card2.Equals(MakeCard(1, nil, 0), nil, nil, COMPARE_True), // 2
 		card3.Equals(MakeCard(2, nil, 1), nil, nil, COMPARE_True), // 3
@@ -1030,8 +1068,20 @@ func case_stack_Get(funcName string) {
 		card7.Equals(MakeCard(1, nil, 0), nil, nil, COMPARE_True), // 7
 		card8 == nil, // 8
 		card9.Equals(cardA), // 9
-		card10.Equals(MakeCard(12, nil, 1)), // 10
-		card11.Equals(MakeCard(stackA, nil, 0)), // 11
+		card10.Equals(MakeCard(12, nil, 1), nil, nil, COMPARE_True), // 10
+		card11.Equals(MakeCard(6, nil, 1), nil, nil, COMPARE_True), // 11
+		card12.Equals(MakeCard(stackA, nil, 0), nil, nil, COMPARE_True), // 12
+		card13 == nil, // 13
+		card14.Equals(MakeCard(&intValB, nil, 1), nil, nil, COMPARE_True), // 14
+		card15.Equals(MakeCard(&intValB, nil, 1), nil, nil, COMPARE_True), // 15
+		card16.Key == "StackA", // 16
+		card17.Val == 3, // 17
+		card18.Key == "StackA", // 18
+		card19.Key == "StackA", // 19
+		card20.Key == "StackA", // 20
+		card21.Equals(MakeCard(6, nil, 1), nil, nil, COMPARE_True), // 21
+		card22.Equals(MakeCard(3, nil, 0), nil, nil, COMPARE_True), // 22
+		card23.Equals(MakeCard(7, nil, 1), nil, nil, COMPARE_True), // 23
 
 	}
 
@@ -1043,16 +1093,59 @@ func case_stack_GetMany(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	// test base functionality
+	// since we already tested Get(), and since GetMany() is nearly identical to Get(), we do not need to test identical cases for GetMany
 
-	// test slice
-	// test all
+	// test base functionality
+	stack1 := MakeStack([]int {1, 2, 3}).GetMany(FIND_All)
+	stack2 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).GetMany(FIND_Last, nil, nil, DEEPSEARCH_True, []int {2})
+	
+	// test slices
+	stack3 := MakeStack([]int {1, 2, 3, 4, 5, 6}).GetMany(FIND_Slice, MakeStack([]int {1, 4}))
+	stack4 := MakeStack([]int {1, 2, 3, 4, 5, 6}).GetMany(FIND_Slice, []int {1, 4})
+	stack5 := MakeStack([]int {1, 2, 3, 4, 5, 6}).GetMany(FIND_Slice, []int {0, -1})
+	stack6 := MakeStack([]int {1, 2, 3, 4, 5, 6}).GetMany(FIND_Slice, []int {-1, 1})
+
+	// test lambda
+	stack7 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]int {4, 7}), MakeStack([]int {10, 14})}).GetMany(FIND_Lambda, func(card *Card, _ *Stack, _ bool, _ *Stack, wmadrs ...any) (bool) {
+		prevCardVal := 0
+		if wmadrs[0] == nil {
+			prevCardVal = 0
+		} else {
+			prevCardVal = wmadrs[0].(*Card).Val.(int)
+		}
+		wmadrs[0] = card
+		return prevCardVal + 3 == card.Val
+	}, nil, DEEPSEARCH_True, nil, nil, PASS_False)
+	
+	stack8 := MakeStack([]int {1, 2, 3, 4}).GetMany(FIND_Lambda, func(card *Card, _ *Stack, _ bool, workingStack *Stack, _ ...any) (bool) {
+		if workingStack.Size == 0 {
+			return true
+		} else {
+			return workingStack.Cards[workingStack.Size - 1].Val.(int) * 2 == card.Val
+		}
+	}, nil, DEEPSEARCH_True, nil, nil, PASS_False)
+	
+	// other
+	stack9 := MakeStack([]int {1, 2, 3, 4, 5, 6}).GetMany(FIND_Idx, []int {0, -1})
 	
 	conditions := []bool {
 
 		// test base functionality
+		stack1.Equals(MakeStack([]int {1, 2, 3})), // 1
+		stack2.Equals(MakeStack([]int {6, 12})), // 2
 
-		false, // temp
+		// test slices
+		stack3.Equals(MakeStack([]int {2, 3, 4, 5})), // 3
+		stack4.Equals(MakeStack([]int {2, 3, 4, 5})), // 4
+		stack5.Equals(MakeStack([]int {1, 2, 3, 4, 5, 6})), // 5
+		stack6.Equals(MakeStack([]int {2, 3, 4, 5, 6})), // 6
+		
+		// test lambda
+		stack7.Equals(MakeStack([]int {7, 10})), // 7
+		stack8.Equals(MakeStack([]int {1, 2, 4})), // 8
+
+		// test other
+		stack9.Equals(MakeStack([]int {1, 6})), // 9
 
 	}
 
@@ -1109,8 +1202,8 @@ func Run(_showTestText bool) {
 	case_stack_Print("stack.Print") // GOOD
 	
 	// GENERALIZED FUNCTIONS
-	// case_stack_GetMany("stack.GetMany") // BAD
-	case_stack_Get("stack.Get") // BAD
+	case_stack_Get("stack.Get") // GOOD
+	case_stack_GetMany("stack.GetMany") // GOOD
 	// case_stack_AddMany("stack.AddMany") // BAD
 	// case_stack_Add("stack.Add") // BAD
 	// case_stack_Move("stack.Move") // BAD

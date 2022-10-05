@@ -6,7 +6,7 @@ import (
 	"github.com/gabetucker2/gogenerics"
 )
 
-func selectCard(findType any, findData any, pointerType any, card *Card, stack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) bool {
+func selectCard(findType any, findData any, pointerType any, findCompareRaw COMPARE, returnType string, card *Card, stack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) bool {
 
 	// set defaults
 	setFINDDefaultIfNil(&findType)
@@ -22,8 +22,8 @@ func selectCard(findType any, findData any, pointerType any, card *Card, stack *
 		return false
 	}
 
-	getType := func(in any) string {
-		if in == nil {
+	getType := func(in any, findCompareRaw COMPARE) string {
+		if in == nil || findCompareRaw == COMPARE_True {
 			return "element"
 		} else {
 			_, isStack := in.(*Stack)
@@ -40,16 +40,40 @@ func selectCard(findType any, findData any, pointerType any, card *Card, stack *
 		}
 	}
 
-	match := func(needle any, haystack any) bool {
-		switch getType(findData) {
+	match := func(findCompareRaw COMPARE, needle any, haystack any) bool {
+		switch getType(findData, findCompareRaw) {
 		case "element":
 			return needle == haystack
 		case "array":
 			return needleInHaystack(needle, gogenerics.UnpackArray(haystack))
 		case "stack":
-			return needleInHaystack(needle, gogenerics.UnpackArray(haystack.(*Stack).ToArray()))
+			return needleInHaystack(needle, haystack.(*Stack).ToArray())
 		default:
 			return false
+		}
+	}
+
+	getPointer := func(ptr any, variadic ...any) any {
+
+		// unpack variadic into optional parameters
+		var returnIfNotPointer any
+		gogenerics.UnpackVariadic(variadic, &returnIfNotPointer)
+		// set default
+		if returnIfNotPointer == nil {
+			returnIfNotPointer = true
+		}
+	
+		_, isPtrInf := ptr.(*any)
+		if gogenerics.IsPointer(ptr) && isPtrInf {
+			return *ptr.(*any)
+		} else if gogenerics.IsPointer(ptr) && !isPtrInf {
+			return ptr
+		} else {
+			if returnIfNotPointer.(bool) {
+				return ptr
+			} else {
+				return nil
+			}
 		}
 	}
 
@@ -59,34 +83,45 @@ func selectCard(findType any, findData any, pointerType any, card *Card, stack *
 		return card.Idx == 0
 	case FIND_Last:
 		return card.Idx == stack.Size - 1
-	case FIND_Idx:
-		return match(card.Idx, findData)
+	case FIND_Idx: // -1 = stack.Size - 1
+		haystack := []any {}
+		switch getType(findData, findCompareRaw) {
+		case "element":
+			haystack = append(haystack, findData)
+		case "array":
+			haystack = append(haystack, gogenerics.UnpackArray(findData)...)
+		case "stack":
+			haystack = append(haystack, findData.(*Stack).ToArray()...)
+		}
+		for i := range haystack {
+			if haystack[i] == -1 {
+				haystack[i] = stack.Size - 1
+			}
+		}
+		return needleInHaystack(card.Idx, haystack)
 	case FIND_Key:
 		switch pointerType {
 		case POINTER_True:
-			return match(gogenerics.GetPointer(card.Key, false), findData)
+			return match(findCompareRaw, getPointer(card.Key, false), findData)
 		case POINTER_False:
-			return match(card.Key, findData)
+			return match(findCompareRaw, card.Key, findData)
 		}
 	case FIND_Val:
 		switch pointerType {
 		case POINTER_True:
-			return match(gogenerics.GetPointer(card.Val, false), findData)
+			return match(findCompareRaw, getPointer(card.Val, false), findData)
 		case POINTER_False:
-			return match(card.Val, findData)
+			return match(findCompareRaw, card.Val, findData)
 		}
 	case FIND_Card:
-		return match(card, findData)
-	case FIND_Stack:
-		return match(card.Val.(*Stack), findData)
+		return match(findCompareRaw, card, findData)
 	case FIND_Size:
-		return match(card.Val.(*Stack).Size, findData)
+		return match(findCompareRaw, card.Val.(*Stack).Size, findData)
 	case FIND_Depth:
-		return match(card.Val.(*Stack).Depth, findData)
-	case FIND_Slice: // [inclusive, exclusive)
-		test := false
+		return match(findCompareRaw, card.Val.(*Stack).Depth, findData)
+	case FIND_Slice: // [inclusive, inclusive]; -1 => stack.Size - 1
 		var slice []any
-		switch getType(findData) {
+		switch getType(findData, findCompareRaw) {
 		case "array":
 			slice = gogenerics.UnpackArray(findData)
 		case "stack":
@@ -94,25 +129,35 @@ func selectCard(findType any, findData any, pointerType any, card *Card, stack *
 		}
 		start := slice[0].(int)
 		end := slice[1].(int)
+		if start == -1 {
+			start = stack.Size - 1
+		}
+		if end == -1 {
+			end = stack.Size - 1
+		}
+		end += 1
 		slice = []any {}
 		if start < end {
 			for i := start; i < end; i++ {
 				slice = append(slice, i)
 			}
 		} else if start > end {
-			for i := end - 1; i >= start; i++ {
+			for i := start; i >= end - 1; i-- {
 				slice = append(slice, i)
 			}
+		} else { // start == end
+			slice = append(slice, start)
 		}
-		for _, idx := range slice {
-			test = match(card.Idx, idx)
-			if !test {break}
-		}
-		return test
+		return needleInHaystack(card.Idx, slice)
 	case FIND_All:
 		return true
 	case FIND_Lambda:
-		return findData.(func(*Card, *Stack, bool, *Stack, *Card, any, ...any) (bool)) (card, stack, isSubstack, retStack, retCard, &retVarAdr, wmadrs...)
+		switch returnType {
+		case "card":
+			return findData.(func(*Card, *Stack, bool, ...any) (bool)) (card, stack, isSubstack, wmadrs...)
+		case "stack":
+			return findData.(func(*Card, *Stack, bool, *Stack, ...any) (bool)) (card, stack, isSubstack, retStack, wmadrs...)
+		}
 	}
 	return false
 
