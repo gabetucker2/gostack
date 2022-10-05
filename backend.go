@@ -6,52 +6,55 @@ import (
 	"github.com/gabetucker2/gogenerics"
 )
 
+func needleInHaystack(needle any, haystack []any) bool {
+	for _, hay := range haystack {
+		if needle == hay {
+			return true
+		}
+	}
+	return false
+}
+
+/** return {"element", "slice", or "stack"} */
+func getType(in any, override bool) string {
+	if in == nil || override {
+		return "element"
+	} else {
+		_, isStack := in.(*Stack)
+		if isStack {
+			return "stack"
+		} else {
+			isArr := reflect.TypeOf(in).Kind() == reflect.Slice
+			if isArr {
+				return "slice"
+			} else {
+				return "element"
+			}
+		}
+	}
+}
+
+/** hatstack type{any, []any, *Stack} */
+func match(needle any, haystack any, override bool) bool {
+	switch getType(haystack, override) {
+	case "element":
+		return needle == haystack
+	case "slice":
+		return needleInHaystack(needle, gogenerics.UnpackArray(haystack))
+	case "stack":
+		return needleInHaystack(needle, haystack.(*Stack).ToArray())
+	default:
+		return false
+	}
+}
+
 func selectCard(findType any, findData any, pointerType any, findCompareRaw COMPARE, returnType string, card *Card, stack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) bool {
 
 	// set defaults
 	setFINDDefaultIfNil(&findType)
 	setPOINTERDefaultIfNil(&pointerType)
 
-	// local functions
-	needleInHaystack := func(needle any, haystack []any) bool {
-		for _, hay := range haystack {
-			if needle == hay {
-				return true
-			}
-		}
-		return false
-	}
-
-	getType := func(in any, findCompareRaw COMPARE) string {
-		if in == nil || findCompareRaw == COMPARE_True {
-			return "element"
-		} else {
-			_, isStack := in.(*Stack)
-			if isStack {
-				return "stack"
-			} else {
-				isArr := reflect.TypeOf(in).Kind() == reflect.Slice
-				if isArr {
-					return "array"
-				} else {
-					return "element"
-				}
-			}
-		}
-	}
-
-	match := func(findCompareRaw COMPARE, needle any, haystack any) bool {
-		switch getType(findData, findCompareRaw) {
-		case "element":
-			return needle == haystack
-		case "array":
-			return needleInHaystack(needle, gogenerics.UnpackArray(haystack))
-		case "stack":
-			return needleInHaystack(needle, haystack.(*Stack).ToArray())
-		default:
-			return false
-		}
-	}
+	override := findCompareRaw == COMPARE_True
 
 	getPointer := func(ptr any, variadic ...any) any {
 
@@ -85,10 +88,10 @@ func selectCard(findType any, findData any, pointerType any, findCompareRaw COMP
 		return card.Idx == stack.Size - 1
 	case FIND_Idx: // -1 = stack.Size - 1
 		haystack := []any {}
-		switch getType(findData, findCompareRaw) {
+		switch getType(findData, false) {
 		case "element":
 			haystack = append(haystack, findData)
-		case "array":
+		case "slice":
 			haystack = append(haystack, gogenerics.UnpackArray(findData)...)
 		case "stack":
 			haystack = append(haystack, findData.(*Stack).ToArray()...)
@@ -102,27 +105,27 @@ func selectCard(findType any, findData any, pointerType any, findCompareRaw COMP
 	case FIND_Key:
 		switch pointerType {
 		case POINTER_True:
-			return match(findCompareRaw, getPointer(card.Key, false), findData)
+			return match(getPointer(card.Key, false), findData, override)
 		case POINTER_False:
-			return match(findCompareRaw, card.Key, findData)
+			return match(card.Key, findData, override)
 		}
 	case FIND_Val:
 		switch pointerType {
 		case POINTER_True:
-			return match(findCompareRaw, getPointer(card.Val, false), findData)
+			return match(getPointer(card.Val, false), findData, override)
 		case POINTER_False:
-			return match(findCompareRaw, card.Val, findData)
+			return match(card.Val, findData, override)
 		}
 	case FIND_Card:
-		return match(findCompareRaw, card, findData)
+		return match(card, findData, false)
 	case FIND_Size:
-		return match(findCompareRaw, card.Val.(*Stack).Size, findData)
+		return match(card.Val.(*Stack).Size, findData, false)
 	case FIND_Depth:
-		return match(findCompareRaw, card.Val.(*Stack).Depth, findData)
+		return match(card.Val.(*Stack).Depth, findData, false)
 	case FIND_Slice: // [inclusive, inclusive]; -1 => stack.Size - 1
 		var slice []any
-		switch getType(findData, findCompareRaw) {
-		case "array":
+		switch getType(findData, false) {
+		case "slice":
 			slice = gogenerics.UnpackArray(findData)
 		case "stack":
 			slice = findData.(*Stack).ToArray()
@@ -191,16 +194,14 @@ func selectCard(findType any, findData any, pointerType any, findCompareRaw COMP
  @param keys type{[]any}
  @param vals type{[]any}
  @param globalI type{*int} used because: extracting from 1-D arrays into N-D matrix, so need to track our position in the 1-D arrays between different recursive calls
+ @param overrideCards type{OVERRIDE}
  @returns type{*Stack}
  @requires
   * `MakeStack()` and `MakeCard()` have been implemented
   * |keys| == |vals| if neither are nil
   * |keys| or |vals| == product of ints in matrixShape
 */
-func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []any, globalI *int, overrideCards any) (ret *Stack) {
-	
-	// set defaults
-	if overrideCards == nil {overrideCards = false}
+func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []any, globalI *int, overrideCards OVERRIDE) (ret *Stack) {
 
 	// make stack
 	if len(matrixShape) > 1 {
@@ -237,7 +238,7 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []
 
 		for i := 0; i < matrixShape[0]; i++ {
 
-			if overrideCards.(bool) {
+			if overrideCards == OVERRIDE_True {
 				makeNewCard()
 			} else {
 
@@ -408,19 +409,6 @@ func depthPrinter(depth int) (out string) {
 		out += "-"
 	}
 	return out
-}
-
-/** Sets the card value to `to`'s address if it's already a pointer'; else, just set the card value to `to`. */
-func setCardProps(c *Card, to any, valNotKey bool) {
-	if valNotKey {
-		if gogenerics.SetPointer(c.Val, to) == nil {
-			c.Val = to
-		}
-	} else {
-		if gogenerics.SetPointer(c.Key, to) == nil {
-			c.Key = to
-		}
-	}
 }
 
 /** Casts to *Stack, except ensures if `stack` is nil, then doesn't attempt to cast it */

@@ -22,6 +22,8 @@ type CLONE int
 type DEEPSEARCH int
 type COMPARE int
 type PASS int
+type OVERRIDE int
+type ACTION int
 //type PRINT int
 
 const (
@@ -88,6 +90,16 @@ const (
 	PASS_True
 )
 
+const (
+	OVERRIDE_False OVERRIDE = iota
+	OVERRIDE_True
+)
+
+const (
+	ACTION_First ACTION = iota
+	ACTION_All
+)
+
 /*const (
 	PRINT_False PRINT = iota
 	PRINT_True
@@ -138,6 +150,18 @@ func setDepthDefaultIfNil(depth *any) {
 func setCOMPAREDefaultIfNil(compareType *any) {
 	if *compareType == nil {
 		*compareType = COMPARE_True
+	}
+}
+
+func setOVERRIDEDefaultIfNil(overrideType *any) {
+	if *overrideType == nil {
+		*overrideType = OVERRIDE_False
+	}
+}
+
+func setACTIONDefaultIfNil(actionType *any) {
+	if *actionType == nil {
+		*actionType = ACTION_All
 	}
 }
 

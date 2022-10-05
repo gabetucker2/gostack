@@ -96,14 +96,13 @@ func case_MakeStack(funcName string) {
 	stack5 := MakeStack(arrVals, nil, 3)
 	stack6 := MakeStack(nil, nil, 10)
 	stack7 := MakeStack(stack2.Cards) // should equal stack2
-	stack8 := MakeStack(stack2.Cards, nil, nil, true) // should be a stack of cards pointing to the cards of stack2
+	stack8 := MakeStack(stack2.Cards, nil, nil, OVERRIDE_True) // should be a stack of cards pointing to the cards of stack2
 	stack9 := MakeStack()
 
 	// override card support
 	card1 := MakeCard("Hey")
-	card2 := MakeCard(card1)
-	stack10 := MakeStack([]*Card {card1}, nil, nil, false)
-	stack11 := MakeStack([]*Card {card1}, nil, nil, true)
+	stack10 := MakeStack([]*Card {card1}, nil, nil, OVERRIDE_False)
+	stack11 := MakeStack([]*Card {card1}, nil, nil, OVERRIDE_True)
 
 	// pointer storage support
 	var name any//lint:ignore S1021 Ignore warning
@@ -160,7 +159,7 @@ func case_MakeStack(funcName string) {
 		test_StackProperties(stack9, []int{0}), // 25
 
 		stack10.Cards[0] == card1, // 26
-		stack11.Cards[0].Equals(card2), // 27
+		stack11.Cards[0].Val == card1, // 27
 
 		gogenerics.GetPointer(stack12.Cards[0].Val) == "Henry", // 28
 		gogenerics.GetPointer(stack13.Cards[0].Val) == "Henry", // 29
@@ -1162,15 +1161,26 @@ func case_stack_Add(funcName string) {
 
 	test_Start(funcName, showTestText)
 
+	// since we already tested core lambda functionality in Lambdas and Get and GetMany, we need not do it here
+
 	// test base functionality
-	// stack1 := MakeStack([]int {3, 2, 1}).Add(4)
-	
+	stack1 := MakeStack([]int {1, 2, 3}).Add(4)
+	stack2 := MakeStack([]int {1, 2, 3}).Add(0, ORDER_Before, FIND_First)
+	stack3 := MakeStack([]int {1, 2, 3}).Add(0, ORDER_Before, FIND_All, nil, nil, ACTION_First)
+	stack4 := MakeStack([]int {1, 2, 3}).Add(0, ORDER_Before, FIND_All, nil, nil, ACTION_All)
+	cardA := MakeCard(0)
+	stack5 := MakeStack([]int {1, 2, 3}).Add(cardA, ORDER_Before, FIND_All, nil, nil, ACTION_First, OVERRIDE_False)
+	stack6 := MakeStack([]int {1, 2, 3}).Add(cardA, ORDER_Before, FIND_All, nil, nil, ACTION_First, OVERRIDE_True)
+
 	conditions := []bool {
 
 		// test base functionality
-		// stack1.Equals(MakeStack([]int {4, 3, 2, 1})), // 1
-
-		false, // temp
+		stack1.Equals(MakeStack([]int {1, 2, 3, 4})), // 1
+		stack2.Equals(MakeStack([]int {0, 1, 2, 3})), // 2
+		stack3.Equals(MakeStack([]int {0, 1, 2, 3})), // 3
+		stack4.Equals(MakeStack([]int {0, 1, 0, 2, 0, 3})), // 4
+		stack5.Equals(MakeStack([]int {0, 1, 2, 3})), // 5
+		stack6.Equals(MakeStack([]any {cardA, 1, 2, 3}, nil, nil, OVERRIDE_True)), // 6
 
 	}
 
@@ -1234,8 +1244,7 @@ func Run(_showTestText bool) {
 	// GENERALIZED FUNCTIONS
 	case_stack_Get("stack.Get") // GOOD
 	case_stack_GetMany("stack.GetMany") // GOOD
-	// case_stack_Add("stack.Add") // BAD
-	// case_stack_AddMany("stack.AddMany") // BAD
+	case_stack_Add("stack.Add") // BAD
 	// case_stack_Move("stack.Move") // BAD
 	case_stack_Has("stack.Has") // GOOD
 	// case_stack_Replace("stack.Replace") // BAD
