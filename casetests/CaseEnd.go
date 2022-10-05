@@ -1266,18 +1266,47 @@ func case_stack_Replace(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	// MakeStack([]int {1, 2, 3}).Move()
+	// no need to test parameters non-unique to replace since these were tested in Add and Get
 
-	// test REPLACE_Vals
-	// test REPLACE_Keys
-	// test REPLACE_Cards
-	// test REPLACE_Cards nil
-	// test REPLACE_Lambda
+	// test REPLACE configurations
+	stack1 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
+	card1 := stack1.Replace(REPLACE_Val, 4)
+	stack2 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
+	card2 := stack2.Replace(REPLACE_Card, MakeCard(4, "KeyD"))
+	stack3 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
+	card3 := stack3.Replace(REPLACE_Key, "KeyD")
+	stack4 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
+	card4 := stack4.Replace(REPLACE_Card, nil)
+	stack5 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
+	card5 := stack5.Replace(REPLACE_Lambda, func(card *Card, _ *Stack, _ bool, _ ...any) {
+		card.Val = card.Val.(int) * 2
+	})
+
+	// test replaceWith data types
+	stack6 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
+	card6 := stack6.Replace(REPLACE_Card, []*Card {MakeCard(4, "KeyD"), MakeCard(5, "KeyE")})
+	stack7 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
+	card7 := stack7.Replace(REPLACE_Card, MakeStack([]string {"KeyD", "KeyE"}, []int {4, 5}))
 	
 	conditions := []bool {
 
-		// test base functionality
-		false,
+		// test REPLACE configurations
+		stack1.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 4})), // 1
+		card1.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 2
+		stack2.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyD"}, []int {1, 2, 4})), // 3
+		card2.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 4
+		stack3.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyD"}, []int {1, 2, 3})), // 5
+		card3.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 6
+		stack4.Equals(MakeStack([]string {"KeyA", "KeyB"}, []int {1, 2})), // 7
+		card4.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 8
+		stack5.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 6})), // 9
+		card5.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 10
+
+		// test replaceWith data types
+		stack6.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyD", "KeyE"}, []int {1, 2, 4, 5})), // 11
+		card6.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 12
+		stack7.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyD", "KeyE"}, []int {1, 2, 4, 5})), // 13
+		card7.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 14
 
 	}
 
@@ -1318,7 +1347,7 @@ func Run(_showTestText bool) {
 	case_stack_Get("stack.Get") // GOOD
 	case_stack_GetMany("stack.GetMany") // GOOD
 	case_stack_Add("stack.Add") // GOOD
-	// case_stack_Replace("stack.Replace") // BAD
+	case_stack_Replace("stack.Replace") // BAD
 	// case_stack_ReplaceMany("stack.ReplaceMany") // BAD
 	// case_stack_Extract("stack.Extract") // BAD
 	// case_stack_ExtractMany("stack.ExtractMany") // BAD

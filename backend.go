@@ -48,7 +48,7 @@ func match(needle any, haystack any, override bool) bool {
 	}
 }
 
-func selectCard(findType any, findData any, pointerType any, findCompareRaw COMPARE, returnType string, card *Card, stack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) bool {
+func selectCard(findType any, findData any, pointerType any, findCompareRaw COMPARE, returnType string, card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) bool {
 
 	// set defaults
 	setFINDDefaultIfNil(&findType)
@@ -85,7 +85,7 @@ func selectCard(findType any, findData any, pointerType any, findCompareRaw COMP
 	case FIND_First:
 		return card.Idx == 0
 	case FIND_Last:
-		return card.Idx == stack.Size - 1
+		return card.Idx == parentStack.Size - 1
 	case FIND_Idx: // -1 = stack.Size - 1
 		haystack := []any {}
 		switch getType(findData, false) {
@@ -98,7 +98,7 @@ func selectCard(findType any, findData any, pointerType any, findCompareRaw COMP
 		}
 		for i := range haystack {
 			if haystack[i] == -1 {
-				haystack[i] = stack.Size - 1
+				haystack[i] = parentStack.Size - 1
 			}
 		}
 		return needleInHaystack(card.Idx, haystack)
@@ -133,10 +133,10 @@ func selectCard(findType any, findData any, pointerType any, findCompareRaw COMP
 		start := slice[0].(int)
 		end := slice[1].(int)
 		if start == -1 {
-			start = stack.Size - 1
+			start = parentStack.Size - 1
 		}
 		if end == -1 {
-			end = stack.Size - 1
+			end = parentStack.Size - 1
 		}
 		end += 1
 		slice = []any {}
@@ -157,9 +157,9 @@ func selectCard(findType any, findData any, pointerType any, findCompareRaw COMP
 	case FIND_Lambda:
 		switch returnType {
 		case "card":
-			return findData.(func(*Card, *Stack, bool, ...any) (bool)) (card, stack, isSubstack, wmadrs...)
+			return findData.(func(*Card, *Stack, bool, ...any) (bool)) (card, parentStack, isSubstack, wmadrs...)
 		case "stack":
-			return findData.(func(*Card, *Stack, bool, *Stack, ...any) (bool)) (card, stack, isSubstack, retStack, wmadrs...)
+			return findData.(func(*Card, *Stack, bool, *Stack, ...any) (bool)) (card, parentStack, isSubstack, retStack, wmadrs...)
 		}
 	}
 	return false

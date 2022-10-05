@@ -342,6 +342,7 @@ func (stack *Stack) StripStackMatrix(variadic ...any) *Stack {
 
  @receiver `stack` type{*Stack}
  @parameter optional `returnType` type{RETURN} default RETURN_Vals
+   No RETURN_Lambda support
  @returns type{[]any} new array
  @requires `stack.ToMatrix()` has been implemented
  @ensures new array values correspond to `stack` values
@@ -1378,7 +1379,7 @@ func (stack *Stack) LambdaVarAdr(lambda func(*Card, *Stack, bool, *Stack, *Card,
  @param `insert` type{any, []any, Stack}
  @param optional `orderType` type{ORDER} default ORDER_After
  @param optional `findType` type{FIND} default FIND_Last
- @param optional `findData` type{any} default nil
+ @param optional `findData` type{any, []any, *Stack any, func(*Card, *Stack, bool, ...any) (bool)} default nil
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
  @param optional `actionType` type{ACTION} default ACTION_All
@@ -1426,7 +1427,7 @@ func (stack *Stack) Add(insert any, variadic ...any) *Stack {
 			case "slice":
 				insertArr = gogenerics.UnpackArray(insert)
 			case "stack":
-				insertArr = insert.(*Stack).ToArray()
+				insertArr = insert.(*Stack).ToArray(RETURN_Cards)
 			}
 
 			// set up insertCards
@@ -1602,7 +1603,7 @@ func (stack *Stack) Has(variadic ...any) bool {
 
  @receiver `stack` type{*Stack}
  @param optional `findType` type{FIND} default FIND_Last
- @param optional `findData` type{any} default nil
+ @param optional `findData` type{any, []any, *Stack any, func(*Card, *Stack, bool, ...any) (bool)} default nil
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
@@ -1647,7 +1648,7 @@ func (stack *Stack) Has(variadic ...any) bool {
 
  @receiver `stack` type{*Stack}
  @param `findType` type{FIND}
- @param optional `findData` type{any} default nil
+ @param optional `findData` type{any, []any, *Stack any, func(*Card, *Stack, bool, *Stack, ...any) (bool)} default nil
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
  @param optional `returnType` type{RETURN} default RETURN_Cards
@@ -1701,14 +1702,12 @@ func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
  
  @receiver `stack` type{*Stack}
  @param `replaceType` type{REPLACE}
- @param `replaceWith` type{any, []any, *Stack}
+ @param `replaceWith` type{any, []any, *Stack, func(card *Card, _ *Stack, _ bool, _ ...any)}
+   only set to []any or *Stack through which to iterate if `replaceType` == REPLACE_Cards
  @param optional `findType` type{FIND} default FIND_Last
  @param optional `findData` type{any} default nil
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
- @param optional `overrideCards` type{OVERRIDE} default OVERRIDE_False
-   By default, if you do stack.Add(cardA), stack = {cardA}.  If you instead desire stack = {Card {val = cardA}}, do true
- @param optional `returnType` type{RETURN} default RETURN_Cards
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `pointerType` type{POINTER} default POINTER_False
@@ -1723,6 +1722,105 @@ func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
 func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, variadic ...any) *Card {
 
 	// unpack variadic into optional parameters
+	var findType, findData, findCompareRaw, deepSearchType, depth, pointerType, passSubstacks, passCards, workingMem any
+	gogenerics.UnpackVariadic(variadic, &findType, &findData, &findCompareRaw, &deepSearchType, &depth, &pointerType, &passSubstacks, &passCards, &workingMem)
+	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
+	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
+	if passSubstacks == nil {passSubstacks = PASS_True}
+
+	// main
+	return stack.LambdaCard(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) {
+		
+		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && retCard.Idx == -1 {
+
+			*retCard = *card.Clone() // return the original card
+
+			// replace mechanism
+			switch replaceType {
+			case REPLACE_Key:
+
+				card.Key = replaceWith
+
+			case REPLACE_Val:
+
+				card.Val = replaceWith
+
+			case REPLACE_Card:
+
+				// initialize variables
+				insertArr := []any {}
+				insertCards := []*Card {}
+
+				// set up insertArr
+				switch getType(replaceWith, false) {
+				case "element":
+					insertArr = append(insertArr, replaceWith)
+				case "slice":
+					insertArr = gogenerics.UnpackArray(replaceWith)
+				case "stack":
+					insertArr = replaceWith.(*Stack).ToArray(RETURN_Cards)
+				}
+	
+				// set up insertCards
+				for _, ins := range insertArr {
+					if ins != nil {
+						insertCards = append(insertCards, ins.(*Card).Clone()) // insert a clone of this card
+					} else {
+						insertCards = append(insertCards, nil)
+					}
+				}
+	
+				// update the stack to have replaceWith at its respective location
+				targetIdx := card.Idx
+				beginningSegment := parentStack.Cards[:targetIdx]
+				endSegment := parentStack.Cards[targetIdx+1:]
+	
+				parentStack.Cards = []*Card {}
+				parentStack.Cards = append(parentStack.Cards, beginningSegment...)
+				if !(len(insertArr) == 1 && insertArr[0] == nil) {
+					parentStack.Cards = append(parentStack.Cards, insertCards...)
+				}
+				parentStack.Cards = append(parentStack.Cards, endSegment...)
+
+			case REPLACE_Lambda:
+
+				replaceWith.(func(*Card, *Stack, bool, ...any)) (card, parentStack, isSubstack, wmadrs...)
+
+			}
+
+		}
+
+	}, nil, nil, false, workingMem.([]any), deepSearchType, depth, passSubstacks, passCards)
+
+}
+
+/** Returns a stack whose values are the original fields updated to `replaceWith`
+ 
+ @receiver `stack` type{*Stack}
+ @param `replaceType` type{REPLACE}
+ @param `replaceWith` type{any, []any, *Stack}
+ @param optional `findType` type{FIND} default FIND_Last
+ @param optional `findData` type{any} default nil
+ @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
+   By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
+ @param optional `overrideCards` type{OVERRIDE} default OVERRIDE_False
+   By default, if you do stack.Replace(cardA), stack = {cardA}.  If you instead desire stack = {Card {val = cardA}}, do true
+ @param optional `returnType` type{RETURN} default RETURN_Cards
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
+ @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `passSubstacks` type{PASS} default PASS_True
+ @param optional `passCards` type{PASS} default PASS_True
+ @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+ @ensures
+   * REPLACE_Card with nil as input ensures the card is removed
+ @returns type{*Stack}
+ */
+ func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceWith any, variadic ...any) *Stack {
+
+	// unpack variadic into optional parameters
 	var findType, findData, findCompareRaw, overrideCards, returnType, deepSearchType, depth, pointerType, passSubstacks, passCards, workingMem any
 	gogenerics.UnpackVariadic(variadic, &findType, &findData, &findCompareRaw, &overrideCards, &returnType, &deepSearchType, &depth, &pointerType, &passSubstacks, &passCards, &workingMem)
 	setOVERRIDEDefaultIfNil(&overrideCards)
@@ -1733,9 +1831,9 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, variadic ...an
 	if passSubstacks == nil {passSubstacks = PASS_True}
 
 	// main
-	initCard := stack.LambdaCard(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) {
+	stack.LambdaStack(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) {
 		
-		if selectCard(findType, findData, pointerType, wmadrs[0].(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs[4:]...) && retCard.Idx == -1 {
+		if selectCard(findType, findData, pointerType, wmadrs[0].(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs[4:]...) {
 
 			*retCard = *card.Clone() // return the original card
 
@@ -1808,61 +1906,20 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, variadic ...an
 	}, nil, nil, false, append([]any{findCompareRaw, replaceType, replaceWith, overrideCards}, workingMem.([]any)...), deepSearchType, depth, passSubstacks, passCards)
 	
 	// return card with appropriate properties TODO: move to replaceMany, remove all returns from here
-	var outCard *Card
-	switch returnType {
-	case RETURN_Keys:
-		outCard = MakeCard(initCard.Key)
-	case RETURN_Vals:
-		outCard = MakeCard(initCard.Val)
-	case RETURN_Idxs:
-		outCard = MakeCard(initCard.Idx)
-	case RETURN_Cards:
-		outCard = initCard
+	// var outCard *Card
+	// switch returnType {
+	// case RETURN_Keys:
+	// 	outCard = MakeCard(initCard.Key)
+	// case RETURN_Vals:
+	// 	outCard = MakeCard(initCard.Val)
+	// case RETURN_Idxs:
+	// 	outCard = MakeCard(initCard.Idx)
+	// case RETURN_Cards:
+	// 	outCard = initCard
 	// case RETURN_Stacks:
 	// 	outCard = initCard.Val.(*Stack)
-	}
-	return outCard
-
-}
-
-/** Returns a stack whose values are the original fields updated to `replaceWith`
- 
- @receiver `stack` type{*Stack}
- @param `replaceType` type{REPLACE}
- @param `replaceWith` type{any}
- @param `findType` type{FIND}
- @param optional `findData` type{any} default nil
- @param optional `returnType` type{RETURN} default RETURN_Cards
- @param optional `pointerType` type{POINTER} default POINTER_False
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int} default -1 (deepest)
- @returns type{*Stack} a stack whose values are the extracted cards pre-update (if find fails, then an empty stack)
- @updates all found cards to `replaceWith` in `stack`
- @ensures IF `replaceWith` is nil and `replaceType is REPLACE_Card`, the cards found will be removed from `stack`
- */
-func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceWith any, findType FIND, variadic ...any) (ret *Stack) {
-
-	// unpack variadic into optional parameters
-	var findData, returnType, pointerType, deepSearchType, depth any
-	gogenerics.UnpackVariadic(variadic, &findData, &returnType, &pointerType, &deepSearchType, &depth)
-/*
-	// get deep copy of targeted cards to return
-	ret = stack.GetMany(findType, findData, returnType, pointerType, CLONE_True, CLONE_True, CLONE_True)
-	// get target data
-	_, targetCards, targetStacks := stack.getPositions(false, findType, findData, pointerType.(POINTER), deepSearchType.(DEEPSEARCH), depth.(int))
-
-	// set targeted cards' fields to replaceWith if was found (updateRespectiveField fulfills our ensures clause)
-	if len(targetCards) != 0 {
-		for i := range targetCards {
-			targetStacks[i].updateRespectiveField(replaceType, replaceWith, targetCards[i])
-		}
-	}
-
-	// update properties
-	stack.setStackProperties()
-*/
-	// return
-	return
+	// }
+	return stack
 
 }
 
