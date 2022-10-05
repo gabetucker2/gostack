@@ -169,8 +169,6 @@ func test_Start(funcName string, showTestText bool) {
 		fmt.Println("-   TESTING " + funcName + "()")
 	}
 
-	// test_Setup()
-
 }
 
 func test_End(funcName string, conditions []bool) {
@@ -195,6 +193,6 @@ func test_End(funcName string, conditions []bool) {
 	}
 
 	// print all the data together
-	fmt.Println(out + " " + funcName + "()")
+	fmt.Println(out + " " + funcName + "()            ~ [" + strconv.Itoa(len(conditions)) + " cases]")
 
 }

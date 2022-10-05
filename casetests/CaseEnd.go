@@ -563,7 +563,7 @@ func case_stack_Unique(funcName string) {
 	myStackKeys := MakeStack(nil, []string {"Person", "Place", "Person", "Thing", "Person"}).Unique(TYPE_Key)
 	myStackVals := MakeStack([]string {"Person", "Place", "Person", "Thing", "Person"}).Unique(TYPE_Val)
 	myStackBoth := MakeStack([]string {"Person", "Place", "Person", "Thing", "Person"}, []string {"Person", "Place", "Person", "Thing", "Person"}).Unique(TYPE_Val)
-
+	
 	conditions := []bool {
 		myStackKeys.Equals(MakeStack(nil, []string {"Person", "Place", "Thing"})), // 1
 		myStackVals.Equals(MakeStack([]string {"Person", "Place", "Thing"})), // 2
@@ -1096,7 +1096,7 @@ func case_stack_GetMany(funcName string) {
 
 	// test base functionality
 	stack1 := MakeStack([]int {1, 2, 3}).GetMany(FIND_All)
-	stack2 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).GetMany(FIND_Last, nil, nil, DEEPSEARCH_True, []int {2})
+	stack2 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).GetMany(FIND_Last, nil, nil, nil, DEEPSEARCH_True, []int {2})
 	
 	// test slices
 	stack3 := MakeStack([]int {1, 2, 3, 4, 5, 6}).GetMany(FIND_Slice, MakeStack([]int {1, 4}))
@@ -1114,7 +1114,7 @@ func case_stack_GetMany(funcName string) {
 		}
 		wmadrs[0] = card
 		return prevCardVal + 3 == card.Val
-	}, nil, DEEPSEARCH_True, nil, nil, PASS_False)
+	}, nil, nil, DEEPSEARCH_True, nil, nil, PASS_False)
 	
 	stack8 := MakeStack([]int {1, 2, 3, 4}).GetMany(FIND_Lambda, func(card *Card, _ *Stack, _ bool, workingStack *Stack, _ ...any) (bool) {
 		if workingStack.Size == 0 {
@@ -1122,7 +1122,7 @@ func case_stack_GetMany(funcName string) {
 		} else {
 			return workingStack.Cards[workingStack.Size - 1].Val.(int) * 2 == card.Val
 		}
-	}, nil, DEEPSEARCH_True, nil, nil, PASS_False)
+	}, nil, nil, DEEPSEARCH_True, nil, nil, PASS_False)
 
 	// other
 	stack9 := MakeStack([]int {1, 2, 3, 4, 5, 6}).GetMany(FIND_Idx, []int {0, -1})
@@ -1213,11 +1213,45 @@ func case_stack_Has(funcName string) {
 	
 }
 
+func case_stack_Move(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// MakeStack([]int {1, 2, 3}).Move()
+	
+	conditions := []bool {
+
+		// test base functionality
+		false,
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_Replace(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// MakeStack([]int {1, 2, 3}).Move()
+	
+	conditions := []bool {
+
+		// test base functionality
+		false,
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
 /** Executes all case tests */
 func Run(_showTestText bool) {
 
 	showTestText = _showTestText
-	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambdas, case_stack_Get, case_stack_GetMany, case_stack_Add, case_stack_Has)
+	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambdas, case_stack_Get, case_stack_GetMany, case_stack_Add, case_stack_Has, case_stack_Move, case_stack_Replace)
 
 	fmt.Println("- BEGINNING TESTS (fix failures/errors in descending order)")
 
@@ -1244,17 +1278,16 @@ func Run(_showTestText bool) {
 	// GENERALIZED FUNCTIONS
 	case_stack_Get("stack.Get") // GOOD
 	case_stack_GetMany("stack.GetMany") // GOOD
-	case_stack_Add("stack.Add") // BAD
-	// case_stack_Move("stack.Move") // BAD
-	case_stack_Has("stack.Has") // GOOD
+	case_stack_Add("stack.Add") // GOOD
 	// case_stack_Replace("stack.Replace") // BAD
 	// case_stack_ReplaceMany("stack.ReplaceMany") // BAD
-	// case_stack_Update("stack.Update") // BAD
-	// case_stack_UpdateMany("stack.UpdateMany") // BAD
 	// case_stack_Extract("stack.Extract") // BAD
 	// case_stack_ExtractMany("stack.ExtractMany") // BAD
+	// case_stack_Update("stack.Update") // BAD
 	// case_stack_Remove("stack.Remove") // BAD
-	// case_stack_RemoveMany("stack.RemoveMany") // BAD
+	case_stack_Has("stack.Has") // GOOD
+	// case_stack_Swap("stack.Swap") // BAD
+	// case_stack_Move("stack.Move") // BAD
 	
 	// NON-GENERALIZED FUNCTIONS (DEPENDENT ON GENERALIZED FUNCTIONS)
 	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD - update, see function documentation

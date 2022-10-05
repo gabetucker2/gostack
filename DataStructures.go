@@ -51,7 +51,6 @@ const (
 	REPLACE_Key REPLACE = iota
 	REPLACE_Val
 	REPLACE_Card
-	REPLACE_Stack
 	REPLACE_Lambda
 )
 
