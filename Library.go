@@ -313,56 +313,28 @@ func MakeStackMatrix(variadic ...any) *Stack {
 /** Returns a stack representing a selection within a stack matrix
  
  @receiver `stack` type{*Stack}
- @param optional `selections` type{int variadic, []int} default []int {0, ..., stack.Size - 1}
-	a set of args representing the indices being selected within an array
+ @param optional `idx` type{int, range []int, range *Stack ints} default []int {0, ..., stack.Size - 1}
  @returns type{*Stack} a new Stack representing the selection
  @constructs type{*Stack} a new Stack representing the selection
  @requires `idx` arguments get valid index positions from the stack
  */
 func (stack *Stack) StripStackMatrix(variadic ...any) *Stack {
 
-	// TODO: update to just use the Get() function
-	// TODO: add support for inserting a variadic of ints instead of []int
-
 	// unpack variadic into optional parameters
-	var firstSelection any
-	gogenerics.UnpackVariadic(variadic, &firstSelection)
+	var idx any
+	gogenerics.UnpackVariadic(variadic, &idx)
 
-	/*
-	// init
-	newStack := MakeStack()
-	var selections []int
-
-	// put firstSelection type{int, []int} into array selections type{[]int}
-	switch fs := firstSelection.(type) {
-	case int:
-		selections = append(selections, fs)
-	case []int:
-		selections = append(selections, fs...)
-	}
-
-	// fmt.Println(len(selections))
-	// iterate through each selection and add them to our new stack
-	for _, idx := range selections {
-		c := stack.Cards[idx]
-		switch c.Val.(type) {
-		case Stack:
-			stripped := newStack.StripStackMatrix(variadic[1:])
-			for _, idx := range firstSelection.([]int) {
-				newStack.Cards = append(newStack.Cards, stripped.Cards[idx])
-			}
-		default:
-			newStack.Cards = append(newStack.Cards, c)
+	// main
+	if idx == nil {
+		return stack.GetMany(FIND_All, nil, nil, RETURN_Stacks)
+	} else {
+		idxInt, isInt := idx.(int)
+		if isInt {
+			return stack.GetMany(FIND_Idx, idxInt, nil, RETURN_Stacks)
+		} else {
+			return stack.GetMany(FIND_Slice, idx, nil, RETURN_Stacks)
 		}
 	}
-
-	// set properties
-	newStack.setStackProperties()
-
-	// return
-	return newStack
-	*/
-	return stack
 
 }
 
@@ -797,7 +769,7 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
  @receiver `thisStack` type{*Stack}
  @param `otherStack` type{*Stack}
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int, []int} default -1 (deepest)
+ @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `compareCardKeys` type{COMPARE} default COMPARE_True
  @param optional `compareCardVals` type{COMPARE} default COMPARE_True
  @param optional `compareSubstackKeys` type{SUBSTACKKEYS} default COMPARE_True
@@ -1165,7 +1137,7 @@ func (stack *Stack) Print(variadic ...any) {
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
 	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int, []int} default -1 (deepest)
+ @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `passSubstacks` type{PASS} default PASS_False
  @param optional `passCards` type{PASS} default PASS_True
  @returns `stack` type{*Stack}
@@ -1330,7 +1302,7 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
 	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int, []int} default -1 (deepest)
+ @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `passSubstacks` type{PASS} default PASS_False
  @param optional `passCards` type{PASS} default PASS_True
  @returns `stack` type{*Stack}
@@ -1350,7 +1322,7 @@ func (stack *Stack) LambdaThis(lambda func(*Card, *Stack, bool, *Stack, *Card, a
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
 	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int, []int} default -1 (deepest)
+ @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `passSubstacks` type{PASS} default PASS_False
  @param optional `passCards` type{PASS} default PASS_True
  @returns `retStack` type{*Stack}
@@ -1370,7 +1342,7 @@ func (stack *Stack) LambdaStack(lambda func(*Card, *Stack, bool, *Stack, *Card, 
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
 	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int, []int} default -1 (deepest)
+ @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `passSubstacks` type{PASS} default PASS_False
  @param optional `passCards` type{PASS} default PASS_True
  @returns `retCard` type{*Card}
@@ -1390,7 +1362,7 @@ func (stack *Stack) LambdaCard(lambda func(*Card, *Stack, bool, *Stack, *Card, a
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
 	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int, []int} default -1 (deepest)
+ @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `passSubstacks` type{PASS} default PASS_False
  @param optional `passCards` type{PASS} default PASS_True
  @returns `retVarAdr` type{any}
@@ -1413,7 +1385,7 @@ func (stack *Stack) LambdaVarAdr(lambda func(*Card, *Stack, bool, *Stack, *Card,
  @param optional `overrideCards` type{OVERRIDE} default OVERRIDE_False
    By default, if you do stack.Add(cardA), stack = {cardA}.  If you instead desire stack = {Card {val = cardA}}, do true
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int, []int} default -1 (deepest)
+ @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `pointerType` type{POINTER} default POINTER_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
@@ -1612,7 +1584,7 @@ func (stack *Stack) Swap(findType_first FIND, findType_second FIND, variadic ...
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int, []int} default -1 (deepest)
+ @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `pointerType` type{POINTER} default POINTER_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
@@ -1634,7 +1606,7 @@ func (stack *Stack) Has(variadic ...any) bool {
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int, []int} default -1 (deepest)
+ @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `pointerType` type{POINTER} default POINTER_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
@@ -1680,7 +1652,7 @@ func (stack *Stack) Has(variadic ...any) bool {
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
  @param optional `returnType` type{RETURN} default RETURN_Cards
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int, []int} default -1 (deepest)
+ @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `pointerType` type{POINTER} default POINTER_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
@@ -1706,18 +1678,18 @@ func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
 		
 		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "stack", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) {
 
-			var outCard *Card
 			switch returnType {
 			case RETURN_Keys:
-				outCard = MakeCard(card.Key)
+				retStack.Cards = append(retStack.Cards, MakeCard(card.Key))
 			case RETURN_Vals:
-				outCard = MakeCard(card.Val)
+				retStack.Cards = append(retStack.Cards, MakeCard(card.Val))
 			case RETURN_Idxs:
-				outCard = MakeCard(card.Idx)
+				retStack.Cards = append(retStack.Cards, MakeCard(card.Idx))
 			case RETURN_Cards:
-				outCard = card.Clone()
+				retStack.Cards = append(retStack.Cards, card.Clone())
+			case RETURN_Stacks:
+				retStack.Cards = append(retStack.Cards, card.Val.(*Stack).Cards...)
 			}
-			retStack.Cards = append(retStack.Cards, outCard)
 			
 		}
 
@@ -1738,7 +1710,7 @@ func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
    By default, if you do stack.Add(cardA), stack = {cardA}.  If you instead desire stack = {Card {val = cardA}}, do true
  @param optional `returnType` type{RETURN} default RETURN_Cards
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int, []int} default -1 (deepest)
+ @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `pointerType` type{POINTER} default POINTER_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
@@ -1835,7 +1807,7 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, variadic ...an
 
 	}, nil, nil, false, append([]any{findCompareRaw, replaceType, replaceWith, overrideCards}, workingMem.([]any)...), deepSearchType, depth, passSubstacks, passCards)
 	
-	// return card with appropriate properties
+	// return card with appropriate properties TODO: move to replaceMany, remove all returns from here
 	var outCard *Card
 	switch returnType {
 	case RETURN_Keys:
@@ -1846,6 +1818,8 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, variadic ...an
 		outCard = MakeCard(initCard.Idx)
 	case RETURN_Cards:
 		outCard = initCard
+	// case RETURN_Stacks:
+	// 	outCard = initCard.Val.(*Stack)
 	}
 	return outCard
 

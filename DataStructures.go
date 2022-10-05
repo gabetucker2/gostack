@@ -31,6 +31,7 @@ const (
 	RETURN_Keys
 	RETURN_Vals
 	RETURN_Cards
+	RETURN_Stacks
 )
 
 const (

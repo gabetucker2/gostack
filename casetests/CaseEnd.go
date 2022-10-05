@@ -248,10 +248,30 @@ func case_stack_StripStackMatrix(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	// stuff
+	// main
+	cardA := MakeCard("HeyA")
+	cardB := MakeCard("HeyB")
+	cardC := MakeCard("HeyC")
+	cardD := MakeCard("HeyD")
+	stack1 := MakeStack([]*Card {cardA, cardB})
+	stack2 := MakeStack([]*Card {cardC, cardD})
+	matrix := MakeStack([]*Stack {stack1, stack2})
+
+	stackA := matrix.StripStackMatrix()
+	stackB := matrix.StripStackMatrix(0)
+	stackC := matrix.StripStackMatrix(1)
+	stackD := matrix.StripStackMatrix([]int {0, 1})
+	stackE := matrix.StripStackMatrix(MakeStack([]int {0, 1}))
 
 	conditions := []bool {
-		false, // temp
+
+		// main
+		stackA.Equals(MakeStack([]*Card {cardA, cardB, cardC, cardD})), // 1
+		stackB.Equals(stack1), // 2
+		stackC.Equals(stack2), // 3
+		stackD.Equals(MakeStack([]*Card {cardA, cardB, cardC, cardD})), // 4
+		stackE.Equals(MakeStack([]*Card {cardA, cardB, cardC, cardD})), // 5
+
 	}
 
 	test_End(funcName, conditions)
@@ -1136,6 +1156,7 @@ func case_stack_GetMany(funcName string) {
 	stack12 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3}).GetMany(FIND_All, nil, nil, RETURN_Idxs)
 	stack13 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3}).GetMany(FIND_All, nil, nil, RETURN_Vals)
 	stack14 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3}).GetMany(FIND_All, nil, nil, RETURN_Keys)
+	stack15 := MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}).GetMany(FIND_Idx, 0, nil, RETURN_Stacks)
 	
 	conditions := []bool {
 
@@ -1160,6 +1181,7 @@ func case_stack_GetMany(funcName string) {
 		stack12.Equals(MakeStack([]int {0, 1, 2})), // 12
 		stack13.Equals(MakeStack([]int {1, 2, 3})), // 13
 		stack14.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyC"})), // 14
+		stack15.Equals(MakeStack([]int {1, 2})), // 15
 
 	}
 
@@ -1290,6 +1312,7 @@ func Run(_showTestText bool) {
 	case_stack_Shuffle("stack.Shuffle") // GOOD
 	case_card_Print("card.Print") // GOOD
 	case_stack_Print("stack.Print") // GOOD
+	case_stack_Transpose("stack.Transpose") // GOOD
 	
 	// GENERALIZED FUNCTIONS
 	case_stack_Get("stack.Get") // GOOD
@@ -1306,8 +1329,7 @@ func Run(_showTestText bool) {
 	// case_stack_Move("stack.Move") // BAD
 	
 	// NON-GENERALIZED FUNCTIONS (DEPENDENT ON GENERALIZED FUNCTIONS)
-	// case_stack_StripStackMatrix("stack.StripStackMatrix") // BAD - update, see function documentation
-	case_stack_Transpose("stack.Transpose") // BAD
+	case_stack_StripStackMatrix("stack.StripStackMatrix") // GOOD
 	case_stack_Unique("stack.Unique") // GOOD
 
 }
