@@ -1288,6 +1288,10 @@ func case_stack_Replace(funcName string) {
 	stack7 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
 	card7 := stack7.Replace(REPLACE_Card, MakeStack([]string {"KeyD", "KeyE"}, []int {4, 5}))
 	
+	// ensure only works on one card
+	stack8 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
+	card8 := stack8.Replace(REPLACE_Card, nil, FIND_All)
+
 	conditions := []bool {
 
 		// test REPLACE configurations
@@ -1308,6 +1312,76 @@ func case_stack_Replace(funcName string) {
 		stack7.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyD", "KeyE"}, []int {1, 2, 4, 5})), // 13
 		card7.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 14
 
+		// ensure only works on one card
+		stack8.Equals(MakeStack([]string {"KeyB", "KeyC"}, []int {2, 3})), // 15
+		card8.Equals(MakeCard(1, "KeyA", 0), nil, nil, COMPARE_True), // 16
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_ReplaceMany(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// don't need as many test cases since Replace covers most of them
+
+	// test base functionality
+	originalStack1 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
+	stack1 := originalStack1.ReplaceMany(REPLACE_Card, nil, FIND_All)
+	originalStack2 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
+	stack2 := originalStack2.ReplaceMany(REPLACE_Card, MakeStack([]string {"KeyD", "KeyE"}, []int {4, 5}), FIND_All, nil, nil, RETURN_Vals)
+
+	conditions := []bool {
+
+		// test base functionality
+		originalStack1.Equals(MakeStack()), // 1
+		stack1.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})), // 2
+		originalStack2.Equals(MakeStack([]string {"KeyD", "KeyE"}, []int {4, 5}, 3)), // 3
+		stack2.Equals(MakeStack([]int {1, 2, 3})), // 4
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_Extract(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// test base functionality
+	stackA := MakeStack([]string {"KeyB", "KeyC"}, []int {2, 3})
+	cardA := stackA.Extract()
+
+	conditions := []bool {
+
+		// test base functionality
+		cardA.Equals(MakeCard(3, "KeyC", 1), nil, nil, COMPARE_True), // 1
+		stackA.Equals(MakeStack([]string {"KeyB"}, []int {2})), // 2
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_ExtractMany(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// test base functionality
+	stackA := MakeStack([]string {"KeyB", "KeyC"}, []int {2, 3})
+	stack1 := stackA.ExtractMany(FIND_All)
+
+	conditions := []bool {
+
+		// test base functionality
+		stack1.Equals(MakeStack([]string {"KeyB", "KeyC"}, []int {2, 3})), // 1
+		stackA.Equals(MakeStack()), // 2
+
 	}
 
 	test_End(funcName, conditions)
@@ -1318,7 +1392,7 @@ func case_stack_Replace(funcName string) {
 func Run(_showTestText bool) {
 
 	showTestText = _showTestText
-	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambdas, case_stack_Get, case_stack_GetMany, case_stack_Add, case_stack_Has, case_stack_Move, case_stack_Replace)
+	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambdas, case_stack_Get, case_stack_GetMany, case_stack_Add, case_stack_Has, case_stack_Move, case_stack_Replace, case_stack_ReplaceMany, case_stack_Extract, case_stack_ExtractMany)
 
 	fmt.Println("- BEGINNING TESTS (fix failures/errors in descending order)")
 
@@ -1347,10 +1421,10 @@ func Run(_showTestText bool) {
 	case_stack_Get("stack.Get") // GOOD
 	case_stack_GetMany("stack.GetMany") // GOOD
 	case_stack_Add("stack.Add") // GOOD
-	case_stack_Replace("stack.Replace") // BAD
-	// case_stack_ReplaceMany("stack.ReplaceMany") // BAD
-	// case_stack_Extract("stack.Extract") // BAD
-	// case_stack_ExtractMany("stack.ExtractMany") // BAD
+	case_stack_Replace("stack.Replace") // GOOD
+	case_stack_ReplaceMany("stack.ReplaceMany") // BAD
+	case_stack_Extract("stack.Extract") // GOOD
+	case_stack_ExtractMany("stack.ExtractMany") // GOOD
 	// case_stack_Update("stack.Update") // BAD
 	// case_stack_Remove("stack.Remove") // BAD
 	case_stack_Has("stack.Has") // GOOD

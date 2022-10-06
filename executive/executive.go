@@ -12,7 +12,7 @@ func main() {
 	gogenerics.RemoveUnusedError(casetests.Run, tutorials.Introduction)
 
 	// tests
-	casetests.Run(true)
+	casetests.Run(false)
 
 	// tutorials
 	//tutorials.Bootstrap()
