@@ -937,33 +937,33 @@ func case_stack_Lambdas(funcName string) {
 	test_Start(funcName, showTestText)
 
 	// test stack updating, multiply each by 5
-	stack1 := MakeStack([]int {1, 5, 20}).LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {
+	stack1 := MakeStack([]int {1, 5, 20}).LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ []any, _ ...any) {
 		card.Val = card.Val.(int) * 5
 	})
 
 	// test retStack output, get all in range
-	stack2 := MakeStack([]int {1, 5, 20, 41, 92, 4104}).LambdaStack(func(card *Card, _ *Stack, _ bool, retStack *Stack, _ *Card, _ any, _ ...any) {
+	stack2 := MakeStack([]int {1, 5, 20, 41, 92, 4104}).LambdaStack(func(card *Card, _ *Stack, _ bool, retStack *Stack, _ *Card, _ any, _ []any, _ ...any) {
 		if 5 < card.Val.(int) && card.Val.(int) < 4104 {
 			retStack.Cards = append(retStack.Cards, card.Clone())
 		}
 	})
 
 	// test retCard output, get last in range
-	card1 := MakeStack([]int {1, 5, 20, 41, 92, 4104}).LambdaCard(func(card *Card, _ *Stack, _ bool, _ *Stack, retCard *Card, _ any, _ ...any) {
+	card1 := MakeStack([]int {1, 5, 20, 41, 92, 4104}).LambdaCard(func(card *Card, _ *Stack, _ bool, _ *Stack, retCard *Card, _ any, _ []any, _ ...any) {
 		if 5 < card.Val.(int) && card.Val.(int) < 4104 {
 			*retCard = *card
 		}
 	})
 
 	// test retOther output, get max
-	maxAdr := MakeStack([]int {50, 2, 45, 140, 42}).LambdaVarAdr(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, maxAdr any, _ ...any) {
+	maxAdr := MakeStack([]int {50, 2, 45, 140, 42}).LambdaVarAdr(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, maxAdr any, _ []any, _ ...any) {
 		if gogenerics.GetPointer(maxAdr).(int) < card.Val.(int) {
 			gogenerics.SetPointer(maxAdr, card.Val)
 		}
 	}, nil, nil, 0) // initialize max to 0
 
 	// test workingMemAdr, get all which are under or equal to 15 away from stack average
-	stack3 := MakeStack([]int {50, 2, 45, 140, 42}).LambdaStack(func(card *Card, stack *Stack, _ bool, retStack *Stack, _ *Card, _ any, wmadrs ...any) {
+	stack3 := MakeStack([]int {50, 2, 45, 140, 42}).LambdaStack(func(card *Card, stack *Stack, _ bool, retStack *Stack, _ *Card, _ any, _ []any, wmadrs ...any) {
 		if wmadrs[0] == nil {
 			sum := gogenerics.MakeInterface(0)
 			for _, c := range stack.Cards {
@@ -979,20 +979,20 @@ func case_stack_Lambdas(funcName string) {
 	})
 
 	// test deepStacks, multiply each by 5
-	stack4 := MakeStackMatrix([]int {1, 5, 20, 2}, nil, []int {2, 2}).LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {
+	stack4 := MakeStackMatrix([]int {1, 5, 20, 2}, nil, []int {2, 2}).LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ []any, _ ...any) {
 		card.Val = card.Val.(int) * 5
 	})
 
 	// test passSubstacks true passCards false, multiply each stack.Key by 5
-	stack5 := MakeStack([]int {4, 7}, []*Stack {MakeStack([]int {1, 5}), MakeStack([]int {20, 2})}).LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {
+	stack5 := MakeStack([]int {4, 7}, []*Stack {MakeStack([]int {1, 5}), MakeStack([]int {20, 2})}).LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ []any, _ ...any) {
 		card.Key = card.Key.(int) * 5
 	}, nil, nil, nil, nil, nil, nil, PASS_True, PASS_False)
 
 	// test that all init values work
-	this, stack, card, varAdr := MakeStack([]string {"Heyy"}).Lambda(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {}, MakeStack([]int {666}), MakeCard("Howdy"), 420)
+	this, stack, card, varAdr := MakeStack([]string {"Heyy"}).Lambda(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ []any, _ ...any) {}, MakeStack([]int {666}), MakeCard("Howdy"), 420)
 
 	// test that various deepStack depth options work
-	stack6 := MakeStackMatrix([]int {1, 5, 20, 2}, nil, []int {2, 2}).LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ ...any) {
+	stack6 := MakeStackMatrix([]int {1, 5, 20, 2}, nil, []int {2, 2}).LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ []any, _ ...any) {
 		if card.Idx == 0 {
 			card.Key = "Marker"	
 		}
@@ -1196,23 +1196,41 @@ func case_stack_Add(funcName string) {
 	// since we already tested core lambda functionality in Lambdas and Get and GetMany, we need not do it here
 
 	// test base functionality
-	stack1 := MakeStack([]int {1, 2, 3}).Add(4)
-	stack2 := MakeStack([]int {1, 2, 3}).Add(0, ORDER_Before, FIND_First)
-	stack3 := MakeStack([]int {1, 2, 3}).Add(0, ORDER_Before, FIND_All, nil, nil, ACTION_First)
-	stack4 := MakeStack([]int {1, 2, 3}).Add(0, ORDER_Before, FIND_All, nil, nil, ACTION_All)
+	stack3 := MakeStack([]int {1, 2, 3}).Add(0, ORDER_Before, FIND_All, nil, nil)
 	cardA := MakeCard(0)
-	stack5 := MakeStack([]int {1, 2, 3}).Add(cardA, ORDER_Before, FIND_All, nil, nil, ACTION_First, OVERRIDE_False)
-	stack6 := MakeStack([]int {1, 2, 3}).Add(cardA, ORDER_Before, FIND_All, nil, nil, ACTION_First, OVERRIDE_True)
+	stack5 := MakeStack([]int {1, 2, 3}).Add(cardA, ORDER_Before, FIND_All, nil, nil, OVERRIDE_False)
+	stack6 := MakeStack([]int {1, 2, 3}).Add(cardA, ORDER_Before, FIND_All, nil, nil, OVERRIDE_True)
+
+	conditions := []bool {
+
+		// test base functionality
+		stack3.Equals(MakeStack([]int {0, 1, 2, 3})), // 1
+		stack5.Equals(MakeStack([]int {0, 1, 2, 3})), // 2
+		stack6.Equals(MakeStack([]any {cardA, 1, 2, 3}, nil, nil, OVERRIDE_True)), // 3
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_AddMany(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// since we already tested core lambda functionality in Lambdas and Get and GetMany, we need not do it here
+
+	// test base functionality
+	stack1 := MakeStack([]int {1, 2, 3}).AddMany(4)
+	stack2 := MakeStack([]int {1, 2, 3}).AddMany(0, ORDER_Before, FIND_First)
+	stack4 := MakeStack([]int {1, 2, 3}).AddMany(0, ORDER_Before, FIND_All, nil, nil)
 
 	conditions := []bool {
 
 		// test base functionality
 		stack1.Equals(MakeStack([]int {1, 2, 3, 4})), // 1
 		stack2.Equals(MakeStack([]int {0, 1, 2, 3})), // 2
-		stack3.Equals(MakeStack([]int {0, 1, 2, 3})), // 3
-		stack4.Equals(MakeStack([]int {0, 1, 0, 2, 0, 3})), // 4
-		stack5.Equals(MakeStack([]int {0, 1, 2, 3})), // 5
-		stack6.Equals(MakeStack([]any {cardA, 1, 2, 3}, nil, nil, OVERRIDE_True)), // 6
+		stack4.Equals(MakeStack([]int {0, 1, 0, 2, 0, 3})), // 3
 
 	}
 
@@ -1246,6 +1264,24 @@ func case_stack_Has(funcName string) {
 }
 
 func case_stack_Move(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// test base functionality
+	stack1 := MakeStack([]int {1, 2, 3}).Move()
+	
+	conditions := []bool {
+
+		// test base functionality
+		stack1.Equals(MakeStack([]int {2, 3, 1})), // 1
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_Swap(funcName string) {
 
 	test_Start(funcName, showTestText)
 
@@ -1388,11 +1424,91 @@ func case_stack_ExtractMany(funcName string) {
 	
 }
 
+func case_stack_Remove(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// test base functionality
+	stackA := MakeStack([]string {"KeyB", "KeyC"}, []int {2, 3})
+	stack1 := stackA.Remove()
+
+	conditions := []bool {
+
+		// test base functionality
+		stackA.Equals(MakeStack([]string {"KeyB"}, []int {2})), // 1
+		stack1.Equals(stackA), // 2
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_RemoveMany(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// test base functionality
+	stackA := MakeStack([]string {"KeyB", "KeyC"}, []int {2, 3})
+	stack1 := stackA.RemoveMany(FIND_All)
+
+	conditions := []bool {
+
+		// test base functionality
+		stackA.Equals(MakeStack()), // 1
+		stack1.Equals(stackA), // 2
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_Update(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// test base functionality
+	stackA := MakeStack([]string {"KeyB", "KeyC"}, []int {2, 3})
+	stack1 := stackA.Update(REPLACE_Card, MakeCard(4, "KeyD"))
+
+	conditions := []bool {
+
+		// test base functionality
+		stackA.Equals(MakeStack([]string {"KeyB", "KeyD"}, []int {2, 4})), // 1
+		stack1.Equals(stackA), // 2
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_UpdateMany(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// test base functionality
+	stackA := MakeStack([]string {"KeyB", "KeyC"}, []int {2, 3})
+	stack1 := stackA.UpdateMany(REPLACE_Card, MakeCard(4, "KeyD"), FIND_All)
+
+	conditions := []bool {
+
+		// test base functionality
+		stackA.Equals(MakeStack([]string {"KeyD", "KeyD"}, []int {4, 4})), // 1
+		stack1.Equals(stackA), // 2
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
 /** Executes all case tests */
 func Run(_showTestText bool) {
 
 	showTestText = _showTestText
-	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambdas, case_stack_Get, case_stack_GetMany, case_stack_Add, case_stack_Has, case_stack_Move, case_stack_Replace, case_stack_ReplaceMany, case_stack_Extract, case_stack_ExtractMany)
+	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambdas, case_stack_Get, case_stack_GetMany, case_stack_Add, case_stack_AddMany, case_stack_Has, case_stack_Move, case_stack_Replace, case_stack_ReplaceMany, case_stack_Extract, case_stack_ExtractMany, case_stack_Remove, case_stack_RemoveMany, case_stack_Update, case_stack_UpdateMany, case_stack_Swap)
 
 	fmt.Println("- BEGINNING TESTS (fix failures/errors in descending order)")
 
@@ -1421,15 +1537,18 @@ func Run(_showTestText bool) {
 	case_stack_Get("stack.Get") // GOOD
 	case_stack_GetMany("stack.GetMany") // GOOD
 	case_stack_Add("stack.Add") // GOOD
+	case_stack_AddMany("stack.AddMany") // GOOD
 	case_stack_Replace("stack.Replace") // GOOD
-	case_stack_ReplaceMany("stack.ReplaceMany") // BAD
+	case_stack_ReplaceMany("stack.ReplaceMany") // GOOD
+	case_stack_Update("stack.Update") // GOOD
+	case_stack_UpdateMany("stack.UpdateMany") // GOOD
 	case_stack_Extract("stack.Extract") // GOOD
 	case_stack_ExtractMany("stack.ExtractMany") // GOOD
-	// case_stack_Update("stack.Update") // BAD
-	// case_stack_Remove("stack.Remove") // BAD
+	case_stack_Remove("stack.Remove") // BAD
+	case_stack_RemoveMany("stack.RemoveMany") // BAD
 	case_stack_Has("stack.Has") // GOOD
+	case_stack_Move("stack.Move") // BAD
 	// case_stack_Swap("stack.Swap") // BAD
-	// case_stack_Move("stack.Move") // BAD
 	
 	// NON-GENERALIZED FUNCTIONS (DEPENDENT ON GENERALIZED FUNCTIONS)
 	case_stack_StripStackMatrix("stack.StripStackMatrix") // GOOD

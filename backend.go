@@ -1,6 +1,7 @@
 package gostack
 
 import (
+	"fmt"
 	"reflect"
 
 	"github.com/gabetucker2/gogenerics"
@@ -38,7 +39,12 @@ func getType(in any, override bool) string {
 func match(needle any, haystack any, override bool) bool {
 	switch getType(haystack, override) {
 	case "element":
-		return needle == haystack
+		_, isCard := needle.(*Card)
+		if isCard {
+			return needle.(*Card).Equals(haystack.(*Card))
+		} else {
+			return needle == haystack
+		}
 	case "slice":
 		return needleInHaystack(needle, gogenerics.UnpackArray(haystack))
 	case "stack":
@@ -117,6 +123,9 @@ func selectCard(findType any, findData any, pointerType any, findCompareRaw COMP
 			return match(card.Val, findData, override)
 		}
 	case FIND_Card:
+		card.Print()
+		findData.(*Card).Print()
+		fmt.Println(match(card, findData, false))
 		return match(card, findData, false)
 	case FIND_Size:
 		return match(card.Val.(*Stack).Size, findData, false)
@@ -427,4 +436,79 @@ func toTypeCard(card any) *Card {
 	} else {
 		return card.(*Card)
 	}
+}
+
+func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *Stack {
+	
+	// unpack variadic into optional parameters
+	var orderType, findType, findData, findCompareRaw, overrideCards, deepSearchType, depth, pointerType, passSubstacks, passCards, workingMem any
+	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &findCompareRaw, &overrideCards, &deepSearchType, &depth, &pointerType, &passSubstacks, &passCards, &workingMem)
+	setOVERRIDEDefaultIfNil(&overrideCards)
+	setORDERDefaultIfNil(&orderType)
+	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
+	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
+	if passSubstacks == nil {passSubstacks = PASS_True}
+
+	// add card
+	cardAddedAdr := stack.LambdaVarAdr(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any,  wmadrs ...any) {
+		
+		// only do add to the first match if ACTION_First, otherwise do for every match
+		if (selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && allNotFirst) || (!allNotFirst && !gogenerics.GetPointer(retVarAdr).(bool)) {
+
+			// update variable to show that we have successfully found a card to whom's stack we will add before or after
+			gogenerics.SetPointer(retVarAdr, true)
+
+			// initialize variables
+			insertArr := []any {}
+			insertCards := []*Card {}
+
+			// set up insertArr
+			switch getType(insert, false) {
+			case "element":
+				insertArr = append(insertArr, insert)
+			case "slice":
+				insertArr = gogenerics.UnpackArray(insert)
+			case "stack":
+				insertArr = insert.(*Stack).ToArray(RETURN_Cards)
+			}
+
+			// set up insertCards
+			for _, ins := range insertArr {
+				insCard, isCard := ins.(*Card)
+				if isCard && overrideCards == OVERRIDE_False {
+					insertCards = append(insertCards, insCard) // insert this card
+				} else {
+					insertCards = append(insertCards, MakeCard(ins)) // insert a card whose val is ins
+				}
+			}
+
+			// update the stack to have insert at its respective location
+			targetIdx := card.Idx
+			switch orderType {
+			case ORDER_Before:
+				targetIdx += 0
+			case ORDER_After:
+				targetIdx += 1
+			}
+
+			beginningSegment := parentStack.Cards[:targetIdx]
+			endSegment := parentStack.Cards[targetIdx:]
+
+			parentStack.Cards = []*Card {}
+			parentStack.Cards = append(parentStack.Cards, beginningSegment...)
+			parentStack.Cards = append(parentStack.Cards, insertCards...)
+			parentStack.Cards = append(parentStack.Cards, endSegment...)
+			
+		}
+
+	}, nil, nil, false, workingMem.([]any), deepSearchType, depth, passSubstacks, passCards)
+
+	// return nil if no add was made, else return card
+	if !gogenerics.GetPointer(cardAddedAdr).(bool) {
+		return nil
+	} else {
+		return stack
+	}
+
 }

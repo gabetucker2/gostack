@@ -95,11 +95,6 @@ const (
 	OVERRIDE_True
 )
 
-const (
-	ACTION_First ACTION = iota
-	ACTION_All
-)
-
 /*const (
 	PRINT_False PRINT = iota
 	PRINT_True
@@ -156,12 +151,6 @@ func setCOMPAREDefaultIfNil(compareType *any) {
 func setOVERRIDEDefaultIfNil(overrideType *any) {
 	if *overrideType == nil {
 		*overrideType = OVERRIDE_False
-	}
-}
-
-func setACTIONDefaultIfNil(actionType *any) {
-	if *actionType == nil {
-		*actionType = ACTION_All
 	}
 }
 
