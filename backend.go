@@ -442,6 +442,7 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &findCompareRaw, &overrideCards, &deepSearchType, &depth, &pointerType, &passSubstacks, &passCards, &workingMem)
 	setOVERRIDEDefaultIfNil(&overrideCards)
 	setORDERDefaultIfNil(&orderType)
+	setFINDDefaultIfNil(&findType)
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
 	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}

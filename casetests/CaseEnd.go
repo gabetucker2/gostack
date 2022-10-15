@@ -1216,6 +1216,8 @@ func case_stack_Add(funcName string) {
 	cardA := MakeCard(0)
 	stack5 := MakeStack([]int {1, 2, 3}).Add(cardA, ORDER_Before, FIND_All, nil, nil, OVERRIDE_False)
 	stack6 := MakeStack([]int {1, 2, 3}).Add(cardA, ORDER_Before, FIND_All, nil, nil, OVERRIDE_True)
+	stack7 := MakeStack([]int {1, 2, 3}).Add(4)
+	stack7.Print()
 
 	conditions := []bool {
 
@@ -1223,6 +1225,7 @@ func case_stack_Add(funcName string) {
 		stack3.Equals(MakeStack([]int {0, 1, 2, 3})), // 1
 		stack5.Equals(MakeStack([]int {0, 1, 2, 3})), // 2
 		stack6.Equals(MakeStack([]any {cardA, 1, 2, 3}, nil, nil, OVERRIDE_True)), // 3
+		stack7.Equals(MakeStack([]int {1, 2, 3, 4})), // 4
 
 	}
 
@@ -1285,11 +1288,15 @@ func case_stack_Move(funcName string) {
 
 	// test base functionality
 	stack1 := MakeStack([]int {1, 2, 3}).Move()
+
+	// TODO: add another case test, one without default parameters, one with matrix
 	
 	conditions := []bool {
 
 		// test base functionality
 		stack1.Equals(MakeStack([]int {2, 3, 1})), // 1
+		false, // 2
+		false , // 3
 
 	}
 

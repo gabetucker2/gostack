@@ -1489,11 +1489,9 @@ func (stack *Stack) Move(variadic ...any) *Stack {
 	setORDERDefaultIfNil(&orderType)
 
 	// main
-	cardFrom := stack.Extract(findTypeFrom, findDataFrom, findCompareRawFrom, deepSearchTypeFrom, depthFrom, pointerTypeFrom, passSubstacksFrom, passCardsFrom, workingMemFrom)
-	cardTo := stack.Get(findTypeTo, findDataTo, findCompareRawTo, deepSearchTypeTo, depthTo, pointerTypeTo, passSubstacksTo, passCardsTo, workingMemTo)
-	
-	stack.Get(FIND_Card, cardTo, nil, nil, DEEPSEARCH_True)
 
+	cardTo := stack.Get(findTypeTo, findDataTo, findCompareRawTo, deepSearchTypeTo, depthTo, pointerTypeTo, passSubstacksTo, passCardsTo, workingMemTo)
+	cardFrom := stack.Extract(findTypeFrom, findDataFrom, findCompareRawFrom, deepSearchTypeFrom, depthFrom, pointerTypeFrom, passSubstacksFrom, passCardsFrom, workingMemFrom)
 	stack.Add(cardFrom, orderType, FIND_Card, cardTo, nil, nil, DEEPSEARCH_True)
 
 	// return
