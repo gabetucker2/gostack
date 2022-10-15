@@ -1135,11 +1135,13 @@ func (stack *Stack) Print(variadic ...any) {
  @param optional `retCard` type{*Card} default nil
  @param optional `retVarAdr` type{any} default nil
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `passSubstacks` type{PASS} default PASS_False
  @param optional `passCards` type{PASS} default PASS_True
+ @param optional `otherInfo` type{[]any {retStackAdr, retCardAdr}} default []any {nil, nil}
+   in order to reference `retStack` and `retCard` to `card`, `parentStack`, or some other struct from within your custom lambda function, the addresses of these pointers must be passed into `otherInfo`
  @returns `stack` type{*Stack}
  @returns `retStack` type{*Stack}
  @returns `retCard` type{*Card}
@@ -1192,16 +1194,29 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 	*/
 
 	// unpack variadic into optional parameters
-	var retStack, retCard, retVarAdr, workingMem, deepSearchType, depth, passSubstacks, passCards any
-	gogenerics.UnpackVariadic(variadic, &retStack, &retCard, &retVarAdr, &workingMem, &deepSearchType, &depth, &passSubstacks, &passCards)
-	if retStack == nil {retStack = MakeStack()}
-	if retCard == nil {retCard = MakeCard()}
+	var retStack, retCard, retVarAdr, workingMem, deepSearchType, depth, passSubstacks, passCards, otherInfo any
+	gogenerics.UnpackVariadic(variadic, &retStack, &retCard, &retVarAdr, &workingMem, &deepSearchType, &depth, &passSubstacks, &passCards, &otherInfo)
 	if retVarAdr == nil {var o any; retVarAdr = &o;}
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	setDepthDefaultIfNil(&depth)
 	if passSubstacks == nil {passSubstacks = PASS_False}
 	if passCards == nil {passCards = PASS_True}
+	if otherInfo == nil {otherInfo = []any {nil, nil}}
+	retStackAdr := otherInfo.([]any)[0]
+	retCardAdr := otherInfo.([]any)[1]
+	if retStack == nil {
+		newStack := MakeStack()
+		retStack = newStack
+		retStackAdr = &newStack
+		otherInfo.([]any)[0] = retStackAdr
+	}
+	if retCard == nil {
+		newCard := MakeCard()
+		retCard = newCard
+		retCardAdr = &newCard
+		otherInfo.([]any)[1] = retCardAdr
+	}
 	
 	// main
 	depthStack, depthIsStack := depth.(*Stack)
@@ -1249,7 +1264,7 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 
 			if passSubstacks == PASS_True && passLayer {
 
-				lambda(card, stack, true, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, []any {&card, &stack, &retStack, &retCard}, workingMem.([]any)...)
+				lambda(card, stack, true, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, []any {&card, &stack, retStackAdr, retCardAdr}, workingMem.([]any)...)
 
 				// update properties
 				stack.setStackProperties()
@@ -1270,18 +1285,29 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 					}
 				}
 
-				substack.Lambda(lambda, retStack, retCard, retVarAdr, workingMem, deepSearchType, transformedDepth, passSubstacks, passCards)
+				substack.Lambda(lambda, retStack, retCard, retVarAdr, workingMem, deepSearchType, transformedDepth, passSubstacks, passCards, otherInfo)
 			}
 
 		} else { // card is not substack
 
 			if passCards == PASS_True && passLayer {
-				lambda(card, stack, false, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, []any {&card, &stack, &retStack, &retCard}, workingMem.([]any)...)
+
+				// fmt.Printf("\ni = %v\n", card.Idx)
+				// fmt.Println("PRE OUT-FUNCTION retCard")
+				// retCard.(*Card).Print()
+				// fmt.Println("PRE OUT-FUNCTION retCardAdr")
+				// if retCardAdr != nil {(*retCardAdr.(**Card)).Print()} else {fmt.Println("nil retCardAdr")}
+				lambda(card, stack, false, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, []any {&card, &stack, retStackAdr, retCardAdr}, workingMem.([]any)...)
+				// fmt.Println("POST OUT-FUNCTION retCard")
+				// retCard.(*Card).Print()
+				// fmt.Println("POST OUT-FUNCTION retCardAdr")
+				// if retCardAdr != nil {(*retCardAdr.(**Card)).Print()} else {fmt.Println("nil retCardAdr")}
 				// update properties
 				stack.setStackProperties()
 				if retStack != nil {
 					retStack.(*Stack).setStackProperties()
 				}
+
 			}
 
 		}
@@ -1300,11 +1326,12 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
  @param optional `retCard` type{*Card} default nil
  @param optional `retVarAdr` type{any} default nil
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `passSubstacks` type{PASS} default PASS_False
  @param optional `passCards` type{PASS} default PASS_True
+ @param optional `otherInfo` type{[]any {retStackAdr, retCardAdr}} default []any {nil, nil}
  @returns `stack` type{*Stack}
  */
 func (stack *Stack) LambdaThis(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), variadic ...any) *Stack {
@@ -1320,11 +1347,12 @@ func (stack *Stack) LambdaThis(lambda func(*Card, *Stack, bool, *Stack, *Card, a
  @param optional `retCard` type{*Card} default nil
  @param optional `retVarAdr` type{any} default nil
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `passSubstacks` type{PASS} default PASS_False
  @param optional `passCards` type{PASS} default PASS_True
+ @param optional `otherInfo` type{[]any {retStackAdr, retCardAdr}} default []any {nil, nil}
  @returns `retStack` type{*Stack}
  */
 func (stack *Stack) LambdaStack(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), variadic ...any) *Stack {
@@ -1340,11 +1368,12 @@ func (stack *Stack) LambdaStack(lambda func(*Card, *Stack, bool, *Stack, *Card, 
  @param optional `retCard` type{*Card} default nil
  @param optional `retVarAdr` type{any} default nil
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `passSubstacks` type{PASS} default PASS_False
  @param optional `passCards` type{PASS} default PASS_True
+ @param optional `otherInfo` type{[]any {retStackAdr, retCardAdr}} default []any {nil, nil}
  @returns `retCard` type{*Card}
  */
 func (stack *Stack) LambdaCard(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), variadic ...any) *Card {
@@ -1360,11 +1389,12 @@ func (stack *Stack) LambdaCard(lambda func(*Card, *Stack, bool, *Stack, *Card, a
  @param optional `retCard` type{*Card} default nil
  @param optional `retVarAdr` type{any} default nil
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
  @param optional `passSubstacks` type{PASS} default PASS_False
  @param optional `passCards` type{PASS} default PASS_True
+ @param optional `otherInfo` type{[]any {retStackAdr, retCardAdr}} default []any {nil, nil}
  @returns `retVarAdr` type{any}
  */
 func (stack *Stack) LambdaVarAdr(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), variadic ...any) any {
@@ -1389,7 +1419,7 @@ func (stack *Stack) LambdaVarAdr(lambda func(*Card, *Stack, bool, *Stack, *Card,
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns `stack` if valid find, or nil if invalid find
  */
 func (stack *Stack) Add(insert any, variadic ...any) *Stack {
@@ -1415,7 +1445,7 @@ func (stack *Stack) Add(insert any, variadic ...any) *Stack {
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns `stack` if valid find, or nil if invalid find
  */
 func (stack *Stack) AddMany(insert any, variadic ...any) *Stack {
@@ -1447,7 +1477,7 @@ func (stack *Stack) AddMany(insert any, variadic ...any) *Stack {
  @param optional `passCardsTo` type{PASS} default PASS_True
  @param optional `workingMemFrom` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
  @param optional `workingMemTo` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns `stack`
  */
 func (stack *Stack) Move(variadic ...any) *Stack {
@@ -1462,9 +1492,7 @@ func (stack *Stack) Move(variadic ...any) *Stack {
 	cardFrom := stack.Extract(findTypeFrom, findDataFrom, findCompareRawFrom, deepSearchTypeFrom, depthFrom, pointerTypeFrom, passSubstacksFrom, passCardsFrom, workingMemFrom)
 	cardTo := stack.Get(findTypeTo, findDataTo, findCompareRawTo, deepSearchTypeTo, depthTo, pointerTypeTo, passSubstacksTo, passCardsTo, workingMemTo)
 	
-	fmt.Println("--------------------------------")
 	stack.Get(FIND_Card, cardTo, nil, nil, DEEPSEARCH_True)
-	fmt.Println("--------------------------------")
 
 	stack.Add(cardFrom, orderType, FIND_Card, cardTo, nil, nil, DEEPSEARCH_True)
 
@@ -1486,7 +1514,7 @@ func (stack *Stack) Move(variadic ...any) *Stack {
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns `stack`
  */
 func (stack *Stack) Swap(findType_first FIND, findType_second FIND, variadic ...any) *Stack {
@@ -1568,7 +1596,7 @@ func (stack *Stack) Has(variadic ...any) bool {
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns type{*Card} the found card OR nil (if invalid find)
     IF `find` is FIND_Lambda, `findData` is of type{ func(card *Card, parentStack *Stack, isSubstack bool, workingMem ...any) (bool) }
 */
@@ -1585,9 +1613,23 @@ func (stack *Stack) Has(variadic ...any) bool {
 	// get card
 	out := stack.LambdaCard(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, wmadrs ...any) {
 		
-		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && retCard.Idx == -1 {+
-			fmt.Println(otherInfo[0])
-			*otherInfo[3].(**Card) = *otherInfo[0].(**Card)
+		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && retCard.Idx == -1 {
+
+			// fmt.Println("\nFOUND")
+			
+			// fmt.Println("PRE IN-FUNCTION cardAdr")
+			// (*otherInfo[0].(**Card)).Print()
+			// fmt.Println("PRE IN-FUNCTION retCardAdr")
+			// if otherInfo[3] != nil {(*otherInfo[3].(**Card)).Print()} else {fmt.Println("nil retCardAdr")}
+
+			*retCard = *card
+			// *otherInfo[3].(**Card) = *otherInfo[0].(**Card)
+			
+			// fmt.Println("POST IN-FUNCTION cardAdr")
+			// (*otherInfo[0].(**Card)).Print()
+			// fmt.Println("POST IN-FUNCTION retCardAdr")
+			// if otherInfo[3] != nil {(*otherInfo[3].(**Card)).Print()} else {fmt.Println("nil retCardAdr")}
+			// fmt.Println()
 		}
 
 	}, nil, nil, nil, workingMem.([]any), deepSearchType, depth, passSubstacks, passCards)
@@ -1671,7 +1713,7 @@ func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns type{*Card}
  @updates `stack`
  @ensures
@@ -1770,7 +1812,7 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, variadic ...an
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns type{*Stack}
  @updates `stack`
  @ensures
@@ -1866,7 +1908,7 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, variadic ...an
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns type{*Card}
  @updates `stack`
  @ensures
@@ -1893,7 +1935,7 @@ func (stack *Stack) Extract(variadic ...any) *Card {
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns type{*Stack}
  @updates `stack`
  @ensures
@@ -1919,7 +1961,7 @@ func (stack *Stack) ExtractMany(variadic ...any) *Stack {
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns `stack`
  @updates `stack`
  @ensures
@@ -1948,7 +1990,7 @@ func (stack *Stack) Remove(variadic ...any) *Stack {
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns `stack`
  @updates `stack`
  @ensures
@@ -1980,7 +2022,7 @@ func (stack *Stack) RemoveMany(variadic ...any) *Stack {
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns `stack`
  @updates `stack`
  @ensures
@@ -2013,7 +2055,7 @@ func (stack *Stack) RemoveMany(variadic ...any) *Stack {
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-	to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns `stack`
  @updates `stack`
  @ensures

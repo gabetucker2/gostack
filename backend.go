@@ -123,10 +123,7 @@ func selectCard(findType any, findData any, pointerType any, findCompareRaw COMP
 			return match(card.Val, findData, override)
 		}
 	case FIND_Card:
-		card.Print()
-		findData.(*Card).Print()
-		fmt.Println(match(card, findData, false))
-		return match(card, findData, false)
+		return fmt.Sprintf("%p", card) == fmt.Sprintf("%p", findData.(*Card))
 	case FIND_Size:
 		return match(card.Val.(*Stack).Size, findData, false)
 	case FIND_Depth:
