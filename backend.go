@@ -456,7 +456,7 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 	stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any,  wmadrs ...any) {
 		
 		// only do add to the first match if ACTION_First, otherwise do for every match
-		if (allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...)) || (!allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && !foundCard) {
+		if (allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...)) || (!allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "stack", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && !foundCard) {
 
 			// update foundCard
 			foundCard = true

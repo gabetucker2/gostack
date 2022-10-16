@@ -1185,6 +1185,8 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 
 				if passSubstacks and passLayer
 					pass substack into lambda(isSubstack = true)
+					update pointers to reflect possible pointer pointer reassignments
+					// https://stackoverflow.com/questions/74090485/why-is-my-interface-containing-a-pointer-not-updating-after-the-pointer-is-updat/74090525#74090525
 
 				if depth > 1 or depth[] has an element > 1 // forwardpropagate
 					substack.Lambda(..., depth = depth - 1 OR depth[] = depth[i - 1, ..., n - 1])
@@ -1193,10 +1195,13 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 
 				if passCards and passLayer
 					pass card into lambda(isSubstack = false)
+					update pointers to reflect possible pointer pointer reassignments
 
 		return *retAdr.(*any)
 
 	*/
+
+	fmt.Println("CALLED LAMBDA")
 
 	// unpack variadic into optional parameters
 	var retStack, retCard, retVarAdr, workingMem, deepSearchType, depth, passSubstacks, passCards, otherInfo any
@@ -1270,11 +1275,13 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 			if passSubstacks == PASS_True && passLayer {
 
 				lambda(card, stack, true, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, []any {&card, &stack, retStackAdr, retCardAdr}, workingMem.([]any)...)
-				
-				// https://stackoverflow.com/questions/74090485/why-is-my-interface-containing-a-pointer-not-updating-after-the-pointer-is-updat/74090525#74090525
-				// Since you encounter issues 
-				if retCard != nil {
-
+				if retCardAdr != nil && *retCardAdr.(**Card) != nil {
+					retCard = *retCardAdr.(**Card)
+					fmt.Println("retCard updated to:")
+					toTypeCard(retCard).Print()
+				}
+				if retStackAdr != nil && *retStackAdr.(**Stack) != nil {
+					retStack = *retStackAdr.(**Stack)
 				}
 
 				// update properties
@@ -1303,18 +1310,15 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 
 			if passCards == PASS_True && passLayer {
 
-				// fmt.Printf("\ni = %v\n", card.Idx)
-				// fmt.Println("PRE OUT-FUNCTION retCard")
-				// retCard.(*Card).Print()
-				// fmt.Println("PRE OUT-FUNCTION retCardAdr")
-				// if retCardAdr != nil {(*retCardAdr.(**Card)).Print()} else {fmt.Println("nil retCardAdr")}
-
 				lambda(card, stack, false, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, []any {&card, &stack, retStackAdr, retCardAdr}, workingMem.([]any)...)
-				
-				// fmt.Println("POST OUT-FUNCTION retCard")
-				// retCard.(*Card).Print()
-				// fmt.Println("POST OUT-FUNCTION retCardAdr")
-				// if retCardAdr != nil {(*retCardAdr.(**Card)).Print()} else {fmt.Println("nil retCardAdr")}
+				if retCardAdr != nil && *retCardAdr.(**Card) != nil {
+					retCard = *retCardAdr.(**Card)
+					fmt.Println("retCard updated to:")
+					toTypeCard(retCard).Print()
+				}
+				if retStackAdr != nil && *retStackAdr.(**Stack) != nil {
+					retStack = *retStackAdr.(**Stack)
+				}
 
 				// update properties
 				stack.setStackProperties()
@@ -1327,6 +1331,9 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 		}
 
 	}
+
+	fmt.Println("lambda card out:")
+	toTypeCard(retCard).Print()
 
 	return stack, toTypeStack(retStack), toTypeCard(retCard), retVarAdr
 
@@ -1626,25 +1633,11 @@ func (stack *Stack) Has(variadic ...any) bool {
 	out := stack.LambdaCard(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, wmadrs ...any) {
 		
 		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && retCard.Idx == -1 {
-
-			fmt.Println("\nFOUND")
-			fmt.Println("IN-FUNCTION cardAdr")
-			(*otherInfo[0].(**Card)).Print()
-			fmt.Println()
-			fmt.Println("PRE IN-FUNCTION retCard")
-			retCard.Print()
-			fmt.Println("PRE IN-FUNCTION retCardAdr")
-			if otherInfo[3] != nil {(*otherInfo[3].(**Card)).Print()} else {fmt.Println("nil retCardAdr")}
-
-			// *otherInfo[3].(**Card) = retCard
-			// *retCard = *card
+			
 			*otherInfo[3].(**Card) = *otherInfo[0].(**Card)
 
-			fmt.Println("\nPOST IN-FUNCTION retCard")
-			retCard.Print()
-			fmt.Println("POST IN-FUNCTION retCardAdr")
-			if otherInfo[3] != nil {(*otherInfo[3].(**Card)).Print()} else {fmt.Println("nil retCardAdr")}
-			fmt.Println()
+			fmt.Println("GOT CARD:")
+			(*otherInfo[3].(**Card)).Print()
 
 		}
 
