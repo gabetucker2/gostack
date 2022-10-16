@@ -1489,7 +1489,6 @@ func (stack *Stack) Move(variadic ...any) *Stack {
 	setORDERDefaultIfNil(&orderType)
 
 	// main
-
 	cardTo := stack.Get(findTypeTo, findDataTo, findCompareRawTo, deepSearchTypeTo, depthTo, pointerTypeTo, passSubstacksTo, passCardsTo, workingMemTo)
 	cardFrom := stack.Extract(findTypeFrom, findDataFrom, findCompareRawFrom, deepSearchTypeFrom, depthFrom, pointerTypeFrom, passSubstacksFrom, passCardsFrom, workingMemFrom)
 	stack.Add(cardFrom, orderType, FIND_Card, cardTo, nil, nil, DEEPSEARCH_True)
@@ -1524,6 +1523,7 @@ func (stack *Stack) Swap(findType_first FIND, findType_second FIND, variadic ...
 	// 1) Get the first and second cards being targeted
 	firsts := stack.GetMany(findType_second, findData_second, RETURN_Cards, pointerType_second, CLONE_False, CLONE_False, CLONE_False, deepSearchType_second, depth_second)
 	seconds := stack.GetMany(findType_first, findData_first, RETURN_Cards, pointerType_first, CLONE_False, CLONE_False, CLONE_False, deepSearchType_first, depth_first)
+
 	// 2) Determine which card is before the other in the stack.  If the second is before the first, switch the first variable and the second variable and all corresponding variables.
 	if seconds.Cards[0].Idx < firsts.Cards[0].Idx {
 		_tempFirst := firsts//lint:ignore SA4006 Ignore warning
@@ -1546,12 +1546,13 @@ func (stack *Stack) Swap(findType_first FIND, findType_second FIND, variadic ...
 		depth_first = depth_second
 		depth_second = _tempDepth_first
 	}
+	
 	// 3) Now, in order second preserve the integrity of indices should the client choose second use FIND_Idx(s)...
-	//    * Insert a copy of firsts after seconds,
+	//     Insert a copy of firsts after seconds,
 	stack.Add(firsts, ORDER_After, findData_second, pointerType_second, deepSearchType_second, depth_second)
-	//    * move second after first,
+	//     move second after first,
 	stack.Move(findType_second, ORDER_After, findType_first, findData_first, findData_second, pointerType_first, pointerType_second, deepSearchType_first, deepSearchType_second, depth_first, depth_second)
-	//    * and remove the original copy of first
+	//     and remove the original copy of first
 	stack.Remove(findType_first, findData_first, pointerType_first, deepSearchType_first, depth_first)
 
 	// return
