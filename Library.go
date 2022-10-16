@@ -854,7 +854,7 @@ func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 		return test
 
 	*/
-	
+
 	// unpack variadic into optional parameters
 	var deepSearchType, depth, compareCardKeys, compareCardVals, compareSubstackKeys, compareSubstackVals, pointerCardKeys, pointerCardVals, pointerSubstackKeys, pointerSubstackVals any
 	gogenerics.UnpackVariadic(variadic, &deepSearchType, &depth, &compareCardKeys, &compareCardVals, &compareSubstackKeys, &compareSubstackVals, &pointerCardKeys, &pointerCardVals, &pointerSubstackKeys, &pointerSubstackVals)
@@ -1043,8 +1043,9 @@ func (stack *Stack) Transpose() *Stack {
  @param optional `depth` type{int} default 0
  	This variable only exists for text-indenting purposes to make your terminal output look a bit cleaner.  1 depth => 4 "-" added before the print.
  @updates terminal logs
+ @returns `card`
  */
-func (card *Card) Print(variadic ...any) {
+func (card *Card) Print(variadic ...any) *Card {
 
 	// unpack variadic into optional parameters
 	var depth any
@@ -1080,6 +1081,8 @@ func (card *Card) Print(variadic ...any) {
 		}
 	}
 
+	return card
+
 }
 
 /** Prints information regarding `stack` to the console
@@ -1088,8 +1091,9 @@ func (card *Card) Print(variadic ...any) {
  @param optional `depth` type{int} default 0
    This variable only exists for text-indenting purposes to make your terminal output look a bit cleaner.  1 depth => 4 "-" added before the print.
  @updates terminal logs
+ @returns `stack`
  */
-func (stack *Stack) Print(variadic ...any) {
+func (stack *Stack) Print(variadic ...any) *Stack {
 	
 	// unpack variadic into optional parameters
 	var depth, idx, key any
@@ -1129,6 +1133,8 @@ func (stack *Stack) Print(variadic ...any) {
 			}
 		}
 	}
+
+	return stack
 	
 }
 
@@ -1473,7 +1479,7 @@ func (stack *Stack) AddMany(insert any, variadic ...any) *Stack {
 
 }
 
-/** Moves one card to before or after another element or slice of cards
+/** Moves one card to before or after another card
  
  @receiver `stack` type{*Stack}
  @param optional `orderType` type{ORDER} default ORDER_After
@@ -1482,8 +1488,8 @@ func (stack *Stack) AddMany(insert any, variadic ...any) *Stack {
  @param optional `findDataFrom` type{any, []any, *Stack any, func(*Card, *Stack, bool, ...any) (bool)} default nil
  @param optional `findDataTo` type{any, []any, *Stack any, func(*Card, *Stack, bool, ...any) (bool)} default nil
  @param optional `findCompareRawFrom` type{COMPARE} default COMPARE_False
- @param optional `findCompareRawTo` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
+ @param optional `findCompareRawTo` type{COMPARE} default COMPARE_False
  @param optional `deepSearchTypeFrom` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `deepSearchTypeTo` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depthFrom` type{int, []int, *Stack ints} default -1 (deepest)
@@ -1497,7 +1503,7 @@ func (stack *Stack) AddMany(insert any, variadic ...any) *Stack {
  @param optional `workingMemFrom` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
  @param optional `workingMemTo` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
    to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
- @returns `stack`, or nil if invalid find
+ @returns `stack`
  */
 func (stack *Stack) Move(variadic ...any) *Stack {
 
@@ -1516,63 +1522,53 @@ func (stack *Stack) Move(variadic ...any) *Stack {
 
 }
 
-/** Swaps one element or slice with the position of another element or slice
+/** Swaps one card with the position of another card
  
  @receiver `stack` type{*Stack}
- @param optional `findType` type{FIND} default FIND_Last
- @param optional `findData` type{any, []any, *Stack any, func(*Card, *Stack, bool, ...any) (bool)} default nil
- @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
+ @param optional `findType1` type{FIND} default FIND_First
+ @param optional `findType2` type{FIND} default FIND_Last
+ @param optional `findData1` type{any, []any, *Stack any, func(*Card, *Stack, bool, ...any) (bool)} default nil
+ @param optional `findData2` type{any, []any, *Stack any, func(*Card, *Stack, bool, ...any) (bool)} default nil
+ @param optional `findCompareRaw1` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int, []int, *Stack ints} default -1 (deepest)
- @param optional `pointerType` type{POINTER} default POINTER_False
- @param optional `passSubstacks` type{PASS} default PASS_True
- @param optional `passCards` type{PASS} default PASS_True
- @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+ @param optional `findCompareRaw2` type{COMPARE} default COMPARE_False
+ @param optional `deepSearchType1` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType2` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `depth1` type{int, []int, *Stack ints} default -1 (deepest)
+ @param optional `depth2` type{int, []int, *Stack ints} default -1 (deepest)
+ @param optional `pointerType1` type{POINTER} default POINTER_False
+ @param optional `pointerType2` type{POINTER} default POINTER_False
+ @param optional `passSubstacks1` type{PASS} default PASS_True
+ @param optional `passSubstacks2` type{PASS} default PASS_True
+ @param optional `passCards1` type{PASS} default PASS_True
+ @param optional `passCards2` type{PASS} default PASS_True
+ @param optional `workingMem1` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+ @param optional `workingMem2` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
    to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns `stack`
  */
-func (stack *Stack) Swap(findType_first FIND, findType_second FIND, variadic ...any) *Stack {
+func (stack *Stack) Swap(variadic ...any) *Stack {
 
-	// unpack variadic insecond optional parameters
-	var findData_first, findData_second, pointerType_first, pointerType_second, deepSearchType_first, deepSearchType_second, depth_first, substackKeysType_first, substackKeysType_second, depth_second any
-	gogenerics.UnpackVariadic(variadic, &findData_first, &findData_second, &pointerType_first, &pointerType_second, &deepSearchType_first, &deepSearchType_second, &substackKeysType_first, &substackKeysType_second, &depth_first, &depth_second)
+	// unpack variadic into optional parameters
+	var findType1, findType2, findData1, findData2, findCompareRaw1, findCompareRaw2, deepSearchType1, deepSearchType2, depth1, depth2, pointerType1, pointerType2, passSubstacks1, passSubstacks2, passCards1, passCards2, workingMem1, workingMem2 any
+	gogenerics.UnpackVariadic(variadic, &findType1, &findType2, &findData1, &findData2, &findCompareRaw1, &findCompareRaw2, &deepSearchType1, &deepSearchType2, &depth1, &depth2, &pointerType1, &pointerType2, &passSubstacks1, &passSubstacks2, &passCards1, &passCards2, &workingMem1, &workingMem2)
+	if findType1 == nil {findType1 = FIND_First}
 
-	// 1) Get the first and second cards being targeted
-	firsts := stack.GetMany(findType_second, findData_second, RETURN_Cards, pointerType_second, CLONE_False, CLONE_False, CLONE_False, deepSearchType_second, depth_second)
-	seconds := stack.GetMany(findType_first, findData_first, RETURN_Cards, pointerType_first, CLONE_False, CLONE_False, CLONE_False, deepSearchType_first, depth_first)
-
-	// 2) Determine which card is before the other in the stack.  If the second is before the first, switch the first variable and the second variable and all corresponding variables.
-	if seconds.Cards[0].Idx < firsts.Cards[0].Idx {
-		_tempFirst := firsts//lint:ignore SA4006 Ignore warning
-		firsts = seconds
-		seconds = _tempFirst//lint:ignore SA4006 Ignore warning
-
-		_tempFindData_first := findData_first
-		findData_first = findData_second
-		findData_second = _tempFindData_first
-
-		_temppointerType_first := pointerType_first
-		pointerType_first = pointerType_second
-		pointerType_second = _temppointerType_first
-
-		_tempDeepSearchType_first := deepSearchType_first
-		deepSearchType_first = deepSearchType_second
-		deepSearchType_second = _tempDeepSearchType_first
-
-		_tempDepth_first := depth_first
-		depth_first = depth_second
-		depth_second = _tempDepth_first
-	}
+	// get card1, add a placeholder right after card1, then remove card1
+	card1Placeholder := MakeCard()
+	card1 := stack.Get(findType1, findData1, findCompareRaw1, deepSearchType1, depth1, pointerType1, passSubstacks1, passCards1, workingMem1)
+	stack.Add(card1Placeholder, ORDER_After, FIND_Card, card1, nil, nil, DEEPSEARCH_True)
+	stack.Remove(FIND_Card, card1, nil, DEEPSEARCH_True)
 	
-	// 3) Now, in order second preserve the integrity of indices should the client choose second use FIND_Idx(s)...
-	//     Insert a copy of firsts after seconds,
-	stack.Add(firsts, ORDER_After, findData_second, pointerType_second, deepSearchType_second, depth_second)
-	//     move second after first,
-	stack.Move(findType_second, ORDER_After, findType_first, findData_first, findData_second, pointerType_first, pointerType_second, deepSearchType_first, deepSearchType_second, depth_first, depth_second)
-	//     and remove the original copy of first
-	stack.Remove(findType_first, findData_first, pointerType_first, deepSearchType_first, depth_first)
+	// get card2, insert card1 after card2, then remove card2
+	card2 := stack.Get(findType2, findData2, findCompareRaw2, deepSearchType2, depth2, pointerType2, passSubstacks2, passCards2, workingMem2)
+	stack.Add(card1, ORDER_After, FIND_Card, card2, nil, nil, DEEPSEARCH_True)
+	stack.Remove(FIND_Card, card2, nil, DEEPSEARCH_True)
 
+	// insert card2 after the placeholder, then remove the placeholder
+	stack.Add(card2, ORDER_After, FIND_Card, card1Placeholder, nil, nil, DEEPSEARCH_True)
+	stack.Remove(FIND_Card, card1Placeholder, nil, DEEPSEARCH_True)
+	
 	// return
 	return stack
 

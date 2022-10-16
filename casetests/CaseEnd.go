@@ -1214,6 +1214,7 @@ func case_stack_Add(funcName string) {
 	stack9 := MakeStackMatrix([]int {1, 2, 3, 4}, []string {"Hi", "Hey", "Hi", "Hey"}, []int {2, 2}).Add(MakeCard("He", 5), nil, FIND_Lambda, func(card *Card, _ *Stack, _ bool, _ ...any) (bool) {
 		return card.Key.(int) < 4 && card.Val == "Hi"
 	}, nil, nil, DEEPSEARCH_True, nil, nil, PASS_False)
+	stack10 := MakeStack().Add(MakeCard())
 
 	conditions := []bool {
 
@@ -1224,6 +1225,7 @@ func case_stack_Add(funcName string) {
 		stack7.Equals(MakeStack([]int {1, 2, 3, 4})), // 4
 		stack8.Equals(MakeStack([]*Stack {MakeStack([]int {1, 2, 5}), MakeStack([]int {3, 4})})), // 5
 		stack9.Equals(MakeStack([]*Stack {MakeStack([]int {1, 5, 2}, []string {"Hi", "He", "Hey"}), MakeStack([]int {3, 4}, []string {"Hi", "Hey"})})), // 6
+		stack10.Equals(MakeStack(nil, nil, 1)), // 7
 
 	}
 
@@ -1304,12 +1306,14 @@ func case_stack_Swap(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	// MakeStack([]int {1, 2, 3}).Move()
-	
+	stack1 := MakeStack([]int {1, 2, 3, 4}).Swap()
+	stack2 := MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}).Swap(FIND_Val, FIND_Val, 1, 4, nil, nil, DEEPSEARCH_True, DEEPSEARCH_True)
+
 	conditions := []bool {
 
 		// test base functionality
-		false,
+		stack1.Equals(MakeStack([]int {4, 2, 3, 1})), // 1
+		stack2.Equals(MakeStackMatrix([]int {4, 2, 3, 1}, nil, []int {2, 2})), // 2
 
 	}
 

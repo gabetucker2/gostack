@@ -428,62 +428,70 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
 	if passSubstacks == nil {passSubstacks = PASS_True}
 
-	// initialize foundCard to false so you can determine whether valid find
+	// initialize foundCard to false so you can determine whether valid find and
+	// initialize variables
 	foundCard := false
+	insertArr := []any {}
+	insertCards := []*Card {}
 
-	// add card
-	stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any,  wmadrs ...any) {
-		
-		// only do add to the first match if ACTION_First, otherwise do for every match
-		if (allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...)) || (!allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && !foundCard) {
+	// set up insertArr
+	switch getType(insert, false) {
+	case "element":
+		insertArr = append(insertArr, insert)
+	case "slice":
+		insertArr = gogenerics.UnpackArray(insert)
+	case "stack":
+		insertArr = insert.(*Stack).ToArray(RETURN_Cards)
+	}
 
-			// update foundCard
-			foundCard = true
-
-			// initialize variables
-			insertArr := []any {}
-			insertCards := []*Card {}
-
-			// set up insertArr
-			switch getType(insert, false) {
-			case "element":
-				insertArr = append(insertArr, insert)
-			case "slice":
-				insertArr = gogenerics.UnpackArray(insert)
-			case "stack":
-				insertArr = insert.(*Stack).ToArray(RETURN_Cards)
-			}
-
-			// set up insertCards
-			for _, ins := range insertArr {
-				insCard, isCard := ins.(*Card)
-				if isCard && overrideCards == OVERRIDE_False {
-					insertCards = append(insertCards, insCard) // insert this card
-				} else {
-					insertCards = append(insertCards, MakeCard(ins)) // insert a card whose val is ins
-				}
-			}
-
-			// update the stack to have insert at its respective location
-			targetIdx := card.Idx
-			switch orderType {
-			case ORDER_Before:
-				targetIdx += 0
-			case ORDER_After:
-				targetIdx += 1
-			}
-
-			beginningSegment := parentStack.Cards[:targetIdx]
-			endSegment := parentStack.Cards[targetIdx:]
-
-			parentStack.Cards = []*Card {}
-			parentStack.Cards = append(parentStack.Cards, beginningSegment...)
-			parentStack.Cards = append(parentStack.Cards, insertCards...)
-			parentStack.Cards = append(parentStack.Cards, endSegment...)
-			
+	// set up insertCards
+	for _, ins := range insertArr {
+		insCard, isCard := ins.(*Card)
+		if isCard && overrideCards == OVERRIDE_False {
+			insertCards = append(insertCards, insCard) // insert this card
+		} else {
+			insertCards = append(insertCards, MakeCard(ins)) // insert a card whose val is ins
 		}
+	}
 
-	}, nil, nil, nil, workingMem.([]any), deepSearchType, depth, passSubstacks, passCards)
+	// add cards to empty stack
+	if stack.Size == 0 {
+
+		foundCard = true
+		stack.Cards = append(stack.Cards, insertCards...)
+		stack.setStackProperties()
+
+	// else add based on find
+	} else {
+		stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any,  wmadrs ...any) {
+		
+			// only do add to the first match if ACTION_First, otherwise do for every match
+			if (allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...)) || (!allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && !foundCard) {
+	
+				// update foundCard
+				foundCard = true
+	
+				// update the stack to have insert at its respective location
+				targetIdx := card.Idx
+				switch orderType {
+				case ORDER_Before:
+					targetIdx += 0
+				case ORDER_After:
+					targetIdx += 1
+				}
+	
+				beginningSegment := parentStack.Cards[:targetIdx]
+				endSegment := parentStack.Cards[targetIdx:]
+	
+				parentStack.Cards = []*Card {}
+				parentStack.Cards = append(parentStack.Cards, beginningSegment...)
+				parentStack.Cards = append(parentStack.Cards, insertCards...)
+				parentStack.Cards = append(parentStack.Cards, endSegment...)
+				
+			}
+	
+		}, nil, nil, nil, workingMem.([]any), deepSearchType, depth, passSubstacks, passCards)
+	}
 
 	// return nil if no add was made, else return card
 	if !foundCard {
