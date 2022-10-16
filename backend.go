@@ -449,20 +449,17 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
 	if passSubstacks == nil {passSubstacks = PASS_True}
 
+	// initialize foundCard to false so you can determine whether valid find
+	foundCard := false
+
 	// add card
-	cardAddedAdr := stack.LambdaVarAdr(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any,  wmadrs ...any) {
+	stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any,  wmadrs ...any) {
 		
 		// only do add to the first match if ACTION_First, otherwise do for every match
-		if (allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...)) || (!allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && !gogenerics.GetPointer(retVarAdr).(bool)) {
+		if (allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...)) || (!allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && !foundCard) {
 
-			fmt.Printf("Adding at %v\n", card.Idx)
-			fmt.Println("Condition 1:")
-			fmt.Println(selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && allNotFirst)
-			fmt.Println("Condition 2:")
-			fmt.Println(!allNotFirst && !gogenerics.GetPointer(retVarAdr).(bool))
-
-			// update variable to show that we have successfully found a card to whom's stack we will add before or after
-			gogenerics.SetPointer(retVarAdr, true)
+			// update foundCard
+			foundCard = true
 
 			// initialize variables
 			insertArr := []any {}
@@ -507,10 +504,10 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 			
 		}
 
-	}, nil, nil, false, workingMem.([]any), deepSearchType, depth, passSubstacks, passCards)
+	}, nil, nil, nil, workingMem.([]any), deepSearchType, depth, passSubstacks, passCards)
 
 	// return nil if no add was made, else return card
-	if !gogenerics.GetPointer(cardAddedAdr).(bool) {
+	if !foundCard {
 		return nil
 	} else {
 		return stack

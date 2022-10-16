@@ -1216,12 +1216,11 @@ func case_stack_Add(funcName string) {
 	cardA := MakeCard(0)
 	stack5 := MakeStack([]int {1, 2, 3}).Add(cardA, ORDER_Before, FIND_All, nil, nil, OVERRIDE_False)
 	stack6 := MakeStack([]int {1, 2, 3}).Add(cardA, ORDER_Before, FIND_All, nil, nil, OVERRIDE_True)
-	fmt.Println("---------------------------------------------------------------")
 	stack7 := MakeStack([]int {1, 2, 3}).Add(4)
-	stack7.Print()
-	fmt.Println("---------------------------------------------------------------")
-
-	// TODO: Add case test with matrix
+	stack8 := MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}).Add(5, nil, FIND_Val, 2, nil, nil, DEEPSEARCH_True)
+	stack9 := MakeStackMatrix([]int {1, 2, 3, 4}, []string {"Hi", "Hey", "Hi", "Hey"}, []int {2, 2}).Add(MakeCard("He", 5), nil, FIND_Lambda, func(card *Card, _ *Stack, _ bool, _ ...any) (bool) {
+		return card.Key.(int) < 4 && card.Val == "Hi"
+	}, nil, nil, DEEPSEARCH_True, nil, nil, PASS_False)
 
 	conditions := []bool {
 
@@ -1230,7 +1229,8 @@ func case_stack_Add(funcName string) {
 		stack5.Equals(MakeStack([]int {0, 1, 2, 3})), // 2
 		stack6.Equals(MakeStack([]any {cardA, 1, 2, 3}, nil, nil, OVERRIDE_True)), // 3
 		stack7.Equals(MakeStack([]int {1, 2, 3, 4})), // 4
-		false,
+		stack8.Equals(MakeStack([]*Stack {MakeStack([]int {1, 2, 5}), MakeStack([]int {3, 4})})), // 5
+		stack9.Equals(MakeStack([]*Stack {MakeStack([]int {1, 5, 2}, []string {"Hi", "He", "Hey"}), MakeStack([]int {3, 4}, []string {"Hi", "Hey"})})), // 6
 
 	}
 
