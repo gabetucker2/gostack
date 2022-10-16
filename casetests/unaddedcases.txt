@@ -1,0 +1,233 @@
+func gostack_case_MakeStack(funcName string) {
+
+	gostack_test_Start(funcName, showTestText)
+
+	stack := MakeStack()
+
+	conditions := []bool{
+		gostack_test_LenAndSize(stack, 0),
+	}
+
+	gostack_test_End(funcName, conditions)
+
+}
+
+func gostack_case_Empty(funcName string) {
+
+	gostack_test_Start(funcName, showTestText)
+
+	stack := gostack_test_SampleStack()
+	stack2 := stack.Empty()
+
+	conditions := []bool{
+		gostack_test_LenAndSize(stack, 0),
+		stack == stack2,
+	}
+
+	gostack_test_End(funcName, conditions)
+
+}
+
+func gostack_case_Add_First(funcName string) {
+
+	gostack_test_Start(funcName, showTestText)
+
+	stack := MakeStack()
+	stack.Add(testCardC, FIND_First).Add(testCardB, FIND_First).Add(testCardA, FIND_First)
+
+	conditions := []bool{
+		gostack_test_LenAndSize(stack, 3),
+		stack.cards[0] == testCardA,
+		stack.cards[1] == testCardB,
+		stack.cards[2] == testCardC,
+	}
+
+	gostack_test_End(funcName, conditions)
+
+}
+
+func gostack_case_Add_Last(funcName string) {
+
+	gostack_test_Start(funcName, showTestText)
+
+	stack := MakeStack()
+	stack.Add(testCardA, FIND_Last).Add(testCardB, FIND_Last).Add(testCardC, FIND_Last)
+
+	conditions := []bool{
+		gostack_test_LenAndSize(stack, 3),
+		stack.cards[0] == testCardA,
+		stack.cards[1] == testCardB,
+		stack.cards[2] == testCardC,
+	}
+
+	gostack_test_End(funcName, conditions)
+
+}
+
+func gostack_case_Extract_Empty(funcName string) {
+
+	gostack_test_Start(funcName, showTestText)
+
+	stack := MakeStack()
+	extract := stack.Extract(FIND_First)
+
+	conditions := []bool{
+		gostack_test_LenAndSize(stack, 0),
+		extract == nil,
+	}
+
+	gostack_test_End(funcName, conditions)
+
+}
+
+func gostack_case_Extract_First(funcName string) {
+
+	gostack_test_Start(funcName, showTestText)
+
+	stack := gostack_test_SampleStack()
+	extract := stack.Extract(FIND_First)
+
+	conditions := []bool{
+		gostack_test_LenAndSize(stack, 2),
+		extract == testCardA,
+		stack.cards[0] == testCardB,
+		stack.cards[1] == testCardC,
+	}
+
+	gostack_test_End(funcName, conditions)
+
+}
+
+func gostack_case_Extract_Last(funcName string) {
+
+	gostack_test_Start(funcName, showTestText)
+
+	stack := gostack_test_SampleStack()
+	extract := stack.Extract(FIND_Last)
+
+	conditions := []bool{
+		gostack_test_LenAndSize(stack, 2),
+		stack.cards[0] == testCardA,
+		stack.cards[1] == testCardB,
+		extract == testCardC,
+	}
+
+	gostack_test_End(funcName, conditions)
+
+}
+
+func gostack_case_Replace_Empty(funcName string) {
+
+	gostack_test_Start(funcName, showTestText)
+
+	stack := MakeStack()
+	extract := stack.Replace(testCardA, FIND_First)
+
+	conditions := []bool{
+		gostack_test_LenAndSize(stack, 0),
+		extract == nil,
+	}
+
+	gostack_test_End(funcName, conditions)
+
+}
+
+func gostack_case_Replace_First(funcName string) {
+
+	gostack_test_Start(funcName, showTestText)
+
+	stack := gostack_test_SampleStack()
+	extract := stack.Replace(testCardC, FIND_First)
+
+	conditions := []bool{
+		gostack_test_LenAndSize(stack, 3),
+		stack.cards[0] == testCardC,
+		stack.cards[1] == testCardB,
+		stack.cards[2] == testCardC,
+		extract == testCardA,
+	}
+
+	gostack_test_End(funcName, conditions)
+
+}
+
+func gostack_case_Replace_Last(funcName string) {
+
+	gostack_test_Start(funcName, showTestText)
+
+	stack := gostack_test_SampleStack()
+	extract := stack.Replace(testCardA, FIND_Last)
+
+	conditions := []bool{
+		gostack_test_LenAndSize(stack, 3),
+		stack.cards[0] == testCardA,
+		stack.cards[1] == testCardB,
+		stack.cards[2] == testCardA,
+		extract == testCardC,
+	}
+
+	gostack_test_End(funcName, conditions)
+
+}
+
+func gostack_case_Has(funcName string) {
+
+	gostack_test_Start(funcName, showTestText)
+
+	stack := gostack_test_SampleStack()
+
+	conditions := []bool{
+		stack.Has(FIND_Card, testCardA),
+		stack.Has(FIND_Card, testCardB),
+		stack.Has(FIND_Card, testCardC),
+		stack.Has(FIND_Val, testCardA.val),
+		stack.Has(FIND_Val, testCardB.val),
+		stack.Has(FIND_Val, testCardC.val),
+		!stack.Has(FIND_Card, testCardD),
+		!stack.Has(FIND_Val, testCardD.val),
+	}
+
+	gostack_test_End(funcName, conditions)
+
+}
+
+func gostack_case_Index(funcName string) {
+
+	gostack_test_Start(funcName, showTestText)
+
+	stack := gostack_test_SampleStack()
+
+	conditions := []bool{
+		stack.Index(FIND_Card, testCardA) == 0,
+		stack.Index(FIND_Card, testCardB) == 1,
+		stack.Index(FIND_Card, testCardC) == 2,
+		stack.Index(FIND_Val, testCardA.val) == 0,
+		stack.Index(FIND_Val, testCardB.val) == 1,
+		stack.Index(FIND_Val, testCardC.val) == 2,
+		stack.Index(FIND_Card, testCardD) == -1,
+		stack.Index(FIND_Val, testCardD.val) == -1,
+	}
+
+	gostack_test_End(funcName, conditions)
+
+}
+
+
+
+// constructor tests
+gostack_case_MakeStack("MakeStack") // regular case
+
+// other function tests
+gostack_case_Empty("stack.Empty") // regular case
+
+gostack_case_Add_First("stack.Add_First")         // regular case
+gostack_case_Add_Last("stack.Add_Last")           // regular case
+gostack_case_Extract_Empty("stack.Extract_Empty") // edge case
+gostack_case_Extract_First("stack.Extract_First") // regular case
+gostack_case_Extract_Last("stack.Extract_Last")   // regular case
+gostack_case_Replace_Empty("stack.Replace_Empty") // edge case
+gostack_case_Replace_First("stack.Replace_First") // regular case
+gostack_case_Replace_Last("stack.Replace_Last")   // regular case
+
+gostack_case_Has("stack.Has")     // regular and edge cases
+gostack_case_Index("stack.Index") // regular and edge cases

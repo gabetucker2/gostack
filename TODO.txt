@@ -1,6 +1,0 @@
-* add/extract/replace U first/last/idx/val/key/range methods
-* Update documentation
-* Add tensor support
-* Group emergent methods by procedures
-* Distinguish names for dynamics layers
-* Add a cost function- inhibitory mechanism, countervalent force to wanting, different brain region for want/cost function?, could measure in terms of time

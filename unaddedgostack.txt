@@ -1,0 +1,200 @@
+/*
+func gostack_back_AddCard(stack *Stack, card *Card, idx any, beforeNotAfter bool) *Stack {
+
+	// insert card into new array slice to satisfy append function
+	newCards := []*Card{}
+
+	if stack.size == 0 { // add card to empty list
+
+		newCards = append(newCards, card)
+
+	} else { // append each card in stack.cards to card
+
+		if beforeNotAfter {
+
+			for i := range stack.cards {
+				c := stack.cards[i]
+				if i != idx {
+					newCards = append(newCards, c)
+				} else if i == idx {
+					newCards = append(newCards, card)
+					newCards = append(newCards, c)
+				}
+			}
+
+			if idx == stack.size {
+				newCards = append(newCards, card)
+			}
+
+		} else {
+
+			for i := range stack.cards {
+				c := stack.cards[i]
+				if i != idx {
+					newCards = append(newCards, c)
+				} else if i == idx {
+					newCards = append(newCards, c)
+					newCards = append(newCards, card)
+				}
+			}
+
+		}
+
+	}
+
+	// set stack.cards to our new array
+	stack.cards = newCards
+
+	// update stack properties
+	stack.size++
+
+	// return
+	return stack
+
+}
+
+func gostack_back_ExtractCard(stack *Stack, idx any) (card *Card) {
+
+	if stack.size == 0 { // if we can't pop it, return nil
+
+		card = nil
+
+	} else { // if we can pop it, return popped card
+
+		// insert card into new array slice to satisfy append function
+		newCards := []*Card{}
+
+		// append each card in stack.cards to card
+		for i := range stack.cards {
+			c := stack.cards[i]
+			if i != idx {
+				newCards = append(newCards, c)
+			} else if i == idx {
+				card = c
+			}
+		}
+
+		// set stack.cards to our new array
+		stack.cards = newCards
+
+		// update stack properties
+		stack.size--
+
+	}
+
+	return
+
+}
+
+func gostack_back_UpdatePosData(_data ...any) (data any) {
+	if len(_data) == 1 {
+		data = _data[0] // just so there is only one optional param
+	} else {
+		data = nil
+	}
+	return
+}
+
+func gostack_back_GetIdxFromData(stack *Stack, position FIND, _data ...any) (idx int) {
+	return gostack_back_GetIdxFromPosition(stack, position, gostack_back_UpdatePosData(_data)).(int)
+}
+
+// returns index of searched item if valid
+// else, returns -1
+func gostack_back_GetIdxFromPosition(stack *Stack, position FIND, _data ...any) (idx any) {
+
+	data := gostack_back_UpdatePosData(_data...)
+
+	switch position {
+
+	case FIND_First:
+		idx = 0 // nil
+	case FIND_Last:
+		idx = stack.size - 1 // nil
+	case FIND_Card:
+		idx = -1
+		for i, c := range stack.cards {
+			if c == data { // key
+				idx = i
+				break
+			}
+		}
+	case FIND_Idx:
+		idx = data // int
+	case FIND_Key:
+		idx = -1
+		for i, c := range stack.cards {
+			if c.key == data { // key
+				idx = i
+				break
+			}
+		}
+	case FIND_Val:
+		idx = -1
+		for i, c := range stack.cards {
+			if c.val == data { // card
+				idx = i
+				break
+			}
+		}
+
+	}
+
+	return
+
+}
+*/
+
+/*
+func (stack *Stack) Extract(position FIND, data ...any) *Card {
+
+	// get idx
+	idx := gostack_back_GetIdxFromData(stack, position, data)
+
+	// extract card if valid idx
+	var extract *Card = nil
+	if idx != -1 {
+		extract = gostack_back_ExtractCard(stack, idx)
+	}
+
+	// return
+	return extract
+
+}
+
+func (stack *Stack) Replace(toInsert *[]any, position FIND, data ...any) (oldCards *Stack) {
+
+	// get idx
+	idx := gostack_back_GetIdxFromData(stack, position, data)
+
+	if idx != -1 {
+		// extract card
+		oldCard = gostack_back_ExtractCard(stack, idx)
+
+		// insert card at previous location if got out card
+		if oldCard != nil {
+			gostack_back_AddCard(stack, toInsert, idx, true)
+		}
+	}
+
+	// return
+	return
+
+}
+
+func (stack *Stack) Get(returnType RETURN, findType FIND, FINDDATA, pointerType ...POINTER) any {
+
+
+
+}
+
+func (stack  *Stack) Has(lookFor any, position FIND, data ...any) bool
+
+	// get id
+	idx := gostack_back_GetIdxFromData(stack, position, data)
+
+	// retur
+	return idx != -1
+
+}
+*/
