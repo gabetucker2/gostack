@@ -1,0 +1,31 @@
+{
+    "version": "2.0.0",
+    "presentation": {
+        "echo": false,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": true
+    },
+    "tasks": [
+        {
+            "label": "Create terminals",
+            "dependsOn": [
+                "executive"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        },
+        {
+            "label": "executive",
+            "type": "shell",
+            "command": "cd C:/Users/Gabe/Desktop/Desktop/ProjectSaves/gostack/executive; go run .",
+            "isBackground": true,
+        }
+    ]
+}
