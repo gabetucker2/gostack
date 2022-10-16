@@ -11,12 +11,12 @@ import (
 
 /** Creates a card with inputted val, key, and idx
 
- @param optional `val` type{any} default nil
- @param optional `key` type{any} default nil
- @param optional `idx` type{int} default -1
- @returns type{*Card} the newly-constructed card
- @constructs type{*Card} a newly-constructed card
- @ensures the new card will have val `val`, key `key`, and idx `idx`
+@param optional `val` type{any} default nil
+@param optional `key` type{any} default nil
+@param optional `idx` type{int} default -1
+@returns type{*Card} the newly-constructed card
+@constructs type{*Card} a newly-constructed card
+@ensures the new card will have val `val`, key `key`, and idx `idx`
 */
  func MakeCard(variadic ...any) *Card {
 
@@ -717,19 +717,22 @@ func (stack *Stack) Unique(variadic ...any) *Stack {
  @param optional `compareIdxs` type{COMPARE} default COMPARE_False
  @param optional `compareKeys` type{COMPARE} default COMPARE_True
  @param optional `compareVals` type{COMPARE} default COMPARE_True
+ @param optional `compareObjectAdr` type{COMPARE} default COMPARE_False
+   if true, ensures the cards are the same object
  @returns type{bool}
  */
 func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
 
 	// unpack variadic into optional parameters
-	var pointerTypeKey, pointerTypeVal, compareIdxs, compareKeys, compareVals any
-	gogenerics.UnpackVariadic(variadic, &pointerTypeKey, &pointerTypeVal, &compareIdxs, &compareKeys, &compareVals)
+	var pointerTypeKey, pointerTypeVal, compareIdxs, compareKeys, compareVals, compareObjectAdr any
+	gogenerics.UnpackVariadic(variadic, &pointerTypeKey, &pointerTypeVal, &compareIdxs, &compareKeys, &compareVals, &compareObjectAdr)
 	// set default vals
 	setPOINTERDefaultIfNil(&pointerTypeKey)
 	setPOINTERDefaultIfNil(&pointerTypeVal)
 	if compareIdxs == nil {compareIdxs = COMPARE_False}
 	setCOMPAREDefaultIfNil(&compareKeys)
 	setCOMPAREDefaultIfNil(&compareVals)
+	if compareObjectAdr == nil {compareObjectAdr = COMPARE_False}
 	/*setPRINTDefaultIfNil(&printType)
 
 	print := func(printType any, stringToPrint string) {
@@ -758,6 +761,8 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
 
 	condition = condition && (compareIdxs == COMPARE_False || (compareIdxs == COMPARE_True && thisCard.Idx == otherCard.Idx))
 	//print(printType, fmt.Sprintf("IDX PASSES EQUALITY CHECK: %v: (compareIdxs == COMPARE_False [%v] || (compareIdxs == COMPARE_True [%v] && thisCard.Idx == otherCard.Idx [%v]))", (compareIdxs == COMPARE_False || (compareIdxs == COMPARE_True && thisCard.Idx == otherCard.Idx)), compareIdxs == COMPARE_False, compareIdxs == COMPARE_True, thisCard.Idx == otherCard.Idx))
+
+	condition = condition && (compareObjectAdr == COMPARE_False || (compareObjectAdr == COMPARE_True && fmt.Sprintf("%p", thisCard) == fmt.Sprintf("%p", otherCard)))
 
 	// return whether conditions yield true
 	return condition
@@ -1265,6 +1270,12 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 			if passSubstacks == PASS_True && passLayer {
 
 				lambda(card, stack, true, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, []any {&card, &stack, retStackAdr, retCardAdr}, workingMem.([]any)...)
+				
+				// https://stackoverflow.com/questions/74090485/why-is-my-interface-containing-a-pointer-not-updating-after-the-pointer-is-updat/74090525#74090525
+				// Since you encounter issues 
+				if retCard != nil {
+
+				}
 
 				// update properties
 				stack.setStackProperties()
@@ -1297,11 +1308,14 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 				// retCard.(*Card).Print()
 				// fmt.Println("PRE OUT-FUNCTION retCardAdr")
 				// if retCardAdr != nil {(*retCardAdr.(**Card)).Print()} else {fmt.Println("nil retCardAdr")}
+
 				lambda(card, stack, false, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, []any {&card, &stack, retStackAdr, retCardAdr}, workingMem.([]any)...)
+				
 				// fmt.Println("POST OUT-FUNCTION retCard")
 				// retCard.(*Card).Print()
 				// fmt.Println("POST OUT-FUNCTION retCardAdr")
 				// if retCardAdr != nil {(*retCardAdr.(**Card)).Print()} else {fmt.Println("nil retCardAdr")}
+
 				// update properties
 				stack.setStackProperties()
 				if retStack != nil {
@@ -1478,7 +1492,7 @@ func (stack *Stack) AddMany(insert any, variadic ...any) *Stack {
  @param optional `workingMemFrom` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
  @param optional `workingMemTo` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
    to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
- @returns `stack`
+ @returns `stack`, or nil if invalid find
  */
 func (stack *Stack) Move(variadic ...any) *Stack {
 
@@ -1491,10 +1505,9 @@ func (stack *Stack) Move(variadic ...any) *Stack {
 	// main
 	cardTo := stack.Get(findTypeTo, findDataTo, findCompareRawTo, deepSearchTypeTo, depthTo, pointerTypeTo, passSubstacksTo, passCardsTo, workingMemTo)
 	cardFrom := stack.Extract(findTypeFrom, findDataFrom, findCompareRawFrom, deepSearchTypeFrom, depthFrom, pointerTypeFrom, passSubstacksFrom, passCardsFrom, workingMemFrom)
-	stack.Add(cardFrom, orderType, FIND_Card, cardTo, nil, nil, DEEPSEARCH_True)
-
+	
 	// return
-	return stack
+	return stack.Add(cardFrom, orderType, FIND_Card, cardTo, nil, nil, DEEPSEARCH_True)
 
 }
 
@@ -1614,21 +1627,25 @@ func (stack *Stack) Has(variadic ...any) bool {
 		
 		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && retCard.Idx == -1 {
 
-			// fmt.Println("\nFOUND")
-			
-			// fmt.Println("PRE IN-FUNCTION cardAdr")
-			// (*otherInfo[0].(**Card)).Print()
-			// fmt.Println("PRE IN-FUNCTION retCardAdr")
-			// if otherInfo[3] != nil {(*otherInfo[3].(**Card)).Print()} else {fmt.Println("nil retCardAdr")}
+			fmt.Println("\nFOUND")
+			fmt.Println("IN-FUNCTION cardAdr")
+			(*otherInfo[0].(**Card)).Print()
+			fmt.Println()
+			fmt.Println("PRE IN-FUNCTION retCard")
+			retCard.Print()
+			fmt.Println("PRE IN-FUNCTION retCardAdr")
+			if otherInfo[3] != nil {(*otherInfo[3].(**Card)).Print()} else {fmt.Println("nil retCardAdr")}
 
-			*retCard = *card
-			// *otherInfo[3].(**Card) = *otherInfo[0].(**Card)
-			
-			// fmt.Println("POST IN-FUNCTION cardAdr")
-			// (*otherInfo[0].(**Card)).Print()
-			// fmt.Println("POST IN-FUNCTION retCardAdr")
-			// if otherInfo[3] != nil {(*otherInfo[3].(**Card)).Print()} else {fmt.Println("nil retCardAdr")}
-			// fmt.Println()
+			// *otherInfo[3].(**Card) = retCard
+			// *retCard = *card
+			*otherInfo[3].(**Card) = *otherInfo[0].(**Card)
+
+			fmt.Println("\nPOST IN-FUNCTION retCard")
+			retCard.Print()
+			fmt.Println("POST IN-FUNCTION retCardAdr")
+			if otherInfo[3] != nil {(*otherInfo[3].(**Card)).Print()} else {fmt.Println("nil retCardAdr")}
+			fmt.Println()
+
 		}
 
 	}, nil, nil, nil, workingMem.([]any), deepSearchType, depth, passSubstacks, passCards)
