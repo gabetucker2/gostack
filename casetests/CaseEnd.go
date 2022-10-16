@@ -1052,10 +1052,7 @@ func case_stack_Get(funcName string) {
 	cardA := MakeCard(2)
 	card9 := MakeStack([]*Card {MakeCard(2, 1), cardA, MakeCard(3)}).Get(FIND_Card, cardA)
 	card10 := MakeStack([]*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).Get().Val.(*Stack).Get()
-	fmt.Println("-------------------------------------------------------")
 	card11 := MakeStack([]*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).Get(nil, nil, nil, DEEPSEARCH_True, nil, nil, PASS_False)
-	// card11.Print()
-	fmt.Println("-------------------------------------------------------")
 	stackA := MakeStack([]int {3, 6})
 	card12 := MakeStack([]*Stack {stackA, MakeStack([]int {9, 12})}).Get(FIND_Val, stackA, COMPARE_True)
 	card13 := MakeStack([]*Stack {stackA, MakeStack([]int {9, 12})}).Get(FIND_Val, MakeStack([]int {3, 6}), COMPARE_True)
@@ -1556,23 +1553,23 @@ func Run(_showTestText bool) {
 	
 	// GENERALIZED FUNCTIONS
 	case_stack_Get("stack.Get") // GOOD
-	// case_stack_GetMany("stack.GetMany") // GOOD
-	// case_stack_Add("stack.Add") // GOOD
-	// case_stack_AddMany("stack.AddMany") // GOOD
-	// case_stack_Replace("stack.Replace") // GOOD
-	// case_stack_ReplaceMany("stack.ReplaceMany") // GOOD
-	// case_stack_Update("stack.Update") // GOOD
-	// case_stack_UpdateMany("stack.UpdateMany") // GOOD
-	// case_stack_Extract("stack.Extract") // GOOD
-	// case_stack_ExtractMany("stack.ExtractMany") // GOOD
-	// case_stack_Remove("stack.Remove") // BAD
-	// case_stack_RemoveMany("stack.RemoveMany") // BAD
-	// case_stack_Has("stack.Has") // GOOD
-	// case_stack_Move("stack.Move") // BAD
-	// case_stack_Swap("stack.Swap") // BAD
+	case_stack_GetMany("stack.GetMany") // GOOD
+	case_stack_Add("stack.Add") // GOOD
+	case_stack_AddMany("stack.AddMany") // GOOD
+	case_stack_Replace("stack.Replace") // GOOD
+	case_stack_ReplaceMany("stack.ReplaceMany") // GOOD
+	case_stack_Update("stack.Update") // GOOD
+	case_stack_UpdateMany("stack.UpdateMany") // GOOD
+	case_stack_Extract("stack.Extract") // GOOD
+	case_stack_ExtractMany("stack.ExtractMany") // GOOD
+	case_stack_Remove("stack.Remove") // BAD
+	case_stack_RemoveMany("stack.RemoveMany") // BAD
+	case_stack_Has("stack.Has") // GOOD
+	case_stack_Move("stack.Move") // BAD
+	case_stack_Swap("stack.Swap") // BAD
 	
 	// NON-GENERALIZED FUNCTIONS (DEPENDENT ON GENERALIZED FUNCTIONS)
-	// case_stack_StripStackMatrix("stack.StripStackMatrix") // GOOD
-	// case_stack_Unique("stack.Unique") // GOOD
+	case_stack_StripStackMatrix("stack.StripStackMatrix") // GOOD
+	case_stack_Unique("stack.Unique") // GOOD
 
 }

@@ -1190,6 +1190,7 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 
 				if depth > 1 or depth[] has an element > 1 // forwardpropagate
 					substack.Lambda(..., depth = depth - 1 OR depth[] = depth[i - 1, ..., n - 1])
+					update pointers to reflect possible pointer pointer reassignments
 
 			else if card is not substack
 
@@ -1200,8 +1201,6 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 		return *retAdr.(*any)
 
 	*/
-
-	fmt.Println("CALLED LAMBDA")
 
 	// unpack variadic into optional parameters
 	var retStack, retCard, retVarAdr, workingMem, deepSearchType, depth, passSubstacks, passCards, otherInfo any
@@ -1277,8 +1276,6 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 				lambda(card, stack, true, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, []any {&card, &stack, retStackAdr, retCardAdr}, workingMem.([]any)...)
 				if retCardAdr != nil && *retCardAdr.(**Card) != nil {
 					retCard = *retCardAdr.(**Card)
-					fmt.Println("retCard updated to:")
-					toTypeCard(retCard).Print()
 				}
 				if retStackAdr != nil && *retStackAdr.(**Stack) != nil {
 					retStack = *retStackAdr.(**Stack)
@@ -1304,6 +1301,12 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 				}
 
 				substack.Lambda(lambda, retStack, retCard, retVarAdr, workingMem, deepSearchType, transformedDepth, passSubstacks, passCards, otherInfo)
+				if retCardAdr != nil && *retCardAdr.(**Card) != nil {
+					retCard = *retCardAdr.(**Card)
+				}
+				if retStackAdr != nil && *retStackAdr.(**Stack) != nil {
+					retStack = *retStackAdr.(**Stack)
+				}
 			}
 
 		} else { // card is not substack
@@ -1313,8 +1316,6 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 				lambda(card, stack, false, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, []any {&card, &stack, retStackAdr, retCardAdr}, workingMem.([]any)...)
 				if retCardAdr != nil && *retCardAdr.(**Card) != nil {
 					retCard = *retCardAdr.(**Card)
-					fmt.Println("retCard updated to:")
-					toTypeCard(retCard).Print()
 				}
 				if retStackAdr != nil && *retStackAdr.(**Stack) != nil {
 					retStack = *retStackAdr.(**Stack)
@@ -1331,9 +1332,6 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 		}
 
 	}
-
-	fmt.Println("lambda card out:")
-	toTypeCard(retCard).Print()
 
 	return stack, toTypeStack(retStack), toTypeCard(retCard), retVarAdr
 
@@ -1635,9 +1633,6 @@ func (stack *Stack) Has(variadic ...any) bool {
 		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && retCard.Idx == -1 {
 			
 			*otherInfo[3].(**Card) = *otherInfo[0].(**Card)
-
-			fmt.Println("GOT CARD:")
-			(*otherInfo[3].(**Card)).Print()
 
 		}
 

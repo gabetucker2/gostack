@@ -172,27 +172,6 @@ func selectCard(findType any, findData any, pointerType any, findCompareRaw COMP
 
 }
 
-/** Returns, from any map type, a version of that map which is converted to type deep map[any]any...
-
- @param `arr` type{any}
- @return type{[]any}
- @requires `arr` is an array
- */
-/*func unpackDeepMapToKeysVals(input1 any, keys , vals []any) map[any]any {
-    m := unpackMap(input1)
-	for k, v := range m {
-		if reflect.ValueOf(v).Kind() == reflect.Map {
-			unpackDeepMap(m)
-		}
-	}
-
-	for k, v := range  { // TODO: deep unpack
-		keys = append(keys, k)
-		vals = append(vals, v)
-	}
-	return m
-}*/
-
 /** Recursively add elements from 1D array to stack of matrix shape resembling `matrixShape`
  
  @receiver stack type{*Stack}
