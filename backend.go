@@ -435,6 +435,7 @@ func toTypeCard(card any) *Card {
 	}
 }
 
+/** Exists to remove redundancy from writing Add() and AddMany() twice minus one condition */
 func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *Stack {
 	
 	// unpack variadic into optional parameters
@@ -452,7 +453,13 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 	cardAddedAdr := stack.LambdaVarAdr(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any,  wmadrs ...any) {
 		
 		// only do add to the first match if ACTION_First, otherwise do for every match
-		if (selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && allNotFirst) || (!allNotFirst && !gogenerics.GetPointer(retVarAdr).(bool)) {
+		if (allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...)) || (!allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && !gogenerics.GetPointer(retVarAdr).(bool)) {
+
+			fmt.Printf("Adding at %v\n", card.Idx)
+			fmt.Println("Condition 1:")
+			fmt.Println(selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && allNotFirst)
+			fmt.Println("Condition 2:")
+			fmt.Println(!allNotFirst && !gogenerics.GetPointer(retVarAdr).(bool))
 
 			// update variable to show that we have successfully found a card to whom's stack we will add before or after
 			gogenerics.SetPointer(retVarAdr, true)
