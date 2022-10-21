@@ -156,4 +156,4 @@ taskD := MakeStackMatrix(taskC.Clone().Duplicate(4), nil, []int{2, 2, 2, 2})
 
 ***gostack*** won the race!  It took 6.7 times fewer lines than ***classical go*** (9 compared to 61), in turn saving 52 lines of space (excluding comments and empty lines).
 
-[Return to the main page](/../../)
+ [> Return to **Glossary**](../README.md)
