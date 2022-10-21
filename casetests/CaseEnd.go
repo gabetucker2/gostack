@@ -11,23 +11,6 @@ import (
 var showTestText bool
 
 // case functions
-// TEMPLATE:
-/*
-func case_MyFunction(funcName string) {
-
-	test_Start(funcName, showTestText)
-
-	// YOUR STUFF HERE
-
-	conditions := []bool {
-		
-	}
-
-	test_End(funcName, conditions)
-
-}
-*/
-
 func case_MakeCard(funcName string) {
 
 	test_Start(funcName, showTestText)
