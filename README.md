@@ -8,9 +8,11 @@
 
  Introducing **Stacks**—sets of **Card** elements (like a stack of cards)—***gostack*** serves as an all-in-one library for flexible, parsimonious, and elegant scripting in ***Go***.
 
- ***Go***, despite its elegance, is often excruciating.  We often find ourselves writing tedious code to complete seemingly simple tasks, adding an extra layer of complexity that distracts from the goal.  ***gostack*** solves this issue by creating a novel framework for data management, abstracting away this layer of complexity so that you can focus on what matters.
+ ***Go***, despite its elegance, is often excruciating.  We often find ourselves writing tedious code to complete seemingly simple tasks, adding an extra layer of complexity that distracts from the actual goal.  ***gostack*** solves this issue by creating a novel framework for data management, abstracting away this layer of complexity with English-like code so that you can focus more on what matters.
 
+ With arrays, array matrices, maps, map matrices, and interfaces to generalize your code, we felt that this system could use a redesign:
 
+<img src="images/gostack_StackAndCard.png" width="50%" style="margin-top: 20px;margin-left: 25%;"/>
 
  ***gostack***'s stacks...
  * ...replace arrays and maps, and matrices, eliminating the need for translating data between varying data types while supporting smooth conversion between stacks and your existing data structures
