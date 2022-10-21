@@ -123,6 +123,46 @@ func MakeStack(variadic ...any) *Stack {
 
 }
 
+/** Identical to MakeStack, but has a different name for improved semantic clarity while coding
+ 
+ @param optional `input1` type{[]any, map[any]any} default nil
+ @param optional `input2` type{[]any} default nil
+ @param optional `repeats` type{int} default 1
+ @param optional `overrideCards` type{OVERRIDE} default OVERRIDE_False
+   By default, if you do MakeStack([]*Card {cardA}), stack.Cards = []*Card {cardA}.  If you would like your cards to have vals pointing to other cards, where stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }, set this variable to true.
+ @returns type{*Stack} the newly-constructed stack of newly-constructed cards
+ @constructs type{*Stack} a newly-constructed stack of newly-constructed type{*Card} cards
+ @requires
+  * `input1` is map and nil `input2`
+      OR `input1` is an array and nil `input2`
+	  OR `input1` is an array and `input2` is an array
+	  OR `input1` is nil and `input2` is an array
+  * IF `input1` and `input2` are both passed as arguments
+      |`input1`| == |`input2`|
+ @ensures
+  * repeats the function filling `repeats` (or, if nil or under 0, 1) amount of times
+  * assuming all mentions of array are interchangeable with *Stack:
+    IF `input1` is passed
+      IF `input1` is a map
+        unpack the map into new cards with corresponding keys and vals
+      ELSEIF `input1` is an array and `input2` is not passed/nil
+	    IF `input1` is an array of cards:
+		  set `stack.Cards` to `input1`
+		ELSE:
+          unpack values from `input1` into new cards
+      ELSEIF `input1` is an array and `input2` is an array
+        unpack keys from `input1` and values from `input2` into new cards
+      ELSEIF `input1` is nil and `input2` is an array
+        unpack keys from `input2` into new cards
+	ELSEIF `input1` is nil and `input2` is nil and `repeats` is passed
+		make `repeats` cards with nil value and nil key
+    ELSE
+      the stack is empty
+ */
+ func MakeSubstack(variadic ...any) *Stack {
+	return MakeStack(variadic...)
+}
+
 /** Returns a new stack-within-stack-structured stack
  
  @param optional `input1` type{any} default nil
