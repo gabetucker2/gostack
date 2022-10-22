@@ -6,30 +6,32 @@ v1.0.0 — Beta Release — 10/16/2022 — First working implementation
 
  <h1>Glossary</h1>
 
- <h2>Introductory</h2>
+ <h2>Introduction</h2>
 
  * [What is gostack?](documentation/introduction.md)
- * [What will gostack look like in my code?](documentation/sampleCode.md)
- * [How much time does gostack save?](documentation/sampleCode.md)
+ * [How does gostack work?](documentation/overview.md)
+ * [How much time does gostack save?](documentation/race.md)
 
  <h2>Documentation</h2>
  
-  * [Struct documentation](documentation/structs.md)
+  * [Convention documentation](documentation/conventions.md)
   * [Enum documentation](documentation/enums.md)
+  * [Struct documentation](documentation/structs.md)
   * [Function documentation](documentation/functions.md)
 
  <h2>Tutorials</h2>
  
-  * [Installation tutorial](documentation/installation.md)
-  * [Introductory gostack tutorial](tutorials/Bootstrap.go)
-  * [How to code common functions using gostack](tutorials/Bootstrap.go)
-  * [Enum documentation](documentation/enums.md)
-  * [Function documentation](documentation/functions.md)
+  * [Installation tutorial](tutorials/installation.md)
+  * [Introductory tutorial](tutorials/introduction.md)
+  * [StackMatrix tutorial](tutorials/matrices.md)
+  * [Lambda tutorial](documentation/lambda.md)
+  * [Pointers tutorial](documentation/pointers.md)
+  * [Examples of gostack code](tutorials/bootstrap.md)
 
  <h2>Miscellaneous</h2>
  
   * [Credits](credits/credits.md)
-  * [Current & future releases](documentation/releases.md)
+  * [Release timeline](documentation/timeline.md)
   * [The story behind gostack](documentation/story.md)
   * [Frequently asked questions](documentation/faq.md)
 

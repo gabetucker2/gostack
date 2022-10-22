@@ -48,6 +48,8 @@ pairsToInsert <"I" : "Am new", "To" : "This set">
            < << k, k >, < k, k >>, << k, k >, < k, k >> > >
 ```
 
+---
+
 <h2>Let's see how quickly we can do this using...</h2>
 
 <h3 name = "classical">...classical go</h3>
@@ -152,8 +154,12 @@ taskD := MakeStackMatrix(taskC.Clone().Duplicate(4), nil, []int{2, 2, 2, 2})
 
 `lines: 9`
 
+---
+
 <h2>Conclusion</h2>
 
 ***gostack*** won the race!  It took 6.7 times fewer lines than ***classical go*** (9 compared to 61), in turn saving 52 lines of space (excluding comments and empty lines).
+
+---
 
  [> Return to **Glossary**](../README.md)
