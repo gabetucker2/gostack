@@ -4,8 +4,6 @@
 
 <h2>General Questions</h2>
 
----
-
  **Question:** How difficult is it to learn ***gostack***?
 
  To rate the difficulty of our tutorials' content from 1 (friendly to new programmers) to 5 (friendly to Go veterans):
@@ -31,8 +29,6 @@
 ---
 
 <h2>Technical Questions</h2>
-
----
 
  **Question:** Why have a card.Idx field when the card's index can be found via the array of the stack it is in?
 
