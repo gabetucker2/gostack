@@ -7,7 +7,7 @@
 
  ***gostack*** introduces two new structs—the **Card** and the **Stack**—which intend to evoke the image of a stack of cards.  **Stacks**, which replace arrays, maps, and matrices, contain a set of **Cards**.  **Cards** can store **Stacks** (which are in turn called **Substacks**), thereby making **Stacks** a recursive data structure.  This allows ***gostack***'s functions to...
 
- * abstract away for-loops, if-statements(Recommended), and recursive functions
+ * abstract away for-loops, if-statements, and recursive functions
  * seamlessly translate between **Stacks** and existing arrays, maps, and matrices
  * filter through **Cards** in a **Stack** by any desired search criteria
  * dynamically update **Cards** within a **Stack** according to those criteria
