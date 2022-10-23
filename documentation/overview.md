@@ -65,8 +65,8 @@ These examples should give you an intuitive feel of how ***gostack*** works!
  
  [> Introductory tutorial (Recommended)](tutorials/introduction.md)
 
- [> How many lines is gostack compared to native Go?](race.md)
+ [> How many lines does gostack save compared to native Go?](race.md)
 
  [> How fast is gostack compared to native Go?](benchmark.md)
 
- [> Return to Glossary](../README.md)
+ [> Return to glossary](../README.md)

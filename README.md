@@ -8,15 +8,21 @@ v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
 
  <h2>Introduction</h2>
 
- * [What is gostack? (Recommended)](documentation/introduction.md)
- * [How does gostack work? (Recommended)](documentation/overview.md)
- * [Frequently Asked Questions (Recommended)](documentation/faq.md)
- * [How many lines is gostack compared to native Go?](documentation/race.md)
+ * [What is gostack?](documentation/introduction.md)
+ * [How does gostack work?](documentation/overview.md)
+ * [Frequently Asked Questions](documentation/faq.md)
+
+ <h2>General</h2>
+ 
  * [How fast is gostack compared to native Go?](documentation/benchmark.md)
+ * [How many lines does gostack save compared to native Go?](documentation/race.md)
+ * [Timeline](documentation/timeline.md)
+ * [Credits](documentation/credits.md)
 
  <h2>Documentation</h2>
  
   * [Meta documentation](documentation/meta.md)
+  * [Conventional documentation](documentation/conventions.md)
   * [Enum documentation](documentation/enums.md)
   * [Struct documentation](documentation/structs.md)
   * [Function documentation](documentation/functions.md)
@@ -29,11 +35,6 @@ v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
   * [StackMatrix tutorial](documentation/matrices.md)
   * [Lambda tutorial](documentation/lambda.md)
   * [Pointers tutorial](documentation/pointers.md)
-
- <h2>Miscellaneous</h2>
- 
-  * [Credits](credits/credits.md)
-  * [Timeline](documentation/timeline.md)
 
 ---
 

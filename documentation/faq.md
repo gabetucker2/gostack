@@ -6,7 +6,7 @@
 
  **Question:** How difficult is it to learn ***gostack***?
 
- To rate the difficulty of our tutorials' content from 1 (friendly to new programmers) to 5 (friendly to Go veterans):
+ Rating the difficulty of our tutorials' contents from 1 (friendly to new programmers) to 5 (friendly to Go veterans):
  * [Installation](installation.md)
    * Conceptually: 2
    * In practice: 1
@@ -32,11 +32,11 @@
 
  **Question:** Why have a card.Idx field when the card's index can be found via the array of the stack it is in?
 
- Well, there are two reasons:
+ There are two reasons:
 
  * If you have a card and don't already know its index, you would have to call an iterative function to get its index.  Being able to just do `card.Idx` is simpler and more optimized.
  * When you're referencing a card's index, doing `card.Idx` gets a card's current position so that you don't have to worry about whether the card's index has changed since the last time you referenced it.
 
  ---
 
- [> Return to Glossary](../README.md)
+ [> Return to glossary](../README.md)

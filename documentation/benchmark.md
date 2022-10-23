@@ -6,6 +6,6 @@ TODO: measure
 
 ---
 
- [> How many lines is gostack compared to native Go?](race.md)
+ [> How many lines does gostack save compared to native Go?](race.md)
 
- [> Return to Glossary](../README.md)
+ [> Return to glossary](../README.md)
