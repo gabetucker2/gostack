@@ -6,53 +6,67 @@
  
  <img src="../images/gostack_StackAndCard.png" width="50%" style="margin-bottom: 10px;"/>
 
- Great!  Now, let's make a map structure the way we would in ***native Go***:
+ Without yet using these structs, let's make a map structure in ***native Go***:
 
  ```
  existingMap := map[string]string {"Kid":"Tommy", "Adult":"Chuck", "Adult":"Joey"}
  ``` 
- Now that we have our map structure, let's make it into a **Stack** so that we can perform ***gostack*** functions on it:
+ Now that we have our map structure, let's make it into a **Stack** so that we can use it with ***gostack*** functions:
 
  ```
  kidsAndAdults := MakeStack(existingMap)
  ```
 
- Nice!  Now, let's take a peek inside `kidsAndAdults`:
- 
  <img src="../images/gostack_StackSample1.png" width="50%" style="margin-bottom: 10px;"/>
 
- Great!  But this seems a little redundant.  Why do we have an **Idx** property when the card's index can already be found by looking at the **Cards** array?  There are two reasons:
-
- * If you have a card and don't already know its index, you would have to call an iterative function to find its index.  Being able to just do `card.Idx` is simpler and more optimized.
- * If you grab a card in a stack,
-
- In order to get all people in `kidsAndAdults` who are adults, you would do:
+ Great!  Next, we will get all the people in `kidsAndAdults` who are adults:
 
  ```
  adults := kidsAndAdults.GetMany(FIND_Key, "Adult")
  ```
 
- Now, to update the key of every adult from "Adult" to 4, we would do:
+ <img src="../images/gostack_StackSample2.png" width="40%" style="margin-bottom: 10px;"/>
+
+ Pretty straight-forward!  But what if we want to make something more complicated, like a matrix?  Let's do that here, fiting an array with four elements to a 2x2 matrix:
 
  ```
- adults.UpdateMany(REPLACE_Key, 4, FIND_All)
+ myMatrix := MakeStackMatrix([]int {1, 3, 2, 4}, nil, []int {2, 2})
+ ```
+ 
+ <img src="../images/gostack_StackSample3.png" width="70%" style="margin-bottom: 10px;"/>
+
+ The complexity of this tree structure may feel a lot more difficult to navigate than a traditional `[][]array` structure.  But worry not!  You won't have to navigate through this.  You can treat this as a data structure which looks like `{{1, 3}, {2, 4}}`.
+
+ For instance, to set the key of every final card in a substack of `myMatrix` to "Number", we would simply do:
+
+ ```
+ myMatrix.UpdateMany(REPLACE_Key, "Number", FIND_Last)
  ```
 
- And to multiply the key of an adult by 3 if and only if its order (1, 2, ..., n) in `adults` is even:
+ <img src="../images/gostack_StackSample4.png" width="70%" style="margin-bottom: 10px;"/>
+
+ Finally, let's say we wanted to do something a little more complex, like multiplying every multiple of 8 by 3:
 
  ```
- adults.UpdateMany(REPLACE_Lambda, func(card *Card) {
+ myMatrix.UpdateMany(REPLACE_Lambda, func(card *Card) {
   card.Key = card.Key.(int) * 3
  }, FIND_Lambda, func(card *Card) (bool) {
-  return (card.Idx + 1) % 2 == 0
+  return card.Val.(int) % 8 == 0
  })
  ```
 
+ <img src="../images/gostack_StackSample5.png" width="70%" style="margin-bottom: 10px;"/>
+
+These examples should give you an intuitive feel of how ***gostack*** works!
 
 ---
 
- [> How much time does gostack save?](race.md)
-
- [> Return to **Glossary**](../README.md)
+ [> Frequently Asked Questions (Recommended)](faq.md)
  
----
+ [> Introductory tutorial (Recommended)](tutorials/introduction.md)
+
+ [> How many lines is gostack compared to native Go?](race.md)
+
+ [> How fast is gostack compared to native Go?](benchmark.md)
+
+ [> Return to Glossary](../README.md)

@@ -19,4 +19,4 @@
  <img src="../images/imports.png" width="30%" style="margin-left:10%; margin-bottom:15px"/>
 
 ---
- [> Return to **Glossary**](../README.md)
+ [> Return to Glossary](../README.md)

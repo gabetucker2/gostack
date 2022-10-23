@@ -162,4 +162,6 @@ taskD := MakeStackMatrix(taskC.Clone().Duplicate(4), nil, []int{2, 2, 2, 2})
 
 ---
 
- [> Return to **Glossary**](../README.md)
+ [> How fast is gostack compared to native Go?](benchmark.md)
+
+ [> Return to Glossary](../README.md)

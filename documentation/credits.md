@@ -12,4 +12,4 @@
  * Andy Chen [ [University of Southern California](https://www.usc.edu/) ]
  * Dr. Stephen Read [ [University of Southern California](https://www.usc.edu/) / [Faculty Page](https://dornsife.usc.edu/cf/faculty-and-staff/faculty.cfm?pid=1003627) ]
 
- [> Return to **Glossary**](../README.md)
+ [> Return to Glossary](../README.md)
