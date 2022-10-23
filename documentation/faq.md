@@ -6,23 +6,23 @@
 
  **Question:** How difficult is it to learn ***gostack***?
 
- Rating the difficulty of our tutorials' contents from 1 (friendly to new programmers) to 5 (friendly to Go veterans):
- * [Installation](installation.md)
+ Rating the difficulty of our tutorials' contents from 1 (beginner programmer) to 5 (advanced programmer):
+ * [Installation](installationTutorial.md)
    * Conceptually: 2
    * In practice: 1
- * [Introductory](introduction.md)
+ * [Introductory](introductionTutorial.md)
    * Conceptually: 1
    * In practice: 1
- * [Post-Introductory](postIntroduction.md)
+ * [Post-Introductory](postIntroductionTutorial.md)
    * Conceptually: 2
    * In practice: 2
- * [StackMatrices](matrices.md)
+ * [StackMatrices](matricesTutorial.md)
    * Conceptually: 2
    * In practice: 3
- * [Lambda](lambda.md)
+ * [Lambda](lambdaTutorial.md)
    * Conceptually: 4
    * In practice: 4
- * [Pointers](lambda.md)
+ * [Pointers](pointersTutorial.md)
    * Conceptually: 4
    * In practice: 5
 

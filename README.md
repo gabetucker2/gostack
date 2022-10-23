@@ -21,20 +21,20 @@ v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
 
  <h2>Documentation</h2>
  
-  * [Meta documentation](documentation/meta.md)
   * [Conventional documentation](documentation/conventions.md)
   * [Enum documentation](documentation/enums.md)
   * [Struct documentation](documentation/structs.md)
   * [Function documentation](documentation/functions.md)
+  * [Meta documentation](documentation/meta.md)
 
  <h2>Tutorials</h2>
  
-  * [Installation tutorial](documentation/installation.md)
-  * [Introductory tutorial](documentation/introduction.md)
-  * [Post-introductory tutorial](documentation/postIntroduction.md)
-  * [StackMatrix tutorial](documentation/matrices.md)
-  * [Lambda tutorial](documentation/lambda.md)
-  * [Pointers tutorial](documentation/pointers.md)
+  * [Installation tutorial](documentation/installationTutorial.md)
+  * [Introductory tutorial](documentation/introductionTutorial.md)
+  * [Post-introductory tutorial](documentation/postIntroductionTutorial.md)
+  * [StackMatrix tutorial](documentation/matricesTutorial.md)
+  * [Lambda tutorial](documentation/lambdaTutorial.md)
+  * [Pointers tutorial](documentation/pointersTutorial.md)
 
 ---
 

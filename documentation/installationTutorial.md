@@ -5,7 +5,7 @@
  1. Edit your **go.mod** file
    
     *([or add one if you haven't already](https://go.dev/doc/tutorial/create-module))*
- 2. Add `github.com/gabetucker2/gostack [release version]` to the **go.mod**'s **require** clause
+ 2. Add `github.com/gabetucker2/gostack [release version]` to **go.mod**'s **require** clause
 
  <img src="../images/releases.png" width="20%" style="margin-left:10%; margin-bottom:15px"/>
  <img src="../images/requirements.png" width="40%" style="margin-left:10%"/>

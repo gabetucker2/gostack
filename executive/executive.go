@@ -2,16 +2,16 @@ package main
 
 import (
 	"github.com/gabetucker2/gogenerics"
-	"github.com/gabetucker2/gostack/casetests"
+	"github.com/gabetucker2/gostack/testing"
 )
 
 func main() {
 
 	// remove import errors when stuff is commented out
-	gogenerics.RemoveUnusedError(casetests.Run)
+	gogenerics.RemoveUnusedError(testing.Run)
 
 	// tests
-	casetests.Run(true)
+	testing.Run(false)
 
 	// tutorials
 	//tutorials.Bootstrap()

@@ -1,4 +1,6 @@
- <h1>Race</h1>
+![Banner](../images/gostack_Smaller.png)
+
+<h1>Race</h1>
 
 <h2>Introduction</h2>
 
