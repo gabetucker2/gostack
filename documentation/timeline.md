@@ -33,7 +33,7 @@
 * ***gostack***'s functions' default parameter values have been adjusted to make more intuitive sense
 * ***gostack*** gains the **MakeSubstack()** function
 * ***gostack***'s functions' parameter naming has been adjusted to be more consistent
-* The **Depth** property of **Stacks** is renamed to **Height** to improve conceptual clarity
+* The **Height** property of **Stacks** is renamed to **Height** to improve conceptual clarity
 * ***gostack***'s default parameter orderings have been adjusted to decrease the likelihood of having to pass repeated `nil` values
 * Removed all files that won't be in the full release (e.g., `unaddedcases.txt`)
 

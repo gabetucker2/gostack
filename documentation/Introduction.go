@@ -22,13 +22,13 @@ func Introduction() {
 		you with the primary functions and concepts in gostack.  There are two main ideas
 		that are essential to understand in gostack: stacks and cards.
 	
-	 Stacks have three attributes: Size [int], Depth [int], and an array (or "stack") of
+	 Stacks have three attributes: Size [int], Height [int], and an array (or "stack") of
 	 	cards [[]*Cards].  Say you have a stack called "myStack"; if you wanted to access
-		these attributes, you would do stack.Size, stack.Depth, or stack.Cards.  stack.Size
-		is equal to len(stack.Cards); stack.Depth represents how many stacks within stacks
-		there are; if you have a 1D stack (stack{card, card}), stack.Depth == 1; if you have
+		these attributes, you would do stack.Size, stack.Height, or stack.Cards.  stack.Size
+		is equal to len(stack.Cards); stack.Height represents how many stacks within stacks
+		there are; if you have a 1D stack (stack{card, card}), stack.Height == 1; if you have
 		a 2D stack/a stack of stacks (stack{stack{card, card}, stack{card, card}}),
-		stack.Depth == 2.  You should never have to access stack.Cards unless you are writing
+		stack.Height == 2.  You should never have to access stack.Cards unless you are writing
 		your own lambda functions, which are covered in the Lambda.go tutorial.
 
 	 Cards have three attributes: Idx [int], Key [interface/any], and Val [interface/any].
@@ -50,7 +50,7 @@ func Introduction() {
 		
 		myStack Stack {
 			Size: 0,
-			Depth: 1,
+			Height: 1,
 			[]*Cards: { },
 		}*/
 	
@@ -109,7 +109,7 @@ func Introduction() {
 		
 		myStack Stack {
 			Size: 3,
-			Depth: 1,
+			Height: 1,
 			[]*Cards: {
 				cardA Card {
 					Idx: 0,

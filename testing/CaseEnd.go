@@ -1,4 +1,4 @@
-package casetests
+package testing
 
 import (
 	"fmt"
@@ -170,26 +170,26 @@ func case_MakeStackMatrix(funcName string) {
 	arrShallowKeys := []string {"Alex", "Bre", "Charles", "David", "Elliot", "Ferguson"}
 	arrShallowVals := []int {111, 222, 333, 444, 555, 666}
 
-	deepMap := map[string]map[string]int{
+	heightMap := map[string]map[string]int{
         "First": {
             "Alex": 111,
             "Bre": 222,
         },
     }
 
-	arrDeepKeys := []any {[]any {"Alex", "Bre"}, []string {"Charles", "David"}, []any {"Elliot", "Ferguson"}}
-	arrDeepVals := []any {[]int {111, 222}, []any {333, 444}, []any {555, 666}}
+	arrHeightKeys := []any {[]any {"Alex", "Bre"}, []string {"Charles", "David"}, []any {"Elliot", "Ferguson"}}
+	arrHeightVals := []any {[]int {111, 222}, []any {333, 444}, []any {555, 666}}
 	
-	irregularDepth := []any {10, []any {20, 30}, []any {[]int {40, 50}, []any {60, 70}}}
+	irregularHeight := []any {10, []any {20, 30}, []any {[]int {40, 50}, []any {60, 70}}}
 
 	// to stacks (in order of conditions listed in documentation)
 	
 	correctStack := MakeStack([]*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222}), MakeStack([]string {"Charles", "David"}, []int {333, 444}), MakeStack([]string {"Elliot", "Ferguson"}, []int {555, 666})})
 
-	stack1 := MakeStackMatrix(deepMap)
-	stack2 := MakeStackMatrix(arrDeepVals)
-	stack3 := MakeStackMatrix(arrDeepKeys, arrDeepVals)
-	stack4 := MakeStackMatrix(nil, arrDeepKeys)
+	stack1 := MakeStackMatrix(heightMap)
+	stack2 := MakeStackMatrix(arrHeightVals)
+	stack3 := MakeStackMatrix(arrHeightKeys, arrHeightVals)
+	stack4 := MakeStackMatrix(nil, arrHeightKeys)
 
 	// shallow stacks
 	stack5 := MakeStackMatrix()
@@ -199,12 +199,12 @@ func case_MakeStackMatrix(funcName string) {
 	stack9 := MakeStackMatrix(nil, arrShallowKeys, matrixShape)
 	stack10 := MakeStackMatrix(nil, nil, matrixShape)
 
-	// irregular depth
-	stack11 := MakeStackMatrix(irregularDepth)
+	// irregular height
+	stack11 := MakeStackMatrix(irregularHeight)
 
 	conditions := []bool {
 
-		// deep tests
+		// height tests
 		stack1.Equals(MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Alex", "Bre"}, []int {111, 222})})) || stack1.Equals(MakeStack([]string {"First"}, []*Stack {MakeStack([]string {"Bre", "Alex"}, []int {222, 111})})), // 1
 		stack2.Equals(correctStack, nil, nil, COMPARE_False, COMPARE_True), // 2
 		stack3.Equals(correctStack, nil, nil, COMPARE_True, COMPARE_True), // 3
@@ -218,7 +218,7 @@ func case_MakeStackMatrix(funcName string) {
 		stack9.Equals(correctStack, nil, nil, COMPARE_True, COMPARE_False), // 9
 		stack10.Equals(MakeStack([]*Stack {MakeStack(nil, nil, 2), MakeStack(nil, nil, 2), MakeStack(nil, nil, 2)})), // 10
 
-		// irregular depth
+		// irregular height
 		stack11.Equals(MakeStack([]any {10, MakeStack([]int {20, 30}), MakeStack([]*Stack {MakeStack([]int {40, 50}), MakeStack([]any {60, 70})} ) } )), // 11
 
 	}
@@ -341,19 +341,19 @@ func case_stack_ToMatrix(funcName string) {
 	matA := MakeStack([]string {"Hi", "Hello", "Hey"}).ToMatrix()
 	matACorrect := []any {"Hi", "Hello", "Hey"}
 
-	// test for deep on deep
+	// test for height on height
 	matB := MakeStackMatrix([]string {"Hi", "Hey", "Hoy", "Hiya"}, nil, []int {2, 2}).ToMatrix()
 	matBCorrect := []any {[]any {"Hi", "Hey"}, []any {"Hoy", "Hiya"}}
 
-	// test for shallow on deep
+	// test for shallow on height
 	matC := MakeStackMatrix([]string {"Hi", "Hey", "Hoy", "Hiya"}, nil, []int {2, 2}).ToMatrix(nil, DEEPSEARCH_False)
 	matCCorrect := []any {[]any {}, []any {}}
 
-	// test for irregular deep
+	// test for irregular height
 	matD := MakeStack([]any {"Hi", MakeStack([]string {"Hoy", "Hiya"})}).ToMatrix()
 	matDCorrect := []any {"Hi", []any {"Hoy", "Hiya"}}
 
-	// test for deepsearchfalse <=> deepsearchtrue | depth: 1
+	// test for heightsearchfalse <=> heightsearchtrue | height: 1
 	matE := MakeStackMatrix([]string {"Hi", "Hey", "Hoy", "Hiya"}, nil, []int {2, 2}).ToMatrix(nil, DEEPSEARCH_True, 1)
 	matECorrect := []any {[]any {}, []any {}}
 
@@ -375,16 +375,16 @@ func case_stack_ToMatrix(funcName string) {
 		// test for shallow on shallow
 		MakeStackMatrix(matA).Equals(MakeStackMatrix(matACorrect)), // 1
 
-		// test for deep on deep
+		// test for height on height
 		MakeStackMatrix(matB).Equals(MakeStackMatrix(matBCorrect)), // 2
 
-		// test for shallow on deep
+		// test for shallow on height
 		MakeStackMatrix(matC).Equals(MakeStackMatrix(matCCorrect)), // 3
 
-		// test for irregular deep
+		// test for irregular height
 		MakeStackMatrix(matD).Equals(MakeStackMatrix(matDCorrect)), // 4
 
-		// test for deepsearchfalse <=> deepsearchtrue | depth: 1
+		// test for heightsearchfalse <=> heightsearchtrue | height: 1
 		MakeStackMatrix(matE).Equals(MakeStackMatrix(matECorrect)), // 5
 		
 		// test for different return types
@@ -514,7 +514,7 @@ func case_stack_Clone(funcName string) {
 	stackAClone.Cards[1].Key = "New"
 	stackAClone.Cards[0].Val = "New"
 
-	// deep cloning
+	// height cloning
 	stackB := MakeStackMatrix([]string {"Original", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "Original"}, []int{2, 2})
 	stackBClone := stackB.Clone()
 	stackBClone.Cards[0].Val.(*Stack).Cards[0].Key = "New"
@@ -539,7 +539,7 @@ func case_stack_Clone(funcName string) {
 		stackA.Equals(MakeStack([]string {"Original", "Original"}, []string {"Original", "Original"})), // 1
 		stackAClone.Equals(MakeStack([]string {"New", "New"}, []string {"New", "Original"})), // 2
 		
-		// deep cloning
+		// height cloning
 		stackB.Equals(MakeStackMatrix([]string {"Original", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "Original"}, []int{2, 2})), // 3
 		stackBClone.Equals(MakeStackMatrix([]string {"New", "Original", "Original", "Original"}, []string {"Original", "Original", "Original", "New"}, []int{2, 2})), // 4
 
@@ -670,12 +670,12 @@ func case_stack_Equals(funcName string) {
 	sos2 := MakeStack([]string {"Hello", "Hey"})
 	sos3 := MakeStack([]string {"Hi", "Hey"})
 
-	// test for deep-on-deep equality
+	// test for height-on-height equality
 	dod1 := MakeStack([]*Stack {MakeStack([]string {"Hi1", "Hi2"}), MakeStack([]string {"Hi3", "Hi4"})})
 	dod2 := MakeStack([]*Stack {MakeStack([]string {"Hi1", "Hi2"}), MakeStack([]string {"Hi3", "Hi4"})})
 	dod3 := MakeStack([]*Stack {MakeStack([]string {"Hi1", "Hello2"}), MakeStack([]string {"Hi3", "Hi4"})})
 
-	// test for shallow-on-deep equality
+	// test for shallow-on-height equality
 	sod1 := MakeStack([]*Stack {MakeStack([]string {"Hi1", "Hi2"}), MakeStack([]string {"Hi3", "Hi4"})})
 	sod2 := MakeStack([]*Stack {MakeStack([]string {"Hi1", "Hello2"}), MakeStack([]string {"Hi3", "Hi4"})})
 	sod3 := MakeStack([]*Stack {MakeStack([]string {"Hi1"}), MakeStack([]string {"Hi3", "Hi4"})})
@@ -697,7 +697,7 @@ func case_stack_Equals(funcName string) {
 	csf4 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]string {"Hi1", "Hello2"}), csfStack2})
 	csf5 := MakeStack([]string {"Stack420", "StackB"}, []*Stack {MakeStack([]string {"Hi1", "Hello2"}), csfStack2})
 
-	// test for depth search filters
+	// test for height search filters
 	dsf1 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]string {"Hi1", "Hi2"}), MakeStack([]string {"Hi3", "Hi4"})})
 	dsf2 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]string {"Hi1", "Hi2"}), MakeStack([]string {"Hi3", "Hi4"})})
 	dsf3 := MakeStack([]string {"Stack420", "StackB"}, []*Stack {MakeStack([]string {"Hi1", "Hi2"}), MakeStack([]string {"Hi3", "Hi4"})})
@@ -711,11 +711,11 @@ func case_stack_Equals(funcName string) {
 		sos1.Equals(sos2, DEEPSEARCH_False), // 1
 		!sos1.Equals(sos3, DEEPSEARCH_False), // 2
 
-		// test for deep-on-deep equality
+		// test for height-on-height equality
 		dod1.Equals(dod2, DEEPSEARCH_True), // 3
 		!dod1.Equals(dod3, DEEPSEARCH_True), // 4
 
-		// test for shallow-on-deep equality
+		// test for shallow-on-height equality
 		sod1.Equals(sod2, DEEPSEARCH_False), // 5
 		sod1.Equals(sod3, DEEPSEARCH_False), // 6
 		!sod1.Equals(sod4, DEEPSEARCH_False), // 7
@@ -762,7 +762,7 @@ func case_stack_Equals(funcName string) {
 		!csf1.Equals(csf5, nil, nil, nil, COMPARE_False, COMPARE_True, COMPARE_False), // 38
 		csf1.Equals(csf5, nil, nil, nil, COMPARE_False, COMPARE_False, COMPARE_False), // 39
 
-		// test for depth search filters
+		// test for height search filters
 		dsf1.Equals(dsf2, nil, 0), // 40
 
 		dsf1.Equals(dsf2, nil, -1), // 41
@@ -835,7 +835,7 @@ func case_stack_Equals(funcName string) {
 		!dsf1.Equals(dsf6, nil, []int {2}), // 86
 
 
-		// test Stack depths
+		// test Stack heights
 		dsf1.Equals(dsf2, nil, MakeStack([]int {1, 2})), // 87
 		!dsf1.Equals(dsf6, nil, MakeStack([]int {1, 2})), // 88
 
@@ -961,7 +961,7 @@ func case_stack_Lambdas(funcName string) {
 		}
 	})
 
-	// test deepStacks, multiply each by 5
+	// test heightStacks, multiply each by 5
 	stack4 := MakeStackMatrix([]int {1, 5, 20, 2}, nil, []int {2, 2}).LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ []any, _ ...any) {
 		card.Val = card.Val.(int) * 5
 	})
@@ -974,7 +974,7 @@ func case_stack_Lambdas(funcName string) {
 	// test that all init values work
 	this, stack, card, varAdr := MakeStack([]string {"Heyy"}).Lambda(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ []any, _ ...any) {}, MakeStack([]int {666}), MakeCard("Howdy"), 420)
 
-	// test that various deepStack depth options work
+	// test that various heightStack height options work
 	stack6 := MakeStackMatrix([]int {1, 5, 20, 2}, nil, []int {2, 2}).LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ []any, _ ...any) {
 		if card.Idx == 0 {
 			card.Key = "Marker"	
@@ -998,7 +998,7 @@ func case_stack_Lambdas(funcName string) {
 		// test workingMemAdr, get average and return all in average's range
 		stack3.Equals(MakeStack([]int {50, 45, 42})), // 5
 
-		// test deepStacks, multiply each by 5
+		// test heightStacks, multiply each by 5
 		stack4.Equals(MakeStackMatrix([]int {5, 25, 100, 10}, nil, []int {2, 2})), // 6
 
 		// test passSubstacks true passCards false, multiply each stack.Key by 5
@@ -1010,7 +1010,7 @@ func case_stack_Lambdas(funcName string) {
 		card.Equals(MakeCard("Howdy")), // 10
 		gogenerics.GetPointer(varAdr) == 420, // 11
 
-		// test that various deepStack depth options work
+		// test that various heightStack height options work
 		stack6.Equals(MakeStackMatrix([]any {"Marker", nil, "Marker", nil}, []int {1, 5, 20, 2}, []int {2, 2})), // 12
 
 	}
@@ -1149,7 +1149,7 @@ func case_stack_GetMany(funcName string) {
 	stack13 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3}).GetMany(FIND_All, nil, nil, RETURN_Vals)
 	stack14 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3}).GetMany(FIND_All, nil, nil, RETURN_Keys)
 	stack15 := MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}).GetMany(FIND_Idx, 0, nil, RETURN_Stacks)
-	
+
 	conditions := []bool {
 
 		// test base functionality

@@ -14,7 +14,7 @@ func main() {
 	testing.Run(false)
 
 	// tutorials
-	//tutorials.Bootstrap()
-	//tutorials.Lambda()
+	// tutorials.Bootstrap()
+	// tutorials.Lambda()
 
 }

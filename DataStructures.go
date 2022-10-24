@@ -7,9 +7,9 @@ type Card struct {
 }
 
 type Stack struct {
-	Cards []*Card
-	Size  int
-	Depth int
+	Cards  []*Card
+	Size   int
+	Height int
 }
 
 type RETURN int
@@ -24,6 +24,7 @@ type COMPARE int
 type PASS int
 type OVERRIDE int
 type ACTION int
+
 //type PRINT int
 
 const (
@@ -42,7 +43,7 @@ const (
 	FIND_Val
 	FIND_Card
 	FIND_Size
-	FIND_Depth
+	FIND_Height
 	FIND_Slice
 	FIND_All
 	FIND_Lambda
@@ -130,15 +131,15 @@ func setCLONEDefaultIfNil(cloneType *any) {
 	}
 }
 
-func setDEEPSEARCHDefaultIfNil(deepSearchType *any) {
-	if *deepSearchType == nil {
-		*deepSearchType = DEEPSEARCH_True
+func setDEEPSEARCHDefaultIfNil(heightSearchType *any) {
+	if *heightSearchType == nil {
+		*heightSearchType = DEEPSEARCH_True
 	}
 }
 
-func setDepthDefaultIfNil(depth *any) {
-	if *depth == nil {
-		*depth = -1
+func setHeightDefaultIfNil(height *any) {
+	if *height == nil {
+		*height = -1
 	}
 }
 

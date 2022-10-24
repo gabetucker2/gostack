@@ -10,7 +10,7 @@ v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
 
  * [What is gostack?](documentation/introduction.md)
  * [How does gostack work?](documentation/overview.md)
- * [Frequently Asked Questions](documentation/faq.md)
+ * [Frequently asked questions](documentation/faq.md)
 
  <h2>General</h2>
  

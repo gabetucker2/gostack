@@ -19,7 +19,7 @@ This library was built to be as general-purpose as possible so that any coding p
 
  [> How does gostack work? (Recommended)](overview.md)
 
- [> Frequently Asked Questions (Recommended)](faq.md)
+ [> Frequently asked questions (Recommended)](faq.md)
  
  [> How many lines does gostack save compared to native Go?](race.md)
 

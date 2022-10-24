@@ -126,8 +126,8 @@ func selectCard(findType any, findData any, pointerType any, findCompareRaw COMP
 		return fmt.Sprintf("%p", card) == fmt.Sprintf("%p", findData.(*Card))
 	case FIND_Size:
 		return match(card.Val.(*Stack).Size, findData, false)
-	case FIND_Depth:
-		return match(card.Val.(*Stack).Depth, findData, false)
+	case FIND_Height:
+		return match(card.Val.(*Stack).Height, findData, false)
 	case FIND_Slice: // [inclusive, inclusive]; -1 => stack.Size - 1
 		var slice []any
 		switch getType(findData, false) {
@@ -349,14 +349,14 @@ func (stack *Stack) makeStackMatrixFromND(keys, vals any) (ret *Stack) {
 
 }
 
-/** Updates a stack's Size, Depth, and Card Indices */
+/** Updates a stack's Size, Height, and Card Indices */
 func (stack *Stack) setStackProperties() {
 	stack.Size = len(stack.Cards)
 	
 
-	/** Assuming normally-shaped matrix, returns the depth of this stack */
-	var getStackDepth func (stack *Stack) (depth int) // so that it can be recursive and nested
-	getStackDepth = func (stack *Stack) (depth int) {
+	/** Assuming normally-shaped matrix, returns the height of this stack */
+	var getStackHeight func (stack *Stack) (height int) // so that it can be recursive and nested
+	getStackHeight = func (stack *Stack) (height int) {
 		
 		if stack.Size > 0 {
 
@@ -366,31 +366,31 @@ func (stack *Stack) setStackProperties() {
 			switch c.Val.(type) {
 			case *Stack:
 				isStack = true
-				depth = getStackDepth(c.Val.(*Stack)) + 1
+				height = getStackHeight(c.Val.(*Stack)) + 1
 			}
 
 			if !isStack {
-				depth = 1
+				height = 1
 			}
 
 		}
 
-		if depth == 0 {
-			depth = 1
+		if height == 0 {
+			height = 1
 		}
 
 		return
 
 	}
-	stack.Depth = getStackDepth(stack)
+	stack.Height = getStackHeight(stack)
 	for i := range stack.Cards {
 		stack.Cards[i].Idx = i
 	}
 }
 
-/** Prints some number of - outputs based on depth. */
-func depthPrinter(depth int) (out string) {
-	for i := 0; i < depth; i++ {
+/** Prints some number of - outputs based on height. */
+func heightPrinter(height int) (out string) {
+	for i := 0; i < height; i++ {
 		out += "-"
 	}
 	return out
@@ -418,14 +418,14 @@ func toTypeCard(card any) *Card {
 func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *Stack {
 	
 	// unpack variadic into optional parameters
-	var orderType, findType, findData, findCompareRaw, overrideCards, deepSearchType, depth, pointerType, passSubstacks, passCards, workingMem any
-	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &findCompareRaw, &overrideCards, &deepSearchType, &depth, &pointerType, &passSubstacks, &passCards, &workingMem)
+	var orderType, findType, findData, findCompareRaw, overrideCards, heightSearchType, height, pointerType, passSubstacks, passCards, workingMem any
+	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &findCompareRaw, &overrideCards, &heightSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
 	setOVERRIDEDefaultIfNil(&overrideCards)
 	setORDERDefaultIfNil(&orderType)
 	setFINDDefaultIfNil(&findType)
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
-	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
+	if heightSearchType == nil {heightSearchType = DEEPSEARCH_False}
 	if passSubstacks == nil {passSubstacks = PASS_True}
 
 	// initialize foundCard to false so you can determine whether valid find and
@@ -490,7 +490,7 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 				
 			}
 	
-		}, nil, nil, nil, workingMem.([]any), deepSearchType, depth, passSubstacks, passCards)
+		}, nil, nil, nil, workingMem.([]any), heightSearchType, height, passSubstacks, passCards)
 	}
 
 	// return nil if no add was made, else return card

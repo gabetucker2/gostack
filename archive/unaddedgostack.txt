@@ -193,7 +193,7 @@
 
  <h2>General</h2>
 
- If depth is inputted as type{int}, then every substack and card down to that int will be considered.  If depth is inputted as type{[]int} (only allowed to be inputted this way in some functions, defined in their respective documentation), then only the levels as deep down from the top as each int will be considered.  For instance, if you wanted to test for all things in the first, second, and third layer from the outer stack, then you would do depth = 3.  If you only wanted to test the first and the third, however, then you would do depth = []int {1, 3}.
+ If height is inputted as type{int}, then every substack and card down to that int will be considered.  If height is inputted as type{[]int} (only allowed to be inputted this way in some functions, defined in their respective documentation), then only the levels as height down from the top as each int will be considered.  For instance, if you wanted to test for all things in the first, second, and third layer from the outer stack, then you would do height = 3.  If you only wanted to test the first and the third, however, then you would do height = []int {1, 3}.
 
  Executing `go run executive/executive.go` in a terminal in the main directory, or executing `go run .` in the `executive` directory, will run whichever file(s) are being called by `executive.go`.
 
@@ -229,7 +229,7 @@
  >
  >> **Size** *int*
  >
- >> **Depth** *int*
+ >> **Height** *int*
 
  > **card** *Card*
  >> **Idx** *int*
@@ -256,7 +256,7 @@
  > * FIND_Val *any*
  > * FIND_Card *Card*
  > * FIND_Size *int*
- > * FIND_Depth *int*
+ > * FIND_Height *int*
  > * FIND_Slice *[2]int representing all between idx range*
  > * FIND_All *NONE*
  > * FIND_Lambda *lambda function*
@@ -305,43 +305,43 @@
  * **stack.StripStackMatrix(target1, target2, ..., targetN)**
  * **stack.ToArray()**
  * **stack.ToMap()**
- * **stack.ToMatrix(...depth)**
+ * **stack.ToMatrix(...height)**
  * **stack.IsRegular()**
  * **stack.Shape()**
  * **stack.Duplicate(...n)**
  * **stack.Empty()**
  * **card.Clone(...cloneKey, ...cloneVal)**
  * **stack.Clone(...cloneCards, ...cloneKeys, ...cloneVals)**
- * **stack.Unique(typeType, ...pointerType, ...deepSearchType, ...depth)**
+ * **stack.Unique(typeType, ...pointerType, ...heightSearchType, ...height)**
  * **card.Equals(Card, ...pointerTypeKey, ...pointerTypeVal, ...compareIdxs, ...printType)**
- * **stack.Equals(Stack, ...compareStacks, ...pointerTypeStack, ...deepSearchType, ...depth, ...pointerTypeKey, ...pointerTypeVal)**
+ * **stack.Equals(Stack, ...compareStacks, ...pointerTypeStack, ...heightSearchType, ...height, ...pointerTypeKey, ...pointerTypeVal)**
  * **stack.Shuffle()**
  * **stack.Transpose()**
  * **card.Print()**
  * **stack.Print()**
- * **stack.Lambda(lambda function, ...deepSearchType, ...depth)**
- * **stack.LambdaThis(lambda function, ...deepSearchType, ...depth)**
- * **stack.LambdaStack(lambda function, ...deepSearchType, ...depth)**
- * **stack.LambdaCard(lambda function, ...deepSearchType, ...depth)**
- * **stack.LambdaVarAdr(lambda function, ...deepSearchType, ...depth)**
+ * **stack.Lambda(lambda function, ...heightSearchType, ...height)**
+ * **stack.LambdaThis(lambda function, ...heightSearchType, ...height)**
+ * **stack.LambdaStack(lambda function, ...heightSearchType, ...height)**
+ * **stack.LambdaCard(lambda function, ...heightSearchType, ...height)**
+ * **stack.LambdaVarAdr(lambda function, ...heightSearchType, ...height)**
 
 <h2 name = "generalizedFunctionsBrief">Generalized Functions</h2>
 
- * **stack.Add(insert, ...orderType, ...findType, ...findData, ...pointerType, ...deepSearchType, ...depth, ...overrideStackConversion)**
- * **stack.AddMany(insert, ...orderType, ...findType, ...findData, ...pointerType, ...deepSearchType, ...depth, ...overrideStackConversion)**
- * **stack.Move(findType_from, orderType, findType_to, ...findData_from, ...findData_to, ...pointerType_from, ...pointerType_to, ...deepSearchType, ...depth)**
- * **stack.Swap(findType_from, findType_to, ...findData_from, ...findData_to, ...pointerType_from, ...pointerType_to, ...deepSearchType, ...depth)**
- * **stack.Has(returnType, findType, ...findData, ...pointerType, ...deepSearchType, ...depth)**
- * **stack.Get(...findType, ...findData, ...pointerType, ...clonesType_card, ...clonesType_keys, ...clonesType_vals, ...deepSearchType, ...depth)**
- * **stack.GetMany(findType, ...findData, ...pointerType, ...returnType, ...clonesType, ...clonesType_keys, ...clonesType_vals, ...deepSearchType, ...depth)**
- * **stack.Replace(replaceType, replaceData, findType, ...findData, ...pointerType, ...deepSearchType, ...depth)**
- * **stack.ReplaceMany(replaceType, replaceData, findType, ...findData, ...pointerType, ...returnType, ...deepSearchType, ...depth)**
- * **stack.Update(findType, ...findData, ...pointerType, ...deepSearchType, ...depth)**
- * **stack.UpdateMany(findType, ...findData, ...pointerType, ...deepSearchType, ...depth)**
- * **stack.Extract(findType, ...findData, ...pointerType, ...deepSearchType, ...depth)**
- * **stack.ExtractMany(findType, ...findData, ...pointerType, ...returnType, ...deepSearchType, ...depth)**
- * **stack.Remove(findType, ...findData, ...pointerType, ...deepSearchType, ...depth)**
- * **stack.RemoveMany(findType, ...findData, ...pointerType, ...deepSearchType, ...depth)**
+ * **stack.Add(insert, ...orderType, ...findType, ...findData, ...pointerType, ...heightSearchType, ...height, ...overrideStackConversion)**
+ * **stack.AddMany(insert, ...orderType, ...findType, ...findData, ...pointerType, ...heightSearchType, ...height, ...overrideStackConversion)**
+ * **stack.Move(findType_from, orderType, findType_to, ...findData_from, ...findData_to, ...pointerType_from, ...pointerType_to, ...heightSearchType, ...height)**
+ * **stack.Swap(findType_from, findType_to, ...findData_from, ...findData_to, ...pointerType_from, ...pointerType_to, ...heightSearchType, ...height)**
+ * **stack.Has(returnType, findType, ...findData, ...pointerType, ...heightSearchType, ...height)**
+ * **stack.Get(...findType, ...findData, ...pointerType, ...clonesType_card, ...clonesType_keys, ...clonesType_vals, ...heightSearchType, ...height)**
+ * **stack.GetMany(findType, ...findData, ...pointerType, ...returnType, ...clonesType, ...clonesType_keys, ...clonesType_vals, ...heightSearchType, ...height)**
+ * **stack.Replace(replaceType, replaceData, findType, ...findData, ...pointerType, ...heightSearchType, ...height)**
+ * **stack.ReplaceMany(replaceType, replaceData, findType, ...findData, ...pointerType, ...returnType, ...heightSearchType, ...height)**
+ * **stack.Update(findType, ...findData, ...pointerType, ...heightSearchType, ...height)**
+ * **stack.UpdateMany(findType, ...findData, ...pointerType, ...heightSearchType, ...height)**
+ * **stack.Extract(findType, ...findData, ...pointerType, ...heightSearchType, ...height)**
+ * **stack.ExtractMany(findType, ...findData, ...pointerType, ...returnType, ...heightSearchType, ...height)**
+ * **stack.Remove(findType, ...findData, ...pointerType, ...heightSearchType, ...height)**
+ * **stack.RemoveMany(findType, ...findData, ...pointerType, ...heightSearchType, ...height)**
 
 <h1 name = "exhaustiveDocumentation">Exhaustive Documentation</h1>
 
@@ -360,7 +360,7 @@
  >> `Size` *int*
  >>> Returns the cardinality (i.e., `len(stack.Cards)`) of this Stack
  >>
- >> `Depth` *int*
+ >> `Height` *int*
  >>> Returns the dimensionality of this Stack, assuming it is uniform
 
 <h4 name = "card">Card</h4>
@@ -658,7 +658,7 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
         ELSEIF `input1` is nil and `input2` is an array
           unpack keys from `input2` into matrix of shape `matrixShape`
 	  ELSEIF `input1` is not passed
-	    create a StackMatrix of shape `matrixShape` whose deepest card vals are nil
+	    create a StackMatrix of shape `matrixShape` whose heightest card vals are nil
  ```
  
 <h3 name = "StripStackMatrix">StripStackMatrix</h3>
@@ -698,15 +698,15 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
  
 <h3 name = "ToMatrix">ToMatrix</h3>
  
- `stack.ToMatrix(...depth)`
+ `stack.ToMatrix(...height)`
  ```
- Creates a new matrix from a stack by depth.  For instance, if depth = 2, then returns the stacks inside stack as an [][]any
+ Creates a new matrix from a stack by height.  For instance, if height = 2, then returns the stacks inside stack as an [][]any
 
  @receiver `stack` type{*Stack}
- @param optional `depth` type{int} default -1
+ @param optional `height` type{int} default -1
  @returns type{[]interface}
  @ensures
-  * -1 depth means it will go as deep as it can
+  * -1 height means it will go as height as it can
   * new map keys and values correspond to `stack` keys and values
   * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} =>
       []any{[]any{"Hi"}, []any{"Hola", "Hello"}, "Hey"}
@@ -786,7 +786,7 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
  
 <h3 name = "Unique">Unique</h3>
  
- `stack.Unique(typeType, ...pointerType, ...deepSearchType, ...depth)`
+ `stack.Unique(typeType, ...pointerType, ...heightSearchType, ...height)`
  ```
  Removes all cards from `stack` which share the same field value as another card before
 
@@ -811,7 +811,7 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
  @returns type{bool}
  ```
  
- `stack.Equals(*Stack, ...compareStacks, ...pointerTypeStack, ...deepSearchType, ...compareCards, ...pointerTypeCard, ...pointerTypeKey, ...pointerTypeVal)`
+ `stack.Equals(*Stack, ...compareStacks, ...pointerTypeStack, ...heightSearchType, ...compareCards, ...pointerTypeCard, ...pointerTypeKey, ...pointerTypeVal)`
  ```
  Returns whether two stacks equal one another
  
@@ -820,8 +820,8 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
  @param optional `compareStacks` type{COMPARE} default COMPARE_False
 	By default, does not compare the stack structs, but rather their cards; can be set true and adjusted with `pointerTypeStack`
  @param optional `pointerTypeStack` type{POINTER} default POINTER_False
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int} default -1 (deepest)
+ @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `height` type{int} default -1 (heightest)
  @param optional `pointerTypeKey` type{POINTER} default POINTER_False
  @param optional `pointerTypeVal` type{POINTER} default POINTER_False
  @returns type{bool}
@@ -872,7 +872,7 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
  
 <h3 name = "Lambda">Lambda</h3>
  
- `stack.Lambda(lambda function, ...deepSearchType, ...depth)`
+ `stack.Lambda(lambda function, ...heightSearchType, ...height)`
  ```
  Iterate through a stack calling your lambda function on each card
  
@@ -883,7 +883,7 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
   * `stack` is the first argument passed into your variadic parameter on the first call
  ```
  
- `stack.LambdaThis(lambda function, ...deepSearchType, ...depth)`
+ `stack.LambdaThis(lambda function, ...heightSearchType, ...height)`
  ```
  Iterate through a stack calling your lambda function on each card
  
@@ -894,7 +894,7 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
   * `stack` is the first argument passed into your variadic parameter on the first call
  ```
  
- `stack.LambdaStack(lambda function, ...deepSearchType, ...depth)`
+ `stack.LambdaStack(lambda function, ...heightSearchType, ...height)`
  ```
  Iterate through a stack calling your lambda function on each card
  
@@ -905,7 +905,7 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
   * `stack` is the first argument passed into your variadic parameter on the first call
  ```
  
- `stack.LambdaCard(lambda function, ...deepSearchType, ...depth)`
+ `stack.LambdaCard(lambda function, ...heightSearchType, ...height)`
  ```
  Iterate through a stack calling your lambda function on each card
  
@@ -916,7 +916,7 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
   * `stack` is the first argument passed into your variadic parameter on the first call
  ```
  
- `stack.LambdaVarAdr(lambda function, ...deepSearchType, ...depth)`
+ `stack.LambdaVarAdr(lambda function, ...heightSearchType, ...height)`
  ```
  Iterate through a stack calling your lambda function on each card
  
@@ -931,7 +931,7 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
  
 <h3 name = "Add">Add</h3>
  
- `stack.Add(insert, ...orderType, ...findType, ...findData, ...pointerType, ...deepSearchType, ...depth, ...overrideStackConversion)`
+ `stack.Add(insert, ...orderType, ...findType, ...findData, ...pointerType, ...heightSearchType, ...height, ...overrideStackConversion)`
  ```
  Adds to a stack of cards or a cards at (each) position(s) and returns `stack`
  
@@ -941,8 +941,8 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
  @param optional `findType` type{FIND} default FIND_First
  @param optional `findData` type{any} default nil
  @param optional `pointerType` type{POINTER} default POINTER_False
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int} default -1 (deepest)
+ @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `height` type{int} default -1 (heightest)
  @param optional `overrideStackConversion` type{bool} default false
 	if `insert` is of type Stack:
 		if not `overrideStackConversion`:
@@ -956,7 +956,7 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
  
 <h3 name = "AddMany">AddMany</h3>
  
- `stack.AddMany(insert, ...orderType, ...findType, ...findData, ...pointerType, ...deepSearchType, ...depth, ...overrideStackConversion)`
+ `stack.AddMany(insert, ...orderType, ...findType, ...findData, ...pointerType, ...heightSearchType, ...height, ...overrideStackConversion)`
  ```
 TODO: Add
  ```
@@ -975,10 +975,10 @@ TODO: Add
  @param optional `findData_to` type{any} default nil
  @param optional `pointerType_from` type{POINTER} default POINTER_False
  @param optional `pointerType_to` type{POINTER} default POINTER_False
- @param optional `deepSearchType_from` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `deepSearchType_to` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth_from` type{int} default -1 (deepest)
- @param optional `depth_to` type{int} default -1 (deepest)
+ @param optional `heightSearchType_from` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `heightSearchType_to` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `height_from` type{int} default -1 (heightest)
+ @param optional `height_to` type{int} default -1 (heightest)
  @returns `stack` if moved OR nil if no move occurred (due to bad find)
  @requires you are not moving a stack to a location within that own stack
  @ensures a stack of cards, or individual cards, can be targeted
@@ -986,7 +986,7 @@ TODO: Add
  
 <h3 name = "Swap">Swap</h3>
  
- `stack.Swap(findType_from, findType_to, ...findData_from, ...findData_to, ...pointerType_from, ...pointerType_to, ...deepSearchType, ...depth)`
+ `stack.Swap(findType_from, findType_to, ...findData_from, ...findData_to, ...pointerType_from, ...pointerType_to, ...heightSearchType, ...height)`
  ```
  Swaps one element or slice with the position of another element or slice
  
@@ -997,10 +997,10 @@ TODO: Add
  @param optional `findData_second` type{any} default nil
  @param optional `pointerType_first` type{POINTER} default POINTER_False
  @param optional `pointerType_second` type{POINTER} default POINTER_False
- @param optional `deepSearchType_first` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `deepSearchType_second` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth_first` type{int} default -1 (deepest)
- @param optional `depth_second` type{int} default -1 (deepest)
+ @param optional `heightSearchType_first` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `heightSearchType_second` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `height_first` type{int} default -1 (heightest)
+ @param optional `height_second` type{int} default -1 (heightest)
  @returns `stack` if moved OR nil if no move occurred (due second bad find)
  @requires you are not swapping a stack with a location within that own stack
  @ensures a stack of cards, or individual cards, can be targeted
@@ -1054,8 +1054,8 @@ TODO: Add
  @param optional `clonesType` type{CLONES} default CLONE_False
  @param optional `clonesType_keys` type{CLONES} default CLONE_False
  @param optional `clonesType_vals` type{CLONES} default CLONE_False
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int} default -1 (deepest)
+ @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `height` type{int} default -1 (heightest)
  @returns type{*Stack} the new stack (if find fails, then an empty stack)
  @constructs type{*Stack} new stack of specified values from specified cards in `stack`
  @requires
@@ -1098,8 +1098,8 @@ TODO: Add
  @param optional `findData` type{any} default nil
  @param optional `returnType` type{RETURN} default RETURN_Cards
  @param optional `pointerType` type{POINTER} default POINTER_False
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int} default -1 (deepest)
+ @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `height` type{int} default -1 (heightest)
  @returns type{*Stack} a stack whose values are the extracted cards pre-update (if find fails, then an empty stack)
  @updates all found cards to `replaceData`
  @requires `stack.GetMany()` has been implemented
@@ -1161,8 +1161,8 @@ TODO: Add
  @param optional `findData` type{any} default nil
  @param optional `returnType` type{RETURN} default RETURN_Cards
  @param optional `pointerType` type{POINTER} default POINTER_False
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int} default -1 (deepest)
+ @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `height` type{int} default -1 (heightest)
  @returns type{*Stack} the extracted card (if find fails, then an empty stack)
  @updates `stack` to no longer have found cards
  @requires `stack.ReplaceMany()` has been implemented

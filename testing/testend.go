@@ -1,4 +1,4 @@
-package casetests
+package testing
 
 import (
 	"fmt"
@@ -10,10 +10,10 @@ import (
 )
 
 /** Test whether stack equals array or map
- (Incomplete documentation)
+(Incomplete documentation)
 
- @requires `_vals` and `_keys` are either nil or of type{[]any}, and 
- */
+@requires `_vals` and `_keys` are either nil or of type{[]any}, and
+*/
 func test_StackEqualArrayOrMap(stack *Stack, _vals, _keys any, _ma any) bool {
 
 	// init
@@ -79,10 +79,10 @@ func test_StackEqualArrayOrMap(stack *Stack, _vals, _keys any, _ma any) bool {
 	
 }
 
-/** Return whether len(cards) == cards.Size and whether depth measures are accurate
- NOTE: depth is one variable that's just optional
+/** Return whether len(cards) == cards.Size and whether height measures are accurate
+ NOTE: height is one variable that's just optional
  */
- func test_StackProperties(stack *Stack, size []int, depth ...int) (test bool) {
+ func test_StackProperties(stack *Stack, size []int, height ...int) (test bool) {
 
 	/*
 
@@ -90,15 +90,15 @@ func test_StackEqualArrayOrMap(stack *Stack, _vals, _keys any, _ma any) bool {
 
 	test = true
 
-	if depth == 0
-		depth = 1 // initialize
+	if height == 0
+		height = 1 // initialize
 	
-	if stack.Size != len(stack.Cards) || stack.Depth != depth
+	if stack.Size != len(stack.Cards) || stack.Height != height
 		test = false
 	else
 		for each card in stack
 			if card has a stack
-				test = recursive call(card.Val.(*Stack), size[1:], depth - 1)
+				test = recursive call(card.Val.(*Stack), size[1:], height - 1)
 			if !test
 				break
 	
@@ -108,18 +108,18 @@ func test_StackEqualArrayOrMap(stack *Stack, _vals, _keys any, _ma any) bool {
 
 	test = true
 
-	// initialize depth on first call
-	if len(depth) == 0 {
-		depth = append(depth, 1)
+	// initialize height on first call
+	if len(height) == 0 {
+		height = append(height, 1)
 	}
 
-	if size[0] != stack.Size || stack.Size != len(stack.Cards) || stack.Depth != depth[0] {
+	if size[0] != stack.Size || stack.Size != len(stack.Cards) || stack.Height != height[0] {
 		// if invalid condition on test
 		fmt.Print("-     DETAIL: ")
 		fmt.Printf(
-			gogenerics.IfElse(size[0] != stack.Size, "size[0] (%v) does not match stack.Size (%v)\n", gogenerics.IfElse(stack.Size != len(stack.Cards), "stack.Size (%v) does not match len(stack.Cards) (%v)\n", "stack.Depth (%v) does not match expected depth (%v)\n")).(string),
-			gogenerics.IfElse(size[0] != stack.Size, size[0], gogenerics.IfElse(stack.Size != len(stack.Cards), stack.Size, stack.Depth)),
-			gogenerics.IfElse(size[0] != stack.Size, stack.Size, gogenerics.IfElse(stack.Size != len(stack.Cards), len(stack.Cards), depth[0])),
+			gogenerics.IfElse(size[0] != stack.Size, "size[0] (%v) does not match stack.Size (%v)\n", gogenerics.IfElse(stack.Size != len(stack.Cards), "stack.Size (%v) does not match len(stack.Cards) (%v)\n", "stack.Height (%v) does not match expected height (%v)\n")).(string),
+			gogenerics.IfElse(size[0] != stack.Size, size[0], gogenerics.IfElse(stack.Size != len(stack.Cards), stack.Size, stack.Height)),
+			gogenerics.IfElse(size[0] != stack.Size, stack.Size, gogenerics.IfElse(stack.Size != len(stack.Cards), len(stack.Cards), height[0])),
 		)
 		test = false
 	} else {
@@ -130,7 +130,7 @@ func test_StackEqualArrayOrMap(stack *Stack, _vals, _keys any, _ma any) bool {
 
 			switch c.Val.(type) {
 			case *Stack:
-				test = test_StackProperties(c.Val.(*Stack), size[1:], depth[0] - 1) // TODO: this seems rather sus... double-check this
+				test = test_StackProperties(c.Val.(*Stack), size[1:], height[0] - 1) // TODO: this seems rather sus... double-check this
 			}
 
 			if !test { break }

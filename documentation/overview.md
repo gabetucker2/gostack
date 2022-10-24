@@ -61,7 +61,7 @@ These examples should give you an intuitive feel of how ***gostack*** works!
 
 ---
 
- [> Frequently Asked Questions (Recommended)](faq.md)
+ [> Frequently asked questions (Recommended)](faq.md)
  
  [> Introductory tutorial (Recommended)](tutorials/introduction.md)
 
