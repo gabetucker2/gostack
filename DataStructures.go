@@ -67,8 +67,10 @@ const (
 )
 
 const (
-	DEREFERENCE_False DEREFERENCE = iota
-	DEREFERENCE_True
+	DEREFERENCE_None DEREFERENCE = iota
+	DEREFERENCE_Both
+	DEREFERENCE_Found
+	DEREFERENCE_This
 )
 
 const (
@@ -119,9 +121,9 @@ func setORDERDefaultIfNil(orderType *any) {
 	}
 }
 
-func setDEREFERENCEDefaultIfNil(pointerType *any) {
-	if *pointerType == nil {
-		*pointerType = DEREFERENCE_False
+func setDEREFERENCEDefaultIfNil(dereferenceType *any) {
+	if *dereferenceType == nil {
+		*dereferenceType = DEREFERENCE_None
 	}
 }
 
@@ -137,9 +139,9 @@ func setDEEPSEARCHDefaultIfNil(deepSearchType *any) {
 	}
 }
 
-func setHeightDefaultIfNil(height *any) {
-	if *height == nil {
-		*height = -1
+func setHeightDefaultIfNil(depth *any) {
+	if *depth == nil {
+		*depth = -1
 	}
 }
 

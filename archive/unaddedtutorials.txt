@@ -3,28 +3,28 @@
  > `stack.Get(RETURN_Card, FIND_First)`
  >> *returns the first card in the Stack*
  >
- > `stack.Get(RETURN_Card, FIND_Val, "String Value", DEREFERENCE_False)`
+ > `stack.Get(RETURN_Card, FIND_Val, "String Value", DEREFERENCE_None)`
  >> *goes through the stack, finds the first card with val "String Value", and returns that card*
  >
- > `stack.Get(RETURN_Card, FIND_Key, "String Key", DEREFERENCE_False)`
+ > `stack.Get(RETURN_Card, FIND_Key, "String Key", DEREFERENCE_None)`
  >> *goes through the stack, finds the first card with key "String Key", and returns that card*
  >
  > `stack.Get(RETURN_Cards, FIND_Lambda, lambda function)` - update
  >> *goes through the stack, finds each card for which the lambda expression is true, and return a stack of these cards*
  >
- > `stack.Get(RETURN_Cards, FIND_Val, "String Value", DEREFERENCE_False)`
+ > `stack.Get(RETURN_Cards, FIND_Val, "String Value", DEREFERENCE_None)`
  >> *goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
  >
- > `stack.Get(RETURN_Card, FIND_Val, stackOfValues, DEREFERENCE_False)`
+ > `stack.Get(RETURN_Card, FIND_Val, stackOfValues, DEREFERENCE_None)`
  >> *goes through the stack, finds the first card with one of the values in stackOfValues, and returns that card*
  >
- > `stack.Get(RETURN_Cards, FIND_Val, stackOfValues, DEREFERENCE_False)`
+ > `stack.Get(RETURN_Cards, FIND_Val, stackOfValues, DEREFERENCE_None)`
  >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
  >
- > `stack.Get(RETURN_Card, FIND_Val, stackOfValues, DEREFERENCE_True)`
+ > `stack.Get(RETURN_Card, FIND_Val, stackOfValues, DEREFERENCE_Both)`
  >> *goes through the stack, finds the first card with the same memory address as one the values in stackOfValues, and returns that card*
  >
- > `stack.Get(RETURN_Cards, FIND_Val, stackOfValues, DEREFERENCE_True)`
+ > `stack.Get(RETURN_Cards, FIND_Val, stackOfValues, DEREFERENCE_Both)`
  >> *goes through the stack, finds each card with a memory address matching one in stackOfValues, and returns a Stack of each of those cards*
 
 
@@ -46,10 +46,10 @@
 
  ***DEREFERENCE Example Uses***
  
- > `stack.Get(RETURN_Card, FIND_Card, cardStructureToFind, DEREFERENCE_False)`
+ > `stack.Get(RETURN_Card, FIND_Card, cardStructureToFind, DEREFERENCE_None)`
  >> *returns the first card that has the same structure (key and value) as cardStructureToFind*
  >
- > stack.Get(RETURN_Card, FIND_Card, exactCardToFind, DEREFERENCE_True)`
+ > stack.Get(RETURN_Card, FIND_Card, exactCardToFind, DEREFERENCE_Both)`
  >> *returns the first card that IS exactCardToFind as stored in memory—not just that's the same structurally*
 
  ***Stack Example Uses***
@@ -59,16 +59,16 @@
 
  ***RETURN Example Uses***
  
- > `stack.Get(RETURN_Card, FIND_Val, "String Value", DEREFERENCE_False)`
+ > `stack.Get(RETURN_Card, FIND_Val, "String Value", DEREFERENCE_None)`
  >> *goes through the stack, finds the first card with val "String Value", and returns that card*
  >
- > `stack.Get(RETURN_Cards, FIND_Val, "String Value", DEREFERENCE_False)`
+ > `stack.Get(RETURN_Cards, FIND_Val, "String Value", DEREFERENCE_None)`
  >> *goes through the stack, finds each card with val "String Value", and returns a Stack of each of those cards*
  >
- > `stack.Get(RETURN_Card, FIND_Val, stackOfValues, DEREFERENCE_False)`
+ > `stack.Get(RETURN_Card, FIND_Val, stackOfValues, DEREFERENCE_None)`
  >> *goes through the stack, finds the first card with one of the values in stackOfValues, and returns that card*
  >
- > `stack.Get(RETURN_Cards, FIND_Val, stackOfValues, DEREFERENCE_False)`
+ > `stack.Get(RETURN_Cards, FIND_Val, stackOfValues, DEREFERENCE_None)`
  >> *goes through the stack, finds each card with one of the values in stackOfValues, and returns a Stack of each of those cards*
 
  ***FIND Example Uses***
@@ -76,10 +76,10 @@
  > `stack.Get(RETURN_Card, FIND_First)`
  >> *returns the first card in the Stack*
  >
- > `stack.Get(RETURN_Card, FIND_Val, "String Value", DEREFERENCE_False)`
+ > `stack.Get(RETURN_Card, FIND_Val, "String Value", DEREFERENCE_None)`
  >> *goes through the stack, finds the first card with val "String Value", and returns that card*
  >
- > `stack.Get(RETURN_Card, FIND_Key, "String Key", DEREFERENCE_False)`
+ > `stack.Get(RETURN_Card, FIND_Key, "String Key", DEREFERENCE_None)`
  >> *goes through the stack, finds the first card with key "String Key", and returns that card*
  >
  > `stack.Get(RETURN_Cards, FIND_Lambda, lambda function)` - update
@@ -97,7 +97,7 @@
  Want to get a unique stack of values of the cards in `stack` whose keys match the object address of Cards defined as UnitTypes unitType1 or unitType2 (where UnitType is your user-defined struct)?
  > `keys := MakeStack().Add(MakeCard(unitType1), ORDER_After, FIND_Last).Add(MakeCard(unitType2), ORDER_After, FIND_Last)`
  >
- > `unitIndices := stack.Get(RETURN_Idxs, FIND_Keys, keys, DEREFERENCE_True).Unique(TYPE_Val)`
+ > `unitIndices := stack.Get(RETURN_Idxs, FIND_Keys, keys, DEREFERENCE_Both).Unique(TYPE_Val)`
  
  Want to replace all cards in `stack` whose values are even ints between -5 and 3 with two new cards and get a stack representing keys of the cards that were replaced?
  > `cardsToInsert := MakeStack().Add(newCard1, ORDER_After, FIND_Last).Add(newCard2, ORDER_After, FIND_Last)`

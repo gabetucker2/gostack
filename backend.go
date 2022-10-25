@@ -7,9 +7,9 @@ import (
 	"github.com/gabetucker2/gogenerics"
 )
 
-func needleInHaystack(needle any, haystack []any) bool {
+func needleInHaystack(needle any, haystack []any, dereferenceType DEREFERENCE) bool {
 	for _, hay := range haystack {
-		if needle == hay {
+		if compareDereference(dereferenceType, needle, hay) {
 			return true
 		}
 	}
@@ -35,30 +35,43 @@ func getType(in any, override bool) string {
 	}
 }
 
+func compareDereference(dereferenceType DEREFERENCE, found, this any) bool {
+	switch dereferenceType {
+	case DEREFERENCE_None:
+		return found == this
+	case DEREFERENCE_Both:
+		return gogenerics.PointersEqual(found, this)
+	case DEREFERENCE_Found:
+		return gogenerics.IsPointer(found) && reflect.DeepEqual(reflect.ValueOf(found).Elem(), this)
+	case DEREFERENCE_This:
+		return gogenerics.IsPointer(this) && reflect.DeepEqual(found, reflect.ValueOf(this).Elem())
+	}
+		return false
+}
+
 /** hatstack type{any, []any, *Stack} */
-func match(needle any, haystack any, override bool) bool {
+func match(needle any, haystack any, override bool, dereferenceType DEREFERENCE) bool {
 	switch getType(haystack, override) {
 	case "element":
 		_, isCard := needle.(*Card)
 		if isCard {
 			return needle.(*Card).Equals(haystack.(*Card))
 		} else {
-			return needle == haystack
+			return compareDereference(dereferenceType, needle, haystack)
 		}
 	case "slice":
-		return needleInHaystack(needle, gogenerics.UnpackArray(haystack))
+		return needleInHaystack(needle, gogenerics.UnpackArray(haystack), dereferenceType)
 	case "stack":
-		return needleInHaystack(needle, haystack.(*Stack).ToArray())
-	default:
-		return false
+		return needleInHaystack(needle, haystack.(*Stack).ToArray(), dereferenceType)
 	}
+	return false
 }
 
-func selectCard(findType any, findData any, pointerType any, findCompareRaw COMPARE, card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) bool {
+func selectCard(findType any, findData any, dereferenceType any, findCompareRaw COMPARE, card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) bool {
 
 	// set defaults
 	setFINDDefaultIfNil(&findType)
-	setDEREFERENCEDefaultIfNil(&pointerType)
+	setDEREFERENCEDefaultIfNil(&dereferenceType)
 
 	override := findCompareRaw == COMPARE_True
 
@@ -107,27 +120,17 @@ func selectCard(findType any, findData any, pointerType any, findCompareRaw COMP
 				haystack[i] = parentStack.Size - 1
 			}
 		}
-		return needleInHaystack(card.Idx, haystack)
+		return needleInHaystack(card.Idx, haystack, DEREFERENCE_None)
 	case FIND_Key:
-		switch pointerType {
-		case DEREFERENCE_True:
-			return match(getPointer(card.Key, false), findData, override)
-		case DEREFERENCE_False:
-			return match(card.Key, findData, override)
-		}
+		return match(getPointer(card.Key, false), findData, override, dereferenceType.(DEREFERENCE))
 	case FIND_Val:
-		switch pointerType {
-		case DEREFERENCE_True:
-			return match(getPointer(card.Val, false), findData, override)
-		case DEREFERENCE_False:
-			return match(card.Val, findData, override)
-		}
+		return match(getPointer(card.Val, false), findData, override, dereferenceType.(DEREFERENCE))
 	case FIND_Card:
 		return fmt.Sprintf("%p", card) == fmt.Sprintf("%p", findData.(*Card))
 	case FIND_Size:
-		return match(card.Val.(*Stack).Size, findData, false)
+		return match(card.Val.(*Stack).Size, findData, false, DEREFERENCE_None)
 	case FIND_Height:
-		return match(card.Val.(*Stack).Height, findData, false)
+		return match(card.Val.(*Stack).Height, findData, false, DEREFERENCE_None)
 	case FIND_Slice: // [inclusive, inclusive]; -1 => stack.Size - 1
 		var slice []any
 		switch getType(findData, false) {
@@ -157,7 +160,7 @@ func selectCard(findType any, findData any, pointerType any, findCompareRaw COMP
 		} else { // start == end
 			slice = append(slice, start)
 		}
-		return needleInHaystack(card.Idx, slice)
+		return needleInHaystack(card.Idx, slice, DEREFERENCE_None)
 	case FIND_All:
 		return true
 	case FIND_Lambda:
@@ -367,9 +370,9 @@ func (stack *Stack) setStackProperties() {
 	stack.Size = len(stack.Cards)
 	
 
-	/** Assuming normally-shaped matrix, returns the height of this stack */
-	var getStackHeight func (stack *Stack) (height int) // so that it can be recursive and nested
-	getStackHeight = func (stack *Stack) (height int) {
+	/** Assuming normally-shaped matrix, returns the depth of this stack */
+	var getStackHeight func (stack *Stack) (depth int) // so that it can be recursive and nested
+	getStackHeight = func (stack *Stack) (depth int) {
 		
 		if stack.Size > 0 {
 
@@ -379,17 +382,17 @@ func (stack *Stack) setStackProperties() {
 			switch c.Val.(type) {
 			case *Stack:
 				isStack = true
-				height = getStackHeight(c.Val.(*Stack)) + 1
+				depth = getStackHeight(c.Val.(*Stack)) + 1
 			}
 
 			if !isStack {
-				height = 1
+				depth = 1
 			}
 
 		}
 
-		if height == 0 {
-			height = 1
+		if depth == 0 {
+			depth = 1
 		}
 
 		return
@@ -401,9 +404,9 @@ func (stack *Stack) setStackProperties() {
 	}
 }
 
-/** Prints some number of - outputs based on height. */
-func heightPrinter(height int) (out string) {
-	for i := 0; i < height; i++ {
+/** Prints some number of - outputs based on depth. */
+func heightPrinter(depth int) (out string) {
+	for i := 0; i < depth; i++ {
 		out += "-"
 	}
 	return out
@@ -431,8 +434,8 @@ func toTypeCard(card any) *Card {
 func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *Stack {
 	
 	// unpack variadic into optional parameters
-	var orderType, findType, findData, findCompareRaw, overrideCards, deepSearchType, height, pointerType, passSubstacks, passCards, workingMem any
-	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &findCompareRaw, &overrideCards, &deepSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
+	var orderType, findType, findData, findCompareRaw, overrideCards, deepSearchType, depth, dereferenceType, passSubstacks, passCards, workingMem any
+	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &findCompareRaw, &overrideCards, &deepSearchType, &depth, &dereferenceType, &passSubstacks, &passCards, &workingMem)
 	setOVERRIDEDefaultIfNil(&overrideCards)
 	setORDERDefaultIfNil(&orderType)
 	setFINDDefaultIfNil(&findType)
@@ -479,7 +482,7 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 		stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any,  wmadrs ...any) {
 		
 			// only do add to the first match if ACTION_First, otherwise do for every match
-			if (allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...)) || (!allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && !foundCard) {
+			if (allNotFirst && selectCard(findType, findData, dereferenceType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...)) || (!allNotFirst && selectCard(findType, findData, dereferenceType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && !foundCard) {
 	
 				// update foundCard
 				foundCard = true
@@ -503,7 +506,7 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 				
 			}
 	
-		}, nil, nil, nil, workingMem.([]any), deepSearchType, height, passSubstacks, passCards)
+		}, nil, nil, nil, workingMem.([]any), deepSearchType, depth, passSubstacks, passCards)
 	}
 
 	// return nil if no add was made, else return card

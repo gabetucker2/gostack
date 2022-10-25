@@ -200,22 +200,28 @@ Enumerators:
 
 <h2 name = "DEREFERENCE">DEREFERENCE</h2>
 
- > False, True
+ > None, Both, Found, This
 
-A enumerator which, if set to true, will attempt to dereference the key/val in question before checking for equality.  For instance, if you stored the object address of an int in an array.  For instance:
+A enumerator which decides whether to dereference the found data or the input data before checking for equality.  For instance:
 
 ```
 intValA := gogenerics.MakeInterface(1)
 intValB := gogenerics.MakeInterface(2)
 intValC := gogenerics.MakeInterface(3)
 card14 := MakeStack([]any {&intValA, &intValB, &intValC}).Get(FIND_Val, &intValB) // finds the first card that matches
-card15 := MakeStack([]any {&intValA, &intValB, &intValC}).Get(FIND_Val, intValB, COMPARE_True, nil, nil, DEREFERENCE_True)
+card15 := MakeStack([]any {&intValA, &intValB, &intValC}).Get(FIND_Val, intValB, nil, nil, nil, DEREFERENCE_Both)
+card15 := MakeStack([]any {&intValA, &intValB, &intValC}).Get(FIND_Val, 2, nil, nil, nil, DEREFERENCE_Found)
+card15 := MakeStack([]any {intValA, intValB, intValC}).Get(FIND_Val, &intValB, nil, nil, nil, DEREFERENCE_This)
 ```
 
 Enumerators:
- > DEREFERENCE_True
+ > DEREFERENCE_None
  
- > DEREFERENCE_False
+ > DEREFERENCE_Both
+
+ > DEREFERENCE_Found
+
+ > DEREFERENCE_This
  
  ---
 
