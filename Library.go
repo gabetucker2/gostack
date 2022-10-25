@@ -18,11 +18,11 @@ import (
 @constructs type{*Card} a newly-constructed card
 @ensures the new card will have val `val`, key `key`, and idx `idx`
 */
- func MakeCard(variadic ...any) *Card {
+ func MakeCard(arguments ...any) *Card {
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var val, key, idx any
-	gogenerics.UnpackVariadic(variadic, &val, &key, &idx)
+	gogenerics.UnpackVariadic(arguments, &val, &key, &idx)
 
 	// initialize and set new Card
 	card := new(Card)
@@ -71,11 +71,11 @@ import (
     ELSE
       the stack is empty
  */
-func MakeStack(variadic ...any) *Stack {
+func MakeStack(arguments ...any) *Stack {
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var input1, input2, repeats, overrideCards any
-	gogenerics.UnpackVariadic(variadic, &input1, &input2, &repeats, &overrideCards)
+	gogenerics.UnpackVariadic(arguments, &input1, &input2, &repeats, &overrideCards)
 	// set default
 	if repeats == nil {
 		if input1 == nil && input2 == nil {
@@ -159,8 +159,8 @@ func MakeStack(variadic ...any) *Stack {
     ELSE
       the stack is empty
  */
- func MakeSubstack(variadic ...any) *Stack {
-	return MakeStack(variadic...)
+ func MakeSubstack(arguments ...any) *Stack {
+	return MakeStack(arguments...)
 }
 
 /** Returns a new stack-within-stack-structured stack
@@ -209,11 +209,11 @@ func MakeStack(variadic ...any) *Stack {
 	  ELSEIF `input1` is not passed AND `input2` is not passed
 	    create a StackMatrix of shape `matrixShape` whose heightest card keys/vals are nil
  */
-func MakeStackMatrix(variadic ...any) *Stack {
+func MakeStackMatrix(arguments ...any) *Stack {
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var input1, input2, matrixShape, overrideCards any
-	gogenerics.UnpackVariadic(variadic, &input1, &input2, &matrixShape, &overrideCards)
+	gogenerics.UnpackVariadic(arguments, &input1, &input2, &matrixShape, &overrideCards)
 	setOVERRIDEDefaultIfNil(&overrideCards)
 
 	stack := new(Stack)
@@ -358,11 +358,11 @@ func MakeStackMatrix(variadic ...any) *Stack {
  @constructs type{*Stack} a new Stack representing the selection
  @requires `idx` arguments get valid index positions from the stack
  */
-func (stack *Stack) StripStackMatrix(variadic ...any) *Stack {
+func (stack *Stack) StripStackMatrix(arguments ...any) *Stack {
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var idx any
-	gogenerics.UnpackVariadic(variadic, &idx)
+	gogenerics.UnpackVariadic(arguments, &idx)
 
 	// main
 	if idx == nil {
@@ -386,11 +386,11 @@ func (stack *Stack) StripStackMatrix(variadic ...any) *Stack {
  @requires `stack.ToMatrix()` has been implemented
  @ensures new array values correspond to `stack` values
  */
-func (stack *Stack) ToArray(variadic ...any) (arr []any) {
+func (stack *Stack) ToArray(arguments ...any) (arr []any) {
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var returnType any
-	gogenerics.UnpackVariadic(variadic, &returnType)
+	gogenerics.UnpackVariadic(arguments, &returnType)
 
 	// return
 	return stack.ToMatrix(returnType, 1)
@@ -430,11 +430,11 @@ func (stack *Stack) ToMap() (m map[any]any) {
   * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} | heightsearchfalse =>
       []any{[]any{}, []any{}, "Hey"}
  */
-func (stack *Stack) ToMatrix(variadic ...any) (matrix []any) {
+func (stack *Stack) ToMatrix(arguments ...any) (matrix []any) {
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var returnType, heightSearchType, height any
-	gogenerics.UnpackVariadic(variadic, &returnType, &heightSearchType, &height)
+	gogenerics.UnpackVariadic(arguments, &returnType, &heightSearchType, &height)
 	// set defaults
 	setRETURNDefaultIfNil(&returnType)
 	setHeightDefaultIfNil(&height)
@@ -566,11 +566,11 @@ func (stack *Stack) ToMatrix(variadic ...any) (matrix []any) {
  @updates `stack`
  @returns `stack`
  */
- func (stack *Stack) Duplicate(variadic ...any) *Stack {
+ func (stack *Stack) Duplicate(arguments ...any) *Stack {
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var n any
-	gogenerics.UnpackVariadic(variadic, &n)
+	gogenerics.UnpackVariadic(arguments, &n)
 	if n == nil {
 		n = 2
 	}
@@ -651,11 +651,11 @@ func (card *Card) Clone() *Card {
    * if you set clone to false, then that property will be cloned as nil
    * if you shallow clone a height stack and cloneSubstackVals is true, then the original substacks will be held in the clone
 */
-func (stack *Stack) Clone(variadic ...any) *Stack {
+func (stack *Stack) Clone(arguments ...any) *Stack {
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var heightSearchType, height, cloneCardKeys, cloneCardVals, cloneSubstackKeys, cloneSubstackVals any
-	gogenerics.UnpackVariadic(variadic, &heightSearchType, &height, &cloneCardKeys, &cloneCardVals, &cloneSubstackKeys, &cloneSubstackVals)
+	gogenerics.UnpackVariadic(arguments, &heightSearchType, &height, &cloneCardKeys, &cloneCardVals, &cloneSubstackKeys, &cloneSubstackVals)
 	// set defaults
 	setDEEPSEARCHDefaultIfNil(&heightSearchType)
 	setHeightDefaultIfNil(&height)
@@ -724,11 +724,11 @@ func (stack *Stack) Clone(variadic ...any) *Stack {
  @returns `stack`
  @updates `stack` to have no repeating values between field `uniqueType`
  */
-func (stack *Stack) Unique(variadic ...any) *Stack {
+func (stack *Stack) Unique(arguments ...any) *Stack {
 	
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var uniqueType any
-	gogenerics.UnpackVariadic(variadic, &uniqueType)
+	gogenerics.UnpackVariadic(arguments, &uniqueType)
 	if uniqueType == nil { uniqueType = TYPE_Val }
 
 	// main
@@ -761,11 +761,11 @@ func (stack *Stack) Unique(variadic ...any) *Stack {
    if true, ensures the cards are the same object
  @returns type{bool}
  */
-func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
+func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var pointerTypeKey, pointerTypeVal, compareIdxs, compareKeys, compareVals, compareObjectAdr any
-	gogenerics.UnpackVariadic(variadic, &pointerTypeKey, &pointerTypeVal, &compareIdxs, &compareKeys, &compareVals, &compareObjectAdr)
+	gogenerics.UnpackVariadic(arguments, &pointerTypeKey, &pointerTypeVal, &compareIdxs, &compareKeys, &compareVals, &compareObjectAdr)
 	// set default vals
 	setPOINTERDefaultIfNil(&pointerTypeKey)
 	setPOINTERDefaultIfNil(&pointerTypeVal)
@@ -830,14 +830,14 @@ func (thisCard *Card) Equals(otherCard *Card, variadic ...any) bool {
    * if `stack`.Height != `otherStack`.Height and the N-height comparison finds that they're equal, then return that they're Equal 
  @returns type{bool}
  */
-func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
+func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 
 	/*
 	PSEUDOCODE OUTLINE:
 
-	stack.Equals(otherStack, ...variadic) bool
+	stack.Equals(otherStack, ...arguments) bool
 
-		set up variadic stuff
+		set up arguments stuff
 
 		if height is stack
 			height = stack to array
@@ -895,9 +895,9 @@ func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
 
 	*/
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var heightSearchType, height, compareCardKeys, compareCardVals, compareSubstackKeys, compareSubstackVals, pointerCardKeys, pointerCardVals, pointerSubstackKeys, pointerSubstackVals any
-	gogenerics.UnpackVariadic(variadic, &heightSearchType, &height, &compareCardKeys, &compareCardVals, &compareSubstackKeys, &compareSubstackVals, &pointerCardKeys, &pointerCardVals, &pointerSubstackKeys, &pointerSubstackVals)
+	gogenerics.UnpackVariadic(arguments, &heightSearchType, &height, &compareCardKeys, &compareCardVals, &compareSubstackKeys, &compareSubstackVals, &pointerCardKeys, &pointerCardVals, &pointerSubstackKeys, &pointerSubstackVals)
 	// set default vals
 	setDEEPSEARCHDefaultIfNil(&heightSearchType)
 	setHeightDefaultIfNil(&height)
@@ -1020,11 +1020,11 @@ func (stack *Stack) Equals(otherStack *Stack, variadic ...any) (test bool) {
   * rand.Seed is updated to time.Now().UnixNano()
  @ensures if stack.Size > 1 and newOrder == true, then new order will be different than previous
  */
-func (stack *Stack) Shuffle(variadic ...any) *Stack {
+func (stack *Stack) Shuffle(arguments ...any) *Stack {
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var newOrder any
-	gogenerics.UnpackVariadic(variadic, &newOrder)
+	gogenerics.UnpackVariadic(arguments, &newOrder)
 	if newOrder == nil {newOrder = false}
 
 	// body
@@ -1077,6 +1077,66 @@ func (stack *Stack) Transpose() *Stack {
 
 }
 
+/** Switches the Key and the Val of `card`
+ 
+ @receiver `card` type{*Card}
+ @returns `card`
+ @updates `card`
+ */
+ func (card *Card) SwitchKeyVal() *Card {
+
+	// main
+	tempVal := card.Val
+	card.Val = card.Key
+	card.Key = tempVal
+
+	// return
+	return card
+
+ }
+
+ /** Switches the Key and the Val of each found card
+
+ @receiver `stack` type{*Stack}
+ @param optional `findType` type{FIND} default FIND_First
+ @param optional `findData` type{any, []any, *Stack any, func(*Card, *Stack, bool, *Stack, ...any) (bool)} default nil
+ @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
+   By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
+ @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
+ @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
+ @constructs a new stack
+ @returns type{*Stack} the new stack
+ @requires
+   IF `find` is FIND_Lambda, `findData` is of type{ func(card *Card, parentStack *Stack, isSubstack bool, workingStack *Stack, workingMem ...any) (bool) }
+  */
+  func (stack *Stack) SwitchKeysVals(arguments ...any) *Stack {
+
+	// set up arguments
+	var findType, findData, findCompareRaw, heightSearchType, height, pointerType, workingMem any
+	gogenerics.UnpackVariadic(arguments, &findType, &findData, &findCompareRaw, &heightSearchType, &height, &pointerType, &workingMem)
+	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
+	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
+	if heightSearchType == nil {heightSearchType = DEEPSEARCH_False}
+ 
+	 // main
+	// get card
+	stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, wmadrs ...any) {
+		
+		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "stack", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && retCard.Idx == -1 {
+			
+			card.SwitchKeyVal()
+
+		}
+
+	}, nil, nil, nil, workingMem.([]any), heightSearchType, height, PASS_False, PASS_True)
+ 
+	 // return
+	 return stack
+ 
+  }
+
 /** Prints information regarding `card` to the console
  
  @receiver `card` type{*Card}
@@ -1085,11 +1145,11 @@ func (stack *Stack) Transpose() *Stack {
  @updates terminal logs
  @returns `card`
  */
-func (card *Card) Print(variadic ...any) *Card {
+func (card *Card) Print(arguments ...any) *Card {
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var height any
-	gogenerics.UnpackVariadic(variadic, &height)
+	gogenerics.UnpackVariadic(arguments, &height)
 	if height == nil { height = 0 }
 
 	// prints
@@ -1133,11 +1193,11 @@ func (card *Card) Print(variadic ...any) *Card {
  @updates terminal logs
  @returns `stack`
  */
-func (stack *Stack) Print(variadic ...any) *Stack {
+func (stack *Stack) Print(arguments ...any) *Stack {
 	
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var height, idx, key any
-	gogenerics.UnpackVariadic(variadic, &height, &idx, &key)
+	gogenerics.UnpackVariadic(arguments, &height, &idx, &key)
 	if height == nil { height = 0 }
 
 	fmt.Printf("%v|%vSTACK\n", heightPrinter(height.(int)), gogenerics.IfElse(idx == nil, "gostack: PRINTING ", "SUB"))
@@ -1198,14 +1258,14 @@ func (stack *Stack) Print(variadic ...any) *Stack {
  @returns `retCard` type{*Card}
  @returns `retVarAdr` type{any}
  */
-func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), variadic ...any) (*Stack, *Stack, *Card, any) {
+func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), arguments ...any) (*Stack, *Stack, *Card, any) {
 
 	/**
 	PSEUDOCODE OUTLINE:
 
-	(stack) Lambda(lambda, ...variadic) (retAdr any)
+	(stack) Lambda(lambda, ...arguments) (retAdr any)
 
-		set up variadic stuff
+		set up arguments stuff
 
 		if height is Stack
 			height = stack to array
@@ -1248,9 +1308,9 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 
 	*/
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var retStack, retCard, retVarAdr, workingMem, heightSearchType, height, passSubstacks, passCards, otherInfo any
-	gogenerics.UnpackVariadic(variadic, &retStack, &retCard, &retVarAdr, &workingMem, &heightSearchType, &height, &passSubstacks, &passCards, &otherInfo)
+	gogenerics.UnpackVariadic(arguments, &retStack, &retCard, &retVarAdr, &workingMem, &heightSearchType, &height, &passSubstacks, &passCards, &otherInfo)
 	if retVarAdr == nil {var o any; retVarAdr = &o;}
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	setDEEPSEARCHDefaultIfNil(&heightSearchType)
@@ -1399,8 +1459,8 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
  @param optional `otherInfo` type{[]any {retStackAdr, retCardAdr}} default []any {nil, nil}
  @returns `stack` type{*Stack}
  */
-func (stack *Stack) LambdaThis(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), variadic ...any) *Stack {
-	stack.Lambda(lambda, variadic...)
+func (stack *Stack) LambdaThis(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), arguments ...any) *Stack {
+	stack.Lambda(lambda, arguments...)
 	return stack
 }
 
@@ -1420,8 +1480,8 @@ func (stack *Stack) LambdaThis(lambda func(*Card, *Stack, bool, *Stack, *Card, a
  @param optional `otherInfo` type{[]any {retStackAdr, retCardAdr}} default []any {nil, nil}
  @returns `retStack` type{*Stack}
  */
-func (stack *Stack) LambdaStack(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), variadic ...any) *Stack {
-	_, thisStack, _, _ := stack.Lambda(lambda, variadic...)
+func (stack *Stack) LambdaStack(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), arguments ...any) *Stack {
+	_, thisStack, _, _ := stack.Lambda(lambda, arguments...)
 	return thisStack
 }
 
@@ -1441,8 +1501,8 @@ func (stack *Stack) LambdaStack(lambda func(*Card, *Stack, bool, *Stack, *Card, 
  @param optional `otherInfo` type{[]any {retStackAdr, retCardAdr}} default []any {nil, nil}
  @returns `retCard` type{*Card}
  */
-func (stack *Stack) LambdaCard(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), variadic ...any) *Card {
-	_, _, thisCard, _ := stack.Lambda(lambda, variadic...)
+func (stack *Stack) LambdaCard(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), arguments ...any) *Card {
+	_, _, thisCard, _ := stack.Lambda(lambda, arguments...)
 	return thisCard
 }
 
@@ -1462,8 +1522,8 @@ func (stack *Stack) LambdaCard(lambda func(*Card, *Stack, bool, *Stack, *Card, a
  @param optional `otherInfo` type{[]any {retStackAdr, retCardAdr}} default []any {nil, nil}
  @returns `retVarAdr` type{any}
  */
-func (stack *Stack) LambdaVarAdr(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), variadic ...any) any {
-	_, _, _, retVarAdr := stack.Lambda(lambda, variadic...)
+func (stack *Stack) LambdaVarAdr(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), arguments ...any) any {
+	_, _, _, retVarAdr := stack.Lambda(lambda, arguments...)
 	return retVarAdr
 }
 
@@ -1487,9 +1547,9 @@ func (stack *Stack) LambdaVarAdr(lambda func(*Card, *Stack, bool, *Stack, *Card,
    to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns `stack` if valid find, or nil if invalid find
  */
-func (stack *Stack) Add(insert any, variadic ...any) *Stack {
+func (stack *Stack) Add(insert any, arguments ...any) *Stack {
 	
-	return stack.addHandler(false, insert, variadic...)
+	return stack.addHandler(false, insert, arguments...)
 
 }
 
@@ -1513,9 +1573,9 @@ func (stack *Stack) Add(insert any, variadic ...any) *Stack {
    to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns `stack` if valid find, or nil if invalid find
  */
-func (stack *Stack) AddMany(insert any, variadic ...any) *Stack {
+func (stack *Stack) AddMany(insert any, arguments ...any) *Stack {
 	
-	return stack.addHandler(true, insert, variadic...)
+	return stack.addHandler(true, insert, arguments...)
 
 }
 
@@ -1545,11 +1605,11 @@ func (stack *Stack) AddMany(insert any, variadic ...any) *Stack {
    to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns `stack`
  */
-func (stack *Stack) Move(variadic ...any) *Stack {
+func (stack *Stack) Move(arguments ...any) *Stack {
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var orderType, findTypeFrom, findTypeTo, findDataFrom, findDataTo, findCompareRawFrom, findCompareRawTo, heightSearchTypeFrom, heightSearchTypeTo, heightFrom, heightTo, pointerTypeFrom, pointerTypeTo, passSubstacksFrom, passSubstacksTo, passCardsFrom, passCardsTo, workingMemFrom, workingMemTo any
-	gogenerics.UnpackVariadic(variadic, &orderType, &findTypeFrom, &findTypeTo, &findDataFrom, &findDataTo, &findCompareRawFrom, &findCompareRawTo, &heightSearchTypeFrom, &heightSearchTypeTo, &heightFrom, &heightTo, &pointerTypeFrom, &pointerTypeTo, &passSubstacksFrom, &passSubstacksTo, &passCardsFrom, &passCardsTo, &workingMemFrom, &workingMemTo)
+	gogenerics.UnpackVariadic(arguments, &orderType, &findTypeFrom, &findTypeTo, &findDataFrom, &findDataTo, &findCompareRawFrom, &findCompareRawTo, &heightSearchTypeFrom, &heightSearchTypeTo, &heightFrom, &heightTo, &pointerTypeFrom, &pointerTypeTo, &passSubstacksFrom, &passSubstacksTo, &passCardsFrom, &passCardsTo, &workingMemFrom, &workingMemTo)
 	if findTypeFrom == nil {findTypeFrom = FIND_First}
 	setORDERDefaultIfNil(&orderType)
 
@@ -1587,11 +1647,11 @@ func (stack *Stack) Move(variadic ...any) *Stack {
    to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
  @returns `stack`
  */
-func (stack *Stack) Swap(variadic ...any) *Stack {
+func (stack *Stack) Swap(arguments ...any) *Stack {
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var findType1, findType2, findData1, findData2, findCompareRaw1, findCompareRaw2, heightSearchType1, heightSearchType2, height1, height2, pointerType1, pointerType2, passSubstacks1, passSubstacks2, passCards1, passCards2, workingMem1, workingMem2 any
-	gogenerics.UnpackVariadic(variadic, &findType1, &findType2, &findData1, &findData2, &findCompareRaw1, &findCompareRaw2, &heightSearchType1, &heightSearchType2, &height1, &height2, &pointerType1, &pointerType2, &passSubstacks1, &passSubstacks2, &passCards1, &passCards2, &workingMem1, &workingMem2)
+	gogenerics.UnpackVariadic(arguments, &findType1, &findType2, &findData1, &findData2, &findCompareRaw1, &findCompareRaw2, &heightSearchType1, &heightSearchType2, &height1, &height2, &pointerType1, &pointerType2, &passSubstacks1, &passSubstacks2, &passCards1, &passCards2, &workingMem1, &workingMem2)
 	if findType1 == nil {findType1 = FIND_First}
 
 	// get card1, add a placeholder right after card1, then remove card1
@@ -1629,10 +1689,10 @@ func (stack *Stack) Swap(variadic ...any) *Stack {
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
  @returns type{bool}
  */
-func (stack *Stack) Has(variadic ...any) bool {
+func (stack *Stack) Has(arguments ...any) bool {
 
 	// return
-	return stack.Get(variadic...) != nil
+	return stack.Get(arguments...) != nil
 
 }
 
@@ -1653,11 +1713,11 @@ func (stack *Stack) Has(variadic ...any) bool {
  @returns type{*Card} the found card OR nil (if invalid find)
     IF `find` is FIND_Lambda, `findData` is of type{ func(card *Card, parentStack *Stack, isSubstack bool, workingMem ...any) (bool) }
 */
- func (stack *Stack) Get(variadic ...any) *Card {
+ func (stack *Stack) Get(arguments ...any) *Card {
 	
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var findType, findData, findCompareRaw, heightSearchType, height, pointerType, passSubstacks, passCards, workingMem any
-	gogenerics.UnpackVariadic(variadic, &findType, &findData, &findCompareRaw, &heightSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
+	gogenerics.UnpackVariadic(arguments, &findType, &findData, &findCompareRaw, &heightSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
 	if heightSearchType == nil {heightSearchType = DEEPSEARCH_False}
@@ -1702,11 +1762,11 @@ func (stack *Stack) Has(variadic ...any) bool {
  @requires
    IF `find` is FIND_Lambda, `findData` is of type{ func(card *Card, parentStack *Stack, isSubstack bool, workingStack *Stack, workingMem ...any) (bool) }
  */
-func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
+func (stack *Stack) GetMany(findType FIND, arguments ...any) *Stack {
 	
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var findData, findCompareRaw, returnType, heightSearchType, height, pointerType, passSubstacks, passCards, workingMem any
-	gogenerics.UnpackVariadic(variadic, &findData, &findCompareRaw, &returnType, &heightSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
+	gogenerics.UnpackVariadic(arguments, &findData, &findCompareRaw, &returnType, &heightSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
 	if returnType == nil {returnType = RETURN_Cards}
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
@@ -1759,11 +1819,11 @@ func (stack *Stack) GetMany(findType FIND, variadic ...any) *Stack {
  @ensures
    * REPLACE_Card with nil as input ensures the card is removed
  */
-func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, variadic ...any) *Card {
+func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...any) *Card {
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var findType, findData, findCompareRaw, heightSearchType, height, pointerType, passSubstacks, passCards, workingMem any
-	gogenerics.UnpackVariadic(variadic, &findType, &findData, &findCompareRaw, &heightSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
+	gogenerics.UnpackVariadic(arguments, &findType, &findData, &findCompareRaw, &heightSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
 	if heightSearchType == nil {heightSearchType = DEEPSEARCH_False}
@@ -1858,11 +1918,11 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, variadic ...an
  @ensures
    * REPLACE_Card with nil as input ensures the card is removed
  */
- func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceWith any, variadic ...any) *Stack {
+ func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceWith any, arguments ...any) *Stack {
 
-	// unpack variadic into optional parameters
+	// unpack arguments into optional parameters
 	var findType, findData, findCompareRaw, returnType, heightSearchType, height, pointerType, passSubstacks, passCards, workingMem any
-	gogenerics.UnpackVariadic(variadic, &findType, &findData, &findCompareRaw, &returnType, &heightSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
+	gogenerics.UnpackVariadic(arguments, &findType, &findData, &findCompareRaw, &returnType, &heightSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
 	if returnType == nil {returnType = RETURN_Cards}
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
@@ -1954,10 +2014,10 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, variadic ...an
  @ensures
    * REPLACE_Card with nil as input ensures the card is removed
  */
-func (stack *Stack) Extract(variadic ...any) *Card {
+func (stack *Stack) Extract(arguments ...any) *Card {
 
 	// return the original value
-	return stack.Replace(REPLACE_Card, nil, variadic...)
+	return stack.Replace(REPLACE_Card, nil, arguments...)
 
 }
 
@@ -1981,10 +2041,10 @@ func (stack *Stack) Extract(variadic ...any) *Card {
  @ensures
    * REPLACE_Card with nil as input ensures the card is removed
  */
-func (stack *Stack) ExtractMany(variadic ...any) *Stack {
+func (stack *Stack) ExtractMany(arguments ...any) *Stack {
 
 	// return the original value
-	return stack.ReplaceMany(REPLACE_Card, nil, variadic...)
+	return stack.ReplaceMany(REPLACE_Card, nil, arguments...)
 
 }
 
@@ -2007,10 +2067,10 @@ func (stack *Stack) ExtractMany(variadic ...any) *Stack {
  @ensures
    * REPLACE_Card with nil as input ensures the card is removed
  */
-func (stack *Stack) Remove(variadic ...any) *Stack {
+func (stack *Stack) Remove(arguments ...any) *Stack {
 
 	// remove the card
-	stack.Replace(REPLACE_Card, nil, variadic...)
+	stack.Replace(REPLACE_Card, nil, arguments...)
 
 	// return stack
 	return stack
@@ -2036,10 +2096,10 @@ func (stack *Stack) Remove(variadic ...any) *Stack {
  @ensures
    * REPLACE_Card with nil as input ensures the card is removed
  */
-func (stack *Stack) RemoveMany(variadic ...any) *Stack {
+func (stack *Stack) RemoveMany(arguments ...any) *Stack {
 
 	// remove the card
-	stack.ReplaceMany(REPLACE_Card, nil, variadic...)
+	stack.ReplaceMany(REPLACE_Card, nil, arguments...)
 
 	// return stack
 	return stack
@@ -2068,10 +2128,10 @@ func (stack *Stack) RemoveMany(variadic ...any) *Stack {
  @ensures
    * REPLACE_Card with nil as input ensures the card is removed
  */
- func (stack *Stack) Update(replaceType REPLACE, replaceWith any, variadic ...any) *Stack {
+ func (stack *Stack) Update(replaceType REPLACE, replaceWith any, arguments ...any) *Stack {
 
 	// update stack
-	stack.Replace(replaceType, replaceWith, variadic...)
+	stack.Replace(replaceType, replaceWith, arguments...)
 
 	// return the original stack
 	return stack
@@ -2101,10 +2161,10 @@ func (stack *Stack) RemoveMany(variadic ...any) *Stack {
  @ensures
    * REPLACE_Card with nil as input ensures the card is removed
  */
- func (stack *Stack) UpdateMany(replaceType REPLACE, replaceWith any, variadic ...any) *Stack {
+ func (stack *Stack) UpdateMany(replaceType REPLACE, replaceWith any, arguments ...any) *Stack {
 
 	// update stack
-	stack.ReplaceMany(replaceType, replaceWith, variadic...)
+	stack.ReplaceMany(replaceType, replaceWith, arguments...)
 
 	// return the original stack
 	return stack

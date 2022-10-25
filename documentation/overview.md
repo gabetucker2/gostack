@@ -9,7 +9,7 @@
  Without yet using these structs, let's make a map structure in ***native Go***:
 
  ```
- existingMap := map[string]string {"Kid":"Tommy", "Adult":"Chuck", "Adult":"Joey"}
+ existingMap := map[string]string {"Tommy":"Kid", "Chuck":"Adult", "Joey":"Adult"}
  ``` 
  Now that we have our map structure, let's make it into a **Stack** so that we can use it with ***gostack*** functions:
 
@@ -22,7 +22,7 @@
  Great!  Next, we will get all the people in `kidsAndAdults` who are adults:
 
  ```
- adults := kidsAndAdults.GetMany(FIND_Key, "Adult")
+ adults := kidsAndAdults.GetMany(FIND_Val, "Adult")
  ```
 
  <img src="../images/gostack_StackSample2.png" width="40%" style="margin-bottom: 10px;"/>
@@ -49,7 +49,7 @@
 
  ```
  myMatrix.UpdateMany(REPLACE_Lambda, func(card *Card) {
-  card.Key = card.Key.(int) * 3
+  card.Val = card.Val.(int) * 3
  }, FIND_Lambda, func(card *Card) (bool) {
   return card.Val.(int) % 8 == 0
  })
@@ -63,7 +63,7 @@ These examples should give you an intuitive feel of how ***gostack*** works!
 
  [> Frequently asked questions (Recommended)](faq.md)
  
- [> Introductory tutorial (Recommended)](tutorials/introduction.md)
+ [> Introductory tutorial (Recommended)](tutorials/introductionTutorial.md)
 
  [> How many lines does gostack save compared to native Go?](race.md)
 

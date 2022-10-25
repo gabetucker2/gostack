@@ -891,6 +891,44 @@ func case_stack_Transpose(funcName string) {
 	
 }
 
+func case_card_SwitchKeyVal(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// main cases
+	cardA := MakeCard("MyVal", "MyKey").SwitchKeyVal()
+
+	conditions := []bool {
+		
+		// main cases
+		cardA.Equals(MakeCard("MyKey", "MyVal")), // 1
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_SwitchKeysVals(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// main cases
+	stack1 := MakeStack([]int {1, 3, 2, 4}, []string {"Guy", "Girl", "Guy", "Girl"}).SwitchKeysVals(FIND_All)
+	stack2 := MakeStackMatrix([]int {1, 3, 2, 4}, []string {"Guy", "Girl", "Guy", "Girl"}, []int {2, 2}).SwitchKeysVals(FIND_All, nil, nil, DEEPSEARCH_True)
+
+	conditions := []bool {
+		
+		// main cases
+		stack1.Equals(MakeStack([]string {"Guy", "Girl", "Guy", "Girl"}, []int {1, 3, 2, 4})), // 1
+		stack2.Equals(MakeStackMatrix([]string {"Guy", "Girl", "Guy", "Girl"}, []int {1, 3, 2, 4}, []int {2, 2})), // 2
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
 func case_card_Print(funcName string) {
 
 	test_Start(funcName, showTestText)
@@ -1538,6 +1576,8 @@ func Run(_showTestText bool) {
 	case_card_Print("card.Print") // GOOD
 	case_stack_Print("stack.Print") // GOOD
 	case_stack_Transpose("stack.Transpose") // GOOD
+	case_card_SwitchKeyVal("card.SwitchKeyVal") // GOOD
+	case_stack_SwitchKeysVals("stack.SwitchKeysVals") // GOOD
 	
 	// GENERALIZED FUNCTIONS
 	case_stack_Get("stack.Get") // GOOD

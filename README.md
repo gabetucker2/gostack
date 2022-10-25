@@ -21,11 +21,11 @@ v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
 
  <h2>Documentation</h2>
  
-  * [Conventional documentation](documentation/conventions.md)
-  * [Enum documentation](documentation/enums.md)
-  * [Struct documentation](documentation/structs.md)
-  * [Function documentation](documentation/functions.md)
-  * [Meta documentation](documentation/meta.md)
+  * [Conventional documentation](documentation/conventionsAPI.md)
+  * [Enum documentation](documentation/enumsAPI.md)
+  * [Struct documentation](documentation/structsAPI.md)
+  * [Function documentation](documentation/functionsAPI.md)
+  * [Meta documentation](documentation/metaAPI.md)
 
  <h2>Tutorials</h2>
  

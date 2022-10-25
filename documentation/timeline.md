@@ -22,20 +22,31 @@
  <h2><b>v1.0.0</b> — <i>Alpha Release</i> — 10/16/2022 — First working implementation</h2>
 
 * ***gostack***'s initial working release
-* Every function is fully implemented and case-tested
+* Every initially-planned function is fully implemented and case-tested
 
  <h1>Planned Releases</h1>
 
- <h2><b>v1.0.4</b> — <i>Beta Release</i> — 10/?/2022 — Post-release polish</h2>
+ <h2><b>v1.0.4</b> — <i>Beta Release</i> — 10/26/2022 — Post-release polish</h2>
 
-* ***gostack*** is finally opened and marketed to the public
-* ***gostack*** receives a documentation overhaul
-* ***gostack***'s functions' default parameter values have been adjusted to make more intuitive sense
-* ***gostack*** gains the **MakeSubstack()** function
-* ***gostack***'s functions' parameter naming has been adjusted to be more consistent
+Completed:
+* Community Discord server is created
 * The **Height** property of **Stacks** is renamed to **Height** to improve conceptual clarity
+* **MakeSubstack()** function added
+* **card.SwitchKeyVal()** functions added
+* **stack.SwitchKeysVals()** functions added
+
+In progress:
+* Created benchmark tests
+* Patreon page is created
+* buymeacoffee page is created
+* Gave FIND_Height and FIND_Size the same []int/Stack(int) options as FIND_Idx
+* ***gostack*** functions parameter naming has been adjusted to be more consistent
+* ***gostack***'s functions' default parameter values have been adjusted to make more intuitive sense
 * ***gostack***'s default parameter orderings have been adjusted to decrease the likelihood of having to pass repeated `nil` values
+* More strictly implement design-by-contract principles in function documentation to facilitate error-catching for invalid arguments
+* ***gostack*** receives a documentation overhaul
 * Removed all files that won't be in the full release (e.g., `unaddedcases.txt`)
+* ***gostack*** is finally opened and marketed to the public
 
  <h2><b>v1.0.6</b> — <i>Beta Release</i> — ?/?/2022 — Patch A</h2>
 

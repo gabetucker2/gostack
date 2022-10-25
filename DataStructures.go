@@ -12,8 +12,8 @@ type Stack struct {
 	Height int
 }
 
-type RETURN int
 type FIND int
+type RETURN int
 type REPLACE int
 type TYPE int
 type ORDER int
@@ -24,16 +24,7 @@ type COMPARE int
 type PASS int
 type OVERRIDE int
 type ACTION int
-
 //type PRINT int
-
-const (
-	RETURN_Idxs RETURN = iota
-	RETURN_Keys
-	RETURN_Vals
-	RETURN_Cards
-	RETURN_Stacks
-)
 
 const (
 	FIND_First FIND = iota
@@ -47,6 +38,14 @@ const (
 	FIND_Slice
 	FIND_All
 	FIND_Lambda
+)
+
+const (
+	RETURN_Idxs RETURN = iota
+	RETURN_Keys
+	RETURN_Vals
+	RETURN_Cards
+	RETURN_Stacks
 )
 
 const (
@@ -101,15 +100,15 @@ const (
 	PRINT_True
 )*/
 
-func setRETURNDefaultIfNil(returnType *any) {
-	if *returnType == nil {
-		*returnType = RETURN_Vals
-	}
-}
-
 func setFINDDefaultIfNil(findType *any) {
 	if *findType == nil {
 		*findType = FIND_Last
+	}
+}
+
+func setRETURNDefaultIfNil(returnType *any) {
+	if *returnType == nil {
+		*returnType = RETURN_Vals
 	}
 }
 
