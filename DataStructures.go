@@ -17,13 +17,14 @@ type REPLACE int
 type RETURN int
 type TYPE int
 type ORDER int
-type POINTER int
+type DEREFERENCE int
 type CLONE int
 type DEEPSEARCH int
 type COMPARE int
 type PASS int
 type OVERRIDE int
 type ACTION int
+
 //type PRINT int
 
 const (
@@ -66,8 +67,8 @@ const (
 )
 
 const (
-	POINTER_False POINTER = iota
-	POINTER_True
+	DEREFERENCE_False DEREFERENCE = iota
+	DEREFERENCE_True
 )
 
 const (
@@ -118,9 +119,9 @@ func setORDERDefaultIfNil(orderType *any) {
 	}
 }
 
-func setPOINTERDefaultIfNil(pointerType *any) {
+func setDEREFERENCEDefaultIfNil(pointerType *any) {
 	if *pointerType == nil {
-		*pointerType = POINTER_False
+		*pointerType = DEREFERENCE_False
 	}
 }
 
@@ -130,9 +131,9 @@ func setCLONEDefaultIfNil(cloneType *any) {
 	}
 }
 
-func setDEEPSEARCHDefaultIfNil(heightSearchType *any) {
-	if *heightSearchType == nil {
-		*heightSearchType = DEEPSEARCH_True
+func setDEEPSEARCHDefaultIfNil(deepSearchType *any) {
+	if *deepSearchType == nil {
+		*deepSearchType = DEEPSEARCH_True
 	}
 }
 

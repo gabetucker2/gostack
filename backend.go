@@ -58,7 +58,7 @@ func selectCard(findType any, findData any, pointerType any, findCompareRaw COMP
 
 	// set defaults
 	setFINDDefaultIfNil(&findType)
-	setPOINTERDefaultIfNil(&pointerType)
+	setDEREFERENCEDefaultIfNil(&pointerType)
 
 	override := findCompareRaw == COMPARE_True
 
@@ -110,16 +110,16 @@ func selectCard(findType any, findData any, pointerType any, findCompareRaw COMP
 		return needleInHaystack(card.Idx, haystack)
 	case FIND_Key:
 		switch pointerType {
-		case POINTER_True:
+		case DEREFERENCE_True:
 			return match(getPointer(card.Key, false), findData, override)
-		case POINTER_False:
+		case DEREFERENCE_False:
 			return match(card.Key, findData, override)
 		}
 	case FIND_Val:
 		switch pointerType {
-		case POINTER_True:
+		case DEREFERENCE_True:
 			return match(getPointer(card.Val, false), findData, override)
-		case POINTER_False:
+		case DEREFERENCE_False:
 			return match(card.Val, findData, override)
 		}
 	case FIND_Card:
@@ -431,14 +431,14 @@ func toTypeCard(card any) *Card {
 func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *Stack {
 	
 	// unpack variadic into optional parameters
-	var orderType, findType, findData, findCompareRaw, overrideCards, heightSearchType, height, pointerType, passSubstacks, passCards, workingMem any
-	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &findCompareRaw, &overrideCards, &heightSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
+	var orderType, findType, findData, findCompareRaw, overrideCards, deepSearchType, height, pointerType, passSubstacks, passCards, workingMem any
+	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &findCompareRaw, &overrideCards, &deepSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
 	setOVERRIDEDefaultIfNil(&overrideCards)
 	setORDERDefaultIfNil(&orderType)
 	setFINDDefaultIfNil(&findType)
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
-	if heightSearchType == nil {heightSearchType = DEEPSEARCH_False}
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
 	if passSubstacks == nil {passSubstacks = PASS_True}
 
 	// initialize foundCard to false so you can determine whether valid find and
@@ -503,7 +503,7 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 				
 			}
 	
-		}, nil, nil, nil, workingMem.([]any), heightSearchType, height, passSubstacks, passCards)
+		}, nil, nil, nil, workingMem.([]any), deepSearchType, height, passSubstacks, passCards)
 	}
 
 	// return nil if no add was made, else return card

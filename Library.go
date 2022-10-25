@@ -421,7 +421,7 @@ func (stack *Stack) ToMap() (m map[any]any) {
 
  @receiver `stack` type{*Stack}
  @param optional `returnType` type{RETURN} default RETURN_Vals
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `height` type{int} default -1 (heightest)
  @returns type{ []any {., ..., .}, []any {[]any {., ..., .}, []any {., ..., .}, ...}, ..., []any { []any {...{ []any{., ..., .}, ... }, ... }, ... } }
  @ensures
@@ -433,14 +433,14 @@ func (stack *Stack) ToMap() (m map[any]any) {
 func (stack *Stack) ToMatrix(arguments ...any) (matrix []any) {
 
 	// unpack arguments into optional parameters
-	var returnType, heightSearchType, height any
-	gogenerics.UnpackVariadic(arguments, &returnType, &heightSearchType, &height)
+	var returnType, deepSearchType, height any
+	gogenerics.UnpackVariadic(arguments, &returnType, &deepSearchType, &height)
 	// set defaults
 	setRETURNDefaultIfNil(&returnType)
 	setHeightDefaultIfNil(&height)
-	setDEEPSEARCHDefaultIfNil(&heightSearchType)
+	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	if height == -1 || height.(int) > stack.Height { height = stack.Height }
-	if heightSearchType == DEEPSEARCH_False { height = 1 }
+	if deepSearchType == DEEPSEARCH_False { height = 1 }
 
 	// break recursion at height == 0
 	if height.(int) != 0 {
@@ -452,7 +452,7 @@ func (stack *Stack) ToMatrix(arguments ...any) (matrix []any) {
 			
 			if isStack {
 				if height.(int) > 1 {
-					matrix = append(matrix, subStack.ToMatrix(returnType, heightSearchType, height.(int) - 1))
+					matrix = append(matrix, subStack.ToMatrix(returnType, deepSearchType, height.(int) - 1))
 				} else {
 					matrix = append(matrix, []any {})
 				}
@@ -637,7 +637,7 @@ func (card *Card) Clone() *Card {
 /** Returns a clone of the given stack
 
  @receiver `stack` type{*Stack}
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `height` type{int} default -1 (heightest)
  @param optional `cloneCardKeys` type{CLONE} default CLONE_True
  @param optional `cloneCardVals` type{CLONE} default CLONE_True
@@ -654,17 +654,17 @@ func (card *Card) Clone() *Card {
 func (stack *Stack) Clone(arguments ...any) *Stack {
 
 	// unpack arguments into optional parameters
-	var heightSearchType, height, cloneCardKeys, cloneCardVals, cloneSubstackKeys, cloneSubstackVals any
-	gogenerics.UnpackVariadic(arguments, &heightSearchType, &height, &cloneCardKeys, &cloneCardVals, &cloneSubstackKeys, &cloneSubstackVals)
+	var deepSearchType, height, cloneCardKeys, cloneCardVals, cloneSubstackKeys, cloneSubstackVals any
+	gogenerics.UnpackVariadic(arguments, &deepSearchType, &height, &cloneCardKeys, &cloneCardVals, &cloneSubstackKeys, &cloneSubstackVals)
 	// set defaults
-	setDEEPSEARCHDefaultIfNil(&heightSearchType)
+	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	setHeightDefaultIfNil(&height)
 	setCLONEDefaultIfNil(&cloneCardKeys)
 	setCLONEDefaultIfNil(&cloneCardVals)
 	setCLONEDefaultIfNil(&cloneSubstackKeys)
 	setCLONEDefaultIfNil(&cloneSubstackVals)
 	if height == -1 || height.(int) > stack.Height { height = stack.Height }
-	if heightSearchType == DEEPSEARCH_False { height = 1 }
+	if deepSearchType == DEEPSEARCH_False { height = 1 }
 
 	// init
 	clone := new(Stack)
@@ -685,8 +685,8 @@ func (stack *Stack) Clone(arguments ...any) *Stack {
 			if cloneSubstackVals == CLONE_True {
 
 				// forwardpropagate if height > 1 and we're heightsearching
-				if heightSearchType == DEEPSEARCH_True && height.(int) > 1 {
-					newCard.Val = substack.Clone(heightSearchType, height.(int) - 1, cloneCardKeys, cloneCardVals, cloneSubstackKeys, cloneSubstackVals)
+				if deepSearchType == DEEPSEARCH_True && height.(int) > 1 {
+					newCard.Val = substack.Clone(deepSearchType, height.(int) - 1, cloneCardKeys, cloneCardVals, cloneSubstackKeys, cloneSubstackVals)
 				} else {
 					newCard.Val = substack
 				}
@@ -752,8 +752,8 @@ func (stack *Stack) Unique(arguments ...any) *Stack {
  
  @receiver `thisCard` type{*Card}
  @param `otherCard` type{*Card}
- @param optional `pointerTypeKey` type{POINTER} default POINTER_False
- @param optional `pointerTypeVal` type{POINTER} default POINTER_False
+ @param optional `pointerTypeKey` type{DEREFERENCE} default DEREFERENCE_False
+ @param optional `pointerTypeVal` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `compareIdxs` type{COMPARE} default COMPARE_False
  @param optional `compareKeys` type{COMPARE} default COMPARE_True
  @param optional `compareVals` type{COMPARE} default COMPARE_True
@@ -767,8 +767,8 @@ func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 	var pointerTypeKey, pointerTypeVal, compareIdxs, compareKeys, compareVals, compareObjectAdr any
 	gogenerics.UnpackVariadic(arguments, &pointerTypeKey, &pointerTypeVal, &compareIdxs, &compareKeys, &compareVals, &compareObjectAdr)
 	// set default vals
-	setPOINTERDefaultIfNil(&pointerTypeKey)
-	setPOINTERDefaultIfNil(&pointerTypeVal)
+	setDEREFERENCEDefaultIfNil(&pointerTypeKey)
+	setDEREFERENCEDefaultIfNil(&pointerTypeVal)
 	if compareIdxs == nil {compareIdxs = COMPARE_False}
 	setCOMPAREDefaultIfNil(&compareKeys)
 	setCOMPAREDefaultIfNil(&compareVals)
@@ -787,17 +787,17 @@ func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 		(compareKeys == COMPARE_False ||
 		(compareKeys == COMPARE_True &&
 			(
-				(pointerTypeKey == POINTER_False && thisCard.Key == otherCard.Key) ||
-				(pointerTypeKey == POINTER_True && gogenerics.PointersEqual(thisCard.Key, otherCard.Key) ) ) ) )
-	//print(printType, fmt.Sprintf("KEY PASSES EQUALITY CHECK: %v: (compareKeys == COMPARE_False [%v] || (compareKeys == COMPARE_True [%v] && ( (pointerTypeKey == POINTER_False [%v] && thisCard.Key == otherCard.Key [%v]) || (pointerTypeKey == POINTER_True [%v] && gogenerics.PointersEqual(thisCard.Key, otherCard.Key) [%v] ) ) ) )", (compareKeys == COMPARE_False || (compareKeys == COMPARE_True && ( (pointerTypeKey == POINTER_False && thisCard.Key == otherCard.Key) || (pointerTypeKey == POINTER_True && gogenerics.PointersEqual(thisCard.Key, otherCard.Key) ) ) ) ), compareKeys == COMPARE_False, compareKeys == COMPARE_True, pointerTypeKey == POINTER_False, thisCard.Key == otherCard.Key, pointerTypeKey == POINTER_True, gogenerics.PointersEqual(thisCard.Key, otherCard.Key) ))
+				(pointerTypeKey == DEREFERENCE_False && thisCard.Key == otherCard.Key) ||
+				(pointerTypeKey == DEREFERENCE_True && gogenerics.PointersEqual(thisCard.Key, otherCard.Key) ) ) ) )
+	//print(printType, fmt.Sprintf("KEY PASSES EQUALITY CHECK: %v: (compareKeys == COMPARE_False [%v] || (compareKeys == COMPARE_True [%v] && ( (pointerTypeKey == DEREFERENCE_False [%v] && thisCard.Key == otherCard.Key [%v]) || (pointerTypeKey == DEREFERENCE_True [%v] && gogenerics.PointersEqual(thisCard.Key, otherCard.Key) [%v] ) ) ) )", (compareKeys == COMPARE_False || (compareKeys == COMPARE_True && ( (pointerTypeKey == DEREFERENCE_False && thisCard.Key == otherCard.Key) || (pointerTypeKey == DEREFERENCE_True && gogenerics.PointersEqual(thisCard.Key, otherCard.Key) ) ) ) ), compareKeys == COMPARE_False, compareKeys == COMPARE_True, pointerTypeKey == DEREFERENCE_False, thisCard.Key == otherCard.Key, pointerTypeKey == DEREFERENCE_True, gogenerics.PointersEqual(thisCard.Key, otherCard.Key) ))
 	
 	condition = condition && 
 		(compareVals == COMPARE_False ||
 		(compareVals == COMPARE_True &&
 			(
-				(pointerTypeVal == POINTER_False && thisCard.Val == otherCard.Val) ||
-				(pointerTypeVal == POINTER_True && gogenerics.PointersEqual(thisCard.Val, otherCard.Val) ) ) ) )
-	//print(printType, fmt.Sprintf("Val PASSES EQUALITY CHECK: %v: (compareVals == COMPARE_False [%v] || (compareVals == COMPARE_True [%v] && ( (pointerTypeVal == POINTER_False [%v] && thisCard.Val == otherCard.Val [%v]) || (pointerTypeVal == POINTER_True [%v] && gogenerics.PointersEqual(thisCard.Val, otherCard.Val) [%v] ) ) ) )", (compareVals == COMPARE_False || (compareVals == COMPARE_True && ( (pointerTypeVal == POINTER_False && thisCard.Val == otherCard.Val) || (pointerTypeVal == POINTER_True && gogenerics.PointersEqual(thisCard.Val, otherCard.Val) ) ) ) ), compareVals == COMPARE_False, compareVals == COMPARE_True, pointerTypeVal == POINTER_False, thisCard.Val == otherCard.Val, pointerTypeVal == POINTER_True, gogenerics.PointersEqual(thisCard.Val, otherCard.Val) ))
+				(pointerTypeVal == DEREFERENCE_False && thisCard.Val == otherCard.Val) ||
+				(pointerTypeVal == DEREFERENCE_True && gogenerics.PointersEqual(thisCard.Val, otherCard.Val) ) ) ) )
+	//print(printType, fmt.Sprintf("Val PASSES EQUALITY CHECK: %v: (compareVals == COMPARE_False [%v] || (compareVals == COMPARE_True [%v] && ( (pointerTypeVal == DEREFERENCE_False [%v] && thisCard.Val == otherCard.Val [%v]) || (pointerTypeVal == DEREFERENCE_True [%v] && gogenerics.PointersEqual(thisCard.Val, otherCard.Val) [%v] ) ) ) )", (compareVals == COMPARE_False || (compareVals == COMPARE_True && ( (pointerTypeVal == DEREFERENCE_False && thisCard.Val == otherCard.Val) || (pointerTypeVal == DEREFERENCE_True && gogenerics.PointersEqual(thisCard.Val, otherCard.Val) ) ) ) ), compareVals == COMPARE_False, compareVals == COMPARE_True, pointerTypeVal == DEREFERENCE_False, thisCard.Val == otherCard.Val, pointerTypeVal == DEREFERENCE_True, gogenerics.PointersEqual(thisCard.Val, otherCard.Val) ))
 
 	condition = condition && (compareIdxs == COMPARE_False || (compareIdxs == COMPARE_True && thisCard.Idx == otherCard.Idx))
 	//print(printType, fmt.Sprintf("IDX PASSES EQUALITY CHECK: %v: (compareIdxs == COMPARE_False [%v] || (compareIdxs == COMPARE_True [%v] && thisCard.Idx == otherCard.Idx [%v]))", (compareIdxs == COMPARE_False || (compareIdxs == COMPARE_True && thisCard.Idx == otherCard.Idx)), compareIdxs == COMPARE_False, compareIdxs == COMPARE_True, thisCard.Idx == otherCard.Idx))
@@ -813,17 +813,17 @@ func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
  
  @receiver `thisStack` type{*Stack}
  @param `otherStack` type{*Stack}
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
  @param optional `compareCardKeys` type{COMPARE} default COMPARE_True
  @param optional `compareCardVals` type{COMPARE} default COMPARE_True
  @param optional `compareSubstackKeys` type{SUBSTACKKEYS} default COMPARE_True
  @param optional `compareSubstackVals` type{SUBSTACKKEYS} default COMPARE_False
    this being set to true will compare the substacks themselves
- @param optional `pointerCardKeys` type{POINTER} default POINTER_False
- @param optional `pointerCardVals` type{POINTER} default POINTER_False
- @param optional `pointerSubstackKeys` type{POINTER} default POINTER_False
- @param optional `pointerSubstackVals` type{POINTER} default POINTER_True
+ @param optional `pointerCardKeys` type{DEREFERENCE} default DEREFERENCE_False
+ @param optional `pointerCardVals` type{DEREFERENCE} default DEREFERENCE_False
+ @param optional `pointerSubstackKeys` type{DEREFERENCE} default DEREFERENCE_False
+ @param optional `pointerSubstackVals` type{DEREFERENCE} default DEREFERENCE_True
    this being set to true will compare the addresses of the substacks
  @ensures
    * `stack`.Size == `otherStack`.Size is tested on the heightest layer
@@ -842,7 +842,7 @@ func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 		if height is stack
 			height = stack to array
 		testLayer = true
-		if heightSearchType is false
+		if deepSearchType is false
 			if height == -1 // first input
 				height = 1
 			else
@@ -896,10 +896,10 @@ func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 	*/
 
 	// unpack arguments into optional parameters
-	var heightSearchType, height, compareCardKeys, compareCardVals, compareSubstackKeys, compareSubstackVals, pointerCardKeys, pointerCardVals, pointerSubstackKeys, pointerSubstackVals any
-	gogenerics.UnpackVariadic(arguments, &heightSearchType, &height, &compareCardKeys, &compareCardVals, &compareSubstackKeys, &compareSubstackVals, &pointerCardKeys, &pointerCardVals, &pointerSubstackKeys, &pointerSubstackVals)
+	var deepSearchType, height, compareCardKeys, compareCardVals, compareSubstackKeys, compareSubstackVals, pointerCardKeys, pointerCardVals, pointerSubstackKeys, pointerSubstackVals any
+	gogenerics.UnpackVariadic(arguments, &deepSearchType, &height, &compareCardKeys, &compareCardVals, &compareSubstackKeys, &compareSubstackVals, &pointerCardKeys, &pointerCardVals, &pointerSubstackKeys, &pointerSubstackVals)
 	// set default vals
-	setDEEPSEARCHDefaultIfNil(&heightSearchType)
+	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	setHeightDefaultIfNil(&height)
 
 	setCOMPAREDefaultIfNil(&compareCardKeys)
@@ -907,10 +907,10 @@ func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 	setCOMPAREDefaultIfNil(&compareSubstackKeys)
 	if compareSubstackVals == nil { compareSubstackVals = COMPARE_False }
 	
-	setPOINTERDefaultIfNil(&pointerCardKeys)
-	setPOINTERDefaultIfNil(&pointerCardVals)
-	setPOINTERDefaultIfNil(&pointerSubstackKeys)
-	if pointerSubstackVals == nil { pointerSubstackVals = POINTER_True }
+	setDEREFERENCEDefaultIfNil(&pointerCardKeys)
+	setDEREFERENCEDefaultIfNil(&pointerCardVals)
+	setDEREFERENCEDefaultIfNil(&pointerSubstackKeys)
+	if pointerSubstackVals == nil { pointerSubstackVals = DEREFERENCE_True }
 
 	heightStack, heightIsStack := height.(*Stack)
 	if heightIsStack {
@@ -921,7 +921,7 @@ func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 	}
 	testLayer := true
 	_, heightIsInt := height.(int)
-	if heightSearchType == DEEPSEARCH_False {
+	if deepSearchType == DEEPSEARCH_False {
 		if height == -1 {// first input
 			height = 1
 		} else {
@@ -962,14 +962,14 @@ func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 					// compare substack properties
 					if testLayer {
 						if compareSubstackKeys == COMPARE_True {
-							if pointerSubstackKeys == POINTER_True {
+							if pointerSubstackKeys == DEREFERENCE_True {
 								test = test && gogenerics.PointersEqual(cardA.Key, cardB.Key)
 							} else {
 								test = test && cardA.Key == cardB.Key
 							}
 						}
 						if compareSubstackVals == COMPARE_True {
-							if pointerSubstackVals == POINTER_True {
+							if pointerSubstackVals == DEREFERENCE_True {
 								test = test && gogenerics.PointersEqual(cardA.Val, cardB.Val)
 							} else {
 								test = test && cardA.Val == cardB.Val
@@ -987,7 +987,7 @@ func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 							transformedHeight = append(transformedHeight.([]int), height.([]int)[i] - 1)
 						}
 					}
-					test = test && substackA.Equals(substackB, heightSearchType, transformedHeight, compareCardKeys, compareCardVals, compareSubstackKeys, compareSubstackVals, pointerCardKeys, pointerCardVals, pointerSubstackKeys, pointerSubstackVals)
+					test = test && substackA.Equals(substackB, deepSearchType, transformedHeight, compareCardKeys, compareCardVals, compareSubstackKeys, compareSubstackVals, pointerCardKeys, pointerCardVals, pointerSubstackKeys, pointerSubstackVals)
 
 				} else if (cardAIsSubstack && !cardBIsSubstack) || (!cardAIsSubstack && cardBIsSubstack) { // one holds a substack and the other doesnt
 
@@ -1102,9 +1102,9 @@ func (stack *Stack) Transpose() *Stack {
  @param optional `findData` type{any, []any, *Stack any, func(*Card, *Stack, bool, *Stack, ...any) (bool)} default nil
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `pointerType` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
  @constructs a new stack
  @returns type{*Stack} the new stack
@@ -1114,11 +1114,11 @@ func (stack *Stack) Transpose() *Stack {
   func (stack *Stack) SwitchKeysVals(arguments ...any) *Stack {
 
 	// set up arguments
-	var findType, findData, findCompareRaw, heightSearchType, height, pointerType, workingMem any
-	gogenerics.UnpackVariadic(arguments, &findType, &findData, &findCompareRaw, &heightSearchType, &height, &pointerType, &workingMem)
+	var findType, findData, findCompareRaw, deepSearchType, height, pointerType, workingMem any
+	gogenerics.UnpackVariadic(arguments, &findType, &findData, &findCompareRaw, &deepSearchType, &height, &pointerType, &workingMem)
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
-	if heightSearchType == nil {heightSearchType = DEEPSEARCH_False}
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
  
 	 // main
 	// get card
@@ -1130,7 +1130,7 @@ func (stack *Stack) Transpose() *Stack {
 
 		}
 
-	}, nil, nil, nil, workingMem.([]any), heightSearchType, height, PASS_False, PASS_True)
+	}, nil, nil, nil, workingMem.([]any), deepSearchType, height, PASS_False, PASS_True)
  
 	 // return
 	 return stack
@@ -1247,7 +1247,7 @@ func (stack *Stack) Print(arguments ...any) *Stack {
  @param optional `retVarAdr` type{any} default nil
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
    to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
  @param optional `passSubstacks` type{PASS} default PASS_False
  @param optional `passCards` type{PASS} default PASS_True
@@ -1270,7 +1270,7 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 		if height is Stack
 			height = stack to array
 		passLayer = true
-		if heightSearchType is false
+		if deepSearchType is false
 			if height == -1 // first input
 				height = 1
 			else
@@ -1309,11 +1309,11 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 	*/
 
 	// unpack arguments into optional parameters
-	var retStack, retCard, retVarAdr, workingMem, heightSearchType, height, passSubstacks, passCards, otherInfo any
-	gogenerics.UnpackVariadic(arguments, &retStack, &retCard, &retVarAdr, &workingMem, &heightSearchType, &height, &passSubstacks, &passCards, &otherInfo)
+	var retStack, retCard, retVarAdr, workingMem, deepSearchType, height, passSubstacks, passCards, otherInfo any
+	gogenerics.UnpackVariadic(arguments, &retStack, &retCard, &retVarAdr, &workingMem, &deepSearchType, &height, &passSubstacks, &passCards, &otherInfo)
 	if retVarAdr == nil {var o any; retVarAdr = &o;}
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
-	setDEEPSEARCHDefaultIfNil(&heightSearchType)
+	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	setHeightDefaultIfNil(&height)
 	if passSubstacks == nil {passSubstacks = PASS_False}
 	if passCards == nil {passCards = PASS_True}
@@ -1345,7 +1345,7 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 	has1 := false
 	hasOver1 := false
 	_, heightIsInt := height.(int)
-	if heightSearchType == DEEPSEARCH_False {
+	if deepSearchType == DEEPSEARCH_False {
 		if height == -1 {// first input
 			height = 1
 		} else {
@@ -1406,7 +1406,7 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 					}
 				}
 
-				substack.Lambda(lambda, retStack, retCard, retVarAdr, workingMem, heightSearchType, transformedHeight, passSubstacks, passCards, otherInfo)
+				substack.Lambda(lambda, retStack, retCard, retVarAdr, workingMem, deepSearchType, transformedHeight, passSubstacks, passCards, otherInfo)
 				if retCardAdr != nil && *retCardAdr.(**Card) != nil {
 					retCard = *retCardAdr.(**Card)
 				}
@@ -1452,7 +1452,7 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
  @param optional `retVarAdr` type{any} default nil
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
    to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
  @param optional `passSubstacks` type{PASS} default PASS_False
  @param optional `passCards` type{PASS} default PASS_True
@@ -1473,7 +1473,7 @@ func (stack *Stack) LambdaThis(lambda func(*Card, *Stack, bool, *Stack, *Card, a
  @param optional `retVarAdr` type{any} default nil
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
    to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
  @param optional `passSubstacks` type{PASS} default PASS_False
  @param optional `passCards` type{PASS} default PASS_True
@@ -1494,7 +1494,7 @@ func (stack *Stack) LambdaStack(lambda func(*Card, *Stack, bool, *Stack, *Card, 
  @param optional `retVarAdr` type{any} default nil
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
    to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
  @param optional `passSubstacks` type{PASS} default PASS_False
  @param optional `passCards` type{PASS} default PASS_True
@@ -1515,7 +1515,7 @@ func (stack *Stack) LambdaCard(lambda func(*Card, *Stack, bool, *Stack, *Card, a
  @param optional `retVarAdr` type{any} default nil
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
    to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
  @param optional `passSubstacks` type{PASS} default PASS_False
  @param optional `passCards` type{PASS} default PASS_True
@@ -1538,9 +1538,9 @@ func (stack *Stack) LambdaVarAdr(lambda func(*Card, *Stack, bool, *Stack, *Card,
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
  @param optional `overrideCards` type{OVERRIDE} default OVERRIDE_False
    By default, if you do stack.Add(cardA), stack = {cardA}.  If you instead desire stack = {Card {val = cardA}}, do true
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `pointerType` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
@@ -1564,9 +1564,9 @@ func (stack *Stack) Add(insert any, arguments ...any) *Stack {
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
  @param optional `overrideCards` type{OVERRIDE} default OVERRIDE_False
    By default, if you do stack.Add(cardA), stack = {cardA}.  If you instead desire stack = {Card {val = cardA}}, do true
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `pointerType` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
@@ -1590,12 +1590,12 @@ func (stack *Stack) AddMany(insert any, arguments ...any) *Stack {
  @param optional `findCompareRawFrom` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
  @param optional `findCompareRawTo` type{COMPARE} default COMPARE_False
- @param optional `heightSearchTypeFrom` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `heightSearchTypeTo` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchTypeFrom` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchTypeTo` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `heightFrom` type{int, []int, *Stack ints} default -1 (heightest)
  @param optional `heightTo` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `pointerTypeFrom` type{POINTER} default POINTER_False
- @param optional `pointerTypeTo` type{POINTER} default POINTER_False
+ @param optional `pointerTypeFrom` type{DEREFERENCE} default DEREFERENCE_False
+ @param optional `pointerTypeTo` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `passSubstacksFrom` type{PASS} default PASS_True
  @param optional `passSubstacksTo` type{PASS} default PASS_True
  @param optional `passCardsFrom` type{PASS} default PASS_True
@@ -1608,14 +1608,14 @@ func (stack *Stack) AddMany(insert any, arguments ...any) *Stack {
 func (stack *Stack) Move(arguments ...any) *Stack {
 
 	// unpack arguments into optional parameters
-	var orderType, findTypeFrom, findTypeTo, findDataFrom, findDataTo, findCompareRawFrom, findCompareRawTo, heightSearchTypeFrom, heightSearchTypeTo, heightFrom, heightTo, pointerTypeFrom, pointerTypeTo, passSubstacksFrom, passSubstacksTo, passCardsFrom, passCardsTo, workingMemFrom, workingMemTo any
-	gogenerics.UnpackVariadic(arguments, &orderType, &findTypeFrom, &findTypeTo, &findDataFrom, &findDataTo, &findCompareRawFrom, &findCompareRawTo, &heightSearchTypeFrom, &heightSearchTypeTo, &heightFrom, &heightTo, &pointerTypeFrom, &pointerTypeTo, &passSubstacksFrom, &passSubstacksTo, &passCardsFrom, &passCardsTo, &workingMemFrom, &workingMemTo)
+	var orderType, findTypeFrom, findTypeTo, findDataFrom, findDataTo, findCompareRawFrom, findCompareRawTo, deepSearchTypeFrom, deepSearchTypeTo, heightFrom, heightTo, pointerTypeFrom, pointerTypeTo, passSubstacksFrom, passSubstacksTo, passCardsFrom, passCardsTo, workingMemFrom, workingMemTo any
+	gogenerics.UnpackVariadic(arguments, &orderType, &findTypeFrom, &findTypeTo, &findDataFrom, &findDataTo, &findCompareRawFrom, &findCompareRawTo, &deepSearchTypeFrom, &deepSearchTypeTo, &heightFrom, &heightTo, &pointerTypeFrom, &pointerTypeTo, &passSubstacksFrom, &passSubstacksTo, &passCardsFrom, &passCardsTo, &workingMemFrom, &workingMemTo)
 	if findTypeFrom == nil {findTypeFrom = FIND_First}
 	setORDERDefaultIfNil(&orderType)
 
 	// main
-	cardTo := stack.Get(findTypeTo, findDataTo, findCompareRawTo, heightSearchTypeTo, heightTo, pointerTypeTo, passSubstacksTo, passCardsTo, workingMemTo)
-	cardFrom := stack.Extract(findTypeFrom, findDataFrom, findCompareRawFrom, heightSearchTypeFrom, heightFrom, pointerTypeFrom, passSubstacksFrom, passCardsFrom, workingMemFrom)
+	cardTo := stack.Get(findTypeTo, findDataTo, findCompareRawTo, deepSearchTypeTo, heightTo, pointerTypeTo, passSubstacksTo, passCardsTo, workingMemTo)
+	cardFrom := stack.Extract(findTypeFrom, findDataFrom, findCompareRawFrom, deepSearchTypeFrom, heightFrom, pointerTypeFrom, passSubstacksFrom, passCardsFrom, workingMemFrom)
 	
 	// return
 	return stack.Add(cardFrom, orderType, FIND_Card, cardTo, nil, nil, DEEPSEARCH_True)
@@ -1632,12 +1632,12 @@ func (stack *Stack) Move(arguments ...any) *Stack {
  @param optional `findCompareRaw1` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
  @param optional `findCompareRaw2` type{COMPARE} default COMPARE_False
- @param optional `heightSearchType1` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `heightSearchType2` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType1` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType2` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `height1` type{int, []int, *Stack ints} default -1 (heightest)
  @param optional `height2` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `pointerType1` type{POINTER} default POINTER_False
- @param optional `pointerType2` type{POINTER} default POINTER_False
+ @param optional `pointerType1` type{DEREFERENCE} default DEREFERENCE_False
+ @param optional `pointerType2` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `passSubstacks1` type{PASS} default PASS_True
  @param optional `passSubstacks2` type{PASS} default PASS_True
  @param optional `passCards1` type{PASS} default PASS_True
@@ -1650,18 +1650,18 @@ func (stack *Stack) Move(arguments ...any) *Stack {
 func (stack *Stack) Swap(arguments ...any) *Stack {
 
 	// unpack arguments into optional parameters
-	var findType1, findType2, findData1, findData2, findCompareRaw1, findCompareRaw2, heightSearchType1, heightSearchType2, height1, height2, pointerType1, pointerType2, passSubstacks1, passSubstacks2, passCards1, passCards2, workingMem1, workingMem2 any
-	gogenerics.UnpackVariadic(arguments, &findType1, &findType2, &findData1, &findData2, &findCompareRaw1, &findCompareRaw2, &heightSearchType1, &heightSearchType2, &height1, &height2, &pointerType1, &pointerType2, &passSubstacks1, &passSubstacks2, &passCards1, &passCards2, &workingMem1, &workingMem2)
+	var findType1, findType2, findData1, findData2, findCompareRaw1, findCompareRaw2, deepSearchType1, deepSearchType2, height1, height2, pointerType1, pointerType2, passSubstacks1, passSubstacks2, passCards1, passCards2, workingMem1, workingMem2 any
+	gogenerics.UnpackVariadic(arguments, &findType1, &findType2, &findData1, &findData2, &findCompareRaw1, &findCompareRaw2, &deepSearchType1, &deepSearchType2, &height1, &height2, &pointerType1, &pointerType2, &passSubstacks1, &passSubstacks2, &passCards1, &passCards2, &workingMem1, &workingMem2)
 	if findType1 == nil {findType1 = FIND_First}
 
 	// get card1, add a placeholder right after card1, then remove card1
 	card1Placeholder := MakeCard()
-	card1 := stack.Get(findType1, findData1, findCompareRaw1, heightSearchType1, height1, pointerType1, passSubstacks1, passCards1, workingMem1)
+	card1 := stack.Get(findType1, findData1, findCompareRaw1, deepSearchType1, height1, pointerType1, passSubstacks1, passCards1, workingMem1)
 	stack.Add(card1Placeholder, ORDER_After, FIND_Card, card1, nil, nil, DEEPSEARCH_True)
 	stack.Remove(FIND_Card, card1, nil, DEEPSEARCH_True)
 	
 	// get card2, insert card1 after card2, then remove card2
-	card2 := stack.Get(findType2, findData2, findCompareRaw2, heightSearchType2, height2, pointerType2, passSubstacks2, passCards2, workingMem2)
+	card2 := stack.Get(findType2, findData2, findCompareRaw2, deepSearchType2, height2, pointerType2, passSubstacks2, passCards2, workingMem2)
 	stack.Add(card1, ORDER_After, FIND_Card, card2, nil, nil, DEEPSEARCH_True)
 	stack.Remove(FIND_Card, card2, nil, DEEPSEARCH_True)
 
@@ -1681,9 +1681,9 @@ func (stack *Stack) Swap(arguments ...any) *Stack {
  @param optional `findData` type{any} default nil
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `pointerType` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
@@ -1703,9 +1703,9 @@ func (stack *Stack) Has(arguments ...any) bool {
  @param optional `findData` type{any, []any, *Stack any, func(*Card, *Stack, bool, ...any) (bool)} default nil
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `pointerType` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
@@ -1716,11 +1716,11 @@ func (stack *Stack) Has(arguments ...any) bool {
  func (stack *Stack) Get(arguments ...any) *Card {
 	
 	// unpack arguments into optional parameters
-	var findType, findData, findCompareRaw, heightSearchType, height, pointerType, passSubstacks, passCards, workingMem any
-	gogenerics.UnpackVariadic(arguments, &findType, &findData, &findCompareRaw, &heightSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
+	var findType, findData, findCompareRaw, deepSearchType, height, pointerType, passSubstacks, passCards, workingMem any
+	gogenerics.UnpackVariadic(arguments, &findType, &findData, &findCompareRaw, &deepSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
-	if heightSearchType == nil {heightSearchType = DEEPSEARCH_False}
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
 	if passSubstacks == nil {passSubstacks = PASS_True}
 
 	// get card
@@ -1732,7 +1732,7 @@ func (stack *Stack) Has(arguments ...any) bool {
 
 		}
 
-	}, nil, nil, nil, workingMem.([]any), heightSearchType, height, passSubstacks, passCards)
+	}, nil, nil, nil, workingMem.([]any), deepSearchType, height, passSubstacks, passCards)
 
 	// return nil if no card found, else return card
 	if out.Idx == -1 {
@@ -1751,9 +1751,9 @@ func (stack *Stack) Has(arguments ...any) bool {
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
  @param optional `returnType` type{RETURN} default RETURN_Cards
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `pointerType` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
@@ -1765,12 +1765,12 @@ func (stack *Stack) Has(arguments ...any) bool {
 func (stack *Stack) GetMany(findType FIND, arguments ...any) *Stack {
 	
 	// unpack arguments into optional parameters
-	var findData, findCompareRaw, returnType, heightSearchType, height, pointerType, passSubstacks, passCards, workingMem any
-	gogenerics.UnpackVariadic(arguments, &findData, &findCompareRaw, &returnType, &heightSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
+	var findData, findCompareRaw, returnType, deepSearchType, height, pointerType, passSubstacks, passCards, workingMem any
+	gogenerics.UnpackVariadic(arguments, &findData, &findCompareRaw, &returnType, &deepSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
 	if returnType == nil {returnType = RETURN_Cards}
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
-	if heightSearchType == nil {heightSearchType = DEEPSEARCH_False}
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
 	if passSubstacks == nil {passSubstacks = PASS_True}
 
 	// make new stack and return
@@ -1793,7 +1793,7 @@ func (stack *Stack) GetMany(findType FIND, arguments ...any) *Stack {
 			
 		}
 
-	}, nil, nil, nil, workingMem.([]any), heightSearchType, height, passSubstacks, passCards)
+	}, nil, nil, nil, workingMem.([]any), deepSearchType, height, passSubstacks, passCards)
 
 }
 
@@ -1807,9 +1807,9 @@ func (stack *Stack) GetMany(findType FIND, arguments ...any) *Stack {
  @param optional `findData` type{any} default nil
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `pointerType` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
@@ -1822,11 +1822,11 @@ func (stack *Stack) GetMany(findType FIND, arguments ...any) *Stack {
 func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...any) *Card {
 
 	// unpack arguments into optional parameters
-	var findType, findData, findCompareRaw, heightSearchType, height, pointerType, passSubstacks, passCards, workingMem any
-	gogenerics.UnpackVariadic(arguments, &findType, &findData, &findCompareRaw, &heightSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
+	var findType, findData, findCompareRaw, deepSearchType, height, pointerType, passSubstacks, passCards, workingMem any
+	gogenerics.UnpackVariadic(arguments, &findType, &findData, &findCompareRaw, &deepSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
-	if heightSearchType == nil {heightSearchType = DEEPSEARCH_False}
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
 	if passSubstacks == nil {passSubstacks = PASS_True}
 
 	// main
@@ -1900,7 +1900,7 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
 
 		}
 
-	}, nil, nil, false, workingMem.([]any), heightSearchType, height, passSubstacks, passCards)
+	}, nil, nil, false, workingMem.([]any), deepSearchType, height, passSubstacks, passCards)
 
 }
 
@@ -1915,9 +1915,9 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
  @param optional `returnType` type{RETURN} default RETURN_Cards
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `pointerType` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
@@ -1930,12 +1930,12 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
  func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceWith any, arguments ...any) *Stack {
 
 	// unpack arguments into optional parameters
-	var findType, findData, findCompareRaw, returnType, heightSearchType, height, pointerType, passSubstacks, passCards, workingMem any
-	gogenerics.UnpackVariadic(arguments, &findType, &findData, &findCompareRaw, &returnType, &heightSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
+	var findType, findData, findCompareRaw, returnType, deepSearchType, height, pointerType, passSubstacks, passCards, workingMem any
+	gogenerics.UnpackVariadic(arguments, &findType, &findData, &findCompareRaw, &returnType, &deepSearchType, &height, &pointerType, &passSubstacks, &passCards, &workingMem)
 	if returnType == nil {returnType = RETURN_Cards}
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
-	if heightSearchType == nil {heightSearchType = DEEPSEARCH_False}
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
 	if passSubstacks == nil {passSubstacks = PASS_True}
 
 	// main
@@ -2000,7 +2000,7 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
 
 		}
 
-	}, nil, nil, false, workingMem.([]any), heightSearchType, height, passSubstacks, passCards).GetMany(FIND_All, nil, nil, returnType)
+	}, nil, nil, false, workingMem.([]any), deepSearchType, height, passSubstacks, passCards).GetMany(FIND_All, nil, nil, returnType)
 
 }
 
@@ -2011,9 +2011,9 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
  @param optional `findData` type{any} default nil
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `pointerType` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
@@ -2038,9 +2038,9 @@ func (stack *Stack) Extract(arguments ...any) *Card {
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
  @param optional `returnType` type{RETURN} default RETURN_Cards
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `pointerType` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
@@ -2064,9 +2064,9 @@ func (stack *Stack) ExtractMany(arguments ...any) *Stack {
  @param optional `findData` type{any} default nil
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `pointerType` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
@@ -2093,9 +2093,9 @@ func (stack *Stack) Remove(arguments ...any) *Stack {
  @param optional `findData` type{any} default nil
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `pointerType` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
@@ -2125,9 +2125,9 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
  @param optional `findData` type{any} default nil
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `pointerType` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
@@ -2158,9 +2158,9 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
  @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
    By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
  @param optional `returnType` type{RETURN} default RETURN_Cards
- @param optional `heightSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
+ @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `height` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `pointerType` type{POINTER} default POINTER_False
+ @param optional `pointerType` type{DEREFERENCE} default DEREFERENCE_False
  @param optional `passSubstacks` type{PASS} default PASS_True
  @param optional `passCards` type{PASS} default PASS_True
  @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}

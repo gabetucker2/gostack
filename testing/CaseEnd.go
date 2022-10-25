@@ -631,20 +631,20 @@ func case_card_Equals(funcName string) {
 		!card1.Equals(card6, nil, nil, COMPARE_False, COMPARE_False, COMPARE_True), // 7
 
 		// test whether pointerTypes work for keys
-		cardA.Equals(cardB, POINTER_False), // 8
-		!cardA.Equals(cardB, POINTER_True), // 9
-		!cardB.Equals(cardC, POINTER_False), // 10
-		!cardB.Equals(cardC, POINTER_True), // 11
-		cardC.Equals(cardD, POINTER_False), // 12
-		cardC.Equals(cardD, POINTER_True), // 13
+		cardA.Equals(cardB, DEREFERENCE_False), // 8
+		!cardA.Equals(cardB, DEREFERENCE_True), // 9
+		!cardB.Equals(cardC, DEREFERENCE_False), // 10
+		!cardB.Equals(cardC, DEREFERENCE_True), // 11
+		cardC.Equals(cardD, DEREFERENCE_False), // 12
+		cardC.Equals(cardD, DEREFERENCE_True), // 13
 
 		// test whether pointerTypes work for vals
-		cardE.Equals(cardF, nil, POINTER_False), // 14
-		!cardE.Equals(cardF, nil, POINTER_True), // 15
-		!cardF.Equals(cardG, nil, POINTER_False), // 16
-		!cardF.Equals(cardG, nil, POINTER_True), // 17
-		cardG.Equals(cardH, nil, POINTER_False), // 18
-		cardG.Equals(cardH, nil, POINTER_True), // 19
+		cardE.Equals(cardF, nil, DEREFERENCE_False), // 14
+		!cardE.Equals(cardF, nil, DEREFERENCE_True), // 15
+		!cardF.Equals(cardG, nil, DEREFERENCE_False), // 16
+		!cardF.Equals(cardG, nil, DEREFERENCE_True), // 17
+		cardG.Equals(cardH, nil, DEREFERENCE_False), // 18
+		cardG.Equals(cardH, nil, DEREFERENCE_True), // 19
 		
 		// test whether we can compare not-by-pointer given we set the card keys
 		// with a non-interface (v := "Hey" RATHER THAN var v any; v = "Hey")
@@ -663,7 +663,7 @@ func case_stack_Equals(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	// since we already tested pointer comparisons in card.Equals, and since our POINTER parameters merely implement those in card.Equals, we need not test our POINTER parameters here
+	// since we already tested pointer comparisons in card.Equals, and since our DEREFERENCE parameters merely implement those in card.Equals, we need not test our DEREFERENCE parameters here
 
 	// test for shallow-on-shallow equality
 	sos1 := MakeStack([]string {"Hello", "Hey"})
@@ -1077,11 +1077,11 @@ func case_stack_Get(funcName string) {
 	stackA := MakeStack([]int {3, 6})
 	card12 := MakeStack([]*Stack {stackA, MakeStack([]int {9, 12})}).Get(FIND_Val, stackA, COMPARE_True)
 	card13 := MakeStack([]*Stack {stackA, MakeStack([]int {9, 12})}).Get(FIND_Val, MakeStack([]int {3, 6}), COMPARE_True)
-	intValA := gogenerics.MakeInterface(1)
-	intValB := gogenerics.MakeInterface(2)
-	intValC := gogenerics.MakeInterface(3)
+	intValA := 1
+	intValB := 2
+	intValC := 3
 	card14 := MakeStack([]any {&intValA, &intValB, &intValC}).Get(FIND_Val, &intValB)
-	card15 := MakeStack([]any {&intValA, &intValB, &intValC}).Get(FIND_Val, intValB, COMPARE_True, nil, nil, POINTER_True)
+	card15 := MakeStack([]any {&intValA, &intValB, &intValC}).Get(FIND_Val, intValB, COMPARE_True, nil, nil, DEREFERENCE_True)
 	card16 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).Get(FIND_All, nil, nil, DEEPSEARCH_True, []int {1})
 	card17 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).Get(FIND_All, nil, nil, DEEPSEARCH_True, []int {2})
 	card18 := MakeStack([]string {"StackA", "StackB"}, []*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).Get(FIND_All, nil, nil, DEEPSEARCH_True, 2)
