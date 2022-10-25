@@ -1124,7 +1124,7 @@ func (stack *Stack) Transpose() *Stack {
 	// get card
 	stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, wmadrs ...any) {
 		
-		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "stack", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && retCard.Idx == -1 {
+		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && retCard.Idx == -1 {
 			
 			card.SwitchKeyVal()
 
@@ -1726,7 +1726,7 @@ func (stack *Stack) Has(arguments ...any) bool {
 	// get card
 	out := stack.LambdaCard(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, wmadrs ...any) {
 		
-		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && retCard.Idx == -1 {
+		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && retCard.Idx == -1 {
 			
 			*otherInfo[3].(**Card) = *otherInfo[0].(**Card)
 
@@ -1776,7 +1776,7 @@ func (stack *Stack) GetMany(findType FIND, arguments ...any) *Stack {
 	// make new stack and return
 	return stack.LambdaStack(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, wmadrs ...any) {
 		
-		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "stack", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) {
+		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) {
 
 			switch returnType {
 			case RETURN_Keys:
@@ -1832,7 +1832,7 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
 	// main
 	return stack.LambdaCard(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, wmadrs ...any) {
 		
-		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && retCard.Idx == -1 {
+		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && retCard.Idx == -1 {
 
 			*retCard = *card.Clone() // return the original card
 
@@ -1884,9 +1884,18 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
 				parentStack.Cards = append(parentStack.Cards, endSegment...)
 
 			case REPLACE_Lambda:
-
-				replaceWith.(func(*Card, *Stack, bool, ...any)) (card, parentStack, isSubstack, wmadrs...)
-
+				
+				conversion1, success := replaceWith.(func())
+				if success {conversion1()}
+				conversion2, success := replaceWith.(func(*Card))
+				if success {conversion2(card)}
+				conversion3, success := replaceWith.(func(*Card, *Stack))
+				if success {conversion3(card, parentStack)}
+				conversion4, success := replaceWith.(func(*Card, *Stack, bool))
+				if success {conversion4(card, parentStack, isSubstack)}
+				conversion5, success := replaceWith.(func(*Card, *Stack, bool, ...any))
+				if success {conversion5(card, parentStack, isSubstack, wmadrs...)}
+				
 			}
 
 		}
@@ -1932,7 +1941,7 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
 	// main
 	return stack.LambdaStack(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, wmadrs ...any) {
 		
-		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "stack", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) {
+		if selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) {
 
 			retStack.Cards = append(retStack.Cards, card.Clone())
 

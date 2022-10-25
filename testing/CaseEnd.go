@@ -1187,6 +1187,7 @@ func case_stack_GetMany(funcName string) {
 	stack13 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3}).GetMany(FIND_All, nil, nil, RETURN_Vals)
 	stack14 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3}).GetMany(FIND_All, nil, nil, RETURN_Keys)
 	stack15 := MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}).GetMany(FIND_Idx, 0, nil, RETURN_Stacks)
+	stack16 := MakeStack([]*Stack {MakeStack([]int {1, 2, 3, 4}), MakeStack([]int {5, 6}), MakeStack([]int {7, 8, 9})}).GetMany(FIND_Size, []int {3, 4})
 
 	conditions := []bool {
 
@@ -1212,6 +1213,7 @@ func case_stack_GetMany(funcName string) {
 		stack13.Equals(MakeStack([]int {1, 2, 3})), // 13
 		stack14.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyC"})), // 14
 		stack15.Equals(MakeStack([]int {1, 2})), // 15
+		stack16.Equals(MakeStack([]*Stack {MakeStack([]int {1, 2, 3, 4}), MakeStack([]int {7, 8, 9})})), // 16
 
 	}
 
@@ -1237,6 +1239,11 @@ func case_stack_Add(funcName string) {
 	}, nil, nil, DEEPSEARCH_True, nil, nil, PASS_False)
 	stack10 := MakeStack().Add(MakeCard())
 
+	// test simplification of paramateriazation for FIND_Lambda
+	stack11 := MakeStackMatrix([]int {1, 2, 3, 4}, []string {"Hi", "Hey", "Hi", "Hey"}, []int {2, 2}).Add(MakeCard("He", 5), nil, FIND_Lambda, func(card *Card) (bool) {
+		return card.Key.(int) < 4 && card.Val == "Hi"
+	}, nil, nil, DEEPSEARCH_True, nil, nil, PASS_False)
+
 	conditions := []bool {
 
 		// test base functionality
@@ -1247,6 +1254,9 @@ func case_stack_Add(funcName string) {
 		stack8.Equals(MakeStack([]*Stack {MakeStack([]int {1, 2, 5}), MakeStack([]int {3, 4})})), // 5
 		stack9.Equals(MakeStack([]*Stack {MakeStack([]int {1, 5, 2}, []string {"Hi", "He", "Hey"}), MakeStack([]int {3, 4}, []string {"Hi", "Hey"})})), // 6
 		stack10.Equals(MakeStack(nil, nil, 1)), // 7
+		
+		// test simplification of paramateriazation for FIND_Lambda
+		stack11.Equals(stack9), // 8
 
 	}
 
@@ -1358,7 +1368,8 @@ func case_stack_Replace(funcName string) {
 	stack4 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
 	card4 := stack4.Replace(REPLACE_Card, nil)
 	stack5 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
-	card5 := stack5.Replace(REPLACE_Lambda, func(card *Card, _ *Stack, _ bool, _ ...any) {
+	stack5A := stack5.Clone()
+	card5 := stack5A.Replace(REPLACE_Lambda, func(card *Card, _ *Stack, _ bool, _ ...any) {
 		card.Val = card.Val.(int) * 2
 	})
 
@@ -1369,8 +1380,13 @@ func case_stack_Replace(funcName string) {
 	card7 := stack7.Replace(REPLACE_Card, MakeStack([]string {"KeyD", "KeyE"}, []int {4, 5}))
 	
 	// ensure only works on one card
-	stack8 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
-	card8 := stack8.Replace(REPLACE_Card, nil, FIND_All)
+	stack5B := stack5.Clone()
+	card8 := stack5B.Replace(REPLACE_Card, nil, FIND_All)
+
+	// test simplification of paramaterization for REPLACE_Lambda
+	card9 := stack5.Clone().Replace(REPLACE_Lambda, func(card *Card) {
+		card.Val = card.Val.(int) * 2
+	})
 
 	conditions := []bool {
 
@@ -1383,7 +1399,7 @@ func case_stack_Replace(funcName string) {
 		card3.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 6
 		stack4.Equals(MakeStack([]string {"KeyA", "KeyB"}, []int {1, 2})), // 7
 		card4.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 8
-		stack5.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 6})), // 9
+		stack5A.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 6})), // 9
 		card5.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 10
 
 		// test replaceWith data types
@@ -1393,8 +1409,11 @@ func case_stack_Replace(funcName string) {
 		card7.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 14
 
 		// ensure only works on one card
-		stack8.Equals(MakeStack([]string {"KeyB", "KeyC"}, []int {2, 3})), // 15
+		stack5B.Equals(MakeStack([]string {"KeyB", "KeyC"}, []int {2, 3})), // 15
 		card8.Equals(MakeCard(1, "KeyA", 0), nil, nil, COMPARE_True), // 16
+
+		// test simplification of paramaterization for REPLACE_Lambda
+		card9.Equals(card5), // 17
 
 	}
 

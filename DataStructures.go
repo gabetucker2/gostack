@@ -13,8 +13,8 @@ type Stack struct {
 }
 
 type FIND int
-type RETURN int
 type REPLACE int
+type RETURN int
 type TYPE int
 type ORDER int
 type POINTER int
@@ -41,18 +41,18 @@ const (
 )
 
 const (
+	REPLACE_Key REPLACE = iota
+	REPLACE_Val
+	REPLACE_Card
+	REPLACE_Lambda
+)
+
+const (
 	RETURN_Idxs RETURN = iota
 	RETURN_Keys
 	RETURN_Vals
 	RETURN_Cards
 	RETURN_Stacks
-)
-
-const (
-	REPLACE_Key REPLACE = iota
-	REPLACE_Val
-	REPLACE_Card
-	REPLACE_Lambda
 )
 
 const (

@@ -54,7 +54,7 @@ func match(needle any, haystack any, override bool) bool {
 	}
 }
 
-func selectCard(findType any, findData any, pointerType any, findCompareRaw COMPARE, returnType string, card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) bool {
+func selectCard(findType any, findData any, pointerType any, findCompareRaw COMPARE, card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) bool {
 
 	// set defaults
 	setFINDDefaultIfNil(&findType)
@@ -161,12 +161,25 @@ func selectCard(findType any, findData any, pointerType any, findCompareRaw COMP
 	case FIND_All:
 		return true
 	case FIND_Lambda:
-		switch returnType {
-		case "card":
-			return findData.(func(*Card, *Stack, bool, ...any) (bool)) (card, parentStack, isSubstack, wmadrs...)
-		case "stack":
-			return findData.(func(*Card, *Stack, bool, *Stack, ...any) (bool)) (card, parentStack, isSubstack, retStack, wmadrs...)
-		}
+
+		conversion1, success := findData.(func() (bool))
+		if success {return conversion1()}
+		conversion2, success := findData.(func(*Card) (bool))
+		if success {return conversion2(card)}
+		conversion3, success := findData.(func(*Card, *Stack) (bool))
+		if success {return conversion3(card, parentStack)}
+		conversion4, success := findData.(func(*Card, *Stack, bool) (bool))
+		if success {return conversion4(card, parentStack, isSubstack)}
+
+		// specific to card return/N
+		conversion5, success := findData.(func(*Card, *Stack, bool, ...any) (bool))
+		if success {return conversion5(card, parentStack, isSubstack, wmadrs...)}
+
+		// specific to stack return/NMany
+		conversion6, success := findData.(func(*Card, *Stack, bool, *Stack) (bool))
+		if success {return conversion6(card, parentStack, isSubstack, retStack)}
+		conversion7, success := findData.(func(*Card, *Stack, bool, *Stack, ...any) (bool))
+		if success {return conversion7(card, parentStack, isSubstack, retStack, wmadrs...)}
 	}
 	return false
 
@@ -466,7 +479,7 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 		stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any,  wmadrs ...any) {
 		
 			// only do add to the first match if ACTION_First, otherwise do for every match
-			if (allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...)) || (!allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), "card", card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && !foundCard) {
+			if (allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...)) || (!allNotFirst && selectCard(findType, findData, pointerType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && !foundCard) {
 	
 				// update foundCard
 				foundCard = true
