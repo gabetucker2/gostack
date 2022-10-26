@@ -35,6 +35,7 @@ Completed:
 * **card.SwitchKeyVal()** functions added
 * **stack.SwitchKeysVals()** functions added
 * Allow simplified Lambda function parameterizations
+* Added more DEFEREFERENCE options for improved flexibility
 
 In progress:
 * Created benchmark tests
