@@ -24,8 +24,6 @@ type COMPARE int
 type PASS int
 type OVERRIDE int
 
-//type PRINT int
-
 const (
 	FIND_First FIND = iota
 	FIND_Last
@@ -155,9 +153,3 @@ func setOVERRIDEDefaultIfNil(overrideType *any) {
 		*overrideType = OVERRIDE_False
 	}
 }
-
-// func setPRINTDefaultIfNil(compareType *any) {
-// 	if *compareType == nil {
-// 		*compareType = PRINT_False
-// 	}
-// }

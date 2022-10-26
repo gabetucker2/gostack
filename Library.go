@@ -773,13 +773,6 @@ func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 	setCOMPAREDefaultIfNil(&compareKeys)
 	setCOMPAREDefaultIfNil(&compareVals)
 	if compareObjectAdr == nil {compareObjectAdr = COMPARE_False}
-	/*setPRINTDefaultIfNil(&printType)
-
-	print := func(printType any, stringToPrint string) {
-		if printType.(PRINT) == PRINT_True {
-			fmt.Printf("-     DETAIL: CONDITION: %v\n", stringToPrint)
-		}
-	}*/
 
 	condition := thisCard != nil && otherCard != nil
 	
@@ -789,7 +782,6 @@ func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 			(
 				(dereferenceTypeKey == DEREFERENCE_None && thisCard.Key == otherCard.Key) ||
 				(dereferenceTypeKey == DEREFERENCE_Both && gogenerics.PointersEqual(thisCard.Key, otherCard.Key) ) ) ) )
-	//print(printType, fmt.Sprintf("KEY PASSES EQUALITY CHECK: %v: (compareKeys == COMPARE_False [%v] || (compareKeys == COMPARE_True [%v] && ( (dereferenceTypeKey == DEREFERENCE_None [%v] && thisCard.Key == otherCard.Key [%v]) || (dereferenceTypeKey == DEREFERENCE_Both [%v] && gogenerics.PointersEqual(thisCard.Key, otherCard.Key) [%v] ) ) ) )", (compareKeys == COMPARE_False || (compareKeys == COMPARE_True && ( (dereferenceTypeKey == DEREFERENCE_None && thisCard.Key == otherCard.Key) || (dereferenceTypeKey == DEREFERENCE_Both && gogenerics.PointersEqual(thisCard.Key, otherCard.Key) ) ) ) ), compareKeys == COMPARE_False, compareKeys == COMPARE_True, dereferenceTypeKey == DEREFERENCE_None, thisCard.Key == otherCard.Key, dereferenceTypeKey == DEREFERENCE_Both, gogenerics.PointersEqual(thisCard.Key, otherCard.Key) ))
 	
 	condition = condition && 
 		(compareVals == COMPARE_False ||
@@ -797,10 +789,8 @@ func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 			(
 				(dereferenceTypeVal == DEREFERENCE_None && thisCard.Val == otherCard.Val) ||
 				(dereferenceTypeVal == DEREFERENCE_Both && gogenerics.PointersEqual(thisCard.Val, otherCard.Val) ) ) ) )
-	//print(printType, fmt.Sprintf("Val PASSES EQUALITY CHECK: %v: (compareVals == COMPARE_False [%v] || (compareVals == COMPARE_True [%v] && ( (dereferenceTypeVal == DEREFERENCE_None [%v] && thisCard.Val == otherCard.Val [%v]) || (dereferenceTypeVal == DEREFERENCE_Both [%v] && gogenerics.PointersEqual(thisCard.Val, otherCard.Val) [%v] ) ) ) )", (compareVals == COMPARE_False || (compareVals == COMPARE_True && ( (dereferenceTypeVal == DEREFERENCE_None && thisCard.Val == otherCard.Val) || (dereferenceTypeVal == DEREFERENCE_Both && gogenerics.PointersEqual(thisCard.Val, otherCard.Val) ) ) ) ), compareVals == COMPARE_False, compareVals == COMPARE_True, dereferenceTypeVal == DEREFERENCE_None, thisCard.Val == otherCard.Val, dereferenceTypeVal == DEREFERENCE_Both, gogenerics.PointersEqual(thisCard.Val, otherCard.Val) ))
 
 	condition = condition && (compareIdxs == COMPARE_False || (compareIdxs == COMPARE_True && thisCard.Idx == otherCard.Idx))
-	//print(printType, fmt.Sprintf("IDX PASSES EQUALITY CHECK: %v: (compareIdxs == COMPARE_False [%v] || (compareIdxs == COMPARE_True [%v] && thisCard.Idx == otherCard.Idx [%v]))", (compareIdxs == COMPARE_False || (compareIdxs == COMPARE_True && thisCard.Idx == otherCard.Idx)), compareIdxs == COMPARE_False, compareIdxs == COMPARE_True, thisCard.Idx == otherCard.Idx))
 
 	condition = condition && (compareObjectAdr == COMPARE_False || (compareObjectAdr == COMPARE_True && fmt.Sprintf("%p", thisCard) == fmt.Sprintf("%p", otherCard)))
 	

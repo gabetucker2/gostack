@@ -2,7 +2,7 @@
 
 <h1>Meta Documentation</h1>
 
-Add image overview of project organization
+ <img src="../images/gostack_Packages.png" width="100%" style="margin-top: 10px; margin-bottom: 10px;"/>
 
 <h2>JDoc Documentation</h2>
 
