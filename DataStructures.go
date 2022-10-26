@@ -23,7 +23,6 @@ type DEEPSEARCH int
 type COMPARE int
 type PASS int
 type OVERRIDE int
-type ACTION int
 
 //type PRINT int
 

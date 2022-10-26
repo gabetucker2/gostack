@@ -263,10 +263,45 @@ Many functions have "deep search functionality".  This means they A) have a DEEP
 
 Enumerators:
  > DEEPSEARCH_True
- >> the function will listen to the `depth` parameter in considering how deep it searches
+ >> the function will listen to the `depth` parameter input in considering how deep it searches
 
  > DEEPSEARCH_False
- >> the function will ignore the `depth` parameter and only consider the immediate children of this stack
+ >> the function will set `depth` to 1, only considering the immediate children of this stack
+
+<h2 name = "COMPARE">COMPARE</h2>
+
+ > True, False
+
+An enumerator which allows you to configure whether or not you compare certain aspects of a card in a `.Equals()` equality test.
+
+Enumerators:
+ > COMPARE_True
+
+ > COMPARE_False
+
+<h2 name = "PASS">PASS</h2>
+
+ > True, False
+
+An enumerator which allows you to configure whether or not you pass a certain type of element (either a card or a substack) into a search.  This allows you to filter out substacks without needing to use an if-statement inside of lambda logic.
+
+Enumerators:
+ > PASS_True
+
+ > PASS_True
+
+<h2 name = "OVERRIDE">OVERRIDE</h2>
+
+ > True, False
+
+An enumerator which allows you to configure whether or not you "override" a certain default argument interpretation.
+
+For instance, if you pass a card as your `insert` argument into the `stack.Add()` function, then the function will automatically add that card to your stack.  If you would like to "override" this parameter and instead have the function add a card to your stack whose val is the `insert` card (i.e., add a card pointing to your card), then you would set override to true.
+
+Enumerators:
+ > OVERRIDE_True
+
+ > OVERRIDE_False
  
  ---
 
