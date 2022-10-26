@@ -35,6 +35,8 @@
  
  <img src="../images/gostack_StackSample3.png" width="70%" style="margin-bottom: 10px;"/>
 
+ In a matrix structure, "substack" will refer to cards whose val is another stack, and "card" will refer to cards whose val is not another substack.
+
  The complexity of this tree structure may feel a lot more difficult to navigate than a traditional `[][]array` structure.  But worry not!  You won't have to navigate through this.  You can treat this as a data structure which looks like `{{1, 3}, {2, 4}}`.
 
  For instance, to set the key of every final card in a substack of `myMatrix` to "Number", we would simply do:

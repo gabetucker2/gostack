@@ -1726,12 +1726,8 @@ func (stack *Stack) Has(arguments ...any) bool {
 	// get card
 	out := stack.LambdaCard(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, wmadrs ...any) {
 
-		fmt.Println("trying")
-		
 		if selectCard(findType, findData, dereferenceType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && retCard.Idx == -1 {
 
-			fmt.Println("yo man uhh bro")
-			
 			*otherInfo[3].(**Card) = *otherInfo[0].(**Card)
 
 		}

@@ -11,7 +11,7 @@ func main() {
 	gogenerics.RemoveUnusedError(testing.Run)
 
 	// tests
-	testing.Run(false)
+	testing.Run(true)
 
 	// tutorials
 	// tutorials.Bootstrap()

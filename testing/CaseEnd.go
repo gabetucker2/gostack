@@ -1113,9 +1113,11 @@ func case_stack_Get(funcName string) {
 
 	// more pointer tests
 	card26 := MakeStack([]any {intValA, intValB, intValC}).Get(FIND_Val, intValD, nil, nil, nil, DEREFERENCE_None)
-	fmt.Println("Before")
 	card27 := MakeStack([]any {intValA, intValB, intValC}).Get(FIND_Val, intValD, nil, nil, nil, DEREFERENCE_Both)
-	fmt.Println("After")
+	card28 := MakeStack([]any {intValA, intValB, intValC}).Get(FIND_Val, 2, nil, nil, nil, DEREFERENCE_Found)
+	card29 := MakeStack([]any {1, 2, 3}).Get(FIND_Val, intValD, nil, nil, nil, DEREFERENCE_This)
+	card30 := MakeStack([]any {intValA, intValB, intValC}).Get(FIND_Val, intValB, nil, nil, nil, DEREFERENCE_Found)
+	card31 := MakeStack([]any {intValA, intValB, intValC}).Get(FIND_Val, intValD, nil, nil, nil, DEREFERENCE_This)
 
 	conditions := []bool {
 
@@ -1151,6 +1153,10 @@ func case_stack_Get(funcName string) {
 		// more pointer tests
 		!card26.Equals(MakeCard(intValB, nil, 1), nil, nil, COMPARE_True), // 26
 		card27.Equals(MakeCard(intValB, nil, 1), nil, nil, COMPARE_True), // 27
+		card28.Equals(MakeCard(intValB, nil, 1), nil, nil, COMPARE_True), // 28
+		card29.Equals(MakeCard(2, nil, 1), nil, nil, COMPARE_True), // 29
+		card30 == nil, // 30
+		card31 == nil, // 31
 
 	}
 

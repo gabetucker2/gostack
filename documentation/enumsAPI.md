@@ -202,16 +202,29 @@ Enumerators:
 
  > None, Both, Found, This
 
-A enumerator which decides whether to dereference the found data or the input data before checking for equality.  For instance:
+Assuming FIND is FIND_Key or FIND_Val, this enumerator which decides whether to dereference the key/val of the found cards data or the input data before checking for equality.  For instance, given `stack.Get(..., ..., ..., ..., ..., ..., dereferenceType DEREFERENCE)`:
 
 ```
-intValA := gogenerics.MakeInterface(1)
-intValB := gogenerics.MakeInterface(2)
-intValC := gogenerics.MakeInterface(3)
-card14 := MakeStack([]any {&intValA, &intValB, &intValC}).Get(FIND_Val, &intValB) // finds the first card that matches
-card15 := MakeStack([]any {&intValA, &intValB, &intValC}).Get(FIND_Val, intValB, nil, nil, nil, DEREFERENCE_Both)
-card15 := MakeStack([]any {&intValA, &intValB, &intValC}).Get(FIND_Val, 2, nil, nil, nil, DEREFERENCE_Found)
-card15 := MakeStack([]any {intValA, intValB, intValC}).Get(FIND_Val, &intValB, nil, nil, nil, DEREFERENCE_This)
+init1 := 1
+intValA = &init1
+init2 := 2
+intValB = &init2
+init3 := 3
+intValC = &init3
+init4 := 2
+intValD = &init4
+
+mainStack := MakeStack([]any {intValA, intValB, intValC})
+
+mainStack.Clone().Get(FIND_Val, intValB, nil, nil, nil, DEREFERENCE_None) // gets intValB since intValB == intValB
+mainStack.Clone().Get(FIND_Val, intValD, nil, nil, nil, DEREFERENCE_None) // doesn't get intValB since intValB != intValD
+
+mainStack.Clone().Get(FIND_Val, intValB, nil, nil, nil, DEREFERENCE_Both) // gets intValB since 2 == 2
+mainStack.Clone().Get(FIND_Val, intValD, nil, nil, nil, DEREFERENCE_Both) // gets intValB since 2 == 2
+
+mainStack.Clone().Get(FIND_Val, 2, nil, nil, nil, DEREFERENCE_Found) // gets intValB since *intValB == 2
+
+MakeStack([]any {1, 2, 3}).Get(FIND_Val, intValB, nil, nil, nil, DEREFERENCE_This) // gets 2 since 2 == *intValB
 ```
 
 Enumerators:
@@ -222,6 +235,38 @@ Enumerators:
  > DEREFERENCE_Found
 
  > DEREFERENCE_This
+
+<h2 name = "CLONE">CLONE</h2>
+
+ > True, False
+
+Provides information to a function on whether to clone the key/val of a substack or card.  For example, given `stack.Clone(..., ..., cloneCardKeys, cloneCardVals, cloneSubstackKeys, cloneSubstackVals CLONE)`:
+
+```
+myStack.Clone(nil, nil, CLONE_True, CLONE_False, CLONE_True, CLONE_True)
+// returns a clone of myStack such that each val of a card in the new stack contains the same object val as the original card, but each card's key is a clone of the original key and each substacks key or val is a clone of the original key or val
+```
+
+Enumerators:
+ > CLONE_True
+ 
+ > CLONE_False
+
+<h2 name = "DEEPSEARCH">DEEPSEARCH</h2>
+
+ > True, False
+
+Many functions have "deep search functionality".  This means they A) have a DEEPSEARCH parameter called `deepSearchType` and B) have an int/[]int/Stack{ints} parameter called `depth` which will act as a guide for which layers to consider in the deep search.  Sample:
+
+ > enumerator type's name
+ >> how the function will behave in its search
+
+Enumerators:
+ > DEEPSEARCH_True
+ >> the function will listen to the `depth` parameter in considering how deep it searches
+
+ > DEEPSEARCH_False
+ >> the function will ignore the `depth` parameter and only consider the immediate children of this stack
  
  ---
 

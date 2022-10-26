@@ -42,11 +42,11 @@ func compareDereference(dereferenceType DEREFERENCE, found, this any) bool {
 	case DEREFERENCE_Both:
 		return gogenerics.PointersEqual(found, this)
 	case DEREFERENCE_Found:
-		return gogenerics.IsPointer(found) && reflect.DeepEqual(reflect.ValueOf(found).Elem(), this)
+		return gogenerics.IsPointer(found) && reflect.DeepEqual(reflect.ValueOf(found).Elem().Interface(), this)
 	case DEREFERENCE_This:
-		return gogenerics.IsPointer(this) && reflect.DeepEqual(found, reflect.ValueOf(this).Elem())
+		return gogenerics.IsPointer(this) && reflect.DeepEqual(found, reflect.ValueOf(this).Elem().Interface())
 	}
-		return false
+	return false
 }
 
 /** hatstack type{any, []any, *Stack} */
@@ -122,9 +122,9 @@ func selectCard(findType any, findData any, dereferenceType any, findCompareRaw 
 		}
 		return needleInHaystack(card.Idx, haystack, DEREFERENCE_None)
 	case FIND_Key:
-		return match(getPointer(card.Key, false), findData, override, dereferenceType.(DEREFERENCE))
+		return match(getPointer(card.Key, true), findData, override, dereferenceType.(DEREFERENCE))
 	case FIND_Val:
-		return match(getPointer(card.Val, false), findData, override, dereferenceType.(DEREFERENCE))
+		return match(getPointer(card.Val, true), findData, override, dereferenceType.(DEREFERENCE))
 	case FIND_Card:
 		return fmt.Sprintf("%p", card) == fmt.Sprintf("%p", findData.(*Card))
 	case FIND_Size:
