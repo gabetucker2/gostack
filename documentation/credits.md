@@ -1,4 +1,4 @@
-![Banner](../images/gostack_Smaller.png)
+![Banner](../images/gostack_SmallerTransparent.png)
 
  <h1>Credits</h1>
 

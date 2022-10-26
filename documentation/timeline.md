@@ -1,4 +1,4 @@
-![Banner](../images/gostack_Smaller.png)
+![Banner](../images/gostack_SmallerTransparent.png)
 
  6/18/2022 — Development begins
 

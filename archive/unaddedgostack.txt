@@ -154,7 +154,7 @@
  >>> [executive.go](/executive.go) exists to call functions in this project, either for case testing or executing tutorials
  >>
  >> [images](/images)
- >>> **gostack_Smaller.png** is the banner image for this project
+ >>> **gostack_SmallerTransparent.png** is the banner image for this project
  >>
  >>> **packages.png** is a layout of the package dependencies/structure of this project
  >>
