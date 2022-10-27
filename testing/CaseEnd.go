@@ -1595,7 +1595,7 @@ func Run(_showTestText bool) {
 	showTestText = _showTestText
 	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambdas, case_stack_Get, case_stack_GetMany, case_stack_Add, case_stack_AddMany, case_stack_Has, case_stack_Move, case_stack_Replace, case_stack_ReplaceMany, case_stack_Extract, case_stack_ExtractMany, case_stack_Remove, case_stack_RemoveMany, case_stack_Update, case_stack_UpdateMany, case_stack_Swap)
 
-	fmt.Println("- BEGINNING TESTS (fix failures/errors in descending order)")
+	fmt.Println("- BEGINNING TESTS")
 
 	// NON-GENERALIZED FUNCTIONS (NOT DEPENDENT ON GENERALIZED FUNCTIONS)
 	case_MakeCard("MakeCard") // GOOD

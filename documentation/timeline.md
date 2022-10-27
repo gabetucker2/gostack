@@ -49,6 +49,8 @@ In progress:
  <h2><b>v1.0.6</b> — <i>Beta Release</i> — ?/?/2022 — Patch A</h2>
 
 * More strictly implement design-by-contract principles in function documentation to facilitate error-catching for invalid arguments
+* Optimize to improve performance
+  * Add more benchmarks
 * Implement feedback from the ***gostack*** community
     * Bug fixes
     * Function restructuring
