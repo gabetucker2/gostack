@@ -1,12 +1,12 @@
 ![Banner](../images/gostack_SmallerTransparent.png)
 
- <h1>Functions</h1>
+ <h1>Function Documentation</h1>
 
  [MakeCard](#MakeCard)
 
  <h2 name = "MakeCard">MakeCard</h2>
-
- `func(variadic: input1 any, input2 any, idx int)`
+  
+ <h3>variadic: input1 any, input2 any, idx int</h3>
 
 ```
  Creates a card with given initial parameters
