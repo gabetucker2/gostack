@@ -2,29 +2,143 @@
 
  <h1>Function Documentation</h1>
 
- [MakeCard](#MakeCard)
+ *See [meta documentation](metaAPI.md) if you are curious about the format underlying our function documentation.*
 
- <h2 name = "MakeCard">MakeCard</h2>
-  
- <h3>variadic: input1 any, input2 any, idx int</h3>
+ > [MakeCard](#MakeCard)
+
+ d
+ 
+ d
+ 
+ d
+
+ d
+
+ d
+
+ d
+ d
+ 
+ d
+ 
+ d
+
+ d
+
+ d
+
+ d
+ d
+ 
+ d
+ 
+ d
+
+ d
+
+ d
+
+ d
+ d
+ 
+ d
+ 
+ d
+
+ d
+
+ d
+
+ d
+ d
+ 
+ d
+ 
+ d
+
+ d
+
+ d
+
+ d
+ d
+ 
+ d
+ 
+ d
+
+ d
+
+ d
+
+ d
+ d
+ 
+ d
+ 
+ d
+
+ d
+
+ d
+
+ d
+ d
+ 
+ d
+ 
+ d
+
+ d
+
+ d
+
+ d
+ d
+ 
+ d
+ 
+ d
+
+ d
+
+ d
+
+ d
+ d
+ 
+ d
+ 
+ d
+
+ d
+
+ d
+
+ d
+ d
+ 
+ d
+ 
+ d
+
+ d
+
+ d
+
+ d
+
+ <h2 name = "MakeCard"></h2>
+
+ `MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)`
 
 ```
- Creates a card with given initial parameters
+ Creates a card with given properties
  
- @param optional `input1` type{any} default nil
- @param optional `input2` type{any} default nil
- @param optional `idx` type{int} default -1
- @returns type{*Card} the newly-constructed card
- @constructs type{*Card} a newly-constructed card
- @ensures
-   * variable order will vary:
-     IF `input1` is passed:
- 		IF `input2` is nil/not passed:
- 			MakeCard := func(`val`, /, `idx`)
- 		IF `input2` is passed:
- 			MakeCard := func(`key`, `val`, `idx`)
- 	ELSE `input1` is nil/not passed:
- 		MakeCard := func(/, `key`, `idx`)
+ IF `input1` OR `input2` are not passed:
+ 	MakeCard := func(`val`, `key`, `idx`)
+ ELSE:
+ 	MakeCard := func(`key`, `val`, `idx`)
 ```
 
  [> Return to glossary](../README.md)
