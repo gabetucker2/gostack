@@ -11,12 +11,13 @@ import (
 
 /** Creates a card with given properties
 
- MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
+ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (newCard *Card)
  
- IF `input1` OR `input2` are not passed:
- 	MakeCard := func(`val`, `key`, `idx`)
- ELSE:
- 	MakeCard := func(`key`, `val`, `idx`)
+ @ensures
+ | IF `input1` OR `input2` are not passed:
+ |     MakeCard := func(`val`, `key`, `idx`)
+ | ELSE:
+ |     MakeCard := func(`key`, `val`, `idx`)
 */
  func MakeCard(arguments ...any) *Card {
 
@@ -46,40 +47,38 @@ import (
 }
 
 /** Creates a stack of cards with optional starting cards
+
+ MakeStack(input1 []any [nil], input2 any/map[any]any [nil], repeats int [1], overrideCards OVERRIDE [OVERRIDE_False]) (newStack *Stack)
  
- @param optional `input1` type{[]any, map[any]any} default nil
- @param optional `input2` type{[]any} default nil
- @param optional `repeats` type{int} default 1
- @param optional `overrideCards` type{OVERRIDE} default OVERRIDE_False
-   By default, if you do MakeStack([]*Card {cardA}), stack.Cards = []*Card {cardA}.  If you would like your cards to have vals pointing to other cards, where stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }, set this variable to true.
- @returns type{*Stack} the newly-constructed stack of newly-constructed cards
- @constructs type{*Stack} a newly-constructed stack of newly-constructed type{*Card} cards
+ @notes
+ | * By default, if you do MakeStack([]*Card {cardA}), stack.Cards = []*Card {cardA}.  If you would like your cards to have vals pointing to other cards, where stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }, set this variable to true.
+ |   * repeats the function filling `repeats` (or, if nil or under 0, 1) amount of times
  @requires
-  * `input1` is map and nil `input2`
-      OR `input1` is an array and nil `input2`
-	  OR `input1` is an array and `input2` is an array
-	  OR `input1` is nil and `input2` is an array
-  * IF `input1` and `input2` are both passed as arguments
-      |`input1`| == |`input2`|
+ | `input1` is a map and `input2` is nil
+ |     OR `input1` is an array and `input2` is nil
+ |     OR `input1` is an array and `input2` is an array
+ |     OR `input1` is nil and `input2` is an array
+ |
+ | IF `input1` AND `input2` are both passed as arguments
+ |      |`input1`| == |`input2`|
  @ensures
-  * repeats the function filling `repeats` (or, if nil or under 0, 1) amount of times
-  * assuming all mentions of array are interchangeable with *Stack:
-    IF `input1` is passed
-      IF `input1` is a map
-        unpack the map into new cards with corresponding keys and vals
-      ELSEIF `input1` is an array and `input2` is not passed/nil
-	    IF `input1` is an array of cards:
-		  set `stack.Cards` to `input1`
-		ELSE:
-          unpack values from `input1` into new cards
-      ELSEIF `input1` is an array and `input2` is an array
-        unpack keys from `input1` and values from `input2` into new cards
-      ELSEIF `input1` is nil and `input2` is an array
-        unpack keys from `input2` into new cards
-	ELSEIF `input1` is nil and `input2` is nil and `repeats` is passed
-		make `repeats` cards with nil value and nil key
-    ELSE
-      the stack is empty
+ | assuming all mentions of array are interchangeable with *Stack:
+ |    IF `input1` is passed
+ |      IF `input1` is a map
+ |        unpack the map into new cards with corresponding keys and vals
+ |      ELSEIF `input1` is an array and `input2` is not passed/nil
+ | 	    IF `input1` is an array of cards:
+ | 		  set `stack.Cards` to `input1`
+ | 		ELSE:
+ |          unpack values from `input1` into new cards
+ |      ELSEIF `input1` is an array and `input2` is an array
+ |        unpack keys from `input1` and values from `input2` into new cards
+ |      ELSEIF `input1` is nil and `input2` is an array
+ |        unpack keys from `input2` into new cards
+ | 		make `repeats` cards with nil value and nil key
+ | 		ELSEIF `input1` is nil and `input2` is nil and `repeats` is passed
+ |    ELSE
+ |      the stack is empty
  */
 func MakeStack(arguments ...any) *Stack {
 
