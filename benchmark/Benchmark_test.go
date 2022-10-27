@@ -9,6 +9,12 @@ import (
 
 // ----------------------------------------
 
+func Benchmark_Empty(b *testing.B) {
+	for i := 0; i < b.N; i++ { }
+}
+
+// ----------------------------------------
+
 func test_Native_CreateArray() {
 
 	myArr := []int {1, 2, 3}

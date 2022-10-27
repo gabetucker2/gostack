@@ -2,7 +2,7 @@
 
 <h1>Benchmarks</h1>
 
-To be entirely honest, there is a significant performance sacrifice in using ***gostack*** over ***native Go***.  Thus, optimization be the main focus of updates in future releases.  This sacrifice, however, especially apparent when performing basic tasks, but the performance difference exponentially alleviates as tasks become more complicated.
+There is a performance tradeoff in using ***gostack*** over ***native Go***.  This tradeoff is especially apparent when performing basic tasks, and the tradeoff exponentially alleviates as tasks become more complicated.  Thus, optimization will be the main focus of updates in future releases.
 
 > My sample task: 123 *(gostack is this many times slower than native Go at doing this)*
 

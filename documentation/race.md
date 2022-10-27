@@ -4,29 +4,25 @@
 
 <h2>Introduction</h2>
 
- Welcome!  This consists of a race between ***classical Go*** and ***gostack*** to see who can perform the same data management tasks faster.
-
- Keep in mind that ***gostack*** code has been updated since this was written and ***classical go*** code is untested, meaning this script will be slightly outdated until ***gostack*** is finished.
+ Welcome!  This consists of a race between ***native Go*** and ***gostack*** to see who can perform the same data management tasks faster.
 
  <h4>Jump To</h4>
 
  > [pseudocode outline](#pseudocode)
 
- > [classical go](#classical)
+ > [native Go](#native)
 
  > [gostack](#gostack)
 
  <h3>Assuming you would like to...</h3>
 
- > A) ...make a list representing a non-duplicating set of values from a map where its keys are either "Key A", 2.5, or "Michael Keaton"...
+ > A) ...make an array structure `taskA` representing a non-duplicating set of values from a map structure whose keys are found in array `searchKeys`
  >
- > B) ...create a new map such that the list's values are its keys and its values are the corresponding indices from the original list...
+ > B) ...create a map structure `taskB` whose keys are `taskA`'s values and whose values are the corresponding indices from the original map structure
  >
- > C) ...in a copy of B's map, replace pairs whose values are between 1 and 3 with a new slice of key-value pairs...
+ > C) ...in `taskB`'s map, replace pairs whose values are between 1 and 3 with a new slice of key-value pairs, making this new map `taskC`
  >
- > D) ...and create a copy of C, concatenating the array to itself 4 times, and putting its key-value pairs in a 2x2x2x2 matrix...
-
- ...all the while ensuring no object is cloned in the process, you could use ***classical go*** or ***gostack***:
+ > D) ...and concatenating a clone of `taskC` to itself 3 times, thereafter fitting its key-value pairs to 2x2x2x2 matrix `taskD`
 
 <h3 name = "pseudocode">...pseudocode outline</h3>
 
@@ -45,105 +41,115 @@ pairsToInsert <"I" : "Am new", "To" : "This set">
 // TASK C
 => taskC <40 : 0, "I" : "Am new", "To" : "This set", 520 : 4>
 
-// TASK D ('k' represents a key, just an abstraction for legibility)
-=> taskD < < << k, k >, < k, k >>, << k, k >, < k, k >> >,
-           < << k, k >, < k, k >>, << k, k >, < k, k >> > >
+// TASK D
+=> taskD < < << 40 : 0, "I" : "Am new" >, < "To" : "This set", 520 : 4 >>,
+             << 40 : 0, "I" : "Am new" >, < "To" : "This set", 520 : 4 >> >,
+           < << 40 : 0, "I" : "Am new" >, < "To" : "This set", 520 : 4 >>,
+             << 40 : 0, "I" : "Am new" >, < "To" : "This set", 520 : 4 >> > >
 ```
 
 ---
 
 <h2>Let's see how quickly we can do this using...</h2>
 
-<h3 name = "classical">...classical go</h3>
+<h3 name = "native">...native Go</h3>
 
 ```
 // INIT
-start := map[any]any {"1_Key A" : 40, "Bad Key" : "Bad Value", "2_Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520} // can't have same key twice so need x_KEYNAME
+startKeys := []any {"Key A", "Bad Key", "Key A", 2.5, "Michael Keaton"} // must separate maps like so since native Go maps are unordered
+startVals := []any {40, "Bad Value", "Hello", 40, "520"}
 searchKeys := []any {"Key A", 2.5, "Michael Keaton"}
 pairsToInsert := map[any]any {"I" : "Am new", "To" : "This set"}
- 
+
 // TASK A
 var taskA []any
-for i := range len(start) {
-    k := start[i] // circumvent for loop cloning of k
-    for _, search := range searchKeys {
-        if k == search {
-            alreadyInArray := false
-            for _, v := range taskA {
-                if v == k {
-                    alreadyInArray = true
-                    break
-                }
+for i := 0; i < len(startKeys); i++ {
+    k := startKeys[i]
+    v := startVals[i]
+    cont := false
+    for _, searchKey := range searchKeys {
+        if k == searchKey {
+            cont = true
+            break
+        }
+    }
+    if cont {
+        for _, otherV := range taskA {
+            if otherV == v {
+                cont = false
+                break
             }
-            if !alreadyInArray {
-                taskA = append(taskA, k)
-            }
+        }
+        if cont {
+            taskA = append(taskA, v)
+        }
+    }
+}
+
+// TASK B
+var taskBKeys, taskBVals []any
+for _, taskAVal := range taskA {
+    for i := 0; i < len(startVals); i++ {
+        v := startVals[i]
+        if taskAVal == v {
+            taskBKeys = append(taskBKeys, v)
+            taskBVals = append(taskBVals, i)
             break
         }
     }
 }
- 
-// TASK B
-var taskB map[any]any
-i = 0
-for k, v := range start {
-    for j := range len(taskA) {
-        a := taskA[j] // circumvent for loop cloning of a
-        if a == v {
-            taskB[a] = i
-        }
-    }
-    i++
-}
 
 // TASK C
-var taskC map[any]any
-for k, v := range taskB {
+var taskCKeys, taskCVals []any
+for i := 0; i < len(taskBKeys); i++ {
+    k := taskBKeys[i]
+    v := taskBVals[i]
     if 1 < v.(int) && v.(int) < 4 {
-        for k3 := range pairsToInsert {
-            k4, v4 := pairsToInsert[k3] // circumvent for-loop cloning of keys/vals
-            taskC[k4] = v4
+        for j := 0; j < len(insertKeys); j++ {
+            inK := insertKeys[j]
+            inV := insertVals[j]
+            taskCKeys = append(taskCKeys, inK)
+            taskCVals = append(taskCVals, inV)
         }
     } else {
-        taskC[k] = v
+        taskCKeys = append(taskCKeys, k)
+        taskCVals = append(taskCVals, v)
     }
 }
 
 // TASK D
-var taskD [][][][]any
-type kvPair struct {
-    key any
-    val any
-}
-for a := 0; a < 2; a++ { // using for-loops rather than recursion to make the code more legible 
-    for b := 0; b < 2; b++ {
-        for c := 0; c < 2; c++ {
-            for d := 0; d < 2; d++ {
-                k, v := taskC[a+(b*2)]
-                kClone := reflect.New(reflect.ValueOf(k).Elem().Type()).Interface() // clone our key
-                vClone := reflect.New(reflect.ValueOf(v).Elem().Type()).Interface() // clone our value
-                taskD[a][b][c][d] = kvPair {key: kClone, val: vClone}
-            }
-        }
-    }
+taskCKeys2 := append(taskCKeys, taskCKeys...)
+taskCKeys2 = append(taskCKeys2, taskCKeys...)
+taskCVals2 := append(taskCVals, taskCVals...)
+taskCVals2 = append(taskCVals2, taskCVals...)
+taskDKeys := [][][][]any{{{{nil, nil}, {nil, nil}}, {{nil, nil}, {nil, nil}}}, {{{nil, nil}, {nil, nil}}, {{nil, nil}, {nil, nil}}}}
+taskDVals := [][][][]any{{{{nil, nil}, {nil, nil}}, {{nil, nil}, {nil, nil}}}, {{{nil, nil}, {nil, nil}}, {{nil, nil}, {nil, nil}}}}
+for i := 0; i < 16; i++ {
+    var a, b, c, d int // convert i into 2x2x2x2 sequence: ([0][0][0][0], [0][0][0][1], [0][0][1][0], ..., [1][1][1][1])
+    if i%2 == 1 {d = 1}
+    if ((i-d)/2)%2 == 1 {c = 1}
+    if (4 <= i && i < 8) || (12 <= i && i < 16) {b = 1}
+    if 8 <= i {a = 1}
+    taskDKeys[a][b][c][d] = taskCKeys2[i]
+    taskDVals[a][b][c][d] = taskCVals2[i]
 }
 ```
 
-`lines: 61`
+`lines: 69`
 
 <h3 name = "gostack">...gostack</h3>
 
 ```
 // INIT
-start := MakeStack(map[any]any {"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520})
+start := MakeStack([]any {"Key A", "Bad Key", "Key A", 2.5, "Michael Keaton"}, []any {40, "Bad Value", "Hello", 40, "520"})
 searchKeys := MakeStack([]any {"Key A", 2.5, "Michael Keaton"})
-pairsToInsert := MakeStack(map[any]any {"I" : "Am new", "To" : "This set"})
+pairsToInsert := MakeStack([]any {"I", "To"}, []any {"Am new", "This set"})
 
 // TASK A
-taskA := start.GetMany(FIND_Keys, searchKeys, RETURN_Vals).Unique(TYPE_Val)
+taskA := start.GetMany(FIND_Keys, searchKeys, nil, RETURN_Vals).Unique(TYPE_Val)
 
 // TASK B
-taskB := MakeStack(taskA, start.GetMany(FIND_Vals, taskA, RETURN_Vals).Unique(TYPE_Val))
+taskB := MakeStack(taskA, start.GetMany(FIND_Vals, taskA, nil, RETURN_Vals).Unique(TYPE_Val))
 
 // TASK C
 taskC := taskB.Clone().Replace(RETURN_Cards, pairsToInsert, FIND_Lambda, func(stack *Stack, card *Card) bool {
@@ -160,7 +166,7 @@ taskD := MakeStackMatrix(taskC.Clone().Duplicate(4), nil, []int{2, 2, 2, 2})
 
 <h2>Conclusion</h2>
 
-***gostack*** won the race!  It took 6.7 times fewer lines than ***classical go*** (9 compared to 61), in turn saving 52 lines of space (excluding comments and empty lines).
+***gostack*** won the race!  Excluding comments and empty lines, it took over 7 times fewer lines than ***native Go*** (9 compared to 69), in turn saving 60 lines of space.
 
 ---
 

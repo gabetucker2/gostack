@@ -9,20 +9,41 @@ import (
 	"github.com/gabetucker2/gogenerics"
 )
 
-/** Creates a card with inputted val, key, and idx
-
-@param optional `val` type{any} default nil
-@param optional `key` type{any} default nil
-@param optional `idx` type{int} default -1
-@returns type{*Card} the newly-constructed card
-@constructs type{*Card} a newly-constructed card
-@ensures the new card will have val `val`, key `key`, and idx `idx`
+/** Creates a card with given initial parameters
+ 
+ @param optional `input1` type{any} default nil
+ @param optional `input2` type{any} default nil
+ @param optional `idx` type{int} default -1
+ @returns type{*Card} the newly-constructed card
+ @constructs type{*Card} a newly-constructed card
+ @ensures
+   * variable order will vary:
+     IF `input1` is passed:
+ 		IF `input2` is nil/not passed:
+ 			MakeCard := func(`val`, /, `idx`)
+ 		IF `input2` is passed:
+ 			MakeCard := func(`key`, `val`, `idx`)
+ 	ELSE `input1` is nil/not passed:
+ 		MakeCard := func(/, `key`, `idx`)
 */
  func MakeCard(arguments ...any) *Card {
 
 	// unpack arguments into optional parameters
-	var val, key, idx any
-	gogenerics.UnpackVariadic(arguments, &val, &key, &idx)
+	var input1, input2, idx any
+	gogenerics.UnpackVariadic(arguments, &input1, &input2, &idx)
+
+	// initialize `key` and `val`
+	var key, val any
+	if input1 == nil {
+		if input2 == nil {
+			val = input1
+		} else {
+			key = input1
+			val = input2
+		}
+	} else {
+		key = input2
+	}
 
 	// initialize and set new Card
 	card := new(Card)

@@ -51,6 +51,7 @@ In progress:
 * More strictly implement design-by-contract principles in function documentation to facilitate error-catching for invalid arguments
 * Optimize to improve performance
   * Add more benchmarks
+  * Remove all dependencies on `gogenerics` since this significantly detriments efficiency
 * Implement feedback from the ***gostack*** community
     * Bug fixes
     * Function restructuring

@@ -1635,7 +1635,7 @@ func Run(_showTestText bool) {
 	case_stack_RemoveMany("stack.RemoveMany") // GOOD
 	case_stack_Has("stack.Has") // GOOD
 	case_stack_Move("stack.Move") // GOOD
-	case_stack_Swap("stack.Swap") // BAD
+	case_stack_Swap("stack.Swap") // GOOD
 	
 	// NON-GENERALIZED FUNCTIONS (DEPENDENT ON GENERALIZED FUNCTIONS)
 	case_stack_StripStackMatrix("stack.StripStackMatrix") // GOOD
