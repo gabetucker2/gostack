@@ -49,6 +49,7 @@ In progress:
  <h2><b>v1.0.6</b> — <i>Beta Release</i> — ?/?/2022 — Patch A</h2>
 
 * More strictly implement design-by-contract principles in function documentation to facilitate error-catching for invalid arguments
+* Add function samples to each function documentation file
 * Optimize to improve performance
   * Add more benchmarks
   * Remove all dependencies on `gogenerics` since this significantly detriments efficiency
