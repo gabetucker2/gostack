@@ -140,8 +140,7 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (newCard *Card)
 	return MakeStack(arguments...)
 }
 
-/**
- Creates a stack matrix initialized with starting cards
+/** Creates a stack matrix initialized with starting cards
 
  MakeStackMatrix(input1 []any (deep/shallow)|map[any]any (deep/shallow)|*Stack [nil], input2 []any (deep/shallow)|*Stack [nil], matrixShape []int [[]int {1}], overrideCards OVERRIDE [OVERRIDE_False]) (newStackMatrix *Stack)
  
@@ -152,7 +151,7 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (newCard *Card)
  |     OR `input1` is an array and `input2` is an array
  |     OR `input1` is nil and `input2` is an array
  |
- | IF `input1` AND `input2` are both passed as arguments
+ | IF `input1` AND `input2` are both passed as arguments:
  |      |`input1`| == |`input2`|
  |
  | `matrixShape` must be an int array representing the shape of a regularly-shaped matrix where:
@@ -160,36 +159,36 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (newCard *Card)
  | * the last int defines the size of each final stack
  | * the product of `matrixShape` is equal to the amount of elements in your input(s)
  @ensures
- |  IF no `matrixShape` is passed
+ |  IF no `matrixShape` is passed:
  |    treating `input1`/`input2` as matrices ([]any {[]any {...}, []any {...}, ..., []any {...}})/a map of matrices (map[any]map[any]...map[any]any)/a StackMatrix:
- |    IF `input1` is passed
- |      IF `input1` is a map
+ |    IF `input1` is passed:
+ |      IF `input1` is a map:
  |        unpack the map into matrix of shape `inputx` with corresponding keys and vals
- |      ELSEIF `input1` is an array and `input2` is nil
+ |      ELSEIF `input1` is an array and `input2` is nil:
  |        unpack values from `input1` into matrix of shape `inputx`
- |      ELSEIF `input1` is an array and `input2` is an array
+ |      ELSEIF `input1` is an array and `input2` is an array:
  |        unpack keys from `input1` and values from `input2` into matrix of shape `inputx`
- |      ELSEIF `input1` is nil and `input2` is an array
+ |      ELSEIF `input1` is nil and `input2` is an array:
  |        unpack keys from `input2` into matrix of shape `inputx` 
- |    ELSEIF `input1` and `input2` are nil
+ |    ELSEIF `input1` and `input2` are nil:
  |      the stack is empty
- |    ELSEIF `matrixShape` is passed
+ |    ELSEIF `matrixShape` is passed:
  |      treating `input1`/`input2` as 1D structures ([]any, map[any]any, Stack):
- |      IF `input1` is a map
+ |      IF `input1` is a map:
  |        unpack the map into matrix of shape `matrixShape` with corresponding keys and vals
- |      ELSEIF `input1` is an array and `input2` is nil
+ |      ELSEIF `input1` is an array and `input2` is nil:
  |        IF `input1` is an array of cards:
- |         `overrideCards` == OVERRIDE_True:
- |             MakeStackMatrix([]*Card {cardA}) => stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }
- |         `overrideCards` == OVERRIDE_False:
- |             MakeStackMatrix([]*Card {cardA}) => stack.Cards = []*Card {cardA}
+ |          IF `overrideCards` == OVERRIDE_True:
+ |            MakeStackMatrix([]*Card {cardA}) => stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }
+ |          ELSEIF `overrideCards` == OVERRIDE_False:
+ |            MakeStackMatrix([]*Card {cardA}) => stack.Cards = []*Card {cardA}
  |        ELSE:
  |           unpack values from `input1` into new cards
- |      ELSEIF `input1` is an array and `input2` is an array
+ |      ELSEIF `input1` is an array and `input2` is an array:
  |        unpack keys from `input1` and values from `input2` into matrix of shape `matrixShape`
- |      ELSEIF `input1` is nil and `input2` is an array
+ |      ELSEIF `input1` is nil and `input2` is an array:
  |        unpack keys from `input2` into matrix of shape `matrixShape`
- |      ELSEIF `input1` is nil AND `input2` is nil
+ |      ELSEIF `input1` is nil AND `input2` is nil:
  |        create a StackMatrix of shape `matrixShape` whose heightest card keys/vals are nil
  */
 func MakeStackMatrix(arguments ...any) *Stack {
@@ -361,13 +360,9 @@ func (stack *Stack) StripStackMatrix(arguments ...any) *Stack {
 
 }
 
-/** Creates a new any array from values of `stack`
-
- @receiver `stack` type{*Stack}
- @parameter optional `returnType` type{RETURN} default RETURN_Vals
- @returns type{[]any} new array
- @requires `stack.ToMatrix()` has been implemented
- @ensures new array values correspond to `stack` values
+/** Creates a new any array whose elements are the values of the cards in `stack`
+ 
+ stack.ToArray(returnType RETURN [RETURN_Vals]) (newArray []any)
  */
 func (stack *Stack) ToArray(arguments ...any) (arr []any) {
 
@@ -380,11 +375,9 @@ func (stack *Stack) ToArray(arguments ...any) (arr []any) {
 
 }
 
-/** Creates a new any-any map from values of `stack`
+/** Creates a new map whose keys and values correspond to the cards in `stack`
 
- @receiver `stack` type{*Stack}
- @returns type{map[any]any} new map
- @ensures new map keys and values correspond to `stack` keys and values
+ stack.ToMap() (newMap map[any]any)
  */
 func (stack *Stack) ToMap() (m map[any]any) {
 
@@ -400,30 +393,19 @@ func (stack *Stack) ToMap() (m map[any]any) {
 
 }
 
-/** Creates a new matrix from a stack
+/** Creates a new matrix structure from `stack`
 
- @receiver `stack` type{*Stack}
- @param optional `returnType` type{RETURN} default RETURN_Vals
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int} default -1 (heightest)
- @returns type{ []any {., ..., .}, []any {[]any {., ..., .}, []any {., ..., .}, ...}, ..., []any { []any {...{ []any{., ..., .}, ... }, ... }, ... } }
- @ensures
-  * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} | heightsearchtrue =>
-      []any{[]any{"Hi"}, []any{"Hola", "Hello"}, "Hey"}
-  * example: Stack{Stack{"Hi"}, Stack{"Hello", "Hola"}, "Hey"} | heightsearchfalse =>
-      []any{[]any{}, []any{}, "Hey"}
+ stack.ToMatrix(returnType RETURN [RETURN_Vals], depth int [-1]) (newMatrix []any {elem/[]any{}})
  */
 func (stack *Stack) ToMatrix(arguments ...any) (matrix []any) {
 
 	// unpack arguments into optional parameters
-	var returnType, deepSearchType, depth any
-	gogenerics.UnpackVariadic(arguments, &returnType, &deepSearchType, &depth)
+	var returnType, depth any
+	gogenerics.UnpackVariadic(arguments, &returnType, &depth)
 	// set defaults
 	setRETURNDefaultIfNil(&returnType)
 	setHeightDefaultIfNil(&depth)
-	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	if depth == -1 || depth.(int) > stack.Height { depth = stack.Height }
-	if deepSearchType == DEEPSEARCH_False { depth = 1 }
 
 	// break recursion at depth == 0
 	if depth.(int) != 0 {
@@ -435,7 +417,7 @@ func (stack *Stack) ToMatrix(arguments ...any) (matrix []any) {
 			
 			if isStack {
 				if depth.(int) > 1 {
-					matrix = append(matrix, subStack.ToMatrix(returnType, deepSearchType, depth.(int) - 1))
+					matrix = append(matrix, subStack.ToMatrix(returnType, depth.(int) - 1))
 				} else {
 					matrix = append(matrix, []any {})
 				}

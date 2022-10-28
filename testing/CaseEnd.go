@@ -345,7 +345,7 @@ func case_stack_ToMatrix(funcName string) {
 	matBCorrect := []any {[]any {"Hi", "Hey"}, []any {"Hoy", "Hiya"}}
 
 	// test for shallow on depth
-	matC := MakeStackMatrix([]string {"Hi", "Hey", "Hoy", "Hiya"}, nil, []int {2, 2}).ToMatrix(nil, DEEPSEARCH_False)
+	matC := MakeStackMatrix([]string {"Hi", "Hey", "Hoy", "Hiya"}, nil, []int {2, 2}).ToMatrix(nil, 1)
 	matCCorrect := []any {[]any {}, []any {}}
 
 	// test for irregular depth
@@ -353,7 +353,7 @@ func case_stack_ToMatrix(funcName string) {
 	matDCorrect := []any {"Hi", []any {"Hoy", "Hiya"}}
 
 	// test for heightsearchfalse <=> heightsearchtrue | depth: 1
-	matE := MakeStackMatrix([]string {"Hi", "Hey", "Hoy", "Hiya"}, nil, []int {2, 2}).ToMatrix(nil, DEEPSEARCH_True, 1)
+	matE := MakeStackMatrix([]string {"Hi", "Hey", "Hoy", "Hiya"}, nil, []int {2, 2}).ToMatrix(nil, 1)
 	matECorrect := []any {[]any {}, []any {}}
 
 	// test for different return types

@@ -1,6 +1,6 @@
 ![Banner](../../images/gostack_SmallerTransparent.png)
 
- <h2 name = "MakeSubstack">MakeSubstack</h2>
+ <h2>MakeSubstack()</h2>
 
  `MakeSubstack(input1 []any|map[any]any|*Stack [nil], input2 []any|*Stack [nil], repeats int [1], overrideCards OVERRIDE [OVERRIDE_False]) (newSubstack *Stack)`
 

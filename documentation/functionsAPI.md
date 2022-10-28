@@ -8,7 +8,7 @@
  >> [MakeCard()](functions/MakeCard.md)
  >
  >> [MakeStack()](functions/MakeStack.md)
- > >
+ >>
  >> [MakeSubstack()](functions/MakeSubstack.md)
  > 
  >> [MakeStackMatrix()](functions/MakeStackMatrix.md)
@@ -96,5 +96,7 @@
  >> [stack.Update()](functions/stack_Update.md)
  >>
  >> [stack.UpdateMany()](functions/stack_UpdateMany.md)
+
+ ---
 
  [> Return to glossary](../README.md)
