@@ -11,13 +11,13 @@ import (
 
 /** Creates a card with given properties
 
- MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (newCard *Card)
- 
- @ensures
- | IF `input1` OR `input2` are nil:
- |     MakeCard := func(`val`, `key`, `idx`)
- | ELSE:
- |     MakeCard := func(`key`, `val`, `idx`)
+MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (newCard *Card)
+
+@ensures
+| IF `input1` OR `input2` are nil:
+|     MakeCard := func(`val`, `key`, `idx`)
+| ELSE:
+|     MakeCard := func(`key`, `val`, `idx`)
 */
  func MakeCard(arguments ...any) *Card {
 
@@ -143,7 +143,7 @@ import (
 /**
  Creates a stack matrix initialized with starting cards
 
- MakeStackMatrix(input1 []any|[]any {[]any, ..., []any}|map[any]any|map[any]...map[any]|*Stack [nil], input2 []any|[]any {[]any, ..., []any}|*Stack [nil], matrixShape []int [[]int {1}], overrideCards OVERRIDE [OVERRIDE_False]) (newStackMatrix *Stack)
+ MakeStackMatrix(input1 []any (deep/shallow)|map[any]any (deep/shallow)|*Stack [nil], input2 []any (deep/shallow)|*Stack [nil], matrixShape []int [[]int {1}], overrideCards OVERRIDE [OVERRIDE_False]) (newStackMatrix *Stack)
  
  Where all mentions of array are interchangeable with Stack:
  @requires

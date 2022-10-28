@@ -5,151 +5,97 @@
  *See [meta documentation](metaAPI.md) if you are curious about the format underlying our function documentation.*
 
  > Initialization functions
- >> [MakeCard()](#MakeCard)
+ >> [MakeCard()](functions/MakeCard.md)
  >
- >> [MakeStack()](#MakeStack)
+ >> [MakeStack()](functions/MakeStack.md)
  > >
- >> [MakeSubstack()](#MakeSubstack)
+ >> [MakeSubstack()](functions/MakeSubstack.md)
  > 
- >> [MakeStackMatrix()](#MakeStackMatrix)
+ >> [MakeStackMatrix()](functions/MakeStackMatrix.md)
 
  > Conversion functions
- >> [stack.ToArray()](#stack_ToArray)
+ >> [stack.ToArray()](functions/stack_ToArray.md)
  >
- >> [stack.ToMap()](#stack_ToMap)
+ >> [stack.ToMap()](functions/stack_ToMap.md)
  >
- >> [stack.ToMatrix()](#stack_ToMatrix)
+ >> [stack.ToMatrix()](functions/stack_ToMatrix.md)
  
  > Matrix functions
- >> [stack.IsRegular()](#stack_IsRegular)
+ >> [stack.IsRegular()](functions/stack_IsRegular.md)
  >
- >> [stack.Shape()](#stack_Shape)
+ >> [stack.Shape()](functions/stack_Shape.md)
  >
- >> [stack.StripStackMatrix()](#stack_StripStackMatrix)
+ >> [stack.StripStackMatrix()](functions/stack_StripStackMatrix.md)
  
  > Card/Stack management functions
- >> [card.Print()](#card_Print)
+ >> [card.Print()](functions/card_Print.md)
  >>
- >> [stack.Print()](#stack_Print)
+ >> [stack.Print()](functions/stack_Print.md)
  >
- >> [card.SwitchKeyVal()](#card_SwitchKeyVal)
+ >> [card.SwitchKeyVal()](functions/card_SwitchKeyVal.md)
  >>
- >> [stack.SwitchKeyVal()](#stack_SwitchKeyVal)
+ >> [stack.SwitchKeyVal()](functions/stack_SwitchKeyVal.md)
  >
- >> [card.Clone()](#card_Clone)
+ >> [card.Clone()](functions/card_Clone.md)
  >>
- >> [stack.Clone()](#stack_Clone)
+ >> [stack.Clone()](functions/stack_Clone.md)
  >
- >> [card.Equals()](#card_Equals)
+ >> [card.Equals()](functions/card_Equals.md)
  >>
- >> [stack.Equals()](#stack_Equals)
+ >> [stack.Equals()](functions/stack_Equals.md)
 
  > Miscellaneous functions
- >> [stack.Duplicate()](#stack_Duplicate)
+ >> [stack.Duplicate()](functions/stack_Duplicate.md)
  >
- >> [stack.Empty()](#stack_Empty)
+ >> [stack.Empty()](functions/stack_Empty.md)
  >
- >> [stack.Unique()](#stack_Unique)
+ >> [stack.Unique()](functions/stack_Unique.md)
  >
- >> [stack.Shuffle()](#stack_Shuffle)
+ >> [stack.Shuffle()](functions/stack_Shuffle.md)
  >
- >> [stack.Transpose()](#stack_Transpose)
+ >> [stack.Transpose()](functions/stack_Transpose.md)
  
  > Lambda functions
- >> [stack.Lambda()](#stack_Lambda)
+ >> [stack.Lambda()](functions/stack_Lambda.md)
  >
- >> [stack.LambdaThis()](#stack_LambdaThis)
+ >> [stack.LambdaThis()](functions/stack_LambdaThis.md)
  >
- >> [stack.LambdaStack()](#stack_LambdaStack)
+ >> [stack.LambdaStack()](functions/stack_LambdaStack.md)
  >
- >> [stack.LambdaCard()](#stack_LambdaCard)
+ >> [stack.LambdaCard()](functions/stack_LambdaCard.md)
  >
- >> [stack.LambdaVarAdr()](#stack_LambdaVarAdr)
+ >> [stack.LambdaVarAdr()](functions/stack_LambdaVarAdr.md)
  
  > Generic functions
- >> [stack.Move()](#stack_Move)
+ >> [stack.Move()](functions/stack_Move.md)
  >
- >> [stack.Swap()](#stack_Swap)
+ >> [stack.Swap()](functions/stack_Swap.md)
  >
- >> [stack.Has()](#stack_Has)
+ >> [stack.Has()](functions/stack_Has.md)
  >
- >> [stack.Add()](#stack_Add)
+ >> [stack.Add()](functions/stack_Add.md)
  >>
- >> [stack.AddMany()](#stack_AddMany)
+ >> [stack.AddMany()](functions/stack_AddMany.md)
  >
- >> [stack.Get()](#stack_Get)
+ >> [stack.Get()](functions/stack_Get.md)
  >>
- >> [stack.GetMany()](#stack_GetMany)
+ >> [stack.GetMany()](functions/stack_GetMany.md)
  >
- >> [stack.Replace()](#stack_Replace)
+ >> [stack.Replace()](functions/stack_Replace.md)
  >>
- >> [stack.ReplaceMany()](#stack_ReplaceMany)
+ >> [stack.ReplaceMany()](functions/stack_ReplaceMany.md)
  >
- >> [stack.Extract()](#stack_Extract)
+ >> [stack.Extract()](functions/stack_Extract.md)
  >>
- >> [stack.ExtractMany()](#stack_ExtractMany)
+ >> [stack.ExtractMany()](functions/stack_ExtractMany.md)
  >
- >> [stack.Remove()](#stack_Remove)
+ >> [stack.Remove()](functions/stack_Remove.md)
  >>
- >> [stack.RemoveMany()](#stack_RemoveMany)
+ >> [stack.RemoveMany()](functions/stack_RemoveMany.md)
  >
- >> [stack.Update()](#stack_Update)
+ >> [stack.Update()](functions/stack_Update.md)
  >>
- >> [stack.UpdateMany()](#stack_UpdateMany)
-
- <h2 name = "MakeCard">MakeCard</h2>
-
- `MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)`
-
-```
- Creates a card with given properties
- 
- @ensures
- | IF `input1` OR `input2` are nil:
- |     MakeCard := func(`val`, `key`, `idx`)
- | ELSE:
- |     MakeCard := func(`key`, `val`, `idx`)
-```
-
- <h2 name = "MakeStack">MakeStack</h2>
-
- `MakeStack(input1 []any|map[any]any|*Stack [nil], input2 []any|*Stack [nil], repeats int [1], overrideCards OVERRIDE [OVERRIDE_False]) (newStack *Stack)`
-
-```
- Creates a stack initialized with starting cards
- 
- Where all mentions of array are interchangeable with Stack:
- @notes
- | Makes `repeats` repeats of `input1`/`input2`
- @requires
- | `input1` is a map and `input2` is nil
- |     OR `input1` is an array and `input2` is nil
- |     OR `input1` is an array and `input2` is an array
- |     OR `input1` is nil and `input2` is an array
- |
- | IF `input1` AND `input2` are both passed as arguments
- |      |`input1`| == |`input2`|
- @ensures
- |     IF `input1` is passed
- |       IF `input1` is a map
- |         unpack the map into new cards with corresponding keys and vals
- |       ELSEIF `input1` is an array and `input2` is not passed/nil
- |  	   IF `input1` is an array of cards:
- |           `overrideCards` == OVERRIDE_True:
- |               MakeStack([]*Card {cardA}) => stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }
- |           `overrideCards` == OVERRIDE_False:
- |               MakeStack([]*Card {cardA}) => stack.Cards = []*Card {cardA}
- |  	   ELSE:
- |           unpack values from `input1` into new cards
- |       ELSEIF `input1` is an array and `input2` is an array
- |         unpack keys from `input1` and values from `input2` into new cards
- |       ELSEIF `input1` is nil and `input2` is an array
- |         unpack keys from `input2` into new cards
- |  		make `repeats` cards with nil value and nil key
- |  		ELSEIF `input1` is nil and `input2` is nil and `repeats` is passed
- |     ELSE
- |       the stack is empty
-```
+ >> [stack.UpdateMany()](functions/stack_UpdateMany.md)
 
  <h2 name = "MakeSubstack">MakeSubstack</h2>
 
@@ -161,7 +107,7 @@
 
  <h2 name = "MakeStackMatrix">MakeStackMatrix</h2>
 
- `MakeStackMatrix(input1 []any|[]any {[]any, ..., []any}|map[any]any|map[any]...map[any]|*Stack [nil], input2 []any|[]any {[]any, ..., []any}|*Stack [nil], matrixShape []int [[]int {1}], overrideCards OVERRIDE [OVERRIDE_False]) (newStackMatrix *Stack)`
+ `MakeStackMatrix(input1 []any (deep/shallow)|map[any]any (deep/shallow)|*Stack [nil], input2 []any (deep/shallow)|*Stack [nil], matrixShape []int [[]int {1}], overrideCards OVERRIDE [OVERRIDE_False]) (newStackMatrix *Stack)`
 
 ```
  Creates a stack matrix initialized with starting cards
