@@ -97,7 +97,7 @@
  >>
  >> [stack.UpdateMany()](#stack_UpdateMany)
 
- <h1 name = "MakeCard">MakeCard</h1>
+ <h2 name = "MakeCard">MakeCard</h2>
 
  `MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)`
 
@@ -111,7 +111,7 @@
  |     MakeCard := func(`key`, `val`, `idx`)
 ```
 
- <h1 name = "MakeStack">MakeStack</h1>
+ <h2 name = "MakeStack">MakeStack</h2>
 
  `MakeStack(input1 []any|map[any]any|*Stack [nil], input2 []any|*Stack [nil], repeats int [1], overrideCards OVERRIDE [OVERRIDE_False]) (newStack *Stack)`
 
@@ -151,7 +151,7 @@
  |       the stack is empty
 ```
 
- <h1 name = "MakeSubstack">MakeSubstack</h1>
+ <h2 name = "MakeSubstack">MakeSubstack</h2>
 
  `MakeSubstack(input1 []any|map[any]any|*Stack [nil], input2 []any|*Stack [nil], repeats int [1], overrideCards OVERRIDE [OVERRIDE_False]) (newSubstack *Stack)`
 
@@ -159,7 +159,7 @@
  An identical implementation to `MakeStack()`
 ```
 
- <h1 name = "MakeStackMatrix">MakeStackMatrix</h1>
+ <h2 name = "MakeStackMatrix">MakeStackMatrix</h2>
 
  `MakeStackMatrix(input1 []any|[]any {[]any, ..., []any}|map[any]any|map[any]...map[any]|*Stack [nil], input2 []any|[]any {[]any, ..., []any}|*Stack [nil], matrixShape []int [[]int {1}], overrideCards OVERRIDE [OVERRIDE_False]) (newStackMatrix *Stack)`
 
