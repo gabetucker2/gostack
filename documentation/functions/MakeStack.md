@@ -1,4 +1,6 @@
- <h1 name = "MakeStack">MakeStack</h1>
+![Banner](../../images/gostack_SmallerTransparent.png)
+
+ <h2 name = "MakeStack">MakeStack</h2>
 
  `MakeStack(input1 []any|map[any]any|*Stack [nil], input2 []any|*Stack [nil], repeats int [1], overrideCards OVERRIDE [OVERRIDE_False]) (newStack *Stack)`
 

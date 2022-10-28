@@ -1,3 +1,5 @@
+![Banner](../../images/gostack_SmallerTransparent.png)
+
  <h2 name = "MakeCard">MakeCard</h2>
 
  `MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)`
