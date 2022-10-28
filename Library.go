@@ -14,7 +14,7 @@ import (
  MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (newCard *Card)
  
  @ensures
- | IF `input1` OR `input2` are not passed:
+ | IF `input1` OR `input2` are nil:
  |     MakeCard := func(`val`, `key`, `idx`)
  | ELSE:
  |     MakeCard := func(`key`, `val`, `idx`)
@@ -46,13 +46,14 @@ import (
 
 }
 
-/** Creates a stack of cards with optional starting cards
-
- MakeStack(input1 []any [nil], input2 any/map[any]any [nil], repeats int [1], overrideCards OVERRIDE [OVERRIDE_False]) (newStack *Stack)
+/** Creates a stack initialized with starting cards
  
+ MakeStack(input1 []any|map[any]any|*Stack [nil], input2 []any|*Stack [nil], repeats int [1], overrideCards OVERRIDE [OVERRIDE_False]) (newStack *Stack)
+ 
+ Where all mentions of array are interchangeable with Stack:
  @notes
- | * By default, if you do MakeStack([]*Card {cardA}), stack.Cards = []*Card {cardA}.  If you would like your cards to have vals pointing to other cards, where stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }, set this variable to true.
- |   * repeats the function filling `repeats` (or, if nil or under 0, 1) amount of times
+ | Makes `repeats` repeats of `input1`/`input2`
+ |
  @requires
  | `input1` is a map and `input2` is nil
  |     OR `input1` is an array and `input2` is nil
@@ -62,25 +63,24 @@ import (
  | IF `input1` AND `input2` are both passed as arguments
  |      |`input1`| == |`input2`|
  @ensures
- | assuming all mentions of array are interchangeable with *Stack:
- |    IF `input1` is passed
- |      IF `input1` is a map
- |        unpack the map into new cards with corresponding keys and vals
- |      ELSEIF `input1` is an array and `input2` is not passed/nil
- | 	    IF `input1` is an array of cards:
- | 		  set `stack.Cards` to `input1`
- | 		ELSE:
- |          unpack values from `input1` into new cards
- |      ELSEIF `input1` is an array and `input2` is an array
- |        unpack keys from `input1` and values from `input2` into new cards
- |      ELSEIF `input1` is nil and `input2` is an array
- |        unpack keys from `input2` into new cards
- | 		make `repeats` cards with nil value and nil key
- | 		ELSEIF `input1` is nil and `input2` is nil and `repeats` is passed
- |    ELSE
- |      the stack is empty
+ |     IF `input1` is passed
+ |       IF `input1` is a map
+ |         unpack the map into new cards with corresponding keys and vals
+ |       ELSEIF `input1` is an array and `input2` is nil
+ |         overrideCards == OVERRIDE_True:
+ |             MakeStackMatrix([]*Card {cardA}) => stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }
+ |         overrideCards == OVERRIDE_False:
+ |             MakeStackMatrix([]*Card {cardA}) => stack.Cards = []*Card {cardA}
+ |       ELSEIF `input1` is an array and `input2` is an array
+ |         unpack keys from `input1` and values from `input2` into new cards
+ |       ELSEIF `input1` is nil and `input2` is an array
+ |         unpack keys from `input2` into new cards
+ |  		 make `repeats` cards with nil value and nil key
+ |  		 ELSEIF `input1` is nil and `input2` is nil and `repeats` is passed
+ |     ELSE
+ |       the stack is empty
  */
-func MakeStack(arguments ...any) *Stack {
+ func MakeStack(arguments ...any) *Stack {
 
 	// unpack arguments into optional parameters
 	var input1, input2, repeats, overrideCards any
@@ -132,91 +132,65 @@ func MakeStack(arguments ...any) *Stack {
 
 }
 
-/** Identical to MakeStack, but has a different name for improved semantic clarity while coding
- 
- @param optional `input1` type{[]any, map[any]any} default nil
- @param optional `input2` type{[]any} default nil
- @param optional `repeats` type{int} default 1
- @param optional `overrideCards` type{OVERRIDE} default OVERRIDE_False
-   By default, if you do MakeStack([]*Card {cardA}), stack.Cards = []*Card {cardA}.  If you would like your cards to have vals pointing to other cards, where stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }, set this variable to true.
- @returns type{*Stack} the newly-constructed stack of newly-constructed cards
- @constructs type{*Stack} a newly-constructed stack of newly-constructed type{*Card} cards
- @requires
-  * `input1` is map and nil `input2`
-      OR `input1` is an array and nil `input2`
-	  OR `input1` is an array and `input2` is an array
-	  OR `input1` is nil and `input2` is an array
-  * IF `input1` and `input2` are both passed as arguments
-      |`input1`| == |`input2`|
- @ensures
-  * repeats the function filling `repeats` (or, if nil or under 0, 1) amount of times
-  * assuming all mentions of array are interchangeable with *Stack:
-    IF `input1` is passed
-      IF `input1` is a map
-        unpack the map into new cards with corresponding keys and vals
-      ELSEIF `input1` is an array and `input2` is not passed/nil
-	    IF `input1` is an array of cards:
-		  set `stack.Cards` to `input1`
-		ELSE:
-          unpack values from `input1` into new cards
-      ELSEIF `input1` is an array and `input2` is an array
-        unpack keys from `input1` and values from `input2` into new cards
-      ELSEIF `input1` is nil and `input2` is an array
-        unpack keys from `input2` into new cards
-	ELSEIF `input1` is nil and `input2` is nil and `repeats` is passed
-		make `repeats` cards with nil value and nil key
-    ELSE
-      the stack is empty
+/** An identical implementation to `MakeStack()`
+
+ MakeSubstack(input1 []any|map[any]any|*Stack [nil], input2 any|*Stack [nil], repeats int [1], overrideCards OVERRIDE [OVERRIDE_False]) (newSubstack *Stack)
  */
  func MakeSubstack(arguments ...any) *Stack {
 	return MakeStack(arguments...)
 }
 
-/** Returns a new stack-within-stack-structured stack
+/**
+ Creates a stack matrix initialized with starting cards
+
+ MakeStackMatrix(input1 []any|[]any {[]any, ..., []any}|map[any]any|map[any]...map[any]|*Stack [nil], input2 []any|[]any {[]any, ..., []any}|*Stack [nil], matrixShape []int [[]int {1}], overrideCards OVERRIDE [OVERRIDE_False]) (newStackMatrix *Stack)
  
- @param optional `input1` type{any} default nil
- @param optional `input2` type{any} default nil
- @param optional `matrixShape` type{[]int} default nil
-  * an int array representing the shape of the matrix
-  * the first int is the largest container
-  * the last int is the container directly containing the inputted cards
- @param optional `overrideCards` type{OVERRIDE} default OVERRIDE_False
-   By default, if you do MakeStackMatrix([]*Card {cardA}), stack.Cards = []*Card {cardA}.  If you would like your cards to have vals pointing to other cards, where stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }, set this variable to true.
-   This only has an effect when `matrixShape` is passed.
- @returns type{*Stack} a new stack
- @constructs type{*Stack} a new stack with type{*Card} new cards
+ Where all mentions of array are interchangeable with Stack:
  @requires
-  * If no `matrixShape` is passed, keys dimension must match the vals dimension
-  * IF `input1` and `input2` are both passed as arguments
-      |`input1`| == |`input2`|
+ | `input1` is a map and `input2` is nil
+ |     OR `input1` is an array and `input2` is nil
+ |     OR `input1` is an array and `input2` is an array
+ |     OR `input1` is nil and `input2` is an array
+ |
+ | IF `input1` AND `input2` are both passed as arguments
+ |      |`input1`| == |`input2`|
+ |
+ | `matrixShape` must be an int array representing the shape of a regularly-shaped matrix where:
+ | * the first int defines `newStackMatrix.Size`
+ | * the last int defines the size of each final stack
+ | * the product of `matrixShape` is equal to the amount of elements in your input(s)
  @ensures
-  * assuming all mentions of array are interchangeable with *Stack:
-    IF no `matrixShape` is passed
-      treating `input1`/`input2` as matrices/a map of matrices:
-      IF `input1` is passed
-        IF `input1` is a map
-          unpack the map into matrix of shape `inputx` with corresponding keys and vals
-        ELSEIF `input1` is an array and `input2` is not passed/nil
-          unpack values from `input1` into matrix of shape `inputx`
-        ELSEIF `input1` is an array and `input2` is an array
-          unpack keys from `input1` and values from `input2` into matrix of shape `inputx`
-        ELSEIF `input1` is nil and `input2` is an array
-          unpack keys from `input2` into matrix of shape `inputx` 
-      ELSEIF `input1` is not passed
-        the stack is empty
-	ELSEIF `matrixShape` is passed
-	  treating `input1`/`input2` as 1D structures:
-	  IF `input1` is passed
-        IF `input1` is a map
-          unpack the map into matrix of shape `matrixShape` with corresponding keys and vals
-        ELSEIF `input1` is an array and `input2` is not passed/nil
-          unpack values from `input1` into new cards in matrix of shape `matrixShape`
-        ELSEIF `input1` is an array and `input2` is an array
-          unpack keys from `input1` and values from `input2` into matrix of shape `matrixShape`
-        ELSEIF `input1` is nil and `input2` is an array
-          unpack keys from `input2` into matrix of shape `matrixShape`
-	  ELSEIF `input1` is not passed AND `input2` is not passed
-	    create a StackMatrix of shape `matrixShape` whose heightest card keys/vals are nil
+ |  IF no `matrixShape` is passed
+ |    treating `input1`/`input2` as matrices ([]any {[]any {...}, []any {...}, ..., []any {...}})/a map of matrices (map[any]map[any]...map[any]any)/a StackMatrix:
+ |    IF `input1` is passed
+ |      IF `input1` is a map
+ |        unpack the map into matrix of shape `inputx` with corresponding keys and vals
+ |      ELSEIF `input1` is an array and `input2` is nil
+ |        unpack values from `input1` into matrix of shape `inputx`
+ |      ELSEIF `input1` is an array and `input2` is an array
+ |        unpack keys from `input1` and values from `input2` into matrix of shape `inputx`
+ |      ELSEIF `input1` is nil and `input2` is an array
+ |        unpack keys from `input2` into matrix of shape `inputx` 
+ |    ELSEIF `input1` and `input2` are nil
+ |      the stack is empty
+ |    ELSEIF `matrixShape` is passed
+ |      treating `input1`/`input2` as 1D structures ([]any, map[any]any, Stack):
+ |      IF `input1` is a map
+ |        unpack the map into matrix of shape `matrixShape` with corresponding keys and vals
+ |      ELSEIF `input1` is an array and `input2` is nil
+ |        IF `input1` is an array of cards:
+ |         `overrideCards` == OVERRIDE_True:
+ |             MakeStackMatrix([]*Card {cardA}) => stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }
+ |         `overrideCards` == OVERRIDE_False:
+ |             MakeStackMatrix([]*Card {cardA}) => stack.Cards = []*Card {cardA}
+ |        ELSE:
+ |           unpack values from `input1` into new cards
+ |      ELSEIF `input1` is an array and `input2` is an array
+ |        unpack keys from `input1` and values from `input2` into matrix of shape `matrixShape`
+ |      ELSEIF `input1` is nil and `input2` is an array
+ |        unpack keys from `input2` into matrix of shape `matrixShape`
+ |      ELSEIF `input1` is nil AND `input2` is nil
+ |        create a StackMatrix of shape `matrixShape` whose heightest card keys/vals are nil
  */
 func MakeStackMatrix(arguments ...any) *Stack {
 

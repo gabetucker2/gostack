@@ -18,10 +18,9 @@ func case_MakeCard(funcName string) {
 	// initialize
 	card1 := MakeCard()
 	card2 := MakeCard("Card 2")
-	card3 := MakeCard("Card 3", card2)
-	card4 := MakeCard(card1, 8, 2)
-	var myStr any//lint:ignore S1021 Ignore warning
-	myStr = "Hello"
+	card3 := MakeCard(card2, "Card 3")
+	card4 := MakeCard(8, card1, 2)
+	myStr := gogenerics.MakeInterface("Hello")
 	card5 := MakeCard(&myStr)
 	card6 := MakeCard(&myStr)
 	card7 := MakeCard(myStr)
@@ -265,9 +264,9 @@ func case_stack_ToArray(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	testCardA := MakeCard("Card A", "Key1")
-	testCardB := MakeCard("Card B", "Key2")
-	testCardC := MakeCard("Card C", "Key3")
+	testCardA := MakeCard("Key1", "Card A")
+	testCardB := MakeCard("Key2", "Card B")
+	testCardC := MakeCard("Key3", "Card C")
 
 	sampleStack := func() *Stack {
 		return MakeStack([]*Card {testCardA.Clone(), testCardB.Clone(), testCardC.Clone()})
@@ -315,9 +314,9 @@ func case_stack_ToMap(funcName string) {
 
 	test_Start(funcName, showTestText)
 
-	testCardA := MakeCard("Card A", "Key1")
-	testCardB := MakeCard("Card B", "Key2")
-	testCardC := MakeCard("Card C", "Key3")
+	testCardA := MakeCard("Key1", "Card A")
+	testCardB := MakeCard("Key2", "Card B")
+	testCardC := MakeCard("Key3", "Card C")
 
 	m := MakeStack([]*Card {testCardA.Clone(), testCardB.Clone(), testCardC.Clone()}).ToMap()
 
@@ -622,13 +621,13 @@ func case_card_Equals(funcName string) {
 		card1.Equals(card2, nil, nil, COMPARE_False, COMPARE_False, COMPARE_False), // 2
 		!card1.Equals(card2, nil, nil, COMPARE_True, COMPARE_False, COMPARE_False), // 3
 
-		// test whether val parameter works
+		// test whether keys parameter works
 		card1.Equals(card3, nil, nil, COMPARE_False, COMPARE_False, COMPARE_False), // 4
-		!card1.Equals(card4, nil, nil, COMPARE_False, COMPARE_True, COMPARE_False), // 5
+		!card5.Equals(card6, nil, nil, COMPARE_False, COMPARE_True, COMPARE_False), // 5
 
-		// test whether key parameter works
+		// test whether val parameter works
 		card1.Equals(card5, nil, nil, COMPARE_False, COMPARE_False, COMPARE_False), // 6
-		!card1.Equals(card6, nil, nil, COMPARE_False, COMPARE_False, COMPARE_True), // 7
+		!card3.Equals(card4, nil, nil, COMPARE_False, COMPARE_False, COMPARE_True), // 7
 
 		// test whether dereferenceTypes work for keys
 		cardA.Equals(cardB, DEREFERENCE_None), // 8
@@ -896,12 +895,12 @@ func case_card_SwitchKeyVal(funcName string) {
 	test_Start(funcName, showTestText)
 
 	// main cases
-	cardA := MakeCard("MyVal", "MyKey").SwitchKeyVal()
+	cardA := MakeCard("MyKey", "MyVal").SwitchKeyVal()
 
 	conditions := []bool {
 		
 		// main cases
-		cardA.Equals(MakeCard("MyKey", "MyVal")), // 1
+		cardA.Equals(MakeCard("MyVal", "MyKey")), // 1
 
 	}
 
@@ -1071,7 +1070,7 @@ func case_stack_Get(funcName string) {
 	card7 := MakeStack([]int {1, 2, 3}).Get(FIND_Key, nil)
 	card8 := MakeStack([]int {1, 2, 3}).Get(FIND_Val, nil)
 	cardA := MakeCard(2)
-	card9 := MakeStack([]*Card {MakeCard(2, 1), cardA, MakeCard(3)}).Get(FIND_Card, cardA)
+	card9 := MakeStack([]*Card {MakeCard(1, 2), cardA, MakeCard(3)}).Get(FIND_Card, cardA)
 	card10 := MakeStack([]*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).Get().Val.(*Stack).Get()
 	card11 := MakeStack([]*Stack {MakeStack([]int {3, 6}), MakeStack([]int {9, 12})}).Get(nil, nil, nil, DEEPSEARCH_True, nil, nil, PASS_False)
 	stackA := MakeStack([]int {3, 6})
@@ -1256,13 +1255,13 @@ func case_stack_Add(funcName string) {
 	stack6 := MakeStack([]int {1, 2, 3}).Add(cardA, ORDER_Before, FIND_All, nil, nil, OVERRIDE_True)
 	stack7 := MakeStack([]int {1, 2, 3}).Add(4)
 	stack8 := MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}).Add(5, nil, FIND_Val, 2, nil, nil, DEEPSEARCH_True)
-	stack9 := MakeStackMatrix([]int {1, 2, 3, 4}, []string {"Hi", "Hey", "Hi", "Hey"}, []int {2, 2}).Add(MakeCard("He", 5), nil, FIND_Lambda, func(card *Card, _ *Stack, _ bool, _ ...any) (bool) {
+	stack9 := MakeStackMatrix([]int {1, 2, 3, 4}, []string {"Hi", "Hey", "Hi", "Hey"}, []int {2, 2}).Add(MakeCard(5, "He"), nil, FIND_Lambda, func(card *Card, _ *Stack, _ bool, _ ...any) (bool) {
 		return card.Key.(int) < 4 && card.Val == "Hi"
 	}, nil, nil, DEEPSEARCH_True, nil, nil, PASS_False)
 	stack10 := MakeStack().Add(MakeCard())
 
 	// test simplification of paramateriazation for FIND_Lambda
-	stack11 := MakeStackMatrix([]int {1, 2, 3, 4}, []string {"Hi", "Hey", "Hi", "Hey"}, []int {2, 2}).Add(MakeCard("He", 5), nil, FIND_Lambda, func(card *Card) (bool) {
+	stack11 := MakeStackMatrix([]int {1, 2, 3, 4}, []string {"Hi", "Hey", "Hi", "Hey"}, []int {2, 2}).Add(MakeCard(5, "He"), nil, FIND_Lambda, func(card *Card) (bool) {
 		return card.Key.(int) < 4 && card.Val == "Hi"
 	}, nil, nil, DEEPSEARCH_True, nil, nil, PASS_False)
 
@@ -1384,7 +1383,7 @@ func case_stack_Replace(funcName string) {
 	stack1 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
 	card1 := stack1.Replace(REPLACE_Val, 4)
 	stack2 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
-	card2 := stack2.Replace(REPLACE_Card, MakeCard(4, "KeyD"))
+	card2 := stack2.Replace(REPLACE_Card, MakeCard("KeyD", 4))
 	stack3 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
 	card3 := stack3.Replace(REPLACE_Key, "KeyD")
 	stack4 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
@@ -1397,7 +1396,7 @@ func case_stack_Replace(funcName string) {
 
 	// test replaceWith data types
 	stack6 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
-	card6 := stack6.Replace(REPLACE_Card, []*Card {MakeCard(4, "KeyD"), MakeCard(5, "KeyE")})
+	card6 := stack6.Replace(REPLACE_Card, []*Card {MakeCard("KeyD", 4), MakeCard("KeyE", 5)})
 	stack7 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3})
 	card7 := stack7.Replace(REPLACE_Card, MakeStack([]string {"KeyD", "KeyE"}, []int {4, 5}))
 	
@@ -1414,25 +1413,25 @@ func case_stack_Replace(funcName string) {
 
 		// test REPLACE configurations
 		stack1.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 4})), // 1
-		card1.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 2
+		card1.Equals(MakeCard("KeyC", 3, 2), nil, nil, COMPARE_True), // 2
 		stack2.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyD"}, []int {1, 2, 4})), // 3
-		card2.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 4
+		card2.Equals(MakeCard("KeyC", 3, 2), nil, nil, COMPARE_True), // 4
 		stack3.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyD"}, []int {1, 2, 3})), // 5
-		card3.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 6
+		card3.Equals(MakeCard("KeyC", 3, 2), nil, nil, COMPARE_True), // 6
 		stack4.Equals(MakeStack([]string {"KeyA", "KeyB"}, []int {1, 2})), // 7
-		card4.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 8
+		card4.Equals(MakeCard("KeyC", 3, 2), nil, nil, COMPARE_True), // 8
 		stack5A.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 6})), // 9
-		card5.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 10
+		card5.Equals(MakeCard("KeyC", 3, 2), nil, nil, COMPARE_True), // 10
 
 		// test replaceWith data types
 		stack6.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyD", "KeyE"}, []int {1, 2, 4, 5})), // 11
-		card6.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 12
+		card6.Equals(MakeCard("KeyC", 3, 2), nil, nil, COMPARE_True), // 12
 		stack7.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyD", "KeyE"}, []int {1, 2, 4, 5})), // 13
-		card7.Equals(MakeCard(3, "KeyC", 2), nil, nil, COMPARE_True), // 14
+		card7.Equals(MakeCard("KeyC", 3, 2), nil, nil, COMPARE_True), // 14
 
 		// ensure only works on one card
 		stack5B.Equals(MakeStack([]string {"KeyB", "KeyC"}, []int {2, 3})), // 15
-		card8.Equals(MakeCard(1, "KeyA", 0), nil, nil, COMPARE_True), // 16
+		card8.Equals(MakeCard("KeyA", 1, 0), nil, nil, COMPARE_True), // 16
 
 		// test simplification of paramaterization for REPLACE_Lambda
 		card9.Equals(card5), // 17
@@ -1480,7 +1479,7 @@ func case_stack_Extract(funcName string) {
 	conditions := []bool {
 
 		// test base functionality
-		cardA.Equals(MakeCard(3, "KeyC", 1), nil, nil, COMPARE_True), // 1
+		cardA.Equals(MakeCard("KeyC", 3, 1), nil, nil, COMPARE_True), // 1
 		stackA.Equals(MakeStack([]string {"KeyB"}, []int {2})), // 2
 
 	}
@@ -1555,7 +1554,7 @@ func case_stack_Update(funcName string) {
 
 	// test base functionality
 	stackA := MakeStack([]string {"KeyB", "KeyC"}, []int {2, 3})
-	stack1 := stackA.Update(REPLACE_Card, MakeCard(4, "KeyD"))
+	stack1 := stackA.Update(REPLACE_Card, MakeCard("KeyD", 4))
 
 	conditions := []bool {
 
@@ -1575,7 +1574,7 @@ func case_stack_UpdateMany(funcName string) {
 
 	// test base functionality
 	stackA := MakeStack([]string {"KeyB", "KeyC"}, []int {2, 3})
-	stack1 := stackA.UpdateMany(REPLACE_Card, MakeCard(4, "KeyD"), FIND_All)
+	stack1 := stackA.UpdateMany(REPLACE_Card, MakeCard("KeyD", 4), FIND_All)
 
 	conditions := []bool {
 
