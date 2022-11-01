@@ -6,6 +6,10 @@
 
 ```
  Creates a new matrix structure from `stack`
+
+ @examples
+ | MakeStack([]int {1, 2, 3, 4}).ToMatrix() => []any {1, 2, 3, 4}
+ | MakeStack(*Stack{MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}).ToMatrix() => []any {[]any {1, 2}, []any {3, 4}}
 ```
 
 ---

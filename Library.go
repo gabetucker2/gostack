@@ -11,13 +11,17 @@ import (
 
 /** Creates a card with given properties
 
-MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (newCard *Card)
-
-@ensures
-| IF `input1` OR `input2` are nil:
-|     MakeCard := func(`val`, `key`, `idx`)
-| ELSE:
-|     MakeCard := func(`key`, `val`, `idx`)
+ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
+ 
+ @ensures
+ | IF `input1` OR `input2` are nil:
+ |     MakeCard := func(`val`, `key`, `idx`)
+ | ELSE:
+ |     MakeCard := func(`key`, `val`, `idx`)
+ @examples
+ | MakeCard("Hello") => Card{Val: "Hello"}
+ | MakeCard(nil, "Hello") => Card{Key: "Hello"}
+ | MakeCard(1, 2) => Card{Key: 1, Val: 2}
 */
  func MakeCard(arguments ...any) *Card {
 
@@ -53,7 +57,6 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (newCard *Card)
  Where all mentions of array are interchangeable with Stack:
  @notes
  | Makes `repeats` repeats of `input1`/`input2`
- |
  @requires
  | `input1` is a map and `input2` is nil
  |     OR `input1` is an array and `input2` is nil
@@ -66,19 +69,28 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (newCard *Card)
  |     IF `input1` is passed
  |       IF `input1` is a map
  |         unpack the map into new cards with corresponding keys and vals
- |       ELSEIF `input1` is an array and `input2` is nil
- |         overrideCards == OVERRIDE_True:
- |             MakeStackMatrix([]*Card {cardA}) => stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }
- |         overrideCards == OVERRIDE_False:
- |             MakeStackMatrix([]*Card {cardA}) => stack.Cards = []*Card {cardA}
+ |       ELSEIF `input1` is an array and `input2` is not passed/nil
+ |  	   IF `input1` is an array of cards:
+ |           `overrideCards` == OVERRIDE_True:
+ |               MakeStack([]*Card {cardA}) => stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }
+ |           `overrideCards` == OVERRIDE_False:
+ |               MakeStack([]*Card {cardA}) => stack.Cards = []*Card {cardA}
+ |  	   ELSE:
+ |           unpack values from `input1` into new cards
  |       ELSEIF `input1` is an array and `input2` is an array
  |         unpack keys from `input1` and values from `input2` into new cards
  |       ELSEIF `input1` is nil and `input2` is an array
  |         unpack keys from `input2` into new cards
- |  		 make `repeats` cards with nil value and nil key
- |  		 ELSEIF `input1` is nil and `input2` is nil and `repeats` is passed
+ |  		make `repeats` cards with nil value and nil key
+ |  		ELSEIF `input1` is nil and `input2` is nil and `repeats` is passed
  |     ELSE
  |       the stack is empty
+ @examples
+ | MakeStack([]int {1, 2, 3}) => Stack{Vals: {1, 2, 3}}
+ | MakeStack(nil, []int {1, 2, 3}) => Stack{Keys: {1, 2, 3}}
+ | MakeStack([]string {"a", "b", "c"}, []int {1, 2, 3}) => Stack{Keys: {"a", "b", "c"}, Vals: {1, 2, 3}}
+ | MakeStack(map[string]int {"a":1, "b":2, "c":3}) => Stack{Keys: {"a", "b", "c"}, Vals: {1, 2, 3}} // but not necessarily in this order
+ | MakeStack(nil, nil, 5) => Stack{nil, nil, nil, nil, nil}
  */
  func MakeStack(arguments ...any) *Stack {
 
@@ -135,6 +147,9 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (newCard *Card)
 /** An identical implementation to `MakeStack()`
 
  MakeSubstack(input1 []any|map[any]any|*Stack [nil], input2 any|*Stack [nil], repeats int [1], overrideCards OVERRIDE [OVERRIDE_False]) (newSubstack *Stack)
+ 
+ @examples
+ | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}) => Stack{Stack{1, 2}, Stack{3, 4}}
  */
  func MakeSubstack(arguments ...any) *Stack {
 	return MakeStack(arguments...)
@@ -159,6 +174,8 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (newCard *Card)
  | * the last int defines the size of each final stack
  | * the product of `matrixShape` is equal to the amount of elements in your input(s)
  @ensures
+ | Using the same logic as MakeStack() in deciding which of the first two inputs is a key/val:
+ |
  |  IF no `matrixShape` is passed:
  |    treating `input1`/`input2` as matrices ([]any {[]any {...}, []any {...}, ..., []any {...}})/a map of matrices (map[any]map[any]...map[any]any)/a StackMatrix:
  |    IF `input1` is passed:
@@ -190,8 +207,13 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (newCard *Card)
  |        unpack keys from `input2` into matrix of shape `matrixShape`
  |      ELSEIF `input1` is nil AND `input2` is nil:
  |        create a StackMatrix of shape `matrixShape` whose heightest card keys/vals are nil
+ @examples
+ | MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}) => Stack{Stack{1, 2}, Stack{3, 4}}
+ | MakeStackMatrix([]int {1, 2, 3, 4, 5, 6}, nil, []int {2, 3}) => Stack{Stack{1, 2, 3}, Stack{4, 5, 6}}
+ | MakeStackMatrix([]int {1, 2, 3, 4, 5, 6}, nil, []int {3, 2}) => Stack{Stack{1, 2}, Stack{3, 4}, Stack{5, 6}}
+ | MakeStackMatrix([]any {[]any {1, 2}, []any {3, 4}}} =>  Stack{Stack{1, 2}, Stack{3, 4}}
  */
-func MakeStackMatrix(arguments ...any) *Stack {
+ func MakeStackMatrix(arguments ...any) *Stack {
 
 	// unpack arguments into optional parameters
 	var input1, input2, matrixShape, overrideCards any
@@ -363,6 +385,14 @@ func (stack *Stack) StripStackMatrix(arguments ...any) *Stack {
 /** Creates a new any array whose elements are the values of the cards in `stack`
  
  stack.ToArray(returnType RETURN [RETURN_Vals]) (newArray []any)
+
+ @examples
+ | MakeStack([]int {1, 2, 3}, []string {"a", "b", "c"}).ToArray() => []any {1, 2, 3}
+ | MakeStack([]int {1, 2, 3}, []string {"a", "b", "c"}).ToArray(RETURN_Keys) => []any {"a", "b", "c"}
+ | MakeStack([]int {1, 2, 3}, []string {"a", "b", "c"}).ToArray(RETURN_Idxs) => []any {0, 1, 2}
+ | MakeStack([]*Card {cardA, cardB, cardC}).ToArray(RETURN_Cards) => []any {cardA, cardB, cardC}
+ | MakeStack([]*Stack {substackA, substackB}).ToArray(RETURN_Cards) => []any {Card{Val:substackA}, Card{Val:substackA}}
+ | MakeStack([]*Stack {substackA, substackB}).ToArray(RETURN_Stacks) => []any {substackA, substackB}
  */
 func (stack *Stack) ToArray(arguments ...any) (arr []any) {
 
@@ -378,6 +408,9 @@ func (stack *Stack) ToArray(arguments ...any) (arr []any) {
 /** Creates a new map whose keys and values correspond to the cards in `stack`
 
  stack.ToMap() (newMap map[any]any)
+
+ @examples
+ | MakeStack([]int {1, 2, 3}, []string {"a", "b", "c"}).ToMap() => map[any]any {1:"a", 2:"b", 3:"c"} // in any order
  */
 func (stack *Stack) ToMap() (m map[any]any) {
 
@@ -396,6 +429,10 @@ func (stack *Stack) ToMap() (m map[any]any) {
 /** Creates a new matrix structure from `stack`
 
  stack.ToMatrix(returnType RETURN [RETURN_Vals], depth int [-1]) (newMatrix []any {elem/[]any{}})
+
+ @examples
+ | MakeStack([]int {1, 2, 3, 4}).ToMatrix() => []any {1, 2, 3, 4}
+ | MakeStack(*Stack{MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}).ToMatrix() => []any {[]any {1, 2}, []any {3, 4}}
  */
 func (stack *Stack) ToMatrix(arguments ...any) (matrix []any) {
 
@@ -471,15 +508,11 @@ func (stack *Stack) ToMatrix(arguments ...any) (matrix []any) {
 
 /** Returns whether the matrix is of a regular shape
 
- @receiver `stack` type{*Stack}
- @returns type{bool}
- @ensures
-   * example:
-       {{1, 2}, 3} == irregular/false
-       {{1, 2}, {3}} == irregular/false
-       {{1, 2}, {3, 4}} == regular/true
-	   {1, 3} == regular/true
-	   {} == regular/true
+ stack.IsRegular() (stackIsRegular bool)
+
+ @examples
+ | MakeStack([]*Stack{MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4}), MakeSubstack([]int {5, 6})}) => true
+ | MakeStack([]*Stack{MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4, 5}), MakeSubstack([]int {6, 7})}) => false
  */
  func (stack *Stack) IsRegular() bool {
 

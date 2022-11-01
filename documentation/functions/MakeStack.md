@@ -38,6 +38,12 @@
  |  		ELSEIF `input1` is nil and `input2` is nil and `repeats` is passed
  |     ELSE
  |       the stack is empty
+ @examples
+ | MakeStack([]int {1, 2, 3}) => Stack{Vals: {1, 2, 3}}
+ | MakeStack(nil, []int {1, 2, 3}) => Stack{Keys: {1, 2, 3}}
+ | MakeStack([]string {"a", "b", "c"}, []int {1, 2, 3}) => Stack{Keys: {"a", "b", "c"}, Vals: {1, 2, 3}}
+ | MakeStack(map[string]int {"a":1, "b":2, "c":3}) => Stack{Keys: {"a", "b", "c"}, Vals: {1, 2, 3}} // but not necessarily in this order
+ | MakeStack(nil, nil, 5) => Stack{nil, nil, nil, nil, nil}
 ```
 
 ---

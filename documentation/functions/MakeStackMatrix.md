@@ -22,6 +22,8 @@
  | * the last int defines the size of each final stack
  | * the product of `matrixShape` is equal to the amount of elements in your input(s)
  @ensures
+ | Using the same logic as MakeStack() in deciding which of the first two inputs is a key/val:
+ |
  |  IF no `matrixShape` is passed:
  |    treating `input1`/`input2` as matrices ([]any {[]any {...}, []any {...}, ..., []any {...}})/a map of matrices (map[any]map[any]...map[any]any)/a StackMatrix:
  |    IF `input1` is passed:
@@ -53,6 +55,12 @@
  |        unpack keys from `input2` into matrix of shape `matrixShape`
  |      ELSEIF `input1` is nil AND `input2` is nil:
  |        create a StackMatrix of shape `matrixShape` whose heightest card keys/vals are nil
+ @examples
+ | MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}) => Stack{Stack{1, 2}, Stack{3, 4}}
+ | MakeStackMatrix([]int {1, 2, 3, 4, 5, 6}, nil, []int {2, 3}) => Stack{Stack{1, 2, 3}, Stack{4, 5, 6}}
+ | MakeStackMatrix([]int {1, 2, 3, 4, 5, 6}, nil, []int {3, 2}) => Stack{Stack{1, 2}, Stack{3, 4}, Stack{5, 6}}
+ | MakeStackMatrix([]any {[]any {1, 2}, []any {3, 4}}} =>  Stack{Stack{1, 2}, Stack{3, 4}}
+ 
 ```
 
 ---

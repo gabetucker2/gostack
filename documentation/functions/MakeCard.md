@@ -12,6 +12,10 @@
  |     MakeCard := func(`val`, `key`, `idx`)
  | ELSE:
  |     MakeCard := func(`key`, `val`, `idx`)
+ @examples
+ | MakeCard("Hello") => Card{Val: "Hello"}
+ | MakeCard(nil, "Hello") => Card{Key: "Hello"}
+ | MakeCard(1, 2) => Card{Key: 1, Val: 2}
 ```
 
 ---

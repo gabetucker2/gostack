@@ -36,9 +36,10 @@ Completed:
 * **stack.SwitchKeysVals()** functions added
 * Allow simplified Lambda function parameterizations
 * Added more DEFEREFERENCE options for improved flexibility
+* Created benchmark tests
 
 In progress:
-* Created benchmark tests
+* Add function samples to each function documentation file
 * ***gostack*** functions parameter naming has been adjusted to be more consistent
 * ***gostack***'s functions' default parameter values have been adjusted to make more intuitive sense
 * ***gostack***'s default parameter orderings have been adjusted to decrease the likelihood of having to pass repeated `nil` values
@@ -49,7 +50,6 @@ In progress:
  <h2><b>v1.0.6</b> — <i>Beta Release</i> — ?/?/2022 — Patch A</h2>
 
 * More strictly implement design-by-contract principles in function documentation to facilitate error-catching for invalid arguments
-* Add function samples to each function documentation file
 * Optimize to improve performance
   * Add more benchmarks
   * Remove all dependencies on `gogenerics` since this significantly detriments efficiency
