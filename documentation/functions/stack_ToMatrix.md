@@ -8,4 +8,6 @@
  Creates a new matrix structure from `stack`
 ```
 
+---
+
  [> Return to functions](../functionsAPI.md)

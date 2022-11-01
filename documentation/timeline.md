@@ -26,7 +26,7 @@
 
  <h1>Planned Releases</h1>
 
- <h2><b>v1.0.4</b> — <i>Beta Release</i> — 10/26/2022 — Post-release polish</h2>
+ <h2><b>v1.0.4</b> — <i>Beta Release</i> — 11/1/2022 — Post-release polish</h2>
 
 Completed:
 * Community Discord server, Patreon page, and buymeaoffee is created

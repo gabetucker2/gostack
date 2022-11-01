@@ -55,4 +55,6 @@
  |        create a StackMatrix of shape `matrixShape` whose heightest card keys/vals are nil
 ```
 
+---
+
  [> Return to functions](../functionsAPI.md)

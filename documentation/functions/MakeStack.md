@@ -40,4 +40,6 @@
  |       the stack is empty
 ```
 
+---
+
  [> Return to functions](../functionsAPI.md)

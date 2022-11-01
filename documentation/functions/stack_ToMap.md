@@ -8,4 +8,6 @@
  Creates a new map whose keys and values correspond to the cards in `stack`
 ```
 
+---
+
  [> Return to functions](../functionsAPI.md)

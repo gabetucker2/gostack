@@ -14,4 +14,6 @@
  |     MakeCard := func(`key`, `val`, `idx`)
 ```
 
+---
+
  [> Return to functions](../functionsAPI.md)

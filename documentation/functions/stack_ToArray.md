@@ -8,4 +8,6 @@
  Creates a new any array whose elements are the values of the cards in `stack`
 ```
 
+---
+
  [> Return to functions](../functionsAPI.md)
