@@ -34,6 +34,7 @@ Completed:
 * **MakeSubstack()** function added
 * **card.SwitchKeyVal()** functions added
 * **stack.SwitchKeysVals()** functions added
+* **stack.Filter()** functions added
 * Allow simplified Lambda function parameterizations
 * Added more DEFEREFERENCE options for improved flexibility
 * Created benchmark tests

@@ -73,6 +73,8 @@
  >
  >> [stack.Has()](functions/stack_Has.md)
  >
+ >> [stack.Filter()](functions/stack_Filter.md)
+ >
  >> [stack.Add()](functions/stack_Add.md)
  >>
  >> [stack.AddMany()](functions/stack_AddMany.md)

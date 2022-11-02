@@ -354,13 +354,17 @@ import (
 	
 }
 
-/** Returns a stack representing a selection within a stack matrix
+/** Updates a stack to represent a selection within that stack matrix
  
- @receiver `stack` type{*Stack}
- @param optional `idx` type{int, range []int, range *Stack ints} default []int {0, ..., stack.Size - 1}
- @returns type{*Stack} a new Stack representing the selection
- @constructs type{*Stack} a new Stack representing the selection
- @requires `idx` arguments get valid index positions from the stack
+ stack.StripStackMatrix(idx ...int|[]int|*Stack [[]int {0, 1, ..., stack.Size - 1}]) (stack)
+
+ @requires
+ | `idx` refers to valid index positions from the stack
+ @examples
+ | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}).StripStackMatrix() => Stack {1, 2, 3, 4}
+ | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}).StripStackMatrix([]int {0, 1}) => Stack {1, 2, 3, 4}
+ | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}).StripStackMatrix(0) => Stack {1, 2}
+ | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}).StripStackMatrix(1) => Stack {3, 4}
  */
 func (stack *Stack) StripStackMatrix(arguments ...any) *Stack {
 
@@ -370,13 +374,13 @@ func (stack *Stack) StripStackMatrix(arguments ...any) *Stack {
 
 	// main
 	if idx == nil {
-		return stack.GetMany(FIND_All, nil, nil, RETURN_Stacks)
+		return stack.Filter(FIND_All, nil, nil, RETURN_Stacks)
 	} else {
 		idxInt, isInt := idx.(int)
 		if isInt {
-			return stack.GetMany(FIND_Idx, idxInt, nil, RETURN_Stacks)
+			return stack.Filter(FIND_Idx, idxInt, nil, RETURN_Stacks)
 		} else {
-			return stack.GetMany(FIND_Slice, idx, nil, RETURN_Stacks)
+			return stack.Filter(FIND_Slice, idx, nil, RETURN_Stacks)
 		}
 	}
 
@@ -394,7 +398,7 @@ func (stack *Stack) StripStackMatrix(arguments ...any) *Stack {
  | MakeStack([]*Stack {substackA, substackB}).ToArray(RETURN_Cards) => []any {Card{Val:substackA}, Card{Val:substackA}}
  | MakeStack([]*Stack {substackA, substackB}).ToArray(RETURN_Stacks) => []any {substackA, substackB}
  */
-func (stack *Stack) ToArray(arguments ...any) (arr []any) {
+func (stack *Stack) ToArray(arguments ...any) []any {
 
 	// unpack arguments into optional parameters
 	var returnType any
@@ -412,17 +416,17 @@ func (stack *Stack) ToArray(arguments ...any) (arr []any) {
  @examples
  | MakeStack([]int {1, 2, 3}, []string {"a", "b", "c"}).ToMap() => map[any]any {1:"a", 2:"b", 3:"c"} // in any order
  */
-func (stack *Stack) ToMap() (m map[any]any) {
+func (stack *Stack) ToMap() map[any]any {
 
 	// add all card keys and values in stack to m
-	m = make(map[any]any)
+	newMap := make(map[any]any)
 	for i := range stack.Cards {
 		c := stack.Cards[i]
-		m[c.Key] = c.Val
+		newMap[c.Key] = c.Val
 	}
 
 	// return
-	return
+	return newMap
 
 }
 
@@ -434,7 +438,7 @@ func (stack *Stack) ToMap() (m map[any]any) {
  | MakeStack([]int {1, 2, 3, 4}).ToMatrix() => []any {1, 2, 3, 4}
  | MakeStack(*Stack{MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}).ToMatrix() => []any {[]any {1, 2}, []any {3, 4}}
  */
-func (stack *Stack) ToMatrix(arguments ...any) (matrix []any) {
+func (stack *Stack) ToMatrix(arguments ...any) []any {
 
 	// unpack arguments into optional parameters
 	var returnType, depth any
@@ -443,6 +447,7 @@ func (stack *Stack) ToMatrix(arguments ...any) (matrix []any) {
 	setRETURNDefaultIfNil(&returnType)
 	setHeightDefaultIfNil(&depth)
 	if depth == -1 || depth.(int) > stack.Height { depth = stack.Height }
+	newMatrix := []any {}
 
 	// break recursion at depth == 0
 	if depth.(int) != 0 {
@@ -454,55 +459,64 @@ func (stack *Stack) ToMatrix(arguments ...any) (matrix []any) {
 			
 			if isStack {
 				if depth.(int) > 1 {
-					matrix = append(matrix, subStack.ToMatrix(returnType, depth.(int) - 1))
+					newMatrix = append(newMatrix, subStack.ToMatrix(returnType, depth.(int) - 1))
 				} else {
-					matrix = append(matrix, []any {})
+					newMatrix = append(newMatrix, []any {})
 				}
 			} else {
 				switch returnType {
 				case RETURN_Vals:
-					matrix = append(matrix, c.Val)
+					newMatrix = append(newMatrix, c.Val)
 				case RETURN_Keys:
-					matrix = append(matrix, c.Key)
+					newMatrix = append(newMatrix, c.Key)
 				case RETURN_Idxs:
-					matrix = append(matrix, c.Idx)
+					newMatrix = append(newMatrix, c.Idx)
 				case RETURN_Cards:
-					matrix = append(matrix, c)
+					newMatrix = append(newMatrix, c)
 				}
 			}
 		}
 	}
 	
 	// return
-	return matrix
+	return newMatrix
 
 }
 
-/** Returns the shape of this stackMatrix, or nil if irregular shape
+/** Returns an array representing the shape of `stack`
 
- @receiver `stack` type{*Stack}
- @returns type{[]int}
+ stack.Shape() (stackShape []int)
+
+ @ensures
+ | returns nil if it's not regular and thus doesn't have a shape
+ @examples
+ | MakeStack([]*Stack{MakeSubstack([]int {1, 2, 3}), MakeSubstack([]int {4, 5, 6})}).Shape() => []int {2, 3}
+ | MakeStack([]*Stack{MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4}), MakeSubstack([]int {5, 6})}).Shape() => []int {3, 2}
+ | MakeStack([]*Stack{MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4, 5}), MakeSubstack([]int {6, 7})}) => nil
  */
- func (stack *Stack) Shape() (shape []int) {
+ func (stack *Stack) Shape() []int {
+
+	// init
+	stackShape := []int {}
 
 	// body
 	if stack.IsRegular() {
 
-		shape = append(shape, stack.Size)
+		stackShape = append(stackShape, stack.Size)
 
 		if stack.Size > 0 {
 			_, hasSubstack := stack.Cards[0].Val.(*Stack)
 			if hasSubstack {
-				shape = append(shape, stack.Cards[0].Val.(*Stack).Shape()...)
+				stackShape = append(stackShape, stack.Cards[0].Val.(*Stack).Shape()...)
 			}
 		}
 
 	} else {
-		shape = nil
+		stackShape = nil
 	}
 
 	// return
-	return shape
+	return stackShape
 
 }
 
@@ -1513,6 +1527,12 @@ func (stack *Stack) LambdaCard(lambda func(*Card, *Stack, bool, *Stack, *Card, a
 func (stack *Stack) LambdaVarAdr(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), arguments ...any) any {
 	_, _, _, retVarAdr := stack.Lambda(lambda, arguments...)
 	return retVarAdr
+}
+
+/** The exact same as GetMany, except it replaces `stack` with the new stack */
+func (stack *Stack) Filter(findType FIND, arguments ...any) *Stack {
+	*stack = *stack.GetMany(findType, arguments...)
+	return stack
 }
 
 /** Adds to a stack of cards or a cards the first time it is able and returns `stack`

@@ -239,11 +239,11 @@ func case_stack_StripStackMatrix(funcName string) {
 	stack2 := MakeStack([]*Card {cardC, cardD})
 	matrix := MakeStack([]*Stack {stack1, stack2})
 
-	stackA := matrix.StripStackMatrix()
-	stackB := matrix.StripStackMatrix(0)
-	stackC := matrix.StripStackMatrix(1)
-	stackD := matrix.StripStackMatrix([]int {0, 1})
-	stackE := matrix.StripStackMatrix(MakeStack([]int {0, 1}))
+	stackA := matrix.Clone().StripStackMatrix()
+	stackB := matrix.Clone().StripStackMatrix(0)
+	stackC := matrix.Clone().StripStackMatrix(1)
+	stackD := matrix.Clone().StripStackMatrix([]int {0, 1})
+	stackE := matrix.Clone().StripStackMatrix(MakeStack([]int {0, 1}))
 
 	conditions := []bool {
 
@@ -1056,6 +1056,25 @@ func case_stack_Lambdas(funcName string) {
 	
 }
 
+func case_stack_Filter(funcName string) {
+
+	test_Start(funcName, showTestText)
+
+	// expansively test functionality
+	stack := MakeStack([]int {1, 2, 3})
+	stack.Filter(FIND_Idx, []int {1, 2})
+
+	conditions := []bool {
+
+		// expansively test functionality
+		stack.Equals(MakeStack([]int {2, 3})),
+
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
 func case_stack_Get(funcName string) {
 
 	test_Start(funcName, showTestText)
@@ -1592,7 +1611,7 @@ func case_stack_UpdateMany(funcName string) {
 func Run(_showTestText bool) {
 
 	showTestText = _showTestText
-	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambdas, case_stack_Get, case_stack_GetMany, case_stack_Add, case_stack_AddMany, case_stack_Has, case_stack_Move, case_stack_Replace, case_stack_ReplaceMany, case_stack_Extract, case_stack_ExtractMany, case_stack_Remove, case_stack_RemoveMany, case_stack_Update, case_stack_UpdateMany, case_stack_Swap)
+	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_Filter, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambdas, case_stack_Get, case_stack_GetMany, case_stack_Add, case_stack_AddMany, case_stack_Has, case_stack_Move, case_stack_Replace, case_stack_ReplaceMany, case_stack_Extract, case_stack_ExtractMany, case_stack_Remove, case_stack_RemoveMany, case_stack_Update, case_stack_UpdateMany, case_stack_Swap)
 
 	fmt.Println("- BEGINNING TESTS")
 
@@ -1635,6 +1654,7 @@ func Run(_showTestText bool) {
 	case_stack_Has("stack.Has") // GOOD
 	case_stack_Move("stack.Move") // GOOD
 	case_stack_Swap("stack.Swap") // GOOD
+	case_stack_Filter("stack.Filter") // GOOD
 	
 	// NON-GENERALIZED FUNCTIONS (DEPENDENT ON GENERALIZED FUNCTIONS)
 	case_stack_StripStackMatrix("stack.StripStackMatrix") // GOOD
