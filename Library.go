@@ -619,11 +619,7 @@ func (stack *Stack) ToMatrix(arguments ...any) []any {
 
 }
 
-/** Returns a clone of the given card
-
- @receiver `card` type{*Card}
- @returns type{*Card} card clone
- @constructs type{*Card} clone of `card`
+/** Returns a clone of `card`
 */
 func (card *Card) Clone() *Card {
 
@@ -1050,11 +1046,7 @@ func (stack *Stack) Shuffle(arguments ...any) *Stack {
 
 }
 
-/** Flips the order of all stacks and substacks' cards
- 
- @receiver `stack` type{*Stack}
- @returns `stack`
- @updates `stack` to have its ordering reversed
+/** Reverses the order of all cards and stacks in `stack`
  */
 func (stack *Stack) Transpose() *Stack {
 
@@ -1080,10 +1072,6 @@ func (stack *Stack) Transpose() *Stack {
 }
 
 /** Switches the Key and the Val of `card`
- 
- @receiver `card` type{*Card}
- @returns `card`
- @updates `card`
  */
  func (card *Card) SwitchKeyVal() *Card {
 
@@ -1139,46 +1127,45 @@ func (stack *Stack) Transpose() *Stack {
  
   }
 
-/** Prints information regarding `card` to the console
+/** Prints information surrounding `card` to the terminal
  
- @receiver `card` type{*Card}
- @param optional `depth` type{int} default 0
- 	This variable only exists for text-indenting purposes to make your terminal output look a bit cleaner.  1 depth => 4 "-" added before the print.
- @updates terminal logs
- @returns `card`
+ card.Print(indent int [0]) (card)
+
+ @ensures
+ | prints "-" `indent` * 4 times before each line to indicate depth in a stackMatrix
  */
 func (card *Card) Print(arguments ...any) *Card {
 
 	// unpack arguments into optional parameters
-	var depth any
-	gogenerics.UnpackVariadic(arguments, &depth)
-	if depth == nil { depth = 0 }
+	var indents any
+	gogenerics.UnpackVariadic(arguments, &indents)
+	if indents == nil { indents = 0 }
 
 	// prints
-	fmt.Printf("%v|%vCARD\n", heightPrinter(depth.(int)), gogenerics.IfElse(depth == 0, "gostack: PRINTING ", ""))
+	fmt.Printf("%v|%vCARD\n", depthPrinter(indents.(int)), gogenerics.IfElse(indents == 0, "gostack: PRINTING ", ""))
 	if card == nil {
-		fmt.Printf("%v- card:          %v\n", heightPrinter(depth.(int)), nil)
+		fmt.Printf("%v- card:          %v\n", depthPrinter(indents.(int)), nil)
 	} else {
-		fmt.Printf("%v- &card:         %v\n", heightPrinter(depth.(int)), fmt.Sprintf("%p", card))
-		fmt.Printf("%v- card.Idx:      %v\n", heightPrinter(depth.(int)), card.Idx)
+		fmt.Printf("%v- &card:         %v\n", depthPrinter(indents.(int)), fmt.Sprintf("%p", card))
+		fmt.Printf("%v- card.Idx:      %v\n", depthPrinter(indents.(int)), card.Idx)
 		if gogenerics.IsPointer(card.Key) {
-			fmt.Printf("%v- &card.Key:     %v\n", heightPrinter(depth.(int)), fmt.Sprintf("%p", card.Key))
-			fmt.Printf("%v- card.Key:      %v\n", heightPrinter(depth.(int)), reflect.ValueOf(card.Key).Elem())
-			fmt.Printf("%v- card.Key.Type: (%v)\n", heightPrinter(depth.(int)), reflect.TypeOf(reflect.ValueOf(card.Key).Elem().Interface()))
+			fmt.Printf("%v- &card.Key:     %v\n", depthPrinter(indents.(int)), fmt.Sprintf("%p", card.Key))
+			fmt.Printf("%v- card.Key:      %v\n", depthPrinter(indents.(int)), reflect.ValueOf(card.Key).Elem())
+			fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(indents.(int)), reflect.TypeOf(reflect.ValueOf(card.Key).Elem().Interface()))
 		} else {
-			fmt.Printf("%v- card.Key:      %v\n", heightPrinter(depth.(int)), card.Key)
+			fmt.Printf("%v- card.Key:      %v\n", depthPrinter(indents.(int)), card.Key)
 			if card.Key != nil {
-				fmt.Printf("%v- card.Key.Type: (%v)\n", heightPrinter(depth.(int)), reflect.TypeOf(card.Key))
+				fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(indents.(int)), reflect.TypeOf(card.Key))
 			}
 		}
 		if gogenerics.IsPointer(card.Val) {
-			fmt.Printf("%v- &card.Val:     %v\n", heightPrinter(depth.(int)), fmt.Sprintf("%p", card.Val))
-			fmt.Printf("%v- card.Val:      %v\n", heightPrinter(depth.(int)), reflect.ValueOf(card.Val).Elem())
-			fmt.Printf("%v- card.Val.Type: (%v)\n", heightPrinter(depth.(int)), reflect.TypeOf(reflect.ValueOf(card.Val).Elem().Interface()))
+			fmt.Printf("%v- &card.Val:     %v\n", depthPrinter(indents.(int)), fmt.Sprintf("%p", card.Val))
+			fmt.Printf("%v- card.Val:      %v\n", depthPrinter(indents.(int)), reflect.ValueOf(card.Val).Elem())
+			fmt.Printf("%v- card.Val.Type: (%v)\n", depthPrinter(indents.(int)), reflect.TypeOf(reflect.ValueOf(card.Val).Elem().Interface()))
 		} else {
-			fmt.Printf("%v- card.Val:      %v\n", heightPrinter(depth.(int)), card.Val)
+			fmt.Printf("%v- card.Val:      %v\n", depthPrinter(indents.(int)), card.Val)
 			if card.Val != nil {
-				fmt.Printf("%v- card.Val.Type: (%v)\n", heightPrinter(depth.(int)), reflect.TypeOf(card.Val))
+				fmt.Printf("%v- card.Val.Type: (%v)\n", depthPrinter(indents.(int)), reflect.TypeOf(card.Val))
 			}
 		}
 	}
@@ -1187,51 +1174,50 @@ func (card *Card) Print(arguments ...any) *Card {
 
 }
 
-/** Prints information regarding `stack` to the console
+/** Prints information surrounding `stack` to the terminal
+
+ stack.Print(indent int [0]) (stack)
  
- @receiver `stack` type{*Stack}
- @param optional `depth` type{int} default 0
-   This variable only exists for text-indenting purposes to make your terminal output look a bit cleaner.  1 depth => 4 "-" added before the print.
- @updates terminal logs
- @returns `stack`
+ @ensures
+ | prints "-" `indent` * 4 times before each line to indicate depth in a stackMatrix
  */
 func (stack *Stack) Print(arguments ...any) *Stack {
 	
 	// unpack arguments into optional parameters
-	var depth, idx, key any
-	gogenerics.UnpackVariadic(arguments, &depth, &idx, &key)
-	if depth == nil { depth = 0 }
+	var indent, idx, key any
+	gogenerics.UnpackVariadic(arguments, &indent, &idx, &key)
+	if indent == nil { indent = 0 }
 
-	fmt.Printf("%v|%vSTACK\n", heightPrinter(depth.(int)), gogenerics.IfElse(idx == nil, "gostack: PRINTING ", "SUB"))
+	fmt.Printf("%v|%vSTACK\n", depthPrinter(indent.(int)), gogenerics.IfElse(idx == nil, "gostack: PRINTING ", "SUB"))
 	if stack == nil {
-		fmt.Printf("%v- stack:         %v\n", heightPrinter(depth.(int)), nil)
+		fmt.Printf("%v- stack:         %v\n", depthPrinter(indent.(int)), nil)
 	} else {
-		fmt.Printf("%v- &stack:        %v\n", heightPrinter(depth.(int)), fmt.Sprintf("%p", stack))
+		fmt.Printf("%v- &stack:        %v\n", depthPrinter(indent.(int)), fmt.Sprintf("%p", stack))
 		if idx != nil {
-			fmt.Printf("%v- card.Idx:      %v\n", heightPrinter(depth.(int)), idx)
+			fmt.Printf("%v- card.Idx:      %v\n", depthPrinter(indent.(int)), idx)
 		}
 		if key != nil {
 			if gogenerics.IsPointer(key) {
-				fmt.Printf("%v- &card.Key:     %v\n", heightPrinter(depth.(int)), key)
-				fmt.Printf("%v- card.Key:      %v\n", heightPrinter(depth.(int)), reflect.ValueOf(key).Elem())
-				fmt.Printf("%v- card.Key.Type: (%v)\n", heightPrinter(depth.(int)), reflect.TypeOf(reflect.ValueOf(key).Elem().Interface()))
+				fmt.Printf("%v- &card.Key:     %v\n", depthPrinter(indent.(int)), key)
+				fmt.Printf("%v- card.Key:      %v\n", depthPrinter(indent.(int)), reflect.ValueOf(key).Elem())
+				fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(indent.(int)), reflect.TypeOf(reflect.ValueOf(key).Elem().Interface()))
 			} else {
-				fmt.Printf("%v- card.Key:      %v\n", heightPrinter(depth.(int)), key)
+				fmt.Printf("%v- card.Key:      %v\n", depthPrinter(indent.(int)), key)
 				if key != nil {
-					fmt.Printf("%v- card.Key.Type: (%v)\n", heightPrinter(depth.(int)), reflect.TypeOf(key))
+					fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(indent.(int)), reflect.TypeOf(key))
 				}
 			}
 		}
-		fmt.Printf("%v- stack.Size:    %v\n", heightPrinter(depth.(int)), stack.Size)
-		fmt.Printf("%v- stack.Height:   %v\n", heightPrinter(depth.(int)), stack.Height)
+		fmt.Printf("%v- stack.Size:    %v\n", depthPrinter(indent.(int)), stack.Size)
+		fmt.Printf("%v- stack.Height:   %v\n", depthPrinter(indent.(int)), stack.Height)
 		for i := range stack.Cards {
 			c := stack.Cards[i]
 	
 			switch c.Val.(type) {
 			case *Stack:
-				c.Val.(*Stack).Print(depth.(int)+4, i, c.Key)
+				c.Val.(*Stack).Print(indent.(int)+4, i, c.Key)
 			default:
-				c.Print(depth.(int)+4)
+				c.Print(indent.(int)+4)
 			}
 		}
 	}

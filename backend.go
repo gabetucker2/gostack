@@ -405,7 +405,7 @@ func (stack *Stack) setStackProperties() {
 }
 
 /** Prints some number of - outputs based on depth. */
-func heightPrinter(depth int) (out string) {
+func depthPrinter(depth int) (out string) {
 	for i := 0; i < depth; i++ {
 		out += "-"
 	}

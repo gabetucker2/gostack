@@ -26,19 +26,17 @@
  >> [stack.Shape()](functions/stack_Shape.md)
  >
  >> [stack.StripStackMatrix()](functions/stack_StripStackMatrix.md)
+ >
+ >> [stack.Transpose()](functions/stack_Transpose.md)
  
  > Card/Stack management functions
  >> [card.Print()](functions/card_Print.md)
  >>
  >> [stack.Print()](functions/stack_Print.md)
  >
- >> [card.SwitchKeyVal()](functions/card_SwitchKeyVal.md)
- >>
- >> [stack.SwitchKeyVal()](functions/stack_SwitchKeyVal.md)
- >
  >> [card.Clone()](functions/card_Clone.md)
  >>
- >> [stack.Clone()](functions/stack_Clone.md)
+ >> [stack.Clone()](functions/stack_Clone.md) // RESUME WORKING FROM HERE
  >
  >> [card.Equals()](functions/card_Equals.md)
  >>
@@ -53,7 +51,7 @@
  >
  >> [stack.Shuffle()](functions/stack_Shuffle.md)
  >
- >> [stack.Transpose()](functions/stack_Transpose.md)
+ >> [card.SwitchKeyVal()](functions/card_SwitchKeyVal.md)
  
  > Lambda functions
  >> [stack.Lambda()](functions/stack_Lambda.md)
@@ -74,6 +72,8 @@
  >> [stack.Has()](functions/stack_Has.md)
  >
  >> [stack.Filter()](functions/stack_Filter.md)
+ >
+ >> [stack.SwitchKeyVal()](functions/stack_SwitchKeyVal.md)
  >
  >> [stack.Add()](functions/stack_Add.md)
  >>
