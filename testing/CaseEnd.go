@@ -618,36 +618,40 @@ func case_card_Equals(funcName string) {
 		card1.Equals(card2), // 1
 
 		// test whether idx parameter works
-		card1.Equals(card2, nil, nil, COMPARE_False, COMPARE_False, COMPARE_False), // 2
-		!card1.Equals(card2, nil, nil, COMPARE_True, COMPARE_False, COMPARE_False), // 3
+		card1.Equals(card2, COMPARE_False, COMPARE_False, COMPARE_False), // 2
+		!card1.Equals(card2, COMPARE_True, COMPARE_False, COMPARE_False), // 3
 
 		// test whether keys parameter works
-		card1.Equals(card3, nil, nil, COMPARE_False, COMPARE_False, COMPARE_False), // 4
-		!card5.Equals(card6, nil, nil, COMPARE_False, COMPARE_True, COMPARE_False), // 5
+		card1.Equals(card3, COMPARE_False, COMPARE_False, COMPARE_False), // 4
+		!card5.Equals(card6, COMPARE_False, COMPARE_True, COMPARE_False), // 5
 
 		// test whether val parameter works
-		card1.Equals(card5, nil, nil, COMPARE_False, COMPARE_False, COMPARE_False), // 6
-		!card3.Equals(card4, nil, nil, COMPARE_False, COMPARE_False, COMPARE_True), // 7
+		card1.Equals(card5, COMPARE_False, COMPARE_False, COMPARE_False), // 6
+		!card3.Equals(card4, COMPARE_False, COMPARE_False, COMPARE_True), // 7
 
 		// test whether dereferenceTypes work for keys
-		cardA.Equals(cardB, DEREFERENCE_None), // 8
-		!cardA.Equals(cardB, DEREFERENCE_Both), // 9
-		!cardB.Equals(cardC, DEREFERENCE_None), // 10
-		!cardB.Equals(cardC, DEREFERENCE_Both), // 11
-		cardC.Equals(cardD, DEREFERENCE_None), // 12
-		cardC.Equals(cardD, DEREFERENCE_Both), // 13
+		cardA.Equals(cardB, nil, nil, nil, nil, DEREFERENCE_None), // 8
+		!cardA.Equals(cardB, nil, nil, nil, nil, DEREFERENCE_Both), // 9
+		!cardB.Equals(cardC, nil, nil, nil, nil, DEREFERENCE_None), // 10
+		!cardB.Equals(cardC, nil, nil, nil, nil, DEREFERENCE_Both), // 11
+		cardC.Equals(cardD, nil, nil, nil, nil, DEREFERENCE_None), // 12
+		cardC.Equals(cardD, nil, nil, nil, nil, DEREFERENCE_Both), // 13
 
 		// test whether dereferenceTypes work for vals
-		cardE.Equals(cardF, nil, DEREFERENCE_None), // 14
-		!cardE.Equals(cardF, nil, DEREFERENCE_Both), // 15
-		!cardF.Equals(cardG, nil, DEREFERENCE_None), // 16
-		!cardF.Equals(cardG, nil, DEREFERENCE_Both), // 17
-		cardG.Equals(cardH, nil, DEREFERENCE_None), // 18
-		cardG.Equals(cardH, nil, DEREFERENCE_Both), // 19
+		cardE.Equals(cardF, nil, nil, nil, nil, nil, DEREFERENCE_None), // 14
+		!cardE.Equals(cardF, nil, nil, nil, nil, nil, DEREFERENCE_Both), // 15
+		!cardF.Equals(cardG, nil, nil, nil, nil, nil, DEREFERENCE_None), // 16
+		!cardF.Equals(cardG, nil, nil, nil, nil, nil, DEREFERENCE_Both), // 17
+		cardG.Equals(cardH, nil, nil, nil, nil, nil, DEREFERENCE_None), // 18
+		cardG.Equals(cardH, nil, nil, nil, nil, nil, DEREFERENCE_Both), // 19
 		
 		// test whether we can compare not-by-pointer given we set the card keys
 		// with a non-interface (v := "Hey" RATHER THAN var v any; v = "Hey")
 		cardUno.Equals(cardDos), // 20
+
+		// test compare object vs non
+		!card1.Equals(card2, nil, nil, nil, COMPARE_True), // 21
+		card1.Equals(card2, nil, nil, nil, COMPARE_False), // 22
 		
 	}
 
@@ -1140,39 +1144,39 @@ func case_stack_Get(funcName string) {
 	conditions := []bool {
 
 		// expansively test functionality
-		card1.Equals(MakeCard(3, nil, 2), nil, nil, COMPARE_True), // 1
-		card2.Equals(MakeCard(1, nil, 0), nil, nil, COMPARE_True), // 2
-		card3.Equals(MakeCard(2, nil, 1), nil, nil, COMPARE_True), // 3
-		card4.Equals(MakeCard(2, nil, 1), nil, nil, COMPARE_True), // 4
-		card5.Equals(MakeCard(2, nil, 1), nil, nil, COMPARE_True), // 5
-		card6.Equals(MakeCard(2, nil, 1), nil, nil, COMPARE_True), // 6
-		card7.Equals(MakeCard(1, nil, 0), nil, nil, COMPARE_True), // 7
+		card1.Equals(MakeCard(3, nil, 2), COMPARE_True), // 1
+		card2.Equals(MakeCard(1, nil, 0), COMPARE_True), // 2
+		card3.Equals(MakeCard(2, nil, 1), COMPARE_True), // 3
+		card4.Equals(MakeCard(2, nil, 1), COMPARE_True), // 4
+		card5.Equals(MakeCard(2, nil, 1), COMPARE_True), // 5
+		card6.Equals(MakeCard(2, nil, 1), COMPARE_True), // 6
+		card7.Equals(MakeCard(1, nil, 0), COMPARE_True), // 7
 		card8 == nil, // 8
 		card9.Equals(cardA), // 9
-		card10.Equals(MakeCard(12, nil, 1), nil, nil, COMPARE_True), // 10
-		card11.Equals(MakeCard(6, nil, 1), nil, nil, COMPARE_True), // 11
-		card12.Equals(MakeCard(stackA, nil, 0), nil, nil, COMPARE_True), // 12
+		card10.Equals(MakeCard(12, nil, 1), COMPARE_True), // 10
+		card11.Equals(MakeCard(6, nil, 1), COMPARE_True), // 11
+		card12.Equals(MakeCard(stackA, nil, 0), COMPARE_True), // 12
 		card13 == nil, // 13
-		card14.Equals(MakeCard(intValB, nil, 1), nil, nil, COMPARE_True), // 14
-		card15.Equals(MakeCard(intValB, nil, 1), nil, nil, COMPARE_True), // 15
+		card14.Equals(MakeCard(intValB, nil, 1), COMPARE_True), // 14
+		card15.Equals(MakeCard(intValB, nil, 1), COMPARE_True), // 15
 		card16.Key == "StackA", // 16
 		card17.Val == 3, // 17
 		card18.Key == "StackA", // 18
 		card19.Key == "StackA", // 19
 		card20.Key == "StackA", // 20
-		card21.Equals(MakeCard(6, nil, 1), nil, nil, COMPARE_True), // 21
-		card22.Equals(MakeCard(3, nil, 0), nil, nil, COMPARE_True), // 22
-		card23.Equals(MakeCard(7, nil, 1), nil, nil, COMPARE_True), // 23
+		card21.Equals(MakeCard(6, nil, 1), COMPARE_True), // 21
+		card22.Equals(MakeCard(3, nil, 0), COMPARE_True), // 22
+		card23.Equals(MakeCard(7, nil, 1), COMPARE_True), // 23
 
 		// test for card comparison
 		card24 == nil, // 24
-		card25.Equals(cardB, nil, nil, nil, nil, nil, COMPARE_True), // 25
+		card25.Equals(cardB, nil, nil, nil, COMPARE_True), // 25
 
 		// more pointer tests
-		!card26.Equals(MakeCard(intValB, nil, 1), nil, nil, COMPARE_True), // 26
-		card27.Equals(MakeCard(intValB, nil, 1), nil, nil, COMPARE_True), // 27
-		card28.Equals(MakeCard(intValB, nil, 1), nil, nil, COMPARE_True), // 28
-		card29.Equals(MakeCard(2, nil, 1), nil, nil, COMPARE_True), // 29
+		!card26.Equals(MakeCard(intValB, nil, 1), COMPARE_True), // 26
+		card27.Equals(MakeCard(intValB, nil, 1), COMPARE_True), // 27
+		card28.Equals(MakeCard(intValB, nil, 1), COMPARE_True), // 28
+		card29.Equals(MakeCard(2, nil, 1), COMPARE_True), // 29
 		card30 == nil, // 30
 		card31 == nil, // 31
 

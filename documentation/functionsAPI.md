@@ -36,7 +36,7 @@
  >
  >> [card.Clone()](functions/card_Clone.md)
  >>
- >> [stack.Clone()](functions/stack_Clone.md) // RESUME WORKING FROM HERE
+ >> [stack.Clone()](functions/stack_Clone.md)
  >
  >> [card.Equals()](functions/card_Equals.md)
  >>

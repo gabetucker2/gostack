@@ -26,20 +26,25 @@
 
  <h1>Planned Releases</h1>
 
- <h2><b>v1.0.4</b> — <i>Beta Release</i> — 11/1/2022 — Post-release polish</h2>
+ <h2><b>v1.0.4</b> — <i>Beta Release</i> — 11/?/2022 — Post-release polish</h2>
 
 Completed:
 * Community Discord server, Patreon page, and buymeaoffee is created
 * The **Height** property of **Stacks** is renamed to **Height** to improve conceptual clarity
 * **MakeSubstack()** function added
-* **card.SwitchKeyVal()** functions added
-* **stack.SwitchKeysVals()** functions added
+* **card.SwitchKeyVal()** function added
+* **stack.SwitchKeysVals()** function added
 * **stack.Filter()** functions added
 * Allow simplified Lambda function parameterizations
 * Added more DEFEREFERENCE options for improved flexibility
 * Created benchmark tests
+* Added LICENSE file
 
 In progress:
+* Add Idx coordinate system to Lambda
+* **stack.Sum/Difference/Product()** functions added
+* **csvToStackMatrix() (\*Stack)** function added
+* **stack.ToCSV() ([][]string)** function added
 * Add function samples to each function documentation file
 * ***gostack*** functions parameter naming has been adjusted to be more consistent
 * ***gostack***'s functions' default parameter values have been adjusted to make more intuitive sense

@@ -11,17 +11,17 @@ import (
 
 /** Creates a card with given properties
 
- MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
- 
- @ensures
- | IF `input1` OR `input2` are nil:
- |     MakeCard := func(`val`, `key`, `idx`)
- | ELSE:
- |     MakeCard := func(`key`, `val`, `idx`)
- @examples
- | MakeCard("Hello") => Card{Val: "Hello"}
- | MakeCard(nil, "Hello") => Card{Key: "Hello"}
- | MakeCard(1, 2) => Card{Key: 1, Val: 2}
+MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
+
+@ensures
+| IF `input1` OR `input2` are nil:
+|     MakeCard := func(`val`, `key`, `idx`)
+| ELSE:
+|     MakeCard := func(`key`, `val`, `idx`)
+@examples
+| MakeCard("Hello") => Card{Val: "Hello"}
+| MakeCard(nil, "Hello") => Card{Key: "Hello"}
+| MakeCard(1, 2) => Card{Key: 1, Val: 2}
 */
  func MakeCard(arguments ...any) *Card {
 
@@ -642,22 +642,12 @@ func (card *Card) Clone() *Card {
 
 }
 
-/** Returns a clone of the given stack
+/**  Returns a clone of `card`
 
- @receiver `stack` type{*Stack}
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int} default -1 (heightest)
- @param optional `cloneCardKeys` type{CLONE} default CLONE_True
- @param optional `cloneCardVals` type{CLONE} default CLONE_True
- @param optional `cloneSubstackKeys` type{CLONE} default CLONE_True
- @param optional `cloneSubstackVals` type{CLONE} default CLONE_True
-	only set to false if you want all cards containing substacks to erase those substacks, replacing them with nils, preserving their space in the stack as cards with nil values
-      (will only work on the first layer)
- @returns type{*Stack} stack clone
- @constructs type{*Stack} clone of `stack`
+ stack.Clone(deepSearchType DEEPSEARCH [DEEPSEARCH_True], depth int [-1], cloneCardKeys CLONE [CLONE_True], cloneCardVals CLONE [CLONE_True], cloneSubstackKeys CLONE [CLONE_True], cloneSubstackVals CLONE [CLONE_True]) (stack)
+
  @ensures
-   * if you set clone to false, then that property will be cloned as nil
-   * if you shallow clone a depth stack and cloneSubstackVals is true, then the original substacks will be held in the clone
+ | If `cloneSubstackVals` == CLONE_False, then each card holding a substack as its Val will have its Val updated to nil
 */
 func (stack *Stack) Clone(arguments ...any) *Stack {
 
@@ -756,31 +746,30 @@ func (stack *Stack) Unique(arguments ...any) *Stack {
 
 }
 
-/** Returns whether two cards equal one another
- 
- @receiver `thisCard` type{*Card}
- @param `otherCard` type{*Card}
- @param optional `dereferenceTypeKey` type{DEREFERENCE} default DEREFERENCE_None
- @param optional `dereferenceTypeVal` type{DEREFERENCE} default DEREFERENCE_None
- @param optional `compareIdxs` type{COMPARE} default COMPARE_False
- @param optional `compareKeys` type{COMPARE} default COMPARE_True
- @param optional `compareVals` type{COMPARE} default COMPARE_True
- @param optional `compareObjectAdr` type{COMPARE} default COMPARE_False
-   if true, ensures the cards are the same object
- @returns type{bool}
+/** Returns whether one card equals another
+
+ card.Equals(otherCard *Card, compareIdxs COMPARE [COMPARE_False], compareKeys COMPARE [COMPARE_True], compareVals COMPARE [COMPARE_True], compareCardAdrs COMPARE [COMPARE_False], dereferenceTypeKey DEREFERENCE [DEREFERENCE_None], dereferenceTypeVal DEREFERENCE [DEREFERENCE_None]) (cardEqualsOtherCard bool)
+
+ @examples
+ | card1 := MakeCard("Hey")
+ | card2 := MakeCard("Hey")
+ | myStr := "Hey"
+ | card1.Equals(card2, nil, nil, nil, COMPARE_False) // True
+ | card1.Equals(card2, nil, nil, nil, COMPARE_True) // False
+ | card1.Equals(MakeCard(&myStr), nil, nil, nil, nil, nil, DEREFERENCE_This) // True
  */
 func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 
 	// unpack arguments into optional parameters
-	var dereferenceTypeKey, dereferenceTypeVal, compareIdxs, compareKeys, compareVals, compareObjectAdr any
-	gogenerics.UnpackVariadic(arguments, &dereferenceTypeKey, &dereferenceTypeVal, &compareIdxs, &compareKeys, &compareVals, &compareObjectAdr)
+	var compareIdxs, compareKeys, compareVals, compareCardAdrs, dereferenceTypeKey, dereferenceTypeVal any
+	gogenerics.UnpackVariadic(arguments, &compareIdxs, &compareKeys, &compareVals, &compareCardAdrs, &dereferenceTypeKey, &dereferenceTypeVal)
 	// set default vals
 	setDEREFERENCEDefaultIfNil(&dereferenceTypeKey)
 	setDEREFERENCEDefaultIfNil(&dereferenceTypeVal)
 	if compareIdxs == nil {compareIdxs = COMPARE_False}
 	setCOMPAREDefaultIfNil(&compareKeys)
 	setCOMPAREDefaultIfNil(&compareVals)
-	if compareObjectAdr == nil {compareObjectAdr = COMPARE_False}
+	if compareCardAdrs == nil {compareCardAdrs = COMPARE_False}
 
 	condition := thisCard != nil && otherCard != nil
 	
@@ -800,7 +789,7 @@ func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 
 	condition = condition && (compareIdxs == COMPARE_False || (compareIdxs == COMPARE_True && thisCard.Idx == otherCard.Idx))
 
-	condition = condition && (compareObjectAdr == COMPARE_False || (compareObjectAdr == COMPARE_True && fmt.Sprintf("%p", thisCard) == fmt.Sprintf("%p", otherCard)))
+	condition = condition && (compareCardAdrs == COMPARE_False || (compareCardAdrs == COMPARE_True && fmt.Sprintf("%p", thisCard) == fmt.Sprintf("%p", otherCard)))
 	
 	// return whether conditions yield true
 	return condition
@@ -995,7 +984,7 @@ func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 
 					// compare card properties
 					if testLayer {
-						test = test && cardA.Equals(cardB, pointerCardKeys, pointerCardVals, COMPARE_True, compareCardKeys, compareCardVals)
+						test = test && cardA.Equals(cardB, COMPARE_True, compareCardKeys, compareCardVals, COMPARE_False, pointerCardKeys, pointerCardVals)
 					}
 
 				}
