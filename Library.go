@@ -748,7 +748,7 @@ func (stack *Stack) Unique(arguments ...any) *Stack {
 
 /** Returns whether one card equals another
 
- card.Equals(otherCard *Card, compareIdxs COMPARE [COMPARE_False], compareKeys COMPARE [COMPARE_True], compareVals COMPARE [COMPARE_True], compareCardAdrs COMPARE [COMPARE_False], dereferenceTypeKey DEREFERENCE [DEREFERENCE_None], dereferenceTypeVal DEREFERENCE [DEREFERENCE_None]) (cardEqualsOtherCard bool)
+ card.Equals(otherCard *Card, compareIdxs COMPARE [COMPARE_False], compareKeys COMPARE [COMPARE_True], compareVals COMPARE [COMPARE_True], compareCardAdrs COMPARE [COMPARE_False], pointerKeys DEREFERENCE [DEREFERENCE_None], pointerVals DEREFERENCE [DEREFERENCE_None]) (cardEqualsOtherCard bool)
 
  @examples
  | card1 := MakeCard("Hey")
@@ -761,11 +761,11 @@ func (stack *Stack) Unique(arguments ...any) *Stack {
 func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 
 	// unpack arguments into optional parameters
-	var compareIdxs, compareKeys, compareVals, compareCardAdrs, dereferenceTypeKey, dereferenceTypeVal any
-	gogenerics.UnpackVariadic(arguments, &compareIdxs, &compareKeys, &compareVals, &compareCardAdrs, &dereferenceTypeKey, &dereferenceTypeVal)
+	var compareIdxs, compareKeys, compareVals, compareCardAdrs, pointerKeys, pointerVals any
+	gogenerics.UnpackVariadic(arguments, &compareIdxs, &compareKeys, &compareVals, &compareCardAdrs, &pointerKeys, &pointerVals)
 	// set default vals
-	setDEREFERENCEDefaultIfNil(&dereferenceTypeKey)
-	setDEREFERENCEDefaultIfNil(&dereferenceTypeVal)
+	setDEREFERENCEDefaultIfNil(&pointerKeys)
+	setDEREFERENCEDefaultIfNil(&pointerVals)
 	if compareIdxs == nil {compareIdxs = COMPARE_False}
 	setCOMPAREDefaultIfNil(&compareKeys)
 	setCOMPAREDefaultIfNil(&compareVals)
@@ -775,17 +775,11 @@ func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 	
 	condition = condition && 
 		(compareKeys == COMPARE_False ||
-		(compareKeys == COMPARE_True &&
-			(
-				(dereferenceTypeKey == DEREFERENCE_None && thisCard.Key == otherCard.Key) ||
-				(dereferenceTypeKey == DEREFERENCE_Both && gogenerics.PointersEqual(thisCard.Key, otherCard.Key) ) ) ) )
+		(compareKeys == COMPARE_True && ( compareDereference(pointerKeys.(DEREFERENCE), thisCard.Key, otherCard.Key) ) ) )
 	
 	condition = condition && 
 		(compareVals == COMPARE_False ||
-		(compareVals == COMPARE_True &&
-			(
-				(dereferenceTypeVal == DEREFERENCE_None && thisCard.Val == otherCard.Val) ||
-				(dereferenceTypeVal == DEREFERENCE_Both && gogenerics.PointersEqual(thisCard.Val, otherCard.Val) ) ) ) )
+		(compareVals == COMPARE_True && ( compareDereference(pointerVals.(DEREFERENCE), thisCard.Val, otherCard.Val) ) ) )
 
 	condition = condition && (compareIdxs == COMPARE_False || (compareIdxs == COMPARE_True && thisCard.Idx == otherCard.Idx))
 
@@ -796,31 +790,14 @@ func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 
 }
 
-/** Returns whether two stacks equal one another
- 
- @receiver `thisStack` type{*Stack}
- @param `otherStack` type{*Stack}
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `compareCardKeys` type{COMPARE} default COMPARE_True
- @param optional `compareCardVals` type{COMPARE} default COMPARE_True
- @param optional `compareSubstackKeys` type{SUBSTACKKEYS} default COMPARE_True
- @param optional `compareSubstackVals` type{SUBSTACKKEYS} default COMPARE_False
-   this being set to true will compare the substacks themselves
- @param optional `pointerCardKeys` type{DEREFERENCE} default DEREFERENCE_None
- @param optional `pointerCardVals` type{DEREFERENCE} default DEREFERENCE_None
- @param optional `pointerSubstackKeys` type{DEREFERENCE} default DEREFERENCE_None
- @param optional `pointerSubstackVals` type{DEREFERENCE} default DEREFERENCE_Both
-   this being set to true will compare the addresses of the substacks
- @ensures
-   * `stack`.Size == `otherStack`.Size is tested on the heightest layer
-   * if `stack`.Height != `otherStack`.Height and the N-depth comparison finds that they're equal, then return that they're Equal 
- @returns type{bool}
+/** Returns whether one stack equals another
+
+ stack.Equals(otherStack *Stack, deepSearchType *DEEPSEARCH [DEEPSEARCH_True], depth int|[]int|*Stack, compareCardKeys COMPARE [COMPARE_True], compareCardVals COMPARE [COMPARE_True], compareSubstackKeys COMPARE [COMPARE_True], pointerCardKeys DEREFERENCE [DEREFERENCE_None], pointerCardVals DEREFERENCE [DEREFERENCE_None], pointerSubstackKeys DEREFERENCE [DEREFERENCE_None], compareSubstackAdrs COMPARE [COMPARE_False]) (stackEqualsOtherStack bool)
  */
 func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 
 	/*
-	PSEUDOCODE OUTLINE:
+	PSEUDOCODE OUTLINE: // TODO: update
 
 	stack.Equals(otherStack, ...arguments) bool
 
@@ -883,8 +860,8 @@ func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 	*/
 
 	// unpack arguments into optional parameters
-	var deepSearchType, depth, compareCardKeys, compareCardVals, compareSubstackKeys, compareSubstackVals, pointerCardKeys, pointerCardVals, pointerSubstackKeys, pointerSubstackVals any
-	gogenerics.UnpackVariadic(arguments, &deepSearchType, &depth, &compareCardKeys, &compareCardVals, &compareSubstackKeys, &compareSubstackVals, &pointerCardKeys, &pointerCardVals, &pointerSubstackKeys, &pointerSubstackVals)
+	var deepSearchType, depth, compareCardKeys, compareCardVals, compareSubstackKeys, pointerCardKeys, pointerCardVals, pointerSubstackKeys, compareSubstackAdrs any
+	gogenerics.UnpackVariadic(arguments, &deepSearchType, &depth, &compareCardKeys, &compareCardVals, &compareSubstackKeys, &pointerCardKeys, &pointerCardVals, &pointerSubstackKeys, &compareSubstackAdrs)
 	// set default vals
 	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	setHeightDefaultIfNil(&depth)
@@ -892,12 +869,12 @@ func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 	setCOMPAREDefaultIfNil(&compareCardKeys)
 	setCOMPAREDefaultIfNil(&compareCardVals)
 	setCOMPAREDefaultIfNil(&compareSubstackKeys)
-	if compareSubstackVals == nil { compareSubstackVals = COMPARE_False }
 	
 	setDEREFERENCEDefaultIfNil(&pointerCardKeys)
 	setDEREFERENCEDefaultIfNil(&pointerCardVals)
 	setDEREFERENCEDefaultIfNil(&pointerSubstackKeys)
-	if pointerSubstackVals == nil { pointerSubstackVals = DEREFERENCE_Both }
+
+	if compareSubstackAdrs == nil { compareSubstackAdrs = COMPARE_False }
 
 	heightStack, heightIsStack := depth.(*Stack)
 	if heightIsStack {
@@ -955,12 +932,8 @@ func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 								test = test && cardA.Key == cardB.Key
 							}
 						}
-						if compareSubstackVals == COMPARE_True {
-							if pointerSubstackVals == DEREFERENCE_Both {
-								test = test && gogenerics.PointersEqual(cardA.Val, cardB.Val)
-							} else {
-								test = test && cardA.Val == cardB.Val
-							}
+						if compareSubstackAdrs == COMPARE_True {
+							test = test && fmt.Sprintf("%p", substackA) == fmt.Sprintf("%p", substackB)
 						}
 					}
 					
@@ -974,7 +947,7 @@ func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 							transformedHeight = append(transformedHeight.([]int), depth.([]int)[i] - 1)
 						}
 					}
-					test = test && substackA.Equals(substackB, deepSearchType, transformedHeight, compareCardKeys, compareCardVals, compareSubstackKeys, compareSubstackVals, pointerCardKeys, pointerCardVals, pointerSubstackKeys, pointerSubstackVals)
+					test = test && substackA.Equals(substackB, deepSearchType, transformedHeight, compareCardKeys, compareCardVals, compareSubstackKeys, pointerCardKeys, pointerCardVals, pointerSubstackKeys, compareSubstackAdrs)
 
 				} else if (cardAIsSubstack && !cardBIsSubstack) || (!cardAIsSubstack && cardBIsSubstack) { // one holds a substack and the other doesnt
 
@@ -1116,7 +1089,7 @@ func (stack *Stack) Transpose() *Stack {
  
   }
 
-/** Prints information surrounding `card` to the terminal
+/** Prints information surrounding `card` to the terminal and returns `card`
  
  card.Print(indent int [0]) (card)
 
@@ -1163,12 +1136,14 @@ func (card *Card) Print(arguments ...any) *Card {
 
 }
 
-/** Prints information surrounding `stack` to the terminal
+/** Prints information surrounding `stack` to the terminal and returns `stack`
 
  stack.Print(indent int [0]) (stack)
  
  @ensures
  | prints "-" `indent` * 4 times before each line to indicate depth in a stackMatrix
+ @examples
+ | MakeStack([]string {"Hey", "Hi"}).Print().Remove(FIND_Last).Print() // prints the stack before and after performing the remove function
  */
 func (stack *Stack) Print(arguments ...any) *Stack {
 	

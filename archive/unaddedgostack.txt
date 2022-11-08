@@ -313,8 +313,8 @@
  * **card.Clone(...cloneKey, ...cloneVal)**
  * **stack.Clone(...cloneCards, ...cloneKeys, ...cloneVals)**
  * **stack.Unique(typeType, ...dereferenceType, ...deepSearchType, ...depth)**
- * **card.Equals(Card, ...dereferenceTypeKey, ...dereferenceTypeVal, ...compareIdxs, ...printType)**
- * **stack.Equals(Stack, ...compareStacks, ...dereferenceTypeStack, ...deepSearchType, ...depth, ...dereferenceTypeKey, ...dereferenceTypeVal)**
+ * **card.Equals(Card, ...pointerKeys, ...pointerVals, ...compareIdxs, ...printType)**
+ * **stack.Equals(Stack, ...compareStacks, ...dereferenceTypeStack, ...deepSearchType, ...depth, ...pointerKeys, ...pointerVals)**
  * **stack.Shuffle()**
  * **stack.Transpose()**
  * **card.Print()**
@@ -799,19 +799,19 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
  
 <h3 name = "Equals">Equals</h3>
  
- `card.Equals(*Card, ...compareCards, ...dereferenceTypeCard, ...dereferenceTypeKey, ...dereferenceTypeVal, ...compareIdxs)`
+ `card.Equals(*Card, ...compareCards, ...dereferenceTypeCard, ...pointerKeys, ...pointerVals, ...compareIdxs)`
  ```
  Returns whether two cards equal one another
  
  @receiver `thisCard` type{*Card}
  @param `otherCard` type{*Card}
- @param optional `dereferenceTypeKey` type{DEREFERENCE} default DEREFERENCE_None
- @param optional `dereferenceTypeVal` type{DEREFERENCE} default DEREFERENCE_None
+ @param optional `pointerKeys` type{DEREFERENCE} default DEREFERENCE_None
+ @param optional `pointerVals` type{DEREFERENCE} default DEREFERENCE_None
  @param optional `compareIdxs` type{bool} default false
  @returns type{bool}
  ```
  
- `stack.Equals(*Stack, ...compareStacks, ...dereferenceTypeStack, ...deepSearchType, ...compareCards, ...dereferenceTypeCard, ...dereferenceTypeKey, ...dereferenceTypeVal)`
+ `stack.Equals(*Stack, ...compareStacks, ...dereferenceTypeStack, ...deepSearchType, ...compareCards, ...dereferenceTypeCard, ...pointerKeys, ...pointerVals)`
  ```
  Returns whether two stacks equal one another
  
@@ -822,8 +822,8 @@ Please note that enumerator defaults are default in *most cases*.  However, you 
  @param optional `dereferenceTypeStack` type{DEREFERENCE} default DEREFERENCE_None
  @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
  @param optional `depth` type{int} default -1 (heightest)
- @param optional `dereferenceTypeKey` type{DEREFERENCE} default DEREFERENCE_None
- @param optional `dereferenceTypeVal` type{DEREFERENCE} default DEREFERENCE_None
+ @param optional `pointerKeys` type{DEREFERENCE} default DEREFERENCE_None
+ @param optional `pointerVals` type{DEREFERENCE} default DEREFERENCE_None
  @returns type{bool}
  ```
  

@@ -2,7 +2,7 @@
 
  <h2>card.Equals()</h2>
 
- `card.Equals(otherCard *Card, compareIdxs COMPARE [COMPARE_False], compareKeys COMPARE [COMPARE_True], compareVals COMPARE [COMPARE_True], compareCardAdrs COMPARE [COMPARE_False], dereferenceTypeKey DEREFERENCE [DEREFERENCE_None], dereferenceTypeVal DEREFERENCE [DEREFERENCE_None]) (cardEqualsOtherCard bool)`
+ `card.Equals(otherCard *Card, compareIdxs COMPARE [COMPARE_False], compareKeys COMPARE [COMPARE_True], compareVals COMPARE [COMPARE_True], compareCardAdrs COMPARE [COMPARE_False], pointerKeys DEREFERENCE [DEREFERENCE_None], pointerVals DEREFERENCE [DEREFERENCE_None]) (cardEqualsOtherCard bool)`
 
 ```
  Returns whether one card equals another

@@ -5,7 +5,7 @@
  `card.Print(indent int [0]) (card)`
 
 ```
- Prints information surrounding `card` to the terminal
+ Prints information surrounding `card` to the terminal and returns `card`
  
  @ensures
  | prints "-" `indent` * 4 times before each line to indicate depth in a stackMatrix

@@ -35,7 +35,7 @@ func getType(in any, override bool) string {
 	}
 }
 
-func compareDereference(dereferenceType DEREFERENCE, found, this any) bool {
+func compareDereference(dereferenceType DEREFERENCE, this, found any) bool {
 	switch dereferenceType {
 	case DEREFERENCE_None:
 		return found == this
@@ -57,7 +57,7 @@ func match(needle any, haystack any, override bool, dereferenceType DEREFERENCE)
 		if isCard {
 			return needle.(*Card).Equals(haystack.(*Card))
 		} else {
-			return compareDereference(dereferenceType, needle, haystack)
+			return compareDereference(dereferenceType, haystack, needle)
 		}
 	case "slice":
 		return needleInHaystack(needle, gogenerics.UnpackArray(haystack), dereferenceType)

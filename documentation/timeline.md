@@ -41,8 +41,8 @@ Completed:
 * Added LICENSE file
 
 In progress:
-* Add Idx coordinate system to Lambda
-* **stack.Sum/Difference/Product()** functions added
+* Added DEREFERENCE_X support to card.Equals and stack.Equals
+* Added ***stack.Coordinates()*** and ***stack.CoordinatesMany()*** to ***gostack***
 * **csvToStackMatrix() (\*Stack)** function added
 * **stack.ToCSV() ([][]string)** function added
 * Add function samples to each function documentation file
@@ -53,9 +53,10 @@ In progress:
 * Removed all files that won't be in the full release (e.g., `unaddedcases.txt`)
 * ***gostack*** is finally opened and marketed to the public
 
- <h2><b>v1.0.6</b> — <i>Beta Release</i> — ?/?/2022 — Patch A</h2>
+ <h2><b>v1.0.6</b> — <i>Beta Release</i> — ?/?/2023 — Patch A</h2>
 
 * More strictly implement design-by-contract principles in function documentation to facilitate error-catching for invalid arguments
+* Mathematical functions added (mean, sum, product, add, subtract, multiply, divide, matrix multiply)
 * Optimize to improve performance
   * Add more benchmarks
   * Remove all dependencies on `gogenerics` since this significantly detriments efficiency

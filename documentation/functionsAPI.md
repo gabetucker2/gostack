@@ -30,10 +30,6 @@
  >> [stack.Transpose()](functions/stack_Transpose.md)
  
  > Card/Stack management functions
- >> [card.Print()](functions/card_Print.md)
- >>
- >> [stack.Print()](functions/stack_Print.md)
- >
  >> [card.Clone()](functions/card_Clone.md)
  >>
  >> [stack.Clone()](functions/stack_Clone.md)
@@ -41,6 +37,15 @@
  >> [card.Equals()](functions/card_Equals.md)
  >>
  >> [stack.Equals()](functions/stack_Equals.md)
+ 
+ > I/O functions
+ >> [csvToStackMatrix()](functions/csvToStackMatrix.md) // add
+ >>
+ >> [stack.ToCSV()](functions/stack_ToCSV.md) // add
+ >
+ >> [card.Print()](functions/card_Print.md)
+ >>
+ >> [stack.Print()](functions/stack_Print.md)
 
  > Miscellaneous functions
  >> [stack.Duplicate()](functions/stack_Duplicate.md)
@@ -98,6 +103,10 @@
  >> [stack.Update()](functions/stack_Update.md)
  >>
  >> [stack.UpdateMany()](functions/stack_UpdateMany.md)
+ >
+ >> [stack.Coordinates()](functions/stack_Coordinates.md) // add
+ >>
+ >> [stack.CoordinatesMany()](functions/stack_CoordinatesMany.md) // add
 
  ---
 
