@@ -50,7 +50,6 @@ In progress:
 * Add function samples to each function documentation file
 * ***gostack*** functions parameter naming has been adjusted to be more consistent
 * ***gostack***'s functions' default parameter values have been adjusted to make more intuitive sense
-* ***gostack***'s default parameter orderings have been adjusted to decrease the likelihood of having to pass repeated `nil` values
 * ***gostack*** receives a documentation overhaul
 * Removed all files that won't be in the full release (e.g., `unaddedcases.txt`)
 * ***gostack*** is finally opened and marketed to the public

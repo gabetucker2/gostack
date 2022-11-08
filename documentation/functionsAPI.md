@@ -70,7 +70,7 @@
  >> [stack.LambdaVarAdr()](functions/stack_Lambda.md)
  
  > Generic functions
- >> [stack.Move()](functions/stack_Move.md)
+ >> [stack.Move()](functions/stack_Move.md) // TODO: start here adding documentation
  >
  >> [stack.Swap()](functions/stack_Swap.md)
  >
@@ -104,9 +104,9 @@
  >>
  >> [stack.UpdateMany()](functions/stack_UpdateMany.md)
  >
- >> [stack.Coordinates()](functions/stack_Coordinates.md) // add
+ >> [stack.Coordinates()](functions/stack_Coordinates.md)
  >>
- >> [stack.CoordinatesMany()](functions/stack_CoordinatesMany.md) // add
+ >> [stack.CoordinatesMany()](functions/stack_CoordinatesMany.md)
 
  ---
 
