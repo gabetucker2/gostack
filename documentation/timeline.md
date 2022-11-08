@@ -43,10 +43,10 @@ Completed:
 * **csvToStackMatrix() (\*Stack)** function added
 * **stack.ToCSV() ([][]string)** function added
 * Abstracted ***stack.Lambda()*** input function
-
-In progress:
 * Added ***stack.Coordinates()*** and ***stack.CoordinatesMany()*** to ***gostack***
 * Add coordinates to Lambda functions in otherInfo using forwardpropagation
+
+In progress:
 * Add function samples to each function documentation file
 * ***gostack*** functions parameter naming has been adjusted to be more consistent
 * ***gostack***'s functions' default parameter values have been adjusted to make more intuitive sense
@@ -58,7 +58,7 @@ In progress:
  <h2><b>v1.0.6</b> — <i>Beta Release</i> — ?/?/2023 — Patch A</h2>
 
 * More strictly implement design-by-contract principles in function documentation to facilitate error-catching for invalid arguments
-* Mathematical functions added (mean, sum, product, add, subtract, multiply, divide, matrix multiply)
+* Mathematical functions added (mean, sum, product, add, subtract, multiply, divide, matrix multiply, transpose)
 * Optimize to improve performance
   * Add more benchmarks
   * Remove all dependencies on `gogenerics` since this significantly detriments efficiency

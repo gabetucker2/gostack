@@ -466,8 +466,14 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 	
 		// set up insertCards
 		for _, ins := range insertArr {
-			insertCards = append(insertCards, MakeCard(ins)) // insert a card whose val is ins
+			insCard, insIsCard := ins.(*Card)
+			if insIsCard {
+				insertCards = append(insertCards, insCard) // insert a card whose val is ins
+			} else {
+				insertCards = append(insertCards, MakeCard(ins)) // insert a card whose val is ins
+			}
 		}
+
 	} else {
 		insertCards = append(insertCards, MakeCard(insert)) // insert a card whose val is whatever the input is
 	}

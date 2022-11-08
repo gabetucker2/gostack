@@ -195,8 +195,8 @@ func Introduction() {
 	// set gottenData to a clone of myStack where the first card and the second card are switched
 	gottenData = myStack.Clone().Swap(FIND_First, FIND_Idx, nil, 1)
 
-	// set gotten data to a clone of myStack which is put into a random order, transposeped in the opposite order, and with any cards who have the same value as other cards removed
-	gottenData = myStack.Clone().Shuffle().Transpose().Unique(TYPE_Val)
+	// set gotten data to a clone of myStack which is put into a random order, Flipped in the opposite order, and with any cards who have the same value as other cards removed
+	gottenData = myStack.Clone().Shuffle().Flip().Unique(TYPE_Val)
 
 	/**
 	 There are many more functions than the ones displayed here that you are welcome

@@ -1,8 +1,8 @@
 ![Banner](../../images/gostack_SmallerTransparent.png)
 
- <h2>stack.Transpose()</h2>
+ <h2>stack.Flip()</h2>
 
- `stack.Transpose() (stack)`
+ `stack.Flip() (stack)`
 
 ```
  Reverses the order of all cards and stacks in `stack`

@@ -27,7 +27,7 @@
  >
  >> [stack.StripStackMatrix()](functions/stack_StripStackMatrix.md)
  >
- >> [stack.Transpose()](functions/stack_Transpose.md)
+ >> [stack.Flip()](functions/stack_Flip.md)
  
  > Card/Stack management functions
  >> [card.Clone()](functions/card_Clone.md)

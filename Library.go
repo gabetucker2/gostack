@@ -729,7 +729,7 @@ func (stack *Stack) Unique(arguments ...any) *Stack {
 	if uniqueType == nil { uniqueType = TYPE_Val }
 
 	// main
-	return stack.GetMany(FIND_Lambda, func(card *Card, _ *Stack, _ bool, workingStack *Stack, wm ...any) (bool) {
+	return stack.GetMany(FIND_Lambda, func(card *Card, _ *Stack, _ bool, _ *Stack, workingStack *Stack, wm ...any) (bool) {
 		if workingStack.Size == 0 {
 			return true
 		} else {
@@ -1008,7 +1008,7 @@ func (stack *Stack) Shuffle(arguments ...any) *Stack {
 
 /** Reverses the order of all cards and stacks in `stack`
  */
-func (stack *Stack) Transpose() *Stack {
+func (stack *Stack) Flip() *Stack {
 
 	flipper := func(thisStack *Stack) {
 		newCardsArr := []*Card {}
@@ -1023,7 +1023,7 @@ func (stack *Stack) Transpose() *Stack {
 	flipper(stack)
 
 	// main
-	return stack.LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ []any, _ ...any) {
+	return stack.LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Stack, _ *Card, _ any, _ []any, _ ...any) {
 
 		flipper(card.Val.(*Stack))
 
@@ -2276,18 +2276,7 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
 
 /** Retrieves a stack containing the coordinates of the first found card
 
- @receiver `stack` type{*Stack}
- @param optional `findType` type{FIND} default FIND_Last
- @param optional `findData` type{any, []any, *Stack any, func(*Card, *Stack, bool, ...any) (bool)} default nil
- @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
-   By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `dereferenceType` type{DEREFERENCE} default DEREFERENCE_None
- @param optional `passSubstacks` type{PASS} default PASS_True
- @param optional `passCards` type{PASS} default PASS_True
- @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+ ...stuff here
  */
  func (stack *Stack) Coordinates(arguments ...any) (*Stack) {
 	
@@ -2300,31 +2289,22 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
 	if passSubstacks == nil {passSubstacks = PASS_True}
 
 	// return
+	found := false
 	return stack.LambdaStack(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, workingMem ...any) {
 		
-		if selectCard(findType, findData, dereferenceType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) {
+		if !found && selectCard(findType, findData, dereferenceType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) {
 
 			*retStack = *coords
+			found = true
 
 		}
-	})
+	}, nil, nil, nil, workingMem, deepSearchType, depth, passSubstacks, passCards)
 
 }
 
 /** Retrieves a stack containing a set of stacks containing the coordinates of each found card
 
- @receiver `stack` type{*Stack}
- @param optional `findType` type{FIND} default FIND_Last
- @param optional `findData` type{any, []any, *Stack any, func(*Card, *Stack, bool, ...any) (bool)} default nil
- @param optional `findCompareRaw` type{COMPARE} default COMPARE_False
-   By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `dereferenceType` type{DEREFERENCE} default DEREFERENCE_None
- @param optional `passSubstacks` type{PASS} default PASS_True
- @param optional `passCards` type{PASS} default PASS_True
- @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
+ blah blah blah
  */
  func (stack *Stack) CoordinatesMany(arguments ...any) (*Stack) {
 	
@@ -2344,7 +2324,7 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
 			*retStack = *retStack.Add(coords, nil, nil, nil, nil, OVERRIDE_True)
 
 		}
-	})
+	}, nil, nil, nil, workingMem, deepSearchType, depth, passSubstacks, passCards)
 
 }
 
