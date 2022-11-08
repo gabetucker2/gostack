@@ -75,12 +75,12 @@ Enumerators:
  >
  > FIND_Lambda
  >> if function named N:
- >>> `func(card *Card, parentStack *Stack, isSubstack bool, workingMemAdrs ...any) (returnVal bool)`
+ >>> `func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, workingMemAdrs ...any) (returnVal bool)`
  >> 
  >>> where you can pass a function containing between 0 and all of these parameters (assuming no parameter's order is changed)
  >>
  >> if function named NMany, any of the following are acceptable:
- >>> `func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, workingMemAdrs ...any) (returnVal bool)`
+ >>> `func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, workingMemAdrs ...any) (returnVal bool)`
  >> 
  >>> where you can pass a function containing between 0 and all of these parameters (assuming no parameter's order is changed)
  >

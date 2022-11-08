@@ -67,7 +67,7 @@ func match(needle any, haystack any, override bool, dereferenceType DEREFERENCE)
 	return false
 }
 
-func selectCard(findType any, findData any, dereferenceType any, findCompareRaw COMPARE, card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, wmadrs ...any) bool {
+func selectCard(findType any, findData any, dereferenceType any, findCompareRaw COMPARE, card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, workingMem ...any) bool {
 
 	// set defaults
 	setFINDDefaultIfNil(&findType)
@@ -173,16 +173,19 @@ func selectCard(findType any, findData any, dereferenceType any, findCompareRaw 
 		if success {return conversion3(card, parentStack)}
 		conversion4, success := findData.(func(*Card, *Stack, bool) (bool))
 		if success {return conversion4(card, parentStack, isSubstack)}
+		conversion5, success := findData.(func(*Card, *Stack, bool, *Stack) (bool))
+		if success {return conversion5(card, parentStack, isSubstack, coords)}
 
 		// specific to card return/N
-		conversion5, success := findData.(func(*Card, *Stack, bool, ...any) (bool))
-		if success {return conversion5(card, parentStack, isSubstack, wmadrs...)}
+		conversion6, success := findData.(func(*Card, *Stack, bool, *Stack, ...any) (bool))
+		if success {return conversion6(card, parentStack, isSubstack, coords, workingMem...)}
 
 		// specific to stack return/NMany
-		conversion6, success := findData.(func(*Card, *Stack, bool, *Stack) (bool))
-		if success {return conversion6(card, parentStack, isSubstack, retStack)}
-		conversion7, success := findData.(func(*Card, *Stack, bool, *Stack, ...any) (bool))
-		if success {return conversion7(card, parentStack, isSubstack, retStack, wmadrs...)}
+		conversion7, success := findData.(func(*Card, *Stack, bool, *Stack, *Stack) (bool))
+		if success {return conversion7(card, parentStack, isSubstack, coords, retStack)}
+		conversion8, success := findData.(func(*Card, *Stack, bool, *Stack, *Stack, ...any) (bool))
+		if success {return conversion8(card, parentStack, isSubstack, coords, retStack, workingMem...)}
+
 	}
 	return false
 
@@ -195,21 +198,21 @@ func selectCard(findType any, findData any, dereferenceType any, findCompareRaw 
  @param keys type{[]any}
  @param vals type{[]any}
  @param globalI type{*int} used because: extracting from 1-D arrays into N-D matrix, so need to track our position in the 1-D arrays between different recursive calls
- @param overrideCards type{OVERRIDE}
+ @param overrideInsert type{OVERRIDE}
  @returns type{*Stack}
  @requires
   * `MakeStack()` and `MakeCard()` have been implemented
   * |keys| == |vals| if neither are nil
   * |keys| or |vals| == product of ints in matrixShape
 */
-func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []any, globalI *int, overrideCards OVERRIDE) (ret *Stack) {
+func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []any, globalI *int, overrideInsert OVERRIDE) (ret *Stack) {
 
 	// make stack
 	if len(matrixShape) > 1 {
 		for i := 0; i < matrixShape[0]; i++ {
 			// insert this return value into a card of our current stack
 			stack.Cards = append(stack.Cards, MakeCard(
-				MakeStack().makeStackMatrixFrom1D(matrixShape[1:], keys, vals, globalI, overrideCards), nil, i))
+				MakeStack().makeStackMatrixFrom1D(matrixShape[1:], keys, vals, globalI, overrideInsert), nil, i))
 		}
 
 		ret = stack
@@ -239,7 +242,7 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []
 
 		for i := 0; i < matrixShape[0]; i++ {
 
-			if overrideCards == OVERRIDE_True {
+			if overrideInsert == OVERRIDE_True {
 				makeNewCard()
 			} else {
 
@@ -434,9 +437,9 @@ func toTypeCard(card any) *Card {
 func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *Stack {
 	
 	// unpack variadic into optional parameters
-	var orderType, findType, findData, findCompareRaw, overrideCards, deepSearchType, depth, dereferenceType, passSubstacks, passCards, workingMem any
-	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &findCompareRaw, &overrideCards, &deepSearchType, &depth, &dereferenceType, &passSubstacks, &passCards, &workingMem)
-	setOVERRIDEDefaultIfNil(&overrideCards)
+	var orderType, findType, findData, findCompareRaw, overrideInsert, deepSearchType, depth, dereferenceType, passSubstacks, passCards, workingMem any
+	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &findCompareRaw, &overrideInsert, &deepSearchType, &depth, &dereferenceType, &passSubstacks, &passCards, &workingMem)
+	setOVERRIDEDefaultIfNil(&overrideInsert)
 	setORDERDefaultIfNil(&orderType)
 	setFINDDefaultIfNil(&findType)
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
@@ -447,27 +450,26 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 	// initialize foundCard to false so you can determine whether valid find and
 	// initialize variables
 	foundCard := false
-	insertArr := []any {}
 	insertCards := []*Card {}
 
 	// set up insertArr
-	switch getType(insert, false) {
-	case "element":
-		insertArr = append(insertArr, insert)
-	case "slice":
-		insertArr = gogenerics.UnpackArray(insert)
-	case "stack":
-		insertArr = insert.(*Stack).ToArray(RETURN_Cards)
-	}
-
-	// set up insertCards
-	for _, ins := range insertArr {
-		insCard, isCard := ins.(*Card)
-		if isCard && overrideCards == OVERRIDE_False {
-			insertCards = append(insertCards, insCard) // insert this card
-		} else {
+	if overrideInsert == OVERRIDE_False {
+		insertArr := []any {}
+		switch getType(insert, false) {
+		case "element":
+			insertArr = append(insertArr, insert)
+		case "slice":
+			insertArr = gogenerics.UnpackArray(insert)
+		case "stack":
+			insertArr = insert.(*Stack).ToArray(RETURN_Cards)
+		}
+	
+		// set up insertCards
+		for _, ins := range insertArr {
 			insertCards = append(insertCards, MakeCard(ins)) // insert a card whose val is ins
 		}
+	} else {
+		insertCards = append(insertCards, MakeCard(insert)) // insert a card whose val is whatever the input is
 	}
 
 	// add cards to empty stack
@@ -479,10 +481,10 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 
 	// else add based on find
 	} else {
-		stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any,  wmadrs ...any) {
+		stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any,  workingMem ...any) {
 		
 			// only do add to the first match if ACTION_First, otherwise do for every match
-			if (allNotFirst && selectCard(findType, findData, dereferenceType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...)) || (!allNotFirst && selectCard(findType, findData, dereferenceType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, retStack, retCard, retVarAdr, wmadrs...) && !foundCard) {
+			if (allNotFirst && selectCard(findType, findData, dereferenceType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...)) || (!allNotFirst && selectCard(findType, findData, dereferenceType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) && !foundCard) {
 	
 				// update foundCard
 				foundCard = true
@@ -518,7 +520,8 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 
 }
 
-func callLambda(lambda any, card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, workingMem []any) {
+func callLambda(lambda any, card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, workingMem []any) {
+	
 	conversion1, success := lambda.(func())
 	if success {conversion1()}
 	conversion2, success := lambda.(func(*Card))
@@ -527,14 +530,31 @@ func callLambda(lambda any, card *Card, parentStack *Stack, isSubstack bool, ret
 	if success {conversion3(card, parentStack)}
 	conversion4, success := lambda.(func(*Card, *Stack, bool))
 	if success {conversion4(card, parentStack, isSubstack)}
-	conversion5, success := lambda.(func (*Card, *Stack, bool, *Stack))
-	if success {conversion5(card, parentStack, isSubstack, retStack)}
-	conversion6, success := lambda.(func (*Card, *Stack, bool, *Stack, *Card))
-	if success {conversion6(card, parentStack, isSubstack, retStack, retCard)}
-	conversion7, success := lambda.(func (*Card, *Stack, bool, *Stack, *Card, any))
-	if success {conversion7(card, parentStack, isSubstack, retStack, retCard, retVarAdr)}
-	conversion8, success := lambda.(func (*Card, *Stack, bool, *Stack, *Card, any, []any))
-	if success {conversion8(card, parentStack, isSubstack, retStack, retCard, retVarAdr, otherInfo)}
-	conversion9, success := lambda.(func (*Card, *Stack, bool, *Stack, *Card, any, []any, ...any))
-	if success {conversion9(card, parentStack, isSubstack, retStack, retCard, retVarAdr, otherInfo, workingMem...)}
+	conversion5, success := lambda.(func(*Card, *Stack, bool, *Stack))
+	if success {conversion5(card, parentStack, isSubstack, coords)}
+	conversion6, success := lambda.(func (*Card, *Stack, bool, *Stack, *Stack))
+	if success {conversion6(card, parentStack, isSubstack, coords, retStack)}
+	conversion7, success := lambda.(func (*Card, *Stack, bool, *Stack, *Stack, *Card))
+	if success {conversion7(card, parentStack, isSubstack, coords, retStack, retCard)}
+	conversion8, success := lambda.(func (*Card, *Stack, bool, *Stack, *Stack, *Card, any))
+	if success {conversion8(card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr)}
+	conversion9, success := lambda.(func (*Card, *Stack, bool, *Stack, *Stack, *Card, any, []any))
+	if success {conversion9(card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, otherInfo)}
+	conversion10, success := lambda.(func (*Card, *Stack, bool, *Stack, *Stack, *Card, any, []any, ...any))
+	if success {conversion10(card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, otherInfo, workingMem...)}
+}
+
+func callLambdaReplaceWith(replaceWith any, card *Card, parentStack *Stack, isSubstack bool, coords *Stack, workingMem []any) {
+	conversion1, success := replaceWith.(func())
+	if success {conversion1()}
+	conversion2, success := replaceWith.(func(*Card))
+	if success {conversion2(card)}
+	conversion3, success := replaceWith.(func(*Card, *Stack))
+	if success {conversion3(card, parentStack)}
+	conversion4, success := replaceWith.(func(*Card, *Stack, bool))
+	if success {conversion4(card, parentStack, isSubstack)}
+	conversion5, success := replaceWith.(func(*Card, *Stack, bool, *Stack))
+	if success {conversion5(card, parentStack, isSubstack, coords)}
+	conversion6, success := replaceWith.(func(*Card, *Stack, bool, *Stack, ...any))
+	if success {conversion6(card, parentStack, isSubstack, coords, workingMem...)}
 }

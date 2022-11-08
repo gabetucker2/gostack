@@ -8,6 +8,7 @@
         card *Card,
         parentStack *Stack,
         isSubstack bool,
+        coords *Stack,
         retStack *Stack,
         retCard *Card,
         retVarAdr any,
@@ -33,16 +34,11 @@
  ```
 
 *There are 5 Lambda functions that can take the place of LambdaX.  These are all identical except for their return values:*
-* Lambda()
-  * returns `stack`, `retStack`, `retCard`, and `retVarAdr` 
-* LambdaThis()
-  * returns `stack`
-* LambdaStack()
-  * returns `retStack`
-* LambdaCard()
-  * returns `retCard`
-* LambdaVarAdr()
-  * returns `retVarAdr`
+* stack.Lambda() (stack, retStack, retCard, retVarAdr) 
+* stack.LambdaThis() (stack)
+* stack.LambdaStack() (retStack)
+* stack.LambdaCard() (retCard)
+* stack.LambdaVarAdr() (retVarAdr)
 
 ```
  Iterates through `stack` calling your lambda function on each card
