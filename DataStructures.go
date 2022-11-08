@@ -23,6 +23,7 @@ type DEEPSEARCH int
 type COMPARE int
 type PASS int
 type OVERRIDE int
+type REPEAT int
 
 const (
 	FIND_First FIND = iota
@@ -95,10 +96,10 @@ const (
 	OVERRIDE_True
 )
 
-/*const (
-	PRINT_False PRINT = iota
-	PRINT_True
-)*/
+const (
+	REPEAT_False REPEAT = iota
+	REPEAT_True
+)
 
 func setFINDDefaultIfNil(findType *any) {
 	if *findType == nil {
@@ -151,5 +152,11 @@ func setCOMPAREDefaultIfNil(compareType *any) {
 func setOVERRIDEDefaultIfNil(overrideType *any) {
 	if *overrideType == nil {
 		*overrideType = OVERRIDE_False
+	}
+}
+
+func setREPEATDefaultIfNil(repeatType *any) {
+	if *repeatType == nil {
+		*repeatType = REPEAT_False
 	}
 }

@@ -39,9 +39,9 @@
  >> [stack.Equals()](functions/stack_Equals.md)
  
  > I/O functions
- >> [csvToStackMatrix()](functions/csvToStackMatrix.md) // add
+ >> [CSVToStackMatrix()](functions/CSVToStackMatrix.md)
  >>
- >> [stack.ToCSV()](functions/stack_ToCSV.md) // add
+ >> [stack.ToCSV()](functions/stack_ToCSV.md)
  >
  >> [card.Print()](functions/card_Print.md)
  >>
@@ -61,13 +61,13 @@
  > Lambda functions
  >> [stack.Lambda()](functions/stack_Lambda.md)
  >
- >> [stack.LambdaThis()](functions/stack_LambdaThis.md)
+ >> [stack.LambdaThis()](functions/stack_Lambda.md)
  >
- >> [stack.LambdaStack()](functions/stack_LambdaStack.md)
+ >> [stack.LambdaStack()](functions/stack_Lambda.md)
  >
- >> [stack.LambdaCard()](functions/stack_LambdaCard.md)
+ >> [stack.LambdaCard()](functions/stack_Lambda.md)
  >
- >> [stack.LambdaVarAdr()](functions/stack_LambdaVarAdr.md)
+ >> [stack.LambdaVarAdr()](functions/stack_Lambda.md)
  
  > Generic functions
  >> [stack.Move()](functions/stack_Move.md)

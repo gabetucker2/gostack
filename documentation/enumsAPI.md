@@ -25,6 +25,8 @@
 > [PASS](enums/PASS.md)
 
 > [OVERRIDE](enums/OVERRIDE.md)
+
+> [REPEAT](enums/REPEAT.md)
  
  ---
 

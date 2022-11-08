@@ -3,6 +3,8 @@ package gostack
 import (
 	"fmt"
 	"math/rand"
+	"encoding/csv"
+	"os"
 	"reflect"
 	"time"
 
@@ -570,13 +572,15 @@ func (stack *Stack) ToMatrix(arguments ...any) []any {
 
 }
 
-/** Adds the cards in `stack` to itself `n` - 1 times
-  (duplicate 4 means 3 duplicates made; duplicate 1 means don't duplicate; duplicate 0 means empty)
- 
- @receiver `stack` type{*Stack}
- @param optional `n` type{int} default 2
- @updates `stack`
- @returns `stack`
+/** Appends the cards in `stack` to itself `n` - 1 times
+
+ stack.Duplicate(n int [2]) (stack)
+
+ @examples
+ | MakeStack([]int {1}).Duplicate(0) // Stack{}
+ | MakeStack([]int {1}).Duplicate(1) // Stack{1}
+ | MakeStack([]int {1}).Duplicate(2) // Stack{1, 1}
+ | MakeStack([]int {1, 2}).Duplicate(3) // Stack{1, 2, 1, 2, 1, 2}
  */
  func (stack *Stack) Duplicate(arguments ...any) *Stack {
 
@@ -601,12 +605,8 @@ func (stack *Stack) ToMatrix(arguments ...any) []any {
 
 }
 
-/** Makes a card with inputted vals and keys
-
- @receiver `stack` type{*Stack}
- @returns `stack`
- @updates `stack` to be empty
-*/
+/** Removes all cards from `stack`
+ */
  func (stack *Stack) Empty() *Stack {
 
 	// clear stack.Cards
@@ -713,14 +713,13 @@ func (stack *Stack) Clone(arguments ...any) *Stack {
 
 }
 
-/** Removes all cards from `stack` which share the same field value as another card in that stack and returns the new stack
- Assuming elements represent the values of cards in the pre-existing stack,
- Stack{"Hi", "Hey", "Hello", "Hi", "Hey", "Howdy"}.Unique(TYPE_Val) => Stack{"Hi", "Hey", "Hello", "Howdy"}
+/** Removes all cards from `stack` which share a given property as another card in that stack
 
- @receiver `stack` type{*Stack}
- @param `unique optionalType` type{TYPE} default TYPE_Val
- @returns `stack`
- @updates `stack` to have no repeating values between field `uniqueType`
+ stack.Unique(uniqueType TYPE [TYPE_Val]) (stack)
+
+ @examples
+ | MakeStack([]int {1, 2, 3, 1, 2, 4}).Unique() // Stack{1, 2, 3, 4}
+ | MakeStack([]int {0, 1, 0, 0, 1, 0}, []int {1, 2, 3, 1, 2, 4}).Unique(TYPE_Key) // Stack{1, 2}
  */
 func (stack *Stack) Unique(arguments ...any) *Stack {
 	
@@ -972,25 +971,24 @@ func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 
 /** Shuffles the order of `stack` cards
 
- @receiver `stack` type{*Stack}
- @param optional `newOrder` type{bool} default true
- @returns `stack`
- @updates
-  * `stack` card ordering is randomized
-  * rand.Seed is updated to time.Now().UnixNano()
- @ensures if stack.Size > 1 and newOrder == true, then new order will be different than previous
+ stack.Shuffle(repeatType REPEAT [REPEAT_False]) (stack)
+
+ @ensures
+ | IF `repeatType` == true AND stack.Size > 1:
+ |   shuffles `stack` until it is no longer in its previous order
+ | rand.Seed is updated to time.Now().UnixNano()
  */
 func (stack *Stack) Shuffle(arguments ...any) *Stack {
 
 	// unpack arguments into optional parameters
-	var newOrder any
-	gogenerics.UnpackVariadic(arguments, &newOrder)
-	if newOrder == nil {newOrder = false}
+	var repeatType any
+	gogenerics.UnpackVariadic(arguments, &repeatType)
+	if repeatType == nil {repeatType = REPEAT_False}
 
 	// body
 	initClone := stack.Clone()
 
-	for ok := true; ok; ok = (newOrder.(bool) && stack.Size > 1 && initClone.Equals(stack)) { // emulate a do-while loop
+	for ok := true; ok; ok = (repeatType.(REPEAT) == REPEAT_True && stack.Size > 1 && initClone.Equals(stack)) { // emulate a do-while loop
 		
 		// pseudo-randomize seed
 		rand.Seed(time.Now().UnixNano())
@@ -1190,27 +1188,51 @@ func (stack *Stack) Print(arguments ...any) *Stack {
 	
 }
 
-/** Iterate through a stack calling your lambda function on each card
- 
- @receiver `stack` type{*Stack}
- @param `lambda` type{func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any {cardAdr, parentStackAdr, retStackAdr, retCardAdr}, workingMem ...any)}
- @param optional `retStack` type{*Stack} default nil
- @param optional `retCard` type{*Card} default nil
- @param optional `retVarAdr` type{any} default nil
- @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `passSubstacks` type{PASS} default PASS_False
- @param optional `passCards` type{PASS} default PASS_True
- @param optional `otherInfo` type{[]any {retStackAdr, retCardAdr}} default []any {nil, nil}
-   in order to reference `retStack` and `retCard` to `card`, `parentStack`, or some other struct from within your custom lambda function, the addresses of these pointers must be passed into `otherInfo`
- @returns `stack` type{*Stack}
- @returns `retStack` type{*Stack}
- @returns `retCard` type{*Card}
- @returns `retVarAdr` type{any}
+/** Iterates through `stack` calling your lambda function on each card, returning `stack`, `retStack`, `retCard`, and `retVarAdr`
+
+  stack.Lambda(
+    lambda func(
+        card *Card,
+        parentStack *Stack,
+        isSubstack bool,
+        retStack *Stack,
+        retCard *Card,
+        retVarAdr any,
+        otherInfo []any {
+            cardAdr,
+            parentStackAdr,
+            retStackAdr,
+            retCardAdr},
+        workingMem ...any),
+    retStack *Stack [nil],
+    retCard *Card [nil],
+    retVarAdr any [nil],
+    workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
+    deepSearchType DEEPSEARCH [DEEPSEARCH_True],
+    depth int [-1],
+    passSubstacks PASS [PASS_False],
+    passCards PASS [PASS_True],
+    otherInfo []any {
+        retStackAdr,
+        retCardAdr
+    } []any {nil, nil}, 
+ ) (stack, retStack, retCard, retVarAdr)
+
+ @ensures
+ | IF a version for `lambda` is passed that has fewer parameters than the full function:
+ |   the function will abstract away unincluded parameters
+ | IF you would like to manage more than 10 variables via `workingMem`:
+ |   you must pass an []any array into `workingMem` when you call this function
+ | IF you would like to reference the object address of `retStack` or `retCard`:
+ |   pass the addresses of `retStack` or `retCard` into `otherInfo`
+ @examples
+ | myStack := MakeStackMatrix([]int {1, 3, 2, 4}, nil, []int {2, 2}).LambdaThis(func(card *Card) {
+ |   if card.Idx == 0 && card.Val.(int) % 2 == 0 {
+ |     card.Key = "Marker"	
+ |   }
+ | }) // Stack{nil:1, nil:3, "Marker":2, nil:4}
  */
-func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), arguments ...any) (*Stack, *Stack, *Card, any) {
+ func (stack *Stack) Lambda(lambda any, arguments ...any) (*Stack, *Stack, *Card, any) {
 
 	/**
 	PSEUDOCODE OUTLINE:
@@ -1331,7 +1353,8 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 
 			if passSubstacks == PASS_True && passLayer {
 
-				lambda(card, stack, true, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, []any {&card, &stack, retStackAdr, retCardAdr}, workingMem.([]any)...)
+				callLambda(lambda, card, stack, true, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, []any {&card, &stack, retStackAdr, retCardAdr}, workingMem.([]any))
+
 				if retCardAdr != nil && *retCardAdr.(**Card) != nil {
 					retCard = *retCardAdr.(**Card)
 				}
@@ -1371,7 +1394,7 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 
 			if passCards == PASS_True && passLayer {
 
-				lambda(card, stack, false, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, []any {&card, &stack, retStackAdr, retCardAdr}, workingMem.([]any)...)
+				callLambda(lambda, card, stack, false, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, []any {&card, &stack, retStackAdr, retCardAdr}, workingMem.([]any))
 				if retCardAdr != nil && *retCardAdr.(**Card) != nil {
 					retCard = *retCardAdr.(**Card)
 				}
@@ -1395,86 +1418,198 @@ func (stack *Stack) Lambda(lambda func(*Card, *Stack, bool, *Stack, *Card, any, 
 
 }
 
-/** Iterate through a stack calling your lambda function on each card, returning only `stack`
- 
- @receiver `stack` type{*Stack}
- @param `lambda` type{func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any {cardAdr, parentStackAdr, retStackAdr, retCardAdr}, workingMem ...any)}
- @param optional `retStack` type{*Stack} default nil
- @param optional `retCard` type{*Card} default nil
- @param optional `retVarAdr` type{any} default nil
- @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `passSubstacks` type{PASS} default PASS_False
- @param optional `passCards` type{PASS} default PASS_True
- @param optional `otherInfo` type{[]any {retStackAdr, retCardAdr}} default []any {nil, nil}
- @returns `stack` type{*Stack}
+/** Iterates through `stack` calling your lambda function on each card, returning `stack`, `retStack`, `retCard`, and `retVarAdr`
+
+  stack.Lambda(
+    lambda func(
+        card *Card,
+        parentStack *Stack,
+        isSubstack bool,
+        retStack *Stack,
+        retCard *Card,
+        retVarAdr any,
+        otherInfo []any {
+            cardAdr,
+            parentStackAdr,
+            retStackAdr,
+            retCardAdr},
+        workingMem ...any),
+    retStack *Stack [nil],
+    retCard *Card [nil],
+    retVarAdr any [nil],
+    workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
+    deepSearchType DEEPSEARCH [DEEPSEARCH_True],
+    depth int [-1],
+    passSubstacks PASS [PASS_False],
+    passCards PASS [PASS_True],
+    otherInfo []any {
+        retStackAdr,
+        retCardAdr
+    } []any {nil, nil}, 
+ ) (stack)
+
+ @ensures
+ | IF a version for `lambda` is passed that has fewer parameters than the full function:
+ |   the function will abstract away unincluded parameters
+ | IF you would like to manage more than 10 variables via `workingMem`:
+ |   you must pass an []any array into `workingMem` when you call this function
+ | IF you would like to reference the object address of `retStack` or `retCard`:
+ |   pass the addresses of `retStack` or `retCard` into `otherInfo`
+ @examples
+ | myStack := MakeStackMatrix([]int {1, 3, 2, 4}, nil, []int {2, 2}).LambdaThis(func(card *Card) {
+ |   if card.Idx == 0 && card.Val.(int) % 2 == 0 {
+ |     card.Key = "Marker"	
+ |   }
+ | }) // Stack{nil:1, nil:3, "Marker":2, nil:4}
  */
-func (stack *Stack) LambdaThis(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), arguments ...any) *Stack {
+func (stack *Stack) LambdaThis(lambda any, arguments ...any) *Stack {
 	stack.Lambda(lambda, arguments...)
 	return stack
 }
 
-/** Iterate through a stack calling your lambda function on each card, returning only `retStack`
- 
- @receiver `stack` type{*Stack}
- @param `lambda` type{func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any {cardAdr, parentStackAdr, retStackAdr, retCardAdr}, workingMem ...any)}
- @param optional `retStack` type{*Stack} default nil
- @param optional `retCard` type{*Card} default nil
- @param optional `retVarAdr` type{any} default nil
- @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `passSubstacks` type{PASS} default PASS_False
- @param optional `passCards` type{PASS} default PASS_True
- @param optional `otherInfo` type{[]any {retStackAdr, retCardAdr}} default []any {nil, nil}
- @returns `retStack` type{*Stack}
+/** Iterates through `stack` calling your lambda function on each card, returning `stack`, `retStack`, `retCard`, and `retVarAdr`
+
+  stack.Lambda(
+    lambda func(
+        card *Card,
+        parentStack *Stack,
+        isSubstack bool,
+        retStack *Stack,
+        retCard *Card,
+        retVarAdr any,
+        otherInfo []any {
+            cardAdr,
+            parentStackAdr,
+            retStackAdr,
+            retCardAdr},
+        workingMem ...any),
+    retStack *Stack [nil],
+    retCard *Card [nil],
+    retVarAdr any [nil],
+    workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
+    deepSearchType DEEPSEARCH [DEEPSEARCH_True],
+    depth int [-1],
+    passSubstacks PASS [PASS_False],
+    passCards PASS [PASS_True],
+    otherInfo []any {
+        retStackAdr,
+        retCardAdr
+    } []any {nil, nil}, 
+ ) (retStack)
+
+ @ensures
+ | IF a version for `lambda` is passed that has fewer parameters than the full function:
+ |   the function will abstract away unincluded parameters
+ | IF you would like to manage more than 10 variables via `workingMem`:
+ |   you must pass an []any array into `workingMem` when you call this function
+ | IF you would like to reference the object address of `retStack` or `retCard`:
+ |   pass the addresses of `retStack` or `retCard` into `otherInfo`
+ @examples
+ | myStack := MakeStackMatrix([]int {1, 3, 2, 4}, nil, []int {2, 2}).LambdaThis(func(card *Card) {
+ |   if card.Idx == 0 && card.Val.(int) % 2 == 0 {
+ |     card.Key = "Marker"	
+ |   }
+ | }) // Stack{nil:1, nil:3, "Marker":2, nil:4}
  */
-func (stack *Stack) LambdaStack(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), arguments ...any) *Stack {
+func (stack *Stack) LambdaStack(lambda any, arguments ...any) *Stack {
 	_, thisStack, _, _ := stack.Lambda(lambda, arguments...)
 	return thisStack
 }
 
-/** Iterate through a stack calling your lambda function on each card, returning only `retCard`
- 
- @receiver `stack` type{*Stack}
- @param `lambda` type{func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any {cardAdr, parentStackAdr, retStackAdr, retCardAdr}, workingMem ...any)}
- @param optional `retStack` type{*Stack} default nil
- @param optional `retCard` type{*Card} default nil
- @param optional `retVarAdr` type{any} default nil
- @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `passSubstacks` type{PASS} default PASS_False
- @param optional `passCards` type{PASS} default PASS_True
- @param optional `otherInfo` type{[]any {retStackAdr, retCardAdr}} default []any {nil, nil}
- @returns `retCard` type{*Card}
+/** Iterates through `stack` calling your lambda function on each card, returning `stack`, `retStack`, `retCard`, and `retVarAdr`
+
+  stack.Lambda(
+    lambda func(
+        card *Card,
+        parentStack *Stack,
+        isSubstack bool,
+        retStack *Stack,
+        retCard *Card,
+        retVarAdr any,
+        otherInfo []any {
+            cardAdr,
+            parentStackAdr,
+            retStackAdr,
+            retCardAdr},
+        workingMem ...any),
+    retStack *Stack [nil],
+    retCard *Card [nil],
+    retVarAdr any [nil],
+    workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
+    deepSearchType DEEPSEARCH [DEEPSEARCH_True],
+    depth int [-1],
+    passSubstacks PASS [PASS_False],
+    passCards PASS [PASS_True],
+    otherInfo []any {
+        retStackAdr,
+        retCardAdr
+    } []any {nil, nil}, 
+ ) (retCard)
+
+ @ensures
+ | IF a version for `lambda` is passed that has fewer parameters than the full function:
+ |   the function will abstract away unincluded parameters
+ | IF you would like to manage more than 10 variables via `workingMem`:
+ |   you must pass an []any array into `workingMem` when you call this function
+ | IF you would like to reference the object address of `retStack` or `retCard`:
+ |   pass the addresses of `retStack` or `retCard` into `otherInfo`
+ @examples
+ | myStack := MakeStackMatrix([]int {1, 3, 2, 4}, nil, []int {2, 2}).LambdaThis(func(card *Card) {
+ |   if card.Idx == 0 && card.Val.(int) % 2 == 0 {
+ |     card.Key = "Marker"	
+ |   }
+ | }) // Stack{nil:1, nil:3, "Marker":2, nil:4}
  */
-func (stack *Stack) LambdaCard(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), arguments ...any) *Card {
+func (stack *Stack) LambdaCard(lambda any, arguments ...any) *Card {
 	_, _, thisCard, _ := stack.Lambda(lambda, arguments...)
 	return thisCard
 }
 
-/** Iterate through a stack calling your lambda function on each card, returning only `retVarAdr`
- 
- @receiver `stack` type{*Stack}
- @param `lambda` type{func(card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any {cardAdr, parentStackAdr, retStackAdr, retCardAdr}, workingMem ...any)}
- @param optional `retStack` type{*Stack} default nil
- @param optional `retCard` type{*Card} default nil
- @param optional `retVarAdr` type{any} default nil
- @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_True
- @param optional `depth` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `passSubstacks` type{PASS} default PASS_False
- @param optional `passCards` type{PASS} default PASS_True
- @param optional `otherInfo` type{[]any {retStackAdr, retCardAdr}} default []any {nil, nil}
- @returns `retVarAdr` type{any}
+/** Iterates through `stack` calling your lambda function on each card, returning `stack`, `retStack`, `retCard`, and `retVarAdr`
+
+  stack.Lambda(
+    lambda func(
+        card *Card,
+        parentStack *Stack,
+        isSubstack bool,
+        retStack *Stack,
+        retCard *Card,
+        retVarAdr any,
+        otherInfo []any {
+            cardAdr,
+            parentStackAdr,
+            retStackAdr,
+            retCardAdr},
+        workingMem ...any),
+    retStack *Stack [nil],
+    retCard *Card [nil],
+    retVarAdr any [nil],
+    workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
+    deepSearchType DEEPSEARCH [DEEPSEARCH_True],
+    depth int [-1],
+    passSubstacks PASS [PASS_False],
+    passCards PASS [PASS_True],
+    otherInfo []any {
+        retStackAdr,
+        retCardAdr
+    } []any {nil, nil}, 
+ ) (retVarAdr)
+
+ @ensures
+ | IF a version for `lambda` is passed that has fewer parameters than the full function:
+ |   the function will abstract away unincluded parameters
+ | IF you would like to manage more than 10 variables via `workingMem`:
+ |   you must pass an []any array into `workingMem` when you call this function
+ | IF you would like to reference the object address of `retStack` or `retCard`:
+ |   pass the addresses of `retStack` or `retCard` into `otherInfo`
+ @examples
+ | myStack := MakeStackMatrix([]int {1, 3, 2, 4}, nil, []int {2, 2}).LambdaThis(func(card *Card) {
+ |   if card.Idx == 0 && card.Val.(int) % 2 == 0 {
+ |     card.Key = "Marker"	
+ |   }
+ | }) // Stack{nil:1, nil:3, "Marker":2, nil:4}
  */
-func (stack *Stack) LambdaVarAdr(lambda func(*Card, *Stack, bool, *Stack, *Card, any, []any, ...any), arguments ...any) any {
+func (stack *Stack) LambdaVarAdr(lambda any, arguments ...any) any {
 	_, _, _, retVarAdr := stack.Lambda(lambda, arguments...)
 	return retVarAdr
 }
@@ -2136,4 +2271,39 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
 	// return the original stack
 	return stack
 
+}
+
+/** Takes a CSV at a given file path and returns it as a StackMatrix
+ 
+ CSVToStackMatrix(inPath string) (newStackMatrix *Stack)
+
+ @requires
+ | `inPath` points to valid CSV file
+ */
+ func CSVToStackMatrix(inPath string) *Stack {
+	file, _ := os.Open(inPath)
+	csvReader := csv.NewReader(file)
+	records, _ := csvReader.ReadAll()
+	return MakeStackMatrix(records)
+}
+
+/** Creates a CSV at a given file path given a StackMatrix
+
+ stack.ToCSV(outPath string) (csvFile *os.File)
+ 
+ @requires
+ | `outPath` points to valid location
+ */
+ func (stack *Stack) ToCSV(outPath string) *os.File {
+	file, _ := os.Create(outPath)
+	csvWriter := csv.NewWriter(file)
+	var csv [][]string
+	for i, substack := range stack.ToArray() {
+		csv = append(csv, []string {})
+		for _, val := range substack.([]any) {
+			csv[i] = append(csv[i], val.(string))
+		}
+	}
+	csvWriter.WriteAll(csv)
+	return file
 }

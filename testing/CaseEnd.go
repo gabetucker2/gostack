@@ -871,7 +871,7 @@ func case_stack_Shuffle(funcName string) {
 
 	// if there's an issue, you will have to output a few times to catch it
 	// test for definite shuffle
-	stackB := MakeStack([]int {1, 2}).Shuffle(true)
+	stackB := MakeStack([]int {1, 2}).Shuffle(REPEAT_True)
 
 	conditions := []bool {
 		
@@ -969,6 +969,30 @@ func case_stack_Print(funcName string) {
 	
 }
 
+func case_CSVToStackMatrix(funcName string) {
+
+	test_Start(funcName, showTestText)
+	
+	conditions := []bool {
+		true, // unfortunately, we have to check manually
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
+func case_stack_ToCSV(funcName string) {
+
+	test_Start(funcName, showTestText)
+	
+	conditions := []bool {
+		true, // unfortunately, we have to check manually
+	}
+
+	test_End(funcName, conditions)
+	
+}
+
 func case_stack_Lambdas(funcName string) {
 
 	test_Start(funcName, showTestText)
@@ -1026,10 +1050,10 @@ func case_stack_Lambdas(funcName string) {
 	}, nil, nil, nil, nil, nil, nil, PASS_True, PASS_False)
 
 	// test that all init values work
-	this, stack, card, varAdr := MakeStack([]string {"Heyy"}).Lambda(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ []any, _ ...any) {}, MakeStack([]int {666}), MakeCard("Howdy"), 420)
+	this, stack, card, varAdr := MakeStack([]string {"Heyy"}).Lambda(func() {}, MakeStack([]int {666}), MakeCard("Howdy"), 420)
 
-	// test that various heightStack depth options work
-	stack6 := MakeStackMatrix([]int {1, 5, 20, 2}, nil, []int {2, 2}).LambdaThis(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Card, _ any, _ []any, _ ...any) {
+	// test that various heightStack depth options work AND that you can abstract away parameters
+	stack6 := MakeStackMatrix([]int {1, 5, 20, 2}, nil, []int {2, 2}).LambdaThis(func(card *Card) {
 		if card.Idx == 0 {
 			card.Key = "Marker"	
 		}
@@ -1628,7 +1652,7 @@ func case_stack_UpdateMany(funcName string) {
 func Run(_showTestText bool) {
 
 	showTestText = _showTestText
-	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_Filter, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambdas, case_stack_Get, case_stack_GetMany, case_stack_Add, case_stack_AddMany, case_stack_Has, case_stack_Move, case_stack_Replace, case_stack_ReplaceMany, case_stack_Extract, case_stack_ExtractMany, case_stack_Remove, case_stack_RemoveMany, case_stack_Update, case_stack_UpdateMany, case_stack_Swap)
+	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_StripStackMatrix, case_stack_Filter, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Transpose, case_card_Print, case_stack_Print, case_stack_Lambdas, case_stack_Get, case_stack_GetMany, case_stack_Add, case_stack_AddMany, case_stack_Has, case_stack_Move, case_stack_Replace, case_stack_ReplaceMany, case_stack_Extract, case_stack_ExtractMany, case_stack_Remove, case_stack_RemoveMany, case_stack_Update, case_stack_UpdateMany, case_stack_Swap, case_CSVToStackMatrix, case_stack_ToCSV)
 
 	fmt.Println("- BEGINNING TESTS")
 
@@ -1651,6 +1675,8 @@ func Run(_showTestText bool) {
 	case_stack_Shuffle("stack.Shuffle") // GOOD
 	case_card_Print("card.Print") // GOOD
 	case_stack_Print("stack.Print") // GOOD
+	case_CSVToStackMatrix("CSVToStackMatrix") // GOOD
+	case_stack_ToCSV("stack.ToCSV") // GOOD
 	case_stack_Transpose("stack.Transpose") // GOOD
 	case_card_SwitchKeyVal("card.SwitchKeyVal") // GOOD
 	case_stack_SwitchKeysVals("stack.SwitchKeysVals") // GOOD

@@ -517,3 +517,24 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 	}
 
 }
+
+func callLambda(lambda any, card *Card, parentStack *Stack, isSubstack bool, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, workingMem []any) {
+	conversion1, success := lambda.(func())
+	if success {conversion1()}
+	conversion2, success := lambda.(func(*Card))
+	if success {conversion2(card)}
+	conversion3, success := lambda.(func(*Card, *Stack))
+	if success {conversion3(card, parentStack)}
+	conversion4, success := lambda.(func(*Card, *Stack, bool))
+	if success {conversion4(card, parentStack, isSubstack)}
+	conversion5, success := lambda.(func (*Card, *Stack, bool, *Stack))
+	if success {conversion5(card, parentStack, isSubstack, retStack)}
+	conversion6, success := lambda.(func (*Card, *Stack, bool, *Stack, *Card))
+	if success {conversion6(card, parentStack, isSubstack, retStack, retCard)}
+	conversion7, success := lambda.(func (*Card, *Stack, bool, *Stack, *Card, any))
+	if success {conversion7(card, parentStack, isSubstack, retStack, retCard, retVarAdr)}
+	conversion8, success := lambda.(func (*Card, *Stack, bool, *Stack, *Card, any, []any))
+	if success {conversion8(card, parentStack, isSubstack, retStack, retCard, retVarAdr, otherInfo)}
+	conversion9, success := lambda.(func (*Card, *Stack, bool, *Stack, *Card, any, []any, ...any))
+	if success {conversion9(card, parentStack, isSubstack, retStack, retCard, retVarAdr, otherInfo, workingMem...)}
+}

@@ -39,12 +39,13 @@ Completed:
 * Added more DEFEREFERENCE options for improved flexibility
 * Created benchmark tests
 * Added LICENSE file
-
-In progress:
 * Added DEREFERENCE_X support to card.Equals and stack.Equals
-* Added ***stack.Coordinates()*** and ***stack.CoordinatesMany()*** to ***gostack***
 * **csvToStackMatrix() (\*Stack)** function added
 * **stack.ToCSV() ([][]string)** function added
+* Abstracted ***stack.Lambda()*** input function
+
+In progress:
+* Added ***stack.Coordinates()*** and ***stack.CoordinatesMany()*** to ***gostack***
 * Add function samples to each function documentation file
 * ***gostack*** functions parameter naming has been adjusted to be more consistent
 * ***gostack***'s functions' default parameter values have been adjusted to make more intuitive sense
