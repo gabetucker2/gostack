@@ -1,13 +1,12 @@
 ![Banner](../../images/gostack_SmallerTransparent.png)
 
- <h2>stack.Move()</h2>
+ <h2>stack.Swap()</h2>
 
  ```
- stack.Move(
-    orderType ORDER [ORDER_After],
-    findTypeFrom FIND [FIND_First],
-    findTypeTo FIND [FIND_Last],
-    findDataFrom any|[]any|*Stack|func(
+ stack.Swap(
+    findType1 FIND [FIND_First],
+    findType2 FIND [FIND_Last],
+    findData1 any|[]any|*Stack|func(
       card *Card,
       parentStack *Stack,
       isSubstack bool,
@@ -23,7 +22,7 @@
       },
       workingMem ...any
     ) [nil],
-    findDataTo any|[]any|*Stack|func(
+    findData2 any|[]any|*Stack|func(
       card *Card,
       parentStack *Stack,
       isSubstack bool,
@@ -39,23 +38,23 @@
       },
       workingMem ...any
     ) [nil],
-    deepSearchTypeFrom DEEPSEARCH [DEEPSEARCH_False],
-    deepSearchTypeTo DEEPSEARCH [DEEPSEARCH_False],
-    depthFrom int [-1],
-    depthTo int [-1],
-    passTypeFrom PASS [PASS_Both],
-    passTypeTo PASS [PASS_Both],
-    dereferenceTypeFrom DEREFERENCE [DEREFERENCE_None],
-    dereferenceTypeTo DEREFERENCE [DEREFERENCE_None],
-    overrideFindDataFrom OVERRIDE [OVERRIDE_False],
-    overrideFindDataTo OVERRIDE [OVERRIDE_False],
-    workingMemFrom []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}]
-    workingMemTo []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}]
+    deepSearchType1 DEEPSEARCH [DEEPSEARCH_False],
+    deepSearchType2 DEEPSEARCH [DEEPSEARCH_False],
+    depth1 int [-1],
+    depth2 int [-1],
+    passType1 PASS [PASS_Both],
+    passType2 PASS [PASS_Both],
+    dereferenceType1 DEREFERENCE [DEREFERENCE_None],
+    dereferenceType2 DEREFERENCE [DEREFERENCE_None],
+    overrideFindData1 OVERRIDE [OVERRIDE_False],
+    overrideFindData2 OVERRIDE [OVERRIDE_False],
+    workingMem1 []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}]
+    workingMem2 []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}]
  ) (stack)
  ```
 
 ```
- Moves one card to before/after another card and returns `stack`
+ Swaps one card with another and returns `stack`
 
  @ensures
  | IF `overrideFindDataX` == OVERRIDE_True:

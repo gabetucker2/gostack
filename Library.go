@@ -13,18 +13,18 @@ import (
 
 /** Creates a card with given properties
 
-MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
-
-@ensures
-| IF `input1` OR `input2` are nil:
-|     MakeCard := func(`val`, `key`, `idx`)
-| ELSE:
-|     MakeCard := func(`key`, `val`, `idx`)
-@examples
-| MakeCard("Hello") => Card{Val: "Hello"}
-| MakeCard(nil, "Hello") => Card{Key: "Hello"}
-| MakeCard(1, 2) => Card{Key: 1, Val: 2}
-*/
+ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
+ 
+ @ensures
+ | IF `input1` OR `input2` are nil:
+ |     MakeCard := func(`val`, `key`, `idx`)
+ | ELSE:
+ |     MakeCard := func(`key`, `val`, `idx`)
+ @examples
+ | MakeCard("Hello") => Card{Val: "Hello"}
+ | MakeCard(nil, "Hello") => Card{Key: "Hello"}
+ | MakeCard(1, 2) => Card{Key: 1, Val: 2}
+ */
  func MakeCard(arguments ...any) *Card {
 
 	// unpack arguments into optional parameters
@@ -369,13 +369,13 @@ func (stack *Stack) StripStackMatrix(arguments ...any) *Stack {
 
 	// main
 	if idx == nil {
-		return stack.Filter(FIND_All, nil, nil, RETURN_Stacks)
+		return stack.Filter(FIND_All, nil, RETURN_Stacks)
 	} else {
 		idxInt, isInt := idx.(int)
 		if isInt {
-			return stack.Filter(FIND_Idx, idxInt, nil, RETURN_Stacks)
+			return stack.Filter(FIND_Idx, idxInt, RETURN_Stacks)
 		} else {
-			return stack.Filter(FIND_Slice, idx, nil, RETURN_Stacks)
+			return stack.Filter(FIND_Slice, idx, RETURN_Stacks)
 		}
 	}
 
@@ -599,6 +599,8 @@ func (stack *Stack) ToMatrix(arguments ...any) []any {
 }
 
 /** Removes all cards from `stack`
+
+ stack.Empty() (stack)
  */
  func (stack *Stack) Empty() *Stack {
 
@@ -1018,7 +1020,9 @@ func (stack *Stack) Shuffle(arguments ...any) *Stack {
 
 }
 
-/** Reverses the order of all cards and stacks in `stack`
+/** Reverses the order of the first immediate cards/substacks in `stack`
+
+ stack.Flip() (stack)
  */
 func (stack *Stack) Flip() *Stack {
 
@@ -1033,6 +1037,8 @@ func (stack *Stack) Flip() *Stack {
 }
 
 /** Switches the Key and the Val of `card`
+
+ card.SwitchKeyVal() (card)
  */
  func (card *Card) SwitchKeyVal() *Card {
 
@@ -1046,27 +1052,44 @@ func (stack *Stack) Flip() *Stack {
 
  }
 
- /** Switches the Key and the Val of each found card
+ /** Switches the Key and the Val of each found card and returns `stack`
 
- @receiver `stack` type{*Stack}
- @param optional `findType` type{FIND} default FIND_First
- @param optional `findData` type{any, []any, *Stack any, func(*Card, *Stack, bool, *Stack, ...any) (bool)} default nil
- @param optional `overrideFindData` type{COMPARE} default COMPARE_False
-   By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `dereferenceType` type{DEREFERENCE} default DEREFERENCE_None
- @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
- @constructs a new stack
- @returns type{*Stack} the new stack
- @requires
-   IF `find` is FIND_Lambda, `findData` is of type{ func(card *Card, parentStack *Stack, isSubstack bool, workingStack *Stack, workingMem ...any) (bool) }
+  stack.SwitchKeysVals(
+    findType FIND [FIND_Last],
+    findData any|[]any|*Stack|func(
+      card *Card,
+      parentStack *Stack,
+      isSubstack bool,
+      coords *Stack,
+      retStack *Stack,
+      retCard *Card,
+      retVarAdr any,
+      otherInfo []any {
+            cardAdr,
+            parentStackAdr,
+            retStackAdr,
+            retCardAdr
+      },
+      workingMem ...any
+    ) [nil],
+    deepSearchType DEEPSEARCH [DEEPSEARCH_False],
+    depth int [-1],
+    dereferenceType DEREFERENCE [DEREFERENCE_None],
+    overrideFindData OVERRIDE [OVERRIDE_False],
+    workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}]
+ ) (stack)
+
+ @ensures
+ | IF `overrideFindData` == OVERRIDE_True:
+ |   compare whether each element is equal to `findData` itself, rather than each element inside of `findData` (assuming it is a stack or array)
+ | IF a version for func input data is passed that has fewer parameters than the full function:
+ |   the function will abstract away unincluded parameters
   */
   func (stack *Stack) SwitchKeysVals(arguments ...any) *Stack {
 
 	// set up arguments
-	var findType, findData, overrideFindData, deepSearchType, depth, dereferenceType, workingMem any
-	gogenerics.UnpackVariadic(arguments, &findType, &findData, &overrideFindData, &deepSearchType, &depth, &dereferenceType, &workingMem)
+	var findType, findData, deepSearchType, depth, dereferenceType, overrideFindData, workingMem any
+	gogenerics.UnpackVariadic(arguments, &findType, &findData, &deepSearchType, &depth, &dereferenceType, &overrideFindData, &workingMem)
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if overrideFindData == nil {overrideFindData = OVERRIDE_False}
 	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
@@ -1624,8 +1647,42 @@ func (stack *Stack) LambdaVarAdr(lambda any, arguments ...any) any {
 	return retVarAdr
 }
 
-/** The exact same as GetMany, except it replaces `stack` with the new stack */
-func (stack *Stack) Filter(arguments ...any) *Stack {
+/** Sets `stack` to a set of cards from specified parameters in `stack`, returning `stack`
+
+ stack.Filter(
+    findType FIND [FIND_All],
+    findData any|[]any|*Stack|func(
+      card *Card,
+      parentStack *Stack,
+      isSubstack bool,
+      coords *Stack,
+      retStack *Stack,
+      retCard *Card,
+      retVarAdr any,
+      otherInfo []any {
+            cardAdr,
+            parentStackAdr,
+            retStackAdr,
+            retCardAdr
+      },
+      workingMem ...any
+    ) [nil],
+    returnType RETURN [RETURN_Cards],
+    deepSearchType DEEPSEARCH [DEEPSEARCH_False],
+    depth int [-1],
+    passType PASS [PASS_Both],
+    dereferenceType DEREFERENCE [DEREFERENCE_None],
+    overrideFindData OVERRIDE [OVERRIDE_False],
+    workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}]
+ ) (stack)
+
+ @ensures
+ | IF `overrideFindData` == OVERRIDE_True:
+ |   compare whether each element is equal to `findData` itself, rather than each element inside of `findData` (assuming it is a stack or array)
+ | IF a version for func input data is passed that has fewer parameters than the full function:
+ |   the function will abstract away unincluded parameters
+ */
+ func (stack *Stack) Filter(arguments ...any) *Stack {
 	*stack = *stack.GetMany(arguments...)
 	return stack
 }
@@ -1796,52 +1853,84 @@ func (stack *Stack) Move(arguments ...any) *Stack {
 
 }
 
-/** Swaps one card with the position of another card
- 
- @receiver `stack` type{*Stack}
- @param optional `findType1` type{FIND} default FIND_First
- @param optional `findType2` type{FIND} default FIND_Last
- @param optional `findData1` type{any, []any, *Stack any, func(*Card, *Stack, bool, ...any) (bool)} default nil
- @param optional `findData2` type{any, []any, *Stack any, func(*Card, *Stack, bool, ...any) (bool)} default nil
- @param optional `overrideFindData1` type{COMPARE} default COMPARE_False
-   By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
- @param optional `overrideFindData2` type{COMPARE} default COMPARE_False
- @param optional `deepSearchType1` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `deepSearchType2` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `height1` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `height2` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `dereferenceType1` type{DEREFERENCE} default DEREFERENCE_None
- @param optional `dereferenceType2` type{DEREFERENCE} default DEREFERENCE_None
- @param optional `passSubstacks1` type{PASS} default PASS_True
- @param optional `passSubstacks2` type{PASS} default PASS_True
- @param optional `passCards1` type{PASS} default PASS_True
- @param optional `passCards2` type{PASS} default PASS_True
- @param optional `workingMem1` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
- @param optional `workingMem2` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
- @returns `stack`
+/** Swaps one card with another and returns `stack`
+
+ stack.Swap(
+    findType1 FIND [FIND_First],
+    findType2 FIND [FIND_Last],
+    findData1 any|[]any|*Stack|func(
+      card *Card,
+      parentStack *Stack,
+      isSubstack bool,
+      coords *Stack,
+      retStack *Stack,
+      retCard *Card,
+      retVarAdr any,
+      otherInfo []any {
+            cardAdr,
+            parentStackAdr,
+            retStackAdr,
+            retCardAdr
+      },
+      workingMem ...any
+    ) [nil],
+    findData2 any|[]any|*Stack|func(
+      card *Card,
+      parentStack *Stack,
+      isSubstack bool,
+      coords *Stack,
+      retStack *Stack,
+      retCard *Card,
+      retVarAdr any,
+      otherInfo []any {
+            cardAdr,
+            parentStackAdr,
+            retStackAdr,
+            retCardAdr
+      },
+      workingMem ...any
+    ) [nil],
+    deepSearchType1 DEEPSEARCH [DEEPSEARCH_False],
+    deepSearchType2 DEEPSEARCH [DEEPSEARCH_False],
+    depth1 int [-1],
+    depth2 int [-1],
+    passType1 PASS [PASS_Both],
+    passType2 PASS [PASS_Both],
+    dereferenceType1 DEREFERENCE [DEREFERENCE_None],
+    dereferenceType2 DEREFERENCE [DEREFERENCE_None],
+    overrideFindData1 OVERRIDE [OVERRIDE_False],
+    overrideFindData2 OVERRIDE [OVERRIDE_False],
+    workingMem1 []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}]
+    workingMem2 []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}]
+ ) (stack)
+
+ @ensures
+ | IF `overrideFindDataX` == OVERRIDE_True:
+ |   compare whether each element is equal to `findDataX` itself, rather than each element inside of `findDataX` (assuming it is a stack or array)
+ | IF a version for func input data is passed that has fewer parameters than the full function:
+ |   the function will abstract away unincluded parameters
  */
 func (stack *Stack) Swap(arguments ...any) *Stack {
 
 	// unpack arguments into optional parameters
-	var findType1, findType2, findData1, findData2, overrideFindData1, overrideFindData2, deepSearchType1, deepSearchType2, height1, height2, dereferenceType1, dereferenceType2, passSubstacks1, passSubstacks2, passCards1, passCards2, workingMem1, workingMem2 any
-	gogenerics.UnpackVariadic(arguments, &findType1, &findType2, &findData1, &findData2, &overrideFindData1, &overrideFindData2, &deepSearchType1, &deepSearchType2, &height1, &height2, &dereferenceType1, &dereferenceType2, &passSubstacks1, &passSubstacks2, &passCards1, &passCards2, &workingMem1, &workingMem2)
+	var findType1, findType2, findData1, findData2, deepSearchType1, deepSearchType2, depth1, depth2, passType1, passType2, dereferenceType1, dereferenceType2, overrideFindData1, overrideFindData2, workingMem1, workingMem2 any
+	gogenerics.UnpackVariadic(arguments, &findType1, &findType2, &findData1, &findData2, &deepSearchType1, &deepSearchType2, &depth1, &depth2, &passType1, &passType2, &dereferenceType1, &dereferenceType2, &overrideFindData1, &overrideFindData2, &workingMem1, &workingMem2)
 	if findType1 == nil {findType1 = FIND_First}
 
 	// get card1, add a placeholder right after card1, then remove card1
 	card1Placeholder := MakeCard()
-	card1 := stack.Get(findType1, findData1, overrideFindData1, deepSearchType1, height1, dereferenceType1, passSubstacks1, passCards1, workingMem1)
-	stack.Add(card1Placeholder, ORDER_After, FIND_Card, card1, nil, nil, DEEPSEARCH_True)
-	stack.Remove(FIND_Card, card1, nil, DEEPSEARCH_True)
+	card1 := stack.Get(findType1, findData1, deepSearchType1, depth1, passType1, dereferenceType1, overrideFindData1, workingMem1)
+	stack.Add(card1Placeholder, ORDER_After, FIND_Card, card1, DEEPSEARCH_True)
+	stack.Remove(FIND_Card, card1, DEEPSEARCH_True)
 	
 	// get card2, insert card1 after card2, then remove card2
-	card2 := stack.Get(findType2, findData2, overrideFindData2, deepSearchType2, height2, dereferenceType2, passSubstacks2, passCards2, workingMem2)
-	stack.Add(card1, ORDER_After, FIND_Card, card2, nil, nil, DEEPSEARCH_True)
-	stack.Remove(FIND_Card, card2, nil, DEEPSEARCH_True)
+	card2 := stack.Get(findType2, findData2, deepSearchType2, depth2, passType2, dereferenceType2, overrideFindData2, workingMem2)
+	stack.Add(card1, ORDER_After, FIND_Card, card2, DEEPSEARCH_True)
+	stack.Remove(FIND_Card, card2, DEEPSEARCH_True)
 
 	// insert card2 after the placeholder, then remove the placeholder
-	stack.Add(card2, ORDER_After, FIND_Card, card1Placeholder, nil, nil, DEEPSEARCH_True)
-	stack.Remove(FIND_Card, card1Placeholder, nil, DEEPSEARCH_True)
+	stack.Add(card2, ORDER_After, FIND_Card, card1Placeholder, DEEPSEARCH_True)
+	stack.Remove(FIND_Card, card1Placeholder, DEEPSEARCH_True)
 	
 	// return
 	return stack

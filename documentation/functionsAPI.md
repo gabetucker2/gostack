@@ -72,13 +72,13 @@
  > Generic functions
  >> [stack.Move()](functions/stack_Move.md)
  >
- >> [stack.Swap()](functions/stack_Swap.md) // TODO: document
+ >> [stack.Swap()](functions/stack_Swap.md)
  >
  >> [stack.Has()](functions/stack_Has.md)
  >
- >> [stack.Filter()](functions/stack_Filter.md) // TODO: document
+ >> [stack.Filter()](functions/stack_Filter.md)
  >
- >> [stack.SwitchKeyVal()](functions/stack_SwitchKeyVal.md) // TODO: document
+ >> [stack.SwitchKeysVals()](functions/stack_SwitchKeysVals.md)
  >
  >> [stack.Add()](functions/stack_Add.md)
  >>

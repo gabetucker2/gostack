@@ -1410,7 +1410,7 @@ func case_stack_Swap(funcName string) {
 	test_Start(funcName, showTestText)
 
 	stack1 := MakeStack([]int {1, 2, 3, 4}).Swap()
-	stack2 := MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}).Swap(FIND_Val, FIND_Val, 1, 4, nil, nil, DEEPSEARCH_True, DEEPSEARCH_True)
+	stack2 := MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}).Swap(FIND_Val, FIND_Val, 1, 4, DEEPSEARCH_True, DEEPSEARCH_True)
 
 	conditions := []bool {
 
