@@ -67,13 +67,13 @@ func match(needle any, haystack any, override bool, dereferenceType DEREFERENCE)
 	return false
 }
 
-func selectCard(findType any, findData any, dereferenceType any, findCompareRaw COMPARE, card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, workingMem ...any) bool {
+func selectCard(findType any, findData any, dereferenceType any, overrideFindData COMPARE, card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, workingMem ...any) bool {
 
 	// set defaults
 	setFINDDefaultIfNil(&findType)
 	setDEREFERENCEDefaultIfNil(&dereferenceType)
 
-	override := findCompareRaw == COMPARE_True
+	override := overrideFindData == COMPARE_True
 
 	getPointer := func(ptr any, variadic ...any) any {
 
@@ -432,15 +432,15 @@ func toTypeCard(card any) *Card {
 func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *Stack {
 	
 	// unpack variadic into optional parameters
-	var orderType, findType, findData, findCompareRaw, overrideInsert, deepSearchType, depth, dereferenceType, passSubstacks, passCards, workingMem any
-	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &findCompareRaw, &overrideInsert, &deepSearchType, &depth, &dereferenceType, &passSubstacks, &passCards, &workingMem)
+	var orderType, findType, findData, overrideFindData, overrideInsert, deepSearchType, depth, dereferenceType, passType, passCards, workingMem any
+	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &overrideFindData, &overrideInsert, &deepSearchType, &depth, &dereferenceType, &passType, &passCards, &workingMem)
 	setOVERRIDEDefaultIfNil(&overrideInsert)
 	setORDERDefaultIfNil(&orderType)
 	setFINDDefaultIfNil(&findType)
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
-	if findCompareRaw == nil {findCompareRaw = COMPARE_False}
+	if overrideFindData == nil {overrideFindData = COMPARE_False}
 	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
-	if passSubstacks == nil {passSubstacks = PASS_True}
+	if passType == nil {passType = PASS_Cards}
 
 	// initialize foundCard to false so you can determine whether valid find and
 	// initialize variables
@@ -485,7 +485,7 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 		stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any,  workingMem ...any) {
 		
 			// only do add to the first match if ACTION_First, otherwise do for every match
-			if (allNotFirst && selectCard(findType, findData, dereferenceType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...)) || (!allNotFirst && selectCard(findType, findData, dereferenceType, findCompareRaw.(COMPARE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) && !foundCard) {
+			if (allNotFirst && selectCard(findType, findData, dereferenceType, overrideFindData.(COMPARE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...)) || (!allNotFirst && selectCard(findType, findData, dereferenceType, overrideFindData.(COMPARE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) && !foundCard) {
 	
 				// update foundCard
 				foundCard = true
@@ -509,7 +509,7 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 				
 			}
 	
-		}, nil, nil, nil, workingMem.([]any), deepSearchType, depth, passSubstacks, passCards)
+		}, nil, nil, nil, workingMem.([]any), deepSearchType, depth, passType, passCards)
 	}
 
 	// return nil if no add was made, else return card
@@ -533,15 +533,15 @@ func callLambda(lambda any, card *Card, parentStack *Stack, isSubstack bool, coo
 	if success {conversion4(card, parentStack, isSubstack)}
 	conversion5, success := lambda.(func(*Card, *Stack, bool, *Stack))
 	if success {conversion5(card, parentStack, isSubstack, coords)}
-	conversion6, success := lambda.(func (*Card, *Stack, bool, *Stack, *Stack))
+	conversion6, success := lambda.(func(*Card, *Stack, bool, *Stack, *Stack))
 	if success {conversion6(card, parentStack, isSubstack, coords, retStack)}
-	conversion7, success := lambda.(func (*Card, *Stack, bool, *Stack, *Stack, *Card))
+	conversion7, success := lambda.(func(*Card, *Stack, bool, *Stack, *Stack, *Card))
 	if success {conversion7(card, parentStack, isSubstack, coords, retStack, retCard)}
-	conversion8, success := lambda.(func (*Card, *Stack, bool, *Stack, *Stack, *Card, any))
+	conversion8, success := lambda.(func(*Card, *Stack, bool, *Stack, *Stack, *Card, any))
 	if success {conversion8(card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr)}
-	conversion9, success := lambda.(func (*Card, *Stack, bool, *Stack, *Stack, *Card, any, []any))
+	conversion9, success := lambda.(func(*Card, *Stack, bool, *Stack, *Stack, *Card, any, []any))
 	if success {conversion9(card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, otherInfo)}
-	conversion10, success := lambda.(func (*Card, *Stack, bool, *Stack, *Stack, *Card, any, []any, ...any))
+	conversion10, success := lambda.(func(*Card, *Stack, bool, *Stack, *Stack, *Card, any, []any, ...any))
 	if success {conversion10(card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, otherInfo, workingMem...)}
 }
 

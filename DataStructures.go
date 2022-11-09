@@ -87,8 +87,9 @@ const (
 )
 
 const (
-	PASS_False PASS = iota
-	PASS_True
+	PASS_Cards PASS = iota
+	PASS_Substacks
+	PASS_Both
 )
 
 const (
@@ -152,11 +153,5 @@ func setCOMPAREDefaultIfNil(compareType *any) {
 func setOVERRIDEDefaultIfNil(overrideType *any) {
 	if *overrideType == nil {
 		*overrideType = OVERRIDE_False
-	}
-}
-
-func setREPEATDefaultIfNil(repeatType *any) {
-	if *repeatType == nil {
-		*repeatType = REPEAT_False
 	}
 }

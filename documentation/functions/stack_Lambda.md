@@ -16,20 +16,20 @@
             cardAdr,
             parentStackAdr,
             retStackAdr,
-            retCardAdr},
-        workingMem ...any),
+            retCardAdr
+        },
+        workingMem ...any)
     retStack *Stack [nil],
     retCard *Card [nil],
     retVarAdr any [nil],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
     deepSearchType DEEPSEARCH [DEEPSEARCH_True],
     depth int [-1],
-    passSubstacks PASS [PASS_False],
-    passCards PASS [PASS_True],
+    passType PASS [PASS_Both],
     otherInfo []any {
         retStackAdr,
         retCardAdr
-    } []any {nil, nil}, 
+    } []any {nil, nil},
  ) (READ BELOW)
  ```
 

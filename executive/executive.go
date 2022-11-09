@@ -10,6 +10,6 @@ func main() {
 	// remove import errors when stuff is commented out
 	gogenerics.RemoveUnusedError(testing.Run)
 
-	testing.Run(false)
+	testing.Run(true)
 
 }

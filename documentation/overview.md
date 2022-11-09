@@ -27,7 +27,7 @@
 
  <img src="../images/gostack_StackSample2.png" width="40%" style="margin-bottom: 10px;"/>
 
- Pretty straight-forward!  But what if we want to make something more complicated, like a matrix?  Let's do that here, fiting an array with four elements to a 2x2 matrix:
+ Pretty straight-forward!  But what if we want to make something more complicated, like a matrix?  Let's do that here, fitting an array with four elements to a 2x2 matrix:
 
  ```
  myMatrix := MakeStackMatrix([]int {1, 3, 2, 4}, nil, []int {2, 2})

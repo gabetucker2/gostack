@@ -1,41 +1,36 @@
 ![Banner](../../images/gostack_SmallerTransparent.png)
 
- <h2>stack.Get()</h2>
+ <h2>stack.Replace()</h2>
 
  ```
- stack.Get(
+ stack.Replace(
+    replaceType REPLACE,
+    replaceWith any|[]any|*Stack|func(
+        card *Card,
+        parentStack *Stack,
+        isSubstack bool,
+        coords *Stack,
+        workingMem ...any,
+    ),
     findType FIND [FIND_Last],
-    findData any|[]any|*Stack|func(
-      card *Card,
-      parentStack *Stack,
-      isSubstack bool,
-      coords *Stack,
-      retStack *Stack,
-      retCard *Card,
-      retVarAdr any,
-      otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
-      },
-      workingMem ...any
-    ) [nil],
+    findData any [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
     depth int [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}]
- ) (foundCard *Card)
+ ) (replacedCard *Card)
  ```
 
 ```
- Gets the first card from specified parameters in `stack`, or nil if does not exist
+ Returns a clone of the first found card from specified parameters in `stack`
 
  @ensures
  | IF `overrideFindData` == OVERRIDE_True:
  |   compare whether each element is equal to `findData` itself, rather than each element inside of `findData` (assuming it is a stack or array)
+ | IF a version for `replaceWith` as a func is passed that has fewer parameters than the full function:
+ |   the function will abstract away unincluded parameters
 ```
 
 ---

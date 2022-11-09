@@ -58,6 +58,7 @@ In progress:
  <h2><b>v1.0.6</b> — <i>Beta Release</i> — ?/?/2023 — Patch A</h2>
 
 * More strictly implement design-by-contract principles in function documentation to facilitate error-catching for invalid arguments
+* Make all lambda function calls have the same structure (i.e., no more simplified version for `replaceWith` func)
 * Mathematical functions added (mean, sum, product, add, subtract, multiply, divide, matrix multiply, transpose)
 * Optimize to improve performance
   * Add more benchmarks

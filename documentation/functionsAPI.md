@@ -84,13 +84,13 @@
  >>
  >> [stack.AddMany()](functions/stack_AddMany.md) // TODO: document
  >
- >> [stack.Get()](functions/stack_Get.md) // TODO: document
+ >> [stack.Get()](functions/stack_Get.md)
  >>
- >> [stack.GetMany()](functions/stack_GetMany.md) // TODO: document
+ >> [stack.GetMany()](functions/stack_GetMany.md)
  >
- >> [stack.Replace()](functions/stack_Replace.md) // TODO: document
+ >> [stack.Replace()](functions/stack_Replace.md)
  >>
- >> [stack.ReplaceMany()](functions/stack_ReplaceMany.md) // TODO: document
+ >> [stack.ReplaceMany()](functions/stack_ReplaceMany.md)
  >
  >> [stack.Extract()](functions/stack_Extract.md) // TODO: document
  >>

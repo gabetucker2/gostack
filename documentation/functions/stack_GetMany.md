@@ -1,10 +1,10 @@
 ![Banner](../../images/gostack_SmallerTransparent.png)
 
- <h2>stack.Get()</h2>
+ <h2>stack.GetMany()</h2>
 
  ```
- stack.Get(
-    findType FIND [FIND_Last],
+ stack.GetMany(
+    findType FIND [FIND_All],
     findData any|[]any|*Stack|func(
       card *Card,
       parentStack *Stack,
@@ -21,17 +21,18 @@
       },
       workingMem ...any
     ) [nil],
+    returnType RETURN [RETURN_Cards],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
     depth int [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}]
- ) (foundCard *Card)
+ ) (newStack *Stack)
  ```
 
 ```
- Gets the first card from specified parameters in `stack`, or nil if does not exist
+ Gets a stack of cards from specified parameters in `stack`
 
  @ensures
  | IF `overrideFindData` == OVERRIDE_True:
