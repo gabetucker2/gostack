@@ -1391,7 +1391,7 @@ func case_stack_Move(funcName string) {
 
 	// test base functionality
 	stack1 := MakeStack([]int {1, 2, 3}).Move()
-	stack2 := MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}).Move(nil, FIND_Val, FIND_Val, 1, 4, nil, nil, DEEPSEARCH_True, DEEPSEARCH_True)
+	stack2 := MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}).Move(nil, FIND_Val, FIND_Val, 1, 4, DEEPSEARCH_True, DEEPSEARCH_True)
 
 	conditions := []bool {
 

@@ -70,7 +70,7 @@
  >> [stack.LambdaVarAdr()](functions/stack_Lambda.md)
  
  > Generic functions
- >> [stack.Move()](functions/stack_Move.md) // TODO: document
+ >> [stack.Move()](functions/stack_Move.md)
  >
  >> [stack.Swap()](functions/stack_Swap.md) // TODO: document
  >
@@ -96,17 +96,17 @@
  >>
  >> [stack.ExtractMany()](functions/stack_ExtractMany.md)
  >
- >> [stack.Remove()](functions/stack_Remove.md) // TODO: document
+ >> [stack.Remove()](functions/stack_Remove.md)
  >>
- >> [stack.RemoveMany()](functions/stack_RemoveMany.md) // TODO: document
+ >> [stack.RemoveMany()](functions/stack_RemoveMany.md)
  >
- >> [stack.Update()](functions/stack_Update.md) // TODO: document
+ >> [stack.Update()](functions/stack_Update.md)
  >>
- >> [stack.UpdateMany()](functions/stack_UpdateMany.md) // TODO: document
+ >> [stack.UpdateMany()](functions/stack_UpdateMany.md)
  >
- >> [stack.Coordinates()](functions/stack_Coordinates.md) // TODO: document
+ >> [stack.Coordinates()](functions/stack_Coordinates.md)
  >>
- >> [stack.CoordinatesMany()](functions/stack_CoordinatesMany.md) // TODO: document
+ >> [stack.CoordinatesMany()](functions/stack_CoordinatesMany.md)
 
  ---
 
