@@ -74,7 +74,7 @@
  >
  >> [stack.Swap()](functions/stack_Swap.md) // TODO: document
  >
- >> [stack.Has()](functions/stack_Has.md) // TODO: document
+ >> [stack.Has()](functions/stack_Has.md)
  >
  >> [stack.Filter()](functions/stack_Filter.md) // TODO: document
  >
@@ -92,9 +92,9 @@
  >>
  >> [stack.ReplaceMany()](functions/stack_ReplaceMany.md)
  >
- >> [stack.Extract()](functions/stack_Extract.md) // TODO: document
+ >> [stack.Extract()](functions/stack_Extract.md)
  >>
- >> [stack.ExtractMany()](functions/stack_ExtractMany.md) // TODO: document
+ >> [stack.ExtractMany()](functions/stack_ExtractMany.md)
  >
  >> [stack.Remove()](functions/stack_Remove.md) // TODO: document
  >>
