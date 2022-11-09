@@ -205,14 +205,14 @@ func selectCard(findType any, findData any, dereferenceType any, findCompareRaw 
   * |keys| == |vals| if neither are nil
   * |keys| or |vals| == product of ints in matrixShape
 */
-func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []any, globalI *int, overrideInsert OVERRIDE) (ret *Stack) {
+func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []any, globalI *int) (ret *Stack) {
 
 	// make stack
 	if len(matrixShape) > 1 {
 		for i := 0; i < matrixShape[0]; i++ {
 			// insert this return value into a card of our current stack
 			stack.Cards = append(stack.Cards, MakeCard(
-				MakeStack().makeStackMatrixFrom1D(matrixShape[1:], keys, vals, globalI, overrideInsert), nil, i))
+				MakeStack().makeStackMatrixFrom1D(matrixShape[1:], keys, vals, globalI), nil, i))
 		}
 
 		ret = stack
@@ -242,32 +242,27 @@ func (stack *Stack) makeStackMatrixFrom1D(matrixShape []int, keys []any, vals []
 
 		for i := 0; i < matrixShape[0]; i++ {
 
-			if overrideInsert == OVERRIDE_True {
-				makeNewCard()
-			} else {
-
-				// if inserting vals
-				if len(vals) != 0 {
-					switch vals[i].(type) {
-					case *Card:
-						// set to existing card in card array `vals`
-						ret.Cards = append(ret.Cards, vals[i].(*Card))
-					default:
-						makeNewCard()
-					}
-
-				// if inserting only keys
-				} else if len(keys) != 0 {
-					switch keys[i].(type) {
-					case *Card:
-						// set to existing card in card array `keys`
-						ret.Cards = append(ret.Cards, keys[i].(*Card))
-					default:
-						makeNewCard()
-					}
-				} else {
+			// if inserting vals
+			if len(vals) != 0 {
+				switch vals[i].(type) {
+				case *Card:
+					// set to existing card in card array `vals`
+					ret.Cards = append(ret.Cards, vals[i].(*Card))
+				default:
 					makeNewCard()
 				}
+
+			// if inserting only keys
+			} else if len(keys) != 0 {
+				switch keys[i].(type) {
+				case *Card:
+					// set to existing card in card array `keys`
+					ret.Cards = append(ret.Cards, keys[i].(*Card))
+				default:
+					makeNewCard()
+				}
+			} else {
+				makeNewCard()
 			}
 		}
 

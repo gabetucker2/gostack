@@ -47,6 +47,7 @@ Completed:
 * Add coordinates to Lambda functions in otherInfo using forwardpropagation
 
 In progress:
+* Remove `overrideCards` from anywhere in script
 * Add function samples to each function documentation file
 * ***gostack*** functions parameter naming has been adjusted to be more consistent
 * ***gostack***'s functions' default parameter values have been adjusted to make more intuitive sense

@@ -78,13 +78,7 @@ func case_MakeStack(funcName string) {
 	stack5 := MakeStack(arrVals, nil, 3)
 	stack6 := MakeStack(nil, nil, 10)
 	stack7 := MakeStack(stack2.Cards) // should equal stack2
-	stack8 := MakeStack(stack2.Cards, nil, nil, OVERRIDE_True) // should be a stack of cards pointing to the cards of stack2
 	stack9 := MakeStack()
-
-	// override card support
-	card1 := MakeCard("Hey")
-	stack10 := MakeStack([]*Card {card1}, nil, nil, OVERRIDE_False)
-	stack11 := MakeStack([]*Card {card1}, nil, nil, OVERRIDE_True)
 
 	// pointer storage support
 	var name any//lint:ignore S1021 Ignore warning
@@ -118,36 +112,30 @@ func case_MakeStack(funcName string) {
 		test_IdxsAreGood(stack5), // 5
 		test_IdxsAreGood(stack6), // 6
 		test_IdxsAreGood(stack7), // 7
-		test_IdxsAreGood(stack8), // 8
 
-		test_StackProperties(stack1, []int{3}), // 9
-		test_StackProperties(stack2, []int{3}), // 10
-		test_StackProperties(stack3, []int{3}), // 11
-		test_StackProperties(stack4, []int{3}), // 12
-		test_StackProperties(stack5, []int{9}), // 13
-		test_StackProperties(stack6, []int{10}), // 14
-		test_StackProperties(stack7, []int{3}), // 15
-		test_StackProperties(stack8, []int{3}), // 16
+		test_StackProperties(stack1, []int{3}), // 8
+		test_StackProperties(stack2, []int{3}), // 9
+		test_StackProperties(stack3, []int{3}), // 10
+		test_StackProperties(stack4, []int{3}), // 11
+		test_StackProperties(stack5, []int{9}), // 12
+		test_StackProperties(stack6, []int{10}), // 13
+		test_StackProperties(stack7, []int{3}), // 14
 
-		test_StackEqualArrayOrMap(stack1, nil, nil, map1), // 17
-		test_StackEqualArrayOrMap(stack2, arrVals, nil, nil), // 18
-		test_StackEqualArrayOrMap(stack3, arrVals, arrKeys, nil), // 19
-		test_StackEqualArrayOrMap(stack4, nil, arrKeys, nil), // 20
-		test_StackEqualArrayOrMap(stack5, arrValsTimesThree, nil, nil), // 21
-		test_StackEqualArrayOrMap(stack6, nil, nil, nil), // 22
-		test_StackEqualArrayOrMap(stack7, arrVals, nil, nil), // 23
-		test_StackEqualArrayOrMap(stack8, stack2.Cards, nil, nil), // 24
+		test_StackEqualArrayOrMap(stack1, nil, nil, map1), // 15
+		test_StackEqualArrayOrMap(stack2, arrVals, nil, nil), // 16
+		test_StackEqualArrayOrMap(stack3, arrVals, arrKeys, nil), // 17
+		test_StackEqualArrayOrMap(stack4, nil, arrKeys, nil), // 18
+		test_StackEqualArrayOrMap(stack5, arrValsTimesThree, nil, nil), // 19
+		test_StackEqualArrayOrMap(stack6, nil, nil, nil), // 20
+		test_StackEqualArrayOrMap(stack7, arrVals, nil, nil), // 21
 		
-		test_StackProperties(stack9, []int{0}), // 25
+		test_StackProperties(stack9, []int{0}), // 22
 
-		stack10.Cards[0] == card1, // 26
-		stack11.Cards[0].Val == card1, // 27
+		gogenerics.GetPointer(stack12.Cards[0].Val) == "Henry", // 23
+		gogenerics.GetPointer(stack13.Cards[0].Val) == "Henry", // 24
 
-		gogenerics.GetPointer(stack12.Cards[0].Val) == "Henry", // 28
-		gogenerics.GetPointer(stack13.Cards[0].Val) == "Henry", // 29
-
-		stack14.Cards[0].Key == "Hello1", // 30
-		stack14.Cards[0].Val == "Hello2", // 31
+		stack14.Cards[0].Key == "Hello1", // 25
+		stack14.Cards[0].Val == "Hello2", // 26
 	}
 	
 	test_End(funcName, conditions)

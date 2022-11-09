@@ -2,7 +2,7 @@
 
  <h2>MakeStackMatrix()</h2>
 
- `MakeStackMatrix(input1 []any (deep/shallow)|map[any]any (deep/shallow)|*Stack [nil], input2 []any (deep/shallow)|*Stack [nil], matrixShape []int [[]int {1}], overrideCards OVERRIDE [OVERRIDE_False]) (newStackMatrix *Stack)`
+ `MakeStackMatrix(input1 []any (deep/shallow)|map[any]any (deep/shallow)|*Stack [nil], input2 []any (deep/shallow)|*Stack [nil], matrixShape []int [[]int {1}]) (newStackMatrix *Stack)`
 
 ```
  Creates a stack matrix initialized with starting cards
@@ -43,12 +43,9 @@
  |        unpack the map into matrix of shape `matrixShape` with corresponding keys and vals
  |      ELSEIF `input1` is an array and `input2` is nil:
  |        IF `input1` is an array of cards:
- |          IF `overrideCards` == OVERRIDE_True:
- |            MakeStackMatrix([]*Card {cardA}) => stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }
- |          ELSEIF `overrideCards` == OVERRIDE_False:
- |            MakeStackMatrix([]*Card {cardA}) => stack.Cards = []*Card {cardA}
+ |          unpack cards from `input1` into `stack`
  |        ELSE:
- |           unpack values from `input1` into new cards
+ |          unpack values from `input1` into new cards
  |      ELSEIF `input1` is an array and `input2` is an array:
  |        unpack keys from `input1` and values from `input2` into matrix of shape `matrixShape`
  |      ELSEIF `input1` is nil and `input2` is an array:

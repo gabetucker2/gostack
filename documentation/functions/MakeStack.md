@@ -2,7 +2,7 @@
 
  <h2>MakeStack()</h2>
 
- `MakeStack(input1 []any|map[any]any|*Stack [nil], input2 []any|*Stack [nil], repeats int [1], overrideCards OVERRIDE [OVERRIDE_False]) (newStack *Stack)`
+ `MakeStack(input1 []any|map[any]any|*Stack [nil], input2 []any|*Stack [nil], repeats int [1]) (newStack *Stack)`
 
 ```
  Creates a stack initialized with starting cards
@@ -24,10 +24,7 @@
  |         unpack the map into new cards with corresponding keys and vals
  |       ELSEIF `input1` is an array and `input2` is not passed/nil
  |  	   IF `input1` is an array of cards:
- |           `overrideCards` == OVERRIDE_True:
- |               MakeStack([]*Card {cardA}) => stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }
- |           `overrideCards` == OVERRIDE_False:
- |               MakeStack([]*Card {cardA}) => stack.Cards = []*Card {cardA}
+ |           unpack cards in `input1` into `stack`
  |  	   ELSE:
  |           unpack values from `input1` into new cards
  |       ELSEIF `input1` is an array and `input2` is an array

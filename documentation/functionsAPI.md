@@ -70,43 +70,43 @@
  >> [stack.LambdaVarAdr()](functions/stack_Lambda.md)
  
  > Generic functions
- >> [stack.Move()](functions/stack_Move.md) // TODO: start here adding documentation
+ >> [stack.Move()](functions/stack_Move.md) // TODO: document
  >
- >> [stack.Swap()](functions/stack_Swap.md)
+ >> [stack.Swap()](functions/stack_Swap.md) // TODO: document
  >
- >> [stack.Has()](functions/stack_Has.md)
+ >> [stack.Has()](functions/stack_Has.md) // TODO: document
  >
- >> [stack.Filter()](functions/stack_Filter.md)
+ >> [stack.Filter()](functions/stack_Filter.md) // TODO: document
  >
- >> [stack.SwitchKeyVal()](functions/stack_SwitchKeyVal.md)
+ >> [stack.SwitchKeyVal()](functions/stack_SwitchKeyVal.md) // TODO: document
  >
- >> [stack.Add()](functions/stack_Add.md)
+ >> [stack.Add()](functions/stack_Add.md) // TODO: document
  >>
- >> [stack.AddMany()](functions/stack_AddMany.md)
+ >> [stack.AddMany()](functions/stack_AddMany.md) // TODO: document
  >
- >> [stack.Get()](functions/stack_Get.md)
+ >> [stack.Get()](functions/stack_Get.md) // TODO: document
  >>
- >> [stack.GetMany()](functions/stack_GetMany.md)
+ >> [stack.GetMany()](functions/stack_GetMany.md) // TODO: document
  >
- >> [stack.Replace()](functions/stack_Replace.md)
+ >> [stack.Replace()](functions/stack_Replace.md) // TODO: document
  >>
- >> [stack.ReplaceMany()](functions/stack_ReplaceMany.md)
+ >> [stack.ReplaceMany()](functions/stack_ReplaceMany.md) // TODO: document
  >
- >> [stack.Extract()](functions/stack_Extract.md)
+ >> [stack.Extract()](functions/stack_Extract.md) // TODO: document
  >>
- >> [stack.ExtractMany()](functions/stack_ExtractMany.md)
+ >> [stack.ExtractMany()](functions/stack_ExtractMany.md) // TODO: document
  >
- >> [stack.Remove()](functions/stack_Remove.md)
+ >> [stack.Remove()](functions/stack_Remove.md) // TODO: document
  >>
- >> [stack.RemoveMany()](functions/stack_RemoveMany.md)
+ >> [stack.RemoveMany()](functions/stack_RemoveMany.md) // TODO: document
  >
- >> [stack.Update()](functions/stack_Update.md)
+ >> [stack.Update()](functions/stack_Update.md) // TODO: document
  >>
- >> [stack.UpdateMany()](functions/stack_UpdateMany.md)
+ >> [stack.UpdateMany()](functions/stack_UpdateMany.md) // TODO: document
  >
- >> [stack.Coordinates()](functions/stack_Coordinates.md)
+ >> [stack.Coordinates()](functions/stack_Coordinates.md) // TODO: document
  >>
- >> [stack.CoordinatesMany()](functions/stack_CoordinatesMany.md)
+ >> [stack.CoordinatesMany()](functions/stack_CoordinatesMany.md) // TODO: document
 
  ---
 

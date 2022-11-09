@@ -54,7 +54,7 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
 
 /** Creates a stack initialized with starting cards
  
- MakeStack(input1 []any|map[any]any|*Stack [nil], input2 []any|*Stack [nil], repeats int [1], overrideInsert OVERRIDE [OVERRIDE_False]) (newStack *Stack)
+ MakeStack(input1 []any|map[any]any|*Stack [nil], input2 []any|*Stack [nil], repeats int [1]) (newStack *Stack)
  
  Where all mentions of array are interchangeable with Stack:
  @notes
@@ -73,10 +73,7 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
  |         unpack the map into new cards with corresponding keys and vals
  |       ELSEIF `input1` is an array and `input2` is not passed/nil
  |  	   IF `input1` is an array of cards:
- |           `overrideInsert` == OVERRIDE_True:
- |               MakeStack([]*Card {cardA}) => stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }
- |           `overrideInsert` == OVERRIDE_False:
- |               MakeStack([]*Card {cardA}) => stack.Cards = []*Card {cardA}
+ |           unpack cards in `input1` into `stack`
  |  	   ELSE:
  |           unpack values from `input1` into new cards
  |       ELSEIF `input1` is an array and `input2` is an array
@@ -97,8 +94,8 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
  func MakeStack(arguments ...any) *Stack {
 
 	// unpack arguments into optional parameters
-	var input1, input2, repeats, overrideInsert any
-	gogenerics.UnpackVariadic(arguments, &input1, &input2, &repeats, &overrideInsert)
+	var input1, input2, repeats any
+	gogenerics.UnpackVariadic(arguments, &input1, &input2, &repeats)
 	// set default
 	if repeats == nil {
 		if input1 == nil && input2 == nil {
@@ -135,7 +132,7 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
 			}
 		}
 		
-		stack.Cards = append(stack.Cards, MakeStackMatrix(input1, input2, []int{matrixShape}, overrideInsert).Cards...)
+		stack.Cards = append(stack.Cards, MakeStackMatrix(input1, input2, []int{matrixShape}).Cards...)
 	}
 
 	// property sets
@@ -159,7 +156,7 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
 
 /** Creates a stack matrix initialized with starting cards
 
- MakeStackMatrix(input1 []any (deep/shallow)|map[any]any (deep/shallow)|*Stack [nil], input2 []any (deep/shallow)|*Stack [nil], matrixShape []int [[]int {1}], overrideInsert OVERRIDE [OVERRIDE_False]) (newStackMatrix *Stack)
+ MakeStackMatrix(input1 []any (deep/shallow)|map[any]any (deep/shallow)|*Stack [nil], input2 []any (deep/shallow)|*Stack [nil], matrixShape []int [[]int {1}]) (newStackMatrix *Stack)
  
  Where all mentions of array are interchangeable with Stack:
  @requires
@@ -197,12 +194,9 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
  |        unpack the map into matrix of shape `matrixShape` with corresponding keys and vals
  |      ELSEIF `input1` is an array and `input2` is nil:
  |        IF `input1` is an array of cards:
- |          IF `overrideInsert` == OVERRIDE_True:
- |            MakeStackMatrix([]*Card {cardA}) => stack.Cards = []*Card { card {Idx = 0, Key = nil, Val = cardA} }
- |          ELSEIF `overrideInsert` == OVERRIDE_False:
- |            MakeStackMatrix([]*Card {cardA}) => stack.Cards = []*Card {cardA}
+ |          unpack cards from `input1` into `stack`
  |        ELSE:
- |           unpack values from `input1` into new cards
+ |          unpack values from `input1` into new cards
  |      ELSEIF `input1` is an array and `input2` is an array:
  |        unpack keys from `input1` and values from `input2` into matrix of shape `matrixShape`
  |      ELSEIF `input1` is nil and `input2` is an array:
@@ -218,9 +212,8 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
  func MakeStackMatrix(arguments ...any) *Stack {
 
 	// unpack arguments into optional parameters
-	var input1, input2, matrixShape, overrideInsert any
-	gogenerics.UnpackVariadic(arguments, &input1, &input2, &matrixShape, &overrideInsert)
-	setOVERRIDEDefaultIfNil(&overrideInsert)
+	var input1, input2, matrixShape any
+	gogenerics.UnpackVariadic(arguments, &input1, &input2, &matrixShape)
 
 	stack := new(Stack)
 
@@ -249,7 +242,7 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
 
 					keys, vals = gogenerics.GetKeysValsFromMap(input1)
 					// unpack the map into matrix of shape `matrixShape` with corresponding keys and vals
-					stack.makeStackMatrixFrom1D(matrixShape.([]int), keys, vals, new(int), overrideInsert.(OVERRIDE))
+					stack.makeStackMatrixFrom1D(matrixShape.([]int), keys, vals, new(int))
 				}
 			
 			// ELSEIF `input1` is an array (or slice)...
@@ -276,7 +269,7 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
 					} else {
 
 						// set `stack.Cards` to cards in `input1` in matrix of shape `matrixShape`
-						stack.makeStackMatrixFrom1D(matrixShape.([]int), nil, input1Array, new(int), overrideInsert.(OVERRIDE))
+						stack.makeStackMatrixFrom1D(matrixShape.([]int), nil, input1Array, new(int))
 
 					}
 
@@ -300,7 +293,7 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
 					// ELSEIF `matrixShape` is passed
 					} else {
 						// unpack keys from `input1` and values from `input2` into matrix of shape `matrixShape`
-						stack.makeStackMatrixFrom1D(matrixShape.([]int), input1Array, input2Array, new(int), overrideInsert.(OVERRIDE))
+						stack.makeStackMatrixFrom1D(matrixShape.([]int), input1Array, input2Array, new(int))
 					}
 
 				}
@@ -327,7 +320,7 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
 			// ELSEIF `matrixShape` is passed
 			} else {
 				// unpack keys from `input2` into matrix of shape `matrixShape`
-				stack.makeStackMatrixFrom1D(matrixShape.([]int), input2Array, nil, new(int), overrideInsert.(OVERRIDE))
+				stack.makeStackMatrixFrom1D(matrixShape.([]int), input2Array, nil, new(int))
 			}
 
 		}
@@ -342,7 +335,7 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
 		// ELSEIF `matrixShape` is passed
 		} else {
 			// create a StackMatrix of shape `matrixShape` whose heightest card vals are nil
-			stack.makeStackMatrixFrom1D(matrixShape.([]int), nil, nil, new(int), OVERRIDE_False)
+			stack.makeStackMatrixFrom1D(matrixShape.([]int), nil, nil, new(int))
 
 		}
 
@@ -747,7 +740,15 @@ func (stack *Stack) Unique(arguments ...any) *Stack {
 
 /** Returns whether one card equals another
 
- card.Equals(otherCard *Card, compareIdxs COMPARE [COMPARE_False], compareKeys COMPARE [COMPARE_True], compareVals COMPARE [COMPARE_True], compareCardAdrs COMPARE [COMPARE_False], pointerKeys DEREFERENCE [DEREFERENCE_None], pointerVals DEREFERENCE [DEREFERENCE_None]) (cardEqualsOtherCard bool)
+ card.Equals(
+    otherCard *Card,
+    compareIdxs COMPARE [COMPARE_False],
+    compareKeys COMPARE [COMPARE_True],
+    compareVals COMPARE [COMPARE_True],
+	compareCardAdrs COMPARE [COMPARE_False],
+    pointerKeys DEREFERENCE [DEREFERENCE_None],
+    pointerVals DEREFERENCE [DEREFERENCE_None]
+ ) (cardEqualsOtherCard bool)
 
  @examples
  | card1 := MakeCard("Hey")
@@ -791,7 +792,18 @@ func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 
 /** Returns whether one stack equals another
 
- stack.Equals(otherStack *Stack, deepSearchType *DEEPSEARCH [DEEPSEARCH_True], depth int|[]int|*Stack, compareCardKeys COMPARE [COMPARE_True], compareCardVals COMPARE [COMPARE_True], compareSubstackKeys COMPARE [COMPARE_True], pointerCardKeys DEREFERENCE [DEREFERENCE_None], pointerCardVals DEREFERENCE [DEREFERENCE_None], pointerSubstackKeys DEREFERENCE [DEREFERENCE_None], compareSubstackAdrs COMPARE [COMPARE_False]) (stackEqualsOtherStack bool)
+ stack.Equals(
+    otherStack *Stack,
+    deepSearchType *DEEPSEARCH [DEEPSEARCH_True],
+    depth int|[]int|*Stack,
+    compareCardKeys COMPARE [COMPARE_True],
+    compareCardVals COMPARE [COMPARE_True],
+    compareSubstackKeys COMPARE [COMPARE_True],
+    pointerCardKeys DEREFERENCE [DEREFERENCE_None],
+    pointerCardVals DEREFERENCE [DEREFERENCE_None],
+    pointerSubstackKeys DEREFERENCE [DEREFERENCE_None],
+    compareSubstackAdrs COMPARE [COMPARE_False]
+ ) (stackEqualsOtherStack bool)
  */
 func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 
