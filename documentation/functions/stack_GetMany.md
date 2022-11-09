@@ -37,6 +37,8 @@
  @ensures
  | IF `overrideFindData` == OVERRIDE_True:
  |   compare whether each element is equal to `findData` itself, rather than each element inside of `findData` (assuming it is a stack or array)
+ | IF a version for func input data is passed that has fewer parameters than the full function:
+ |   the function will abstract away unincluded parameters
 ```
 
 ---

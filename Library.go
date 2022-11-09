@@ -1228,7 +1228,7 @@ func (stack *Stack) Print(arguments ...any) *Stack {
     otherInfo []any {
         retStackAdr,
         retCardAdr
-    } []any {nil, nil},
+    } []any [[]any {nil, nil}],
  ) (stack, retStack, retCard, retVarAdr)
 
  @ensures
@@ -1463,7 +1463,7 @@ func (stack *Stack) Print(arguments ...any) *Stack {
     otherInfo []any {
         retStackAdr,
         retCardAdr
-    } []any {nil, nil},
+    } []any [[]any {nil, nil}],
  ) (stack)
 
  @ensures
@@ -1513,7 +1513,7 @@ func (stack *Stack) LambdaThis(lambda any, arguments ...any) *Stack {
     otherInfo []any {
         retStackAdr,
         retCardAdr
-    } []any {nil, nil},
+    } []any [[]any {nil, nil}],
  ) (retStack)
 
  @ensures
@@ -1563,7 +1563,7 @@ func (stack *Stack) LambdaStack(lambda any, arguments ...any) *Stack {
     otherInfo []any {
         retStackAdr,
         retCardAdr
-    } []any {nil, nil},
+    } []any [[]any {nil, nil}],
  ) (retCard)
 
  @ensures
@@ -1613,7 +1613,7 @@ func (stack *Stack) LambdaCard(lambda any, arguments ...any) *Card {
     otherInfo []any {
         retStackAdr,
         retCardAdr
-    } []any {nil, nil},
+    } []any [[]any {nil, nil}],
  ) (retVarAdr)
 
  @ensures
@@ -1841,6 +1841,8 @@ func (stack *Stack) Has(arguments ...any) bool {
  @ensures
  | IF `overrideFindData` == OVERRIDE_True:
  |   compare whether each element is equal to `findData` itself, rather than each element inside of `findData` (assuming it is a stack or array)
+ | IF a version for func input data is passed that has fewer parameters than the full function:
+ |   the function will abstract away unincluded parameters
 */
  func (stack *Stack) Get(arguments ...any) *Card {
 	
@@ -1904,6 +1906,8 @@ func (stack *Stack) Has(arguments ...any) bool {
  @ensures
  | IF `overrideFindData` == OVERRIDE_True:
  |   compare whether each element is equal to `findData` itself, rather than each element inside of `findData` (assuming it is a stack or array)
+ | IF a version for func input data is passed that has fewer parameters than the full function:
+ |   the function will abstract away unincluded parameters
  */
 func (stack *Stack) GetMany(arguments ...any) *Stack {
 	
@@ -1942,7 +1946,6 @@ func (stack *Stack) GetMany(arguments ...any) *Stack {
 }
 
 /** Returns a clone of the first found card from specified parameters in `stack`
-
  stack.Replace(
     replaceType REPLACE,
     replaceWith any|[]any|*Stack|func(
@@ -1953,7 +1956,22 @@ func (stack *Stack) GetMany(arguments ...any) *Stack {
         workingMem ...any,
     ),
     findType FIND [FIND_Last],
-    findData any [nil],
+    findData any|[]any|*Stack|func(
+      card *Card,
+      parentStack *Stack,
+      isSubstack bool,
+      coords *Stack,
+      retStack *Stack,
+      retCard *Card,
+      retVarAdr any,
+      otherInfo []any {
+            cardAdr,
+            parentStackAdr,
+            retStackAdr,
+            retCardAdr
+      },
+      workingMem ...any
+    ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
     depth int [-1],
     passType PASS [PASS_Both],
@@ -1965,7 +1983,7 @@ func (stack *Stack) GetMany(arguments ...any) *Stack {
  @ensures
  | IF `overrideFindData` == OVERRIDE_True:
  |   compare whether each element is equal to `findData` itself, rather than each element inside of `findData` (assuming it is a stack or array)
- | IF a version for `replaceWith` as a func is passed that has fewer parameters than the full function:
+ | IF a version for func input data is passed that has fewer parameters than the full function:
  |   the function will abstract away unincluded parameters
  */
 func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...any) *Card {
@@ -2046,7 +2064,6 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
 }
 
 /** Returns a stack of clones of the found cards from specified parameters in `stack`
-
  stack.ReplaceMany(
     replaceType REPLACE,
     replaceWith any|[]any|*Stack|func(
@@ -2057,7 +2074,22 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
         workingMem ...any,
     ),
     findType FIND [FIND_Last],
-    findData any [nil],
+    findData any|[]any|*Stack|func(
+      card *Card,
+      parentStack *Stack,
+      isSubstack bool,
+      coords *Stack,
+      retStack *Stack,
+      retCard *Card,
+      retVarAdr any,
+      otherInfo []any {
+            cardAdr,
+            parentStackAdr,
+            retStackAdr,
+            retCardAdr
+      },
+      workingMem ...any
+    ) [nil],
     returnType RETURN [RETURN_Cards],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
     depth int [-1],
@@ -2070,7 +2102,7 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
  @ensures
  | IF `overrideFindData` == OVERRIDE_True:
  |   compare whether each element is equal to `findData` itself, rather than each element inside of `findData` (assuming it is a stack or array)
- | IF a version for `replaceWith` as a func is passed that has fewer parameters than the full function:
+ | IF a version for func input data is passed that has fewer parameters than the full function:
  |   the function will abstract away unincluded parameters
  */
  func (stack *Stack) ReplaceMany(replaceType REPLACE, replaceWith any, arguments ...any) *Stack {
@@ -2327,9 +2359,39 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
 
 }
 
-/** Retrieves a stack containing the coordinates of the first found card
+/** Retrieves a stack containing the coordinates of the first found card, or empty stack if doesn't exist
 
- ...stuff here
+ stack.Coordinates(
+    findType FIND [FIND_Last],
+    findData any|[]any|*Stack|func(
+      card *Card,
+      parentStack *Stack,
+      isSubstack bool,
+      coords *Stack,
+      retStack *Stack,
+      retCard *Card,
+      retVarAdr any,
+      otherInfo []any {
+            cardAdr,
+            parentStackAdr,
+            retStackAdr,
+            retCardAdr
+      },
+      workingMem ...any
+    ) [nil],
+    deepSearchType DEEPSEARCH [DEEPSEARCH_True],
+    depth int [-1],
+    passType PASS [PASS_Cards],
+    dereferenceType DEREFERENCE [DEREFERENCE_None],
+    overrideFindData OVERRIDE [OVERRIDE_False],
+    workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}]
+ ) (foundCardCoords *Stack)
+
+ @ensures
+ | IF `overrideFindData` == OVERRIDE_True:
+ |   compare whether each element is equal to `findData` itself, rather than each element inside of `findData` (assuming it is a stack or array)
+ | IF a version for func input data is passed that has fewer parameters than the full function:
+ |   the function will abstract away unincluded parameters
  */
  func (stack *Stack) Coordinates(arguments ...any) (*Stack) {
 	
@@ -2338,8 +2400,9 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
 	gogenerics.UnpackVariadic(arguments, &findType, &findData, &deepSearchType, &depth, &passType, &dereferenceType, &overrideFindData, &workingMem)
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if overrideFindData == nil {overrideFindData = COMPARE_False}
-	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_True}
 	if passType == nil {passType = PASS_Cards}
+	if findType == nil {findType = FIND_Last}
 
 	// return
 	found := false
@@ -2357,7 +2420,37 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
 
 /** Retrieves a stack containing a set of stacks containing the coordinates of each found card
 
- blah blah blah
+ stack.Coordinates(
+    findType FIND [FIND_All],
+    findData any|[]any|*Stack|func(
+      card *Card,
+      parentStack *Stack,
+      isSubstack bool,
+      coords *Stack,
+      retStack *Stack,
+      retCard *Card,
+      retVarAdr any,
+      otherInfo []any {
+            cardAdr,
+            parentStackAdr,
+            retStackAdr,
+            retCardAdr
+      },
+      workingMem ...any
+    ) [nil],
+    deepSearchType DEEPSEARCH [DEEPSEARCH_True],
+    depth int [-1],
+    passType PASS [PASS_Cards],
+    dereferenceType DEREFERENCE [DEREFERENCE_None],
+    overrideFindData OVERRIDE [OVERRIDE_False],
+    workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}]
+ ) (foundCardsCoords *Stack)
+
+ @ensures
+ | IF `overrideFindData` == OVERRIDE_True:
+ |   compare whether each element is equal to `findData` itself, rather than each element inside of `findData` (assuming it is a stack or array)
+ | IF a version for func input data is passed that has fewer parameters than the full function:
+ |   the function will abstract away unincluded parameters
  */
  func (stack *Stack) CoordinatesMany(arguments ...any) (*Stack) {
 	
@@ -2366,8 +2459,9 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
 	gogenerics.UnpackVariadic(arguments, &findType, &findData, &deepSearchType, &depth, &passType, &dereferenceType, &overrideFindData, &workingMem)
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if overrideFindData == nil {overrideFindData = COMPARE_False}
-	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
+	if deepSearchType == nil {deepSearchType = DEEPSEARCH_True}
 	if passType == nil {passType = PASS_Cards}
+	if findType == nil {findType = FIND_All}
 
 	// return
 	return stack.LambdaStack(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, workingMem ...any) {

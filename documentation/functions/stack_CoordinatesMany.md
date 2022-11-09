@@ -1,18 +1,10 @@
 ![Banner](../../images/gostack_SmallerTransparent.png)
 
- <h2>stack.ReplaceMany()</h2>
+ <h2>stack.Coordinates()</h2>
 
  ```
- stack.ReplaceMany(
-    replaceType REPLACE,
-    replaceWith any|[]any|*Stack|func(
-        card *Card,
-        parentStack *Stack,
-        isSubstack bool,
-        coords *Stack,
-        workingMem ...any,
-    ),
-    findType FIND [FIND_Last],
+ stack.Coordinates(
+    findType FIND [FIND_All],
     findData any|[]any|*Stack|func(
       card *Card,
       parentStack *Stack,
@@ -29,18 +21,17 @@
       },
       workingMem ...any
     ) [nil],
-    returnType RETURN [RETURN_Cards],
-    deepSearchType DEEPSEARCH [DEEPSEARCH_False],
+    deepSearchType DEEPSEARCH [DEEPSEARCH_True],
     depth int [-1],
-    passType PASS [PASS_Both],
+    passType PASS [PASS_Cards],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}]
- ) (replacedCards *Stack)
+ ) (foundCardsCoords *Stack)
  ```
 
 ```
- Returns a stack of clones of the found cards from specified parameters in `stack`
+ Retrieves a stack containing a set of stacks containing the coordinates of each found card
 
  @ensures
  | IF `overrideFindData` == OVERRIDE_True:

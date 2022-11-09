@@ -29,7 +29,7 @@
     otherInfo []any {
         retStackAdr,
         retCardAdr
-    } []any {nil, nil},
+    } []any [[]any {nil, nil}],
  ) (READ BELOW)
  ```
 

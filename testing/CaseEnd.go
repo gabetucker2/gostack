@@ -1652,8 +1652,8 @@ func case_stack_Coordinates(funcName string) {
 		stack.Coordinates(FIND_First).Equals(MakeStack([]int {0, 0})), // 1
 		stack.Coordinates(FIND_Last).Equals(MakeStack([]int {0, 1})), // 2
 		stack.Coordinates(FIND_Last).Equals(MakeStack([]int {0, 1})), // 3
-		stack.Coordinates(FIND_First).Equals(MakeStack([]int {0})), // 4
-		stack.Coordinates(FIND_Last).Equals(MakeStack([]int {1})), // 5
+		stack.Coordinates(FIND_First, nil, nil, nil, PASS_Substacks).Equals(MakeStack([]int {0})), // 4
+		stack.Coordinates(FIND_Last, nil, nil, nil, PASS_Substacks).Equals(MakeStack([]int {1})), // 5
 
 	}
 
@@ -1671,7 +1671,7 @@ func case_stack_CoordinatesMany(funcName string) {
 	conditions := []bool {
 
 		// test base functionality
-		stack.CoordinatesMany(FIND_All, nil, nil, DEEPSEARCH_True).Equals(MakeStack([]*Stack {MakeStack([]int {0}), MakeStack([]int {0, 0}), MakeStack([]int {0, 1}), MakeStack([]int {1}), MakeStack([]int {1, 0}), MakeStack([]int {1, 1})})), // 1
+		stack.CoordinatesMany(FIND_All, nil, DEEPSEARCH_True).Equals(MakeStack([]*Stack {MakeStack([]int {0}), MakeStack([]int {0, 0}), MakeStack([]int {0, 1}), MakeStack([]int {1}), MakeStack([]int {1, 0}), MakeStack([]int {1, 1})})), // 1
 
 	}
 

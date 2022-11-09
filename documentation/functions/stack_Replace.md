@@ -13,7 +13,22 @@
         workingMem ...any,
     ),
     findType FIND [FIND_Last],
-    findData any [nil],
+    findData any|[]any|*Stack|func(
+      card *Card,
+      parentStack *Stack,
+      isSubstack bool,
+      coords *Stack,
+      retStack *Stack,
+      retCard *Card,
+      retVarAdr any,
+      otherInfo []any {
+            cardAdr,
+            parentStackAdr,
+            retStackAdr,
+            retCardAdr
+      },
+      workingMem ...any
+    ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
     depth int [-1],
     passType PASS [PASS_Both],
@@ -29,7 +44,7 @@
  @ensures
  | IF `overrideFindData` == OVERRIDE_True:
  |   compare whether each element is equal to `findData` itself, rather than each element inside of `findData` (assuming it is a stack or array)
- | IF a version for `replaceWith` as a func is passed that has fewer parameters than the full function:
+ | IF a version for func input data is passed that has fewer parameters than the full function:
  |   the function will abstract away unincluded parameters
 ```
 
