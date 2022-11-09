@@ -80,9 +80,9 @@
  >
  >> [stack.SwitchKeyVal()](functions/stack_SwitchKeyVal.md) // TODO: document
  >
- >> [stack.Add()](functions/stack_Add.md) // TODO: document
+ >> [stack.Add()](functions/stack_Add.md)
  >>
- >> [stack.AddMany()](functions/stack_AddMany.md) // TODO: document
+ >> [stack.AddMany()](functions/stack_AddMany.md)
  >
  >> [stack.Get()](functions/stack_Get.md)
  >>

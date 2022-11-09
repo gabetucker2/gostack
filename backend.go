@@ -67,13 +67,13 @@ func match(needle any, haystack any, override bool, dereferenceType DEREFERENCE)
 	return false
 }
 
-func selectCard(findType any, findData any, dereferenceType any, overrideFindData COMPARE, card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, workingMem ...any) bool {
+func selectCard(findType any, findData any, dereferenceType any, overrideFindData OVERRIDE, card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, workingMem ...any) bool {
 
 	// set defaults
 	setFINDDefaultIfNil(&findType)
 	setDEREFERENCEDefaultIfNil(&dereferenceType)
 
-	override := overrideFindData == COMPARE_True
+	override := overrideFindData == OVERRIDE_True
 
 	getPointer := func(ptr any, variadic ...any) any {
 
@@ -429,18 +429,18 @@ func toTypeCard(card any) *Card {
 }
 
 /** Exists to remove redundancy from writing Add() and AddMany() twice minus one condition */
-func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *Stack {
+func (stack *Stack) addHandler(allNotFirst bool, insert any, arguments ...any) *Stack {
 	
-	// unpack variadic into optional parameters
-	var orderType, findType, findData, overrideFindData, overrideInsert, deepSearchType, depth, dereferenceType, passType, passCards, workingMem any
-	gogenerics.UnpackVariadic(variadic, &orderType, &findType, &findData, &overrideFindData, &overrideInsert, &deepSearchType, &depth, &dereferenceType, &passType, &passCards, &workingMem)
+	// unpack arguments into optional parameters
+	var orderType, findType, findData, deepSearchType, depth, passType, dereferenceType, overrideInsert, overrideFindData, workingMem any
+	gogenerics.UnpackVariadic(arguments, &orderType, &findType, &findData, &deepSearchType, &depth, &passType, &dereferenceType, &overrideInsert, &overrideFindData, &workingMem)
 	setOVERRIDEDefaultIfNil(&overrideInsert)
+	setOVERRIDEDefaultIfNil(&overrideFindData)
 	setORDERDefaultIfNil(&orderType)
 	setFINDDefaultIfNil(&findType)
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
-	if overrideFindData == nil {overrideFindData = COMPARE_False}
 	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
-	if passType == nil {passType = PASS_Cards}
+	if passType == nil {passType = PASS_Both}
 
 	// initialize foundCard to false so you can determine whether valid find and
 	// initialize variables
@@ -485,7 +485,7 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 		stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any,  workingMem ...any) {
 		
 			// only do add to the first match if ACTION_First, otherwise do for every match
-			if (allNotFirst && selectCard(findType, findData, dereferenceType, overrideFindData.(COMPARE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...)) || (!allNotFirst && selectCard(findType, findData, dereferenceType, overrideFindData.(COMPARE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) && !foundCard) {
+			if (allNotFirst && selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...)) || (!allNotFirst && selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) && !foundCard) {
 	
 				// update foundCard
 				foundCard = true
@@ -509,7 +509,7 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, variadic ...any) *S
 				
 			}
 	
-		}, nil, nil, nil, workingMem.([]any), deepSearchType, depth, passType, passCards)
+		}, nil, nil, nil, workingMem.([]any), deepSearchType, depth, passType)
 	}
 
 	// return nil if no add was made, else return card
