@@ -2,7 +2,7 @@
 
  <h2>stack.Print()</h2>
 
- `stack.Print(indent int [0]) (stack)`
+ `stack.Print(name string [""], indent int [0]) (stack)`
 
 ```
  Prints information surrounding `stack` to the terminal and returns `stack`

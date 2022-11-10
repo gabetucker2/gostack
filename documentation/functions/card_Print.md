@@ -2,7 +2,7 @@
 
  <h2>card.Print()</h2>
 
- `card.Print(indent int [0]) (card)`
+ `card.Print(name string [""], indent int [0]) (card)`
 
 ```
  Prints information surrounding `card` to the terminal and returns `card`

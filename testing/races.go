@@ -114,51 +114,26 @@ func RaceGostack() {
 	// INIT
 	start := MakeStack([]any {"Key A", "Bad Key", "Key A", 2.5, "Michael Keaton"}, []any {40, "Bad Value", "Hello", 40, "520"})
 	searchKeys := MakeStack([]any {"Key A", 2.5, "Michael Keaton"})
-	// keysToInsert := []any {"I", "To"}
-	// valsToInsert := []any {"Am new", "This set"}
+	pairsToInsert := MakeStack([]any {"I", "To"}, []any {"Am new", "This set"})
 
 	// TASK A
 	taskA := start.GetMany(FIND_Key, searchKeys).Unique()
 
 	// TASK B
-	// get desired vals
-	taskA.Print()
-
-	// get idxs matching taskA keyval
-	start.GetMany(FIND_Val, taskA, RETURN_Idxs).Print()
-
-	// start.GetMany(FIND_Key, searchKeys, RETURN_Adrs).GetMany(FIND_Val, start.GetMany(FIND_Key, searchKeys, RETURN_Vals).Unique(), nil, nil, nil, nil, DEREFERENCE_Found).Print()
-
-	// start.GetMany(FIND_Key, searchKeys, RETURN_Adrs).Unique(TYPE_Val, DEREFERENCE_Found).Print()
-
-	// start.GetMany(
-	// 	FIND_Card,
-	// 	start.GetMany(FIND_Key, searchKeys, RETURN_Adrs).Unique(TYPE_Val, DEREFERENCE_Found),
-	// 	RETURN_Idxs,
-	// 	nil,
-	// 	nil,
-	// 	nil,
-	// 	DEREFERENCE_This,
-	// ).Print()
-
-	// taskB := MakeStack(start.GetMany(FIND_Val, taskA, RETURN_Vals).Unique(TYPE_Val), start.GetMany(FIND_KeyVal, start.GetMany(FIND_Val, taskA).Unique(TYPE_Val), RETURN_Idxs))
+	taskB := MakeStack(taskA, start.GetMany(FIND_KeyVal, taskA, RETURN_Idxs))
 
 	// TASK C
-	// taskC := taskB.Clone().Update(REPLACE_Card, pairsToInsert, FIND_Lambda, func(stack *Stack, card *Card) bool {
-	// return 1 < card.Val.(int) && card.Val.(int) < 3
-	// })
+	taskC := taskB.Clone().Update(REPLACE_Card, pairsToInsert, FIND_Lambda, func(stack *Stack, card *Card) bool {
+	return 1 < card.Val.(int) && card.Val.(int) < 3
+	})
 
 	// TASK D
 	// taskD := MakeStackMatrix(taskC.Clone().Duplicate(4), nil, []int{2, 2, 2, 2})
 
 	// PRINTS
-	// fmt.Println("A:")
-	// taskA.Print()
-	// fmt.Println("B:")
-	// taskB.Print()
-	// fmt.Println("C:")
-	// taskC.Print()
-	// fmt.Println("D:")
-	// taskD.Print()
+	taskA.Print("A")
+	taskB.Print("B")
+	taskC.Print("C")
+	// taskD.Print("D")
 
 }

@@ -553,10 +553,14 @@ func case_stack_Unique(funcName string) {
 	myStackKeys := MakeStack(nil, []string {"Person", "Place", "Person", "Thing", "Person"}).Unique(TYPE_Key)
 	myStackVals := MakeStack([]string {"Person", "Place", "Person", "Thing", "Person"}).Unique(TYPE_Val)
 	myStackBoth := MakeStack([]string {"Person", "Place", "Person", "Thing", "Person"}, []string {"Person", "Place", "Person", "Thing", "Person"}).Unique(TYPE_Val)
-	str1 := "Guy"
-	str2 := "Guy"
-	str3 := "Girl"
-	myStackDeref := MakeStack([]any {&str1, &str2, &str3}).Unique(nil, DEREFERENCE_Found)
+	var str1, str2, str3 any
+	str1 = "Guy"
+	str1Ptr := &str1
+	str2 = "Guy"
+	str2Ptr := &str2
+	str3 = "Girl"
+	str3Ptr := &str3
+	myStackDeref := MakeStack([]any {str1Ptr, str2Ptr, str3Ptr}).Unique(nil, DEREFERENCE_This)
 	
 	conditions := []bool {
 		myStackKeys.Equals(MakeStack(nil, []string {"Person", "Place", "Thing"})), // 1

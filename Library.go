@@ -621,16 +621,8 @@ func (card *Card) Clone() *Card {
 	// init
 	clone := gogenerics.CloneObject(card).(*Card)
 	clone.Idx = card.Idx
-	if gogenerics.IsPointer(card.Key) {
-		clone.Key = gogenerics.CloneObject(card.Key)
-	} else {
-		clone.Key = card.Key
-	}
-	if gogenerics.IsPointer(card.Val) {
-		clone.Val = gogenerics.CloneObject(card.Val)
-	} else {
-		clone.Val = card.Val
-	}
+	clone.Key = card.Key
+	clone.Val = card.Val
 	
 	// return
 	return clone
@@ -733,7 +725,9 @@ func (stack *Stack) Unique(arguments ...any) *Stack {
 			case TYPE_Key:
 				return !workingStack.Has(FIND_Key, card.Key, nil, nil, nil, dereferenceType)
 			case TYPE_Val:
-				return !workingStack.Has(FIND_Val, card.Val, nil, nil, nil, dereferenceType)
+				test := !workingStack.Has(FIND_Val, card.Val, nil, nil, nil, dereferenceType)
+				return test
+				// return !workingStack.Has(FIND_Val, card.Val, nil, nil, nil, dereferenceType)
 			}
 			return false // just so it compiles
 		}
@@ -811,7 +805,7 @@ func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 
 	/*
-	PSEUDOCODE OUTLINE: // TODO: update
+	PSEUDOCODE OUTLINE:
 
 	stack.Equals(otherStack, ...arguments) bool
 
@@ -1114,7 +1108,7 @@ func (stack *Stack) Flip() *Stack {
 
 /** Prints information surrounding `card` to the terminal and returns `card`
  
- card.Print(indent int [0]) (card)
+ card.Print(name string [""], indent int [0]) (card)
 
  @ensures
  | prints "-" `indent` * 4 times before each line to indicate depth in a stackMatrix
@@ -1122,21 +1116,22 @@ func (stack *Stack) Flip() *Stack {
 func (card *Card) Print(arguments ...any) *Card {
 
 	// unpack arguments into optional parameters
-	var indents any
-	gogenerics.UnpackVariadic(arguments, &indents)
+	var name, indents any
+	gogenerics.UnpackVariadic(arguments, &name, &indents)
+	if name == nil { name = "" }
 	if indents == nil { indents = 0 }
 
 	// prints
-	fmt.Printf("%v|%vCARD\n", depthPrinter(indents.(int)), gogenerics.IfElse(indents == 0, "gostack: PRINTING ", ""))
+	fmt.Printf("%v|%vCARD%v\n", depthPrinter(indents.(int)), gogenerics.IfElse(indents == 0, "gostack: PRINTING ", ""), gogenerics.IfElse(name == "", "", ": \"" + name.(string) + "\""))
 	if card == nil {
 		fmt.Printf("%v- card:          %v\n", depthPrinter(indents.(int)), nil)
 	} else {
 		fmt.Printf("%v- &card:         %v\n", depthPrinter(indents.(int)), fmt.Sprintf("%p", card))
 		fmt.Printf("%v- card.Idx:      %v\n", depthPrinter(indents.(int)), card.Idx)
 		if gogenerics.IsPointer(card.Key) {
-			fmt.Printf("%v- &card.Key:     %v\n", depthPrinter(indents.(int)), fmt.Sprintf("%p", card.Key))
-			fmt.Printf("%v- card.Key:      %v\n", depthPrinter(indents.(int)), reflect.ValueOf(card.Key).Elem())
-			fmt.Printf("%v- card.Key.Type: (%v)\n", depthPrinter(indents.(int)), reflect.TypeOf(reflect.ValueOf(card.Key).Elem().Interface()))
+			fmt.Printf("%v- card.Key:      %v\n", depthPrinter(indents.(int)), fmt.Sprintf("%p", card.Key))
+			fmt.Printf("%v- *card.Key:     %v\n", depthPrinter(indents.(int)), reflect.ValueOf(card.Key).Elem())
+			fmt.Printf("%v- card.Key.Type: (*%v)\n", depthPrinter(indents.(int)), reflect.TypeOf(reflect.ValueOf(card.Key).Elem().Interface()))
 		} else {
 			fmt.Printf("%v- card.Key:      %v\n", depthPrinter(indents.(int)), card.Key)
 			if card.Key != nil {
@@ -1144,9 +1139,9 @@ func (card *Card) Print(arguments ...any) *Card {
 			}
 		}
 		if gogenerics.IsPointer(card.Val) {
-			fmt.Printf("%v- &card.Val:     %v\n", depthPrinter(indents.(int)), fmt.Sprintf("%p", card.Val))
-			fmt.Printf("%v- card.Val:      %v\n", depthPrinter(indents.(int)), reflect.ValueOf(card.Val).Elem())
-			fmt.Printf("%v- card.Val.Type: (%v)\n", depthPrinter(indents.(int)), reflect.TypeOf(reflect.ValueOf(card.Val).Elem().Interface()))
+			fmt.Printf("%v- card.Val:      %v\n", depthPrinter(indents.(int)), fmt.Sprintf("%p", card.Val))
+			fmt.Printf("%v- *card.Val:     %v\n", depthPrinter(indents.(int)), reflect.ValueOf(card.Val).Elem())
+			fmt.Printf("%v- card.Val.Type: (*%v)\n", depthPrinter(indents.(int)), reflect.TypeOf(reflect.ValueOf(card.Val).Elem().Interface()))
 		} else {
 			fmt.Printf("%v- card.Val:      %v\n", depthPrinter(indents.(int)), card.Val)
 			if card.Val != nil {
@@ -1171,11 +1166,12 @@ func (card *Card) Print(arguments ...any) *Card {
 func (stack *Stack) Print(arguments ...any) *Stack {
 	
 	// unpack arguments into optional parameters
-	var indent, idx, key any
-	gogenerics.UnpackVariadic(arguments, &indent, &idx, &key)
+	var name, indent, idx, key any
+	gogenerics.UnpackVariadic(arguments, &name, &indent, &idx, &key)
 	if indent == nil { indent = 0 }
+	if name == nil { name = "" }
 
-	fmt.Printf("%v|%vSTACK\n", depthPrinter(indent.(int)), gogenerics.IfElse(idx == nil, "gostack: PRINTING ", "SUB"))
+	fmt.Printf("%v|%vSTACK%v\n", depthPrinter(indent.(int)), gogenerics.IfElse(idx == nil, "gostack: PRINTING ", "SUB"), gogenerics.IfElse(name == "", "", ": \"" + name.(string) + "\""))
 	if stack == nil {
 		fmt.Printf("%v- stack:         %v\n", depthPrinter(indent.(int)), nil)
 	} else {
@@ -1202,9 +1198,9 @@ func (stack *Stack) Print(arguments ...any) *Stack {
 	
 			switch c.Val.(type) {
 			case *Stack:
-				c.Val.(*Stack).Print(indent.(int)+4, i, c.Key)
+				c.Val.(*Stack).Print("", indent.(int)+4, i, c.Key)
 			default:
-				c.Print(indent.(int)+4)
+				c.Print("", indent.(int)+4)
 			}
 		}
 	}
@@ -2025,7 +2021,7 @@ func (stack *Stack) Has(arguments ...any) bool {
 
 	// get card
 	out := stack.LambdaCard(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, workingMem ...any) {
-
+		
 		if selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) && retCard.Idx == -1 {
 
 			*otherInfo[3].(**Card) = *otherInfo[0].(**Card)
@@ -2079,7 +2075,7 @@ func (stack *Stack) Has(arguments ...any) bool {
  |   the function will abstract away unincluded parameters
  */
 func (stack *Stack) GetMany(arguments ...any) *Stack {
-	
+
 	// unpack arguments into optional parameters
 	var findType, findData, returnType, deepSearchType, depth, passType, dereferenceType, overrideFindData, workingMem any
 	gogenerics.UnpackVariadic(arguments, &findType, &findData, &returnType, &deepSearchType, &depth, &passType, &dereferenceType, &overrideFindData, &workingMem)
