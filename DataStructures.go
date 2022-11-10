@@ -31,6 +31,7 @@ const (
 	FIND_Idx
 	FIND_Key
 	FIND_Val
+	FIND_KeyVal
 	FIND_Card
 	FIND_Size
 	FIND_Height
@@ -51,6 +52,7 @@ const (
 	RETURN_Keys
 	RETURN_Vals
 	RETURN_Cards
+	RETURN_Adrs
 	RETURN_Stacks
 )
 

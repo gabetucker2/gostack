@@ -2,6 +2,7 @@ package gostack
 
 import (
 	"fmt"
+	"unsafe"
 	"reflect"
 
 	"github.com/gabetucker2/gogenerics"
@@ -99,6 +100,26 @@ func selectCard(findType any, findData any, dereferenceType any, overrideFindDat
 		}
 	}
 
+	getHaystack := func(findData any, arguments ...any) (haystack []any) {
+		var returnType any
+		gogenerics.UnpackVariadic(arguments, &returnType)
+		if returnType == nil {returnType = RETURN_Vals}
+		switch getType(findData, false) {
+		case "element":
+			haystack = []any {findData}
+		case "slice":
+			haystack = gogenerics.UnpackArray(findData)
+		case "stack":
+			haystack = findData.(*Stack).ToArray(returnType)
+		}
+		for i := range haystack {
+			if haystack[i] == -1 {
+				haystack[i] = parentStack.Size - 1
+			}
+		}
+		return
+	}
+
 	// main
 	switch findType {
 	case FIND_First:
@@ -106,31 +127,46 @@ func selectCard(findType any, findData any, dereferenceType any, overrideFindDat
 	case FIND_Last:
 		return card.Idx == parentStack.Size - 1
 	case FIND_Idx: // -1 = stack.Size - 1
-		haystack := []any {}
-		switch getType(findData, false) {
-		case "element":
-			haystack = append(haystack, findData)
-		case "slice":
-			haystack = append(haystack, gogenerics.UnpackArray(findData)...)
-		case "stack":
-			haystack = append(haystack, findData.(*Stack).ToArray()...)
-		}
-		for i := range haystack {
-			if haystack[i] == -1 {
-				haystack[i] = parentStack.Size - 1
-			}
-		}
-		return needleInHaystack(card.Idx, haystack, DEREFERENCE_None)
+		return needleInHaystack(card.Idx, getHaystack(findData), DEREFERENCE_None)
 	case FIND_Key:
 		return match(getPointer(card.Key, true), findData, override, dereferenceType.(DEREFERENCE))
 	case FIND_Val:
 		return match(getPointer(card.Val, true), findData, override, dereferenceType.(DEREFERENCE))
+	case FIND_KeyVal:
+		cards := getHaystack(findData, RETURN_Cards)
+		hasMatch := false
+		for _, lookCard := range cards {
+			hasMatch = match(getPointer(card.Key, true), []any {lookCard.(*Card).Key}, override, DEREFERENCE_None) && match(getPointer(card.Val, true), []any {lookCard.(*Card).Val}, override, DEREFERENCE_None)
+			if hasMatch {break}
+		}
+		return hasMatch
 	case FIND_Card:
-		return fmt.Sprintf("%p", card) == fmt.Sprintf("%p", findData.(*Card))
+		cards := getHaystack(findData, RETURN_Cards)
+		hasMatch := false
+		for _, c := range cards {
+			var thisCardAdr, otherCardAdr string
+			switch dereferenceType {
+			case DEREFERENCE_None:
+				thisCardAdr = fmt.Sprintf("%p", card)
+				otherCardAdr = fmt.Sprintf("%p", c.(*Card))
+			case DEREFERENCE_This:
+				thisCardAdr = fmt.Sprintf("%p", (*Card)(unsafe.Pointer(reflect.ValueOf(card.Val).Pointer())))
+				otherCardAdr = fmt.Sprintf("%p", c.(*Card))
+			case DEREFERENCE_Found:
+				thisCardAdr = fmt.Sprintf("%p", card)
+				otherCardAdr = fmt.Sprintf("%p", (*Card)(unsafe.Pointer(reflect.ValueOf(c.(*Card).Val).Pointer())))
+			case DEREFERENCE_Both:
+				thisCardAdr = fmt.Sprintf("%p", (*Card)(unsafe.Pointer(reflect.ValueOf(card.Val).Pointer())))
+				otherCardAdr = fmt.Sprintf("%p", (*Card)(unsafe.Pointer(reflect.ValueOf(c.(*Card).Val).Pointer())))
+			}
+			hasMatch = thisCardAdr == otherCardAdr
+			if hasMatch {break}
+		}
+		return hasMatch
 	case FIND_Size:
-		return match(card.Val.(*Stack).Size, findData, false, DEREFERENCE_None)
+		return needleInHaystack(card.Val.(*Stack).Size, getHaystack(findData), DEREFERENCE_None)
 	case FIND_Height:
-		return match(card.Val.(*Stack).Height, findData, false, DEREFERENCE_None)
+		return needleInHaystack(card.Val.(*Stack).Height, getHaystack(findData), DEREFERENCE_None)
 	case FIND_Slice: // [inclusive, inclusive]; -1 => stack.Size - 1
 		var slice []any
 		switch getType(findData, false) {

@@ -2,7 +2,7 @@
 
 <h2>FIND</h2>
 
- > First, Last, Idx, Key, Val, Card, Size, Height, Slice, All, Lambda
+ > First, Last, Idx, Key, Val, KeyVal, Card, Size, Height, Slice, All, Lambda
 
 Many functions have "find functionality".  This means they A) have a FIND parameter called `findType` and B) have an interface parameter called `findData` whose dynamic type will vary based on the input for `findType`.  Given `stack.Get(findType FIND, findData any)`:
 
@@ -15,6 +15,8 @@ stack.Get(FIND_Idx, []int {2, 7}) // get first card whose index is either 2 or 7
 stack.Get(FIND_Idx, MakeStack([]int {2, 7})) // get first card whose index is either 2 or 7
 stack.Get(FIND_Lambda, func(card *Card) (bool) {return card.Val.(int) % 2 == 0}) // (assuming all vals are ints) get all cards whose vals are multiples of 2
 ```
+
+It should be noted that `FIND_Key`, `FIND_Val`, and `FIND_Card` are the only FIND types with dereference support.  `FIND_Key` and `FIND_Val` dereference the key and val respectively, whereas dereferencing `FIND_Card` will treat the val of a given card as the address of the card you are storing.
 
 Sample:
  > enumerator type's name
@@ -34,7 +36,7 @@ Enumerators:
  >> Idx is `parentStack.Size - 1`
  >
  > FIND_Idx
- >> `int` / `[]int` / `Stack{ints}`
+ >> `int` / `[]int` / `*Stack{ints}`
  >
  >> each card whose index == at least one value in findData
  >
@@ -48,23 +50,28 @@ Enumerators:
  >
  >> each card whose Val is findData
  >
+ > FIND_KeyVal
+ >> `*Card` / `[]*Card` / `*Stack`
+ >
+ >> each card whose Key and Val correspond to findData cards
+ >
  > FIND_Card
- >> *Card
+ >> `*Card` / `[]*Card` / `*Stack`
  >
  >> each card whose object address is equal to the object address of findData
  >
  > FIND_Size
- >> `int` / `[]int` / `Stack{ints}`
+ >> `int` / `[]int` / `*Stack{ints}`
  >
  >> each card which holds a substack whose Size == at least one value in findData
  >
  > FIND_Height
- >> `int` / `[]int` / `Stack{ints}`
+ >> `int` / `[]int` / `*Stack{ints}`
  >
  >> each card which holds a substack whose Height == at least one value in findData
  >
  > FIND_Slice
- >> `[]int {startIdx, endIdx}` / `Stack{startIdx, endIdx}`
+ >> `[]int {startIdx, endIdx}` / `*Stack{startIdx, endIdx}`
  >
  >> each card whose index is inclusively between startIdx and endIdx
  >

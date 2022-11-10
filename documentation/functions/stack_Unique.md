@@ -2,7 +2,7 @@
 
  <h2>stack.Unique()</h2>
 
- `stack.Unique(uniqueType TYPE [TYPE_Val]) (stack)`
+ `stack.Unique(uniqueType TYPE [TYPE_Val], dereferenceType DEREFERENCE [DEREFERENCE_None]) (stack)`
 
 ```
  Removes all cards from `stack` which share a given property as another card in that stack

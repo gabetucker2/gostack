@@ -2,7 +2,7 @@
 
 <h2>RETURN</h2>
 
- > Idxs, Keys, Vals, Cards, Stacks
+ > Idxs, Keys, Vals, Cards, Adrs, Stacks
 
 Many functions have "return functionality".  This means they A) return a *Stack and B) will make the stack a set of cards whose vals are the return type specified (or whose cards are simply clones of the original cards).  Sample:
  > enumerator type's name
@@ -20,6 +20,9 @@ Enumerators:
  >
  > RETURN_Cards
  >> a stack whose cards are clones of cards in stack
+ >
+ > RETURN_Adrs
+ >> a stack whose vals are the object addresses of cards in stack
  >
  > RETURN_Stacks
  >> a stack whose vals are clones of the cards within a found card's substack

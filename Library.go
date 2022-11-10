@@ -710,7 +710,7 @@ func (stack *Stack) Clone(arguments ...any) *Stack {
 
 /** Removes all cards from `stack` which share a given property as another card in that stack
 
- stack.Unique(uniqueType TYPE [TYPE_Val]) (stack)
+ stack.Unique(uniqueType TYPE [TYPE_Val], dereferenceType DEREFERENCE [DEREFERENCE_None]) (stack)
 
  @examples
  | MakeStack([]int {1, 2, 3, 1, 2, 4}).Unique() // Stack{1, 2, 3, 4}
@@ -719,20 +719,21 @@ func (stack *Stack) Clone(arguments ...any) *Stack {
 func (stack *Stack) Unique(arguments ...any) *Stack {
 	
 	// unpack arguments into optional parameters
-	var uniqueType any
-	gogenerics.UnpackVariadic(arguments, &uniqueType)
+	var uniqueType, dereferenceType any
+	gogenerics.UnpackVariadic(arguments, &uniqueType, &dereferenceType)
 	if uniqueType == nil { uniqueType = TYPE_Val }
+	if dereferenceType == nil { dereferenceType = DEREFERENCE_None }
 
 	// main
-	return stack.GetMany(FIND_Lambda, func(card *Card, _ *Stack, _ bool, _ *Stack, workingStack *Stack, wm ...any) (bool) {
+	return stack.GetMany(FIND_Lambda, func(card *Card, _ *Stack, _ bool, _ *Stack, workingStack *Stack) (bool) {
 		if workingStack.Size == 0 {
 			return true
 		} else {
 			switch uniqueType.(TYPE) {
 			case TYPE_Key:
-				return !workingStack.Has(FIND_Key, card.Key)
+				return !workingStack.Has(FIND_Key, card.Key, nil, nil, nil, dereferenceType)
 			case TYPE_Val:
-				return !workingStack.Has(FIND_Val, card.Val)
+				return !workingStack.Has(FIND_Val, card.Val, nil, nil, nil, dereferenceType)
 			}
 			return false // just so it compiles
 		}
@@ -2103,6 +2104,8 @@ func (stack *Stack) GetMany(arguments ...any) *Stack {
 				retStack.Cards = append(retStack.Cards, MakeCard(card.Idx))
 			case RETURN_Cards:
 				retStack.Cards = append(retStack.Cards, card.Clone())
+			case RETURN_Adrs:
+				retStack.Cards = append(retStack.Cards, MakeCard(fmt.Sprintf("%p", card)))
 			case RETURN_Stacks:
 				retStack.Cards = append(retStack.Cards, card.Val.(*Stack).Cards...)
 			}

@@ -37,7 +37,7 @@
  * "interface" is used interchangeably with "any"
  * "nil" is used interchangeably with "not passing any argument into an optional parameter" 
 
-<h2>How to run our case tests/benchmarks</h2>
+<h2>How to run our cases/test code/benchmarks</h2>
 
 Say you wanted to double-check that our case tests of the library are working properly, or perhaps you wanted to add your own case tests for debugging purposes.  Or, perhaps you would like to run our benchmarks on your computer.  In either a case:
 
@@ -47,8 +47,9 @@ Say you wanted to double-check that our case tests of the library are working pr
 <h3>Case Tests</h3>
 
  1. Enter the `executive` folder of your clone via your terminal
- 2. Type `go run .`
- 3. See the output for each case test!
+ 2. Edit the `main()` function in `executive.go` to call your desired functions
+ 3. Type `go run .`
+ 4. See the output for each function call!
 
  If you'd like to configure this output, enter `executive.go`...
 

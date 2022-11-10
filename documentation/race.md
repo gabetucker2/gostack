@@ -59,7 +59,8 @@ pairsToInsert <"I" : "Am new", "To" : "This set">
 startKeys := []any {"Key A", "Bad Key", "Key A", 2.5, "Michael Keaton"} // must separate maps like so since native Go maps are unordered
 startVals := []any {40, "Bad Value", "Hello", 40, "520"}
 searchKeys := []any {"Key A", 2.5, "Michael Keaton"}
-pairsToInsert := map[any]any {"I" : "Am new", "To" : "This set"}
+keysToInsert := []any {"I", "To"}
+valsToInsert := []any {"Am new", "This set"}
 
 // TASK A
 var taskA []any
@@ -105,9 +106,9 @@ for i := 0; i < len(taskBKeys); i++ {
     k := taskBKeys[i]
     v := taskBVals[i]
     if 1 < v.(int) && v.(int) < 4 {
-        for j := 0; j < len(insertKeys); j++ {
-            inK := insertKeys[j]
-            inV := insertVals[j]
+        for j := 0; j < len(keysToInsert); j++ {
+            inK := keysToInsert[j]
+            inV := valsToInsert[j]
             taskCKeys = append(taskCKeys, inK)
             taskCVals = append(taskCVals, inV)
         }
@@ -119,9 +120,9 @@ for i := 0; i < len(taskBKeys); i++ {
 
 // TASK D
 taskCKeys2 := append(taskCKeys, taskCKeys...)
-taskCKeys2 = append(taskCKeys2, taskCKeys...)
+taskCKeys2 = append(taskCKeys2, taskCKeys2...)
 taskCVals2 := append(taskCVals, taskCVals...)
-taskCVals2 = append(taskCVals2, taskCVals...)
+taskCVals2 = append(taskCVals2, taskCVals2...)
 taskDKeys := [][][][]any{{{{nil, nil}, {nil, nil}}, {{nil, nil}, {nil, nil}}}, {{{nil, nil}, {nil, nil}}, {{nil, nil}, {nil, nil}}}}
 taskDVals := [][][][]any{{{{nil, nil}, {nil, nil}}, {{nil, nil}, {nil, nil}}}, {{{nil, nil}, {nil, nil}}, {{nil, nil}, {nil, nil}}}}
 for i := 0; i < 16; i++ {
@@ -146,10 +147,10 @@ searchKeys := MakeStack([]any {"Key A", 2.5, "Michael Keaton"})
 pairsToInsert := MakeStack([]any {"I", "To"}, []any {"Am new", "This set"})
 
 // TASK A
-taskA := start.GetMany(FIND_Keys, searchKeys, nil, RETURN_Vals).Unique(TYPE_Val)
+taskA := start.GetMany(FIND_Keys, searchKeys, RETURN_Vals).Unique(TYPE_Val)
 
 // TASK B
-taskB := MakeStack(taskA, start.GetMany(FIND_Vals, taskA, nil, RETURN_Vals).Unique(TYPE_Val))
+taskB := MakeStack(taskA, start.GetMany(FIND_Vals, taskA, RETURN_Vals).Unique(TYPE_Val))
 
 // TASK C
 taskC := taskB.Clone().Replace(RETURN_Cards, pairsToInsert, FIND_Lambda, func(stack *Stack, card *Card) bool {
@@ -166,7 +167,7 @@ taskD := MakeStackMatrix(taskC.Clone().Duplicate(4), nil, []int{2, 2, 2, 2})
 
 <h2>Conclusion</h2>
 
-***gostack*** won the race!  Excluding comments and empty lines, it took over 7 times fewer lines than ***native Go*** (9 compared to 69), in turn saving 60 lines of space.
+***gostack*** won the race!  Excluding comments and empty lines, it took over 7 times fewer lines than ***native Go*** (9 compared to 69), in turn saving 60 lines of space.  See our [races script here](../testing/races.go)!
 
 ---
 

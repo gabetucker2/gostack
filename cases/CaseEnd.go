@@ -1,4 +1,4 @@
-package testing
+package cases
 
 import (
 	"fmt"
@@ -553,11 +553,16 @@ func case_stack_Unique(funcName string) {
 	myStackKeys := MakeStack(nil, []string {"Person", "Place", "Person", "Thing", "Person"}).Unique(TYPE_Key)
 	myStackVals := MakeStack([]string {"Person", "Place", "Person", "Thing", "Person"}).Unique(TYPE_Val)
 	myStackBoth := MakeStack([]string {"Person", "Place", "Person", "Thing", "Person"}, []string {"Person", "Place", "Person", "Thing", "Person"}).Unique(TYPE_Val)
+	str1 := "Guy"
+	str2 := "Guy"
+	str3 := "Girl"
+	myStackDeref := MakeStack([]any {&str1, &str2, &str3}).Unique(nil, DEREFERENCE_Found)
 	
 	conditions := []bool {
 		myStackKeys.Equals(MakeStack(nil, []string {"Person", "Place", "Thing"})), // 1
 		myStackVals.Equals(MakeStack([]string {"Person", "Place", "Thing"})), // 2
 		myStackBoth.Equals(MakeStack([]string {"Person", "Place", "Thing"}, []string {"Person", "Place", "Thing"})), // 3
+		myStackDeref.Equals(MakeStack([]any {&str1, &str3})), // 4
 	}
 
 	test_End(funcName, conditions)
@@ -919,7 +924,7 @@ func case_stack_SwitchKeysVals(funcName string) {
 
 	// main cases
 	stack1 := MakeStack([]int {1, 3, 2, 4}, []string {"Guy", "Girl", "Guy", "Girl"}).SwitchKeysVals(FIND_All)
-	stack2 := MakeStackMatrix([]int {1, 3, 2, 4}, []string {"Guy", "Girl", "Guy", "Girl"}, []int {2, 2}).SwitchKeysVals(FIND_All, nil, nil, DEEPSEARCH_True)
+	stack2 := MakeStackMatrix([]int {1, 3, 2, 4}, []string {"Guy", "Girl", "Guy", "Girl"}, []int {2, 2}).SwitchKeysVals(FIND_All, nil, DEEPSEARCH_True)
 
 	conditions := []bool {
 		
@@ -1169,6 +1174,7 @@ func case_stack_Get(funcName string) {
 	card29 := MakeStack([]any {1, 2, 3}).Get(FIND_Val, intValD, nil, nil, nil, DEREFERENCE_This)
 	card30 := MakeStack([]any {intValA, intValB, intValC}).Get(FIND_Val, intValB, nil, nil, nil, DEREFERENCE_Found)
 	card31 := MakeStack([]any {intValA, intValB, intValC}).Get(FIND_Val, intValD, nil, nil, nil, DEREFERENCE_This)
+	card32 := MakeStack([]int {2, 3, 6}, []string {"Bob", "Joe", "Bill"}).Get(FIND_KeyVal, MakeStack([]*Card {MakeCard(3, "Joe"), MakeCard(2, "Joe"), MakeCard(6, "Joe")}))
 
 	conditions := []bool {
 
@@ -1208,6 +1214,7 @@ func case_stack_Get(funcName string) {
 		card29.Equals(MakeCard(2, nil, 1), COMPARE_True), // 29
 		card30 == nil, // 30
 		card31 == nil, // 31
+		card32.Equals(MakeCard(3, "Joe")), // 32
 
 	}
 
@@ -1254,13 +1261,17 @@ func case_stack_GetMany(funcName string) {
 	// other
 	stack9 := MakeStack([]int {1, 2, 3, 4, 5, 6}).GetMany(FIND_Idx, []int {0, -1})
 	cardA := MakeCard("Hey")
-	stack10 := MakeStack([]*Card {cardA}).GetMany(FIND_Card, cardA)
-	stack11 := MakeStack([]*Card {cardA}).GetMany(FIND_Card, MakeCard("Hey"))
+	stack10 := MakeStack([]*Card {cardA}).GetMany(FIND_Card, MakeStack([]*Card {cardA, MakeCard("Not it")}))
+	cardB := MakeCard("Hey")
+	stack11 := MakeStack([]*Card {cardB}).GetMany(FIND_Card, MakeCard("Hey"))
 	stack12 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3}).GetMany(FIND_All, nil, RETURN_Idxs)
 	stack13 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3}).GetMany(FIND_All, nil, RETURN_Vals)
 	stack14 := MakeStack([]string {"KeyA", "KeyB", "KeyC"}, []int {1, 2, 3}).GetMany(FIND_All, nil, RETURN_Keys)
 	stack15 := MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}).GetMany(FIND_Idx, 0, RETURN_Stacks)
 	stack16 := MakeStack([]*Stack {MakeStack([]int {1, 2, 3, 4}), MakeStack([]int {5, 6}), MakeStack([]int {7, 8, 9})}).GetMany(FIND_Size, []int {3, 4})
+	card1 := MakeCard("Kid1")
+	card2 := MakeCard("Kid2")
+	stack17 := MakeStack([]*Card {card1, card2}).GetMany(FIND_All, nil, RETURN_Adrs)
 
 	conditions := []bool {
 
@@ -1287,6 +1298,7 @@ func case_stack_GetMany(funcName string) {
 		stack14.Equals(MakeStack([]string {"KeyA", "KeyB", "KeyC"})), // 14
 		stack15.Equals(MakeStack([]int {1, 2})), // 15
 		stack16.Equals(MakeStack([]*Stack {MakeStack([]int {1, 2, 3, 4}), MakeStack([]int {7, 8, 9})})), // 16
+		stack17.Equals(MakeStack([]any {fmt.Sprintf("%p", card1), fmt.Sprintf("%p", card2)})), // 17
 
 	}
 

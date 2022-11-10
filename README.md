@@ -15,7 +15,7 @@ v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
  <h2>General</h2>
  
  * [How fast is gostack compared to native Go?](documentation/benchmark.md)
- * [How many lines does gostack save compared to native Go?](documentation/race.md)
+ * [How many lines does gostack save compared to native Go?](documentation/race.md) // TODO: implement from test.go and fix there
  * [Timeline](documentation/timeline.md)
  * [Credits](documentation/credits.md)
 
@@ -29,11 +29,11 @@ v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
  <h2>Tutorials</h2>
  
   * [Installation tutorial](documentation/installationTutorial.md)
-  * [Introductory tutorial](documentation/introductionTutorial.md)
-  * [Post-introductory tutorial](documentation/postIntroductionTutorial.md)
-  * [StackMatrix tutorial](documentation/matricesTutorial.md)
-  * [Lambda tutorial](documentation/lambdaTutorial.md)
-  * [Pointers tutorial](documentation/pointersTutorial.md)
+  * [Introductory tutorial](documentation/introductionTutorial.md) // TODO: finish
+  * [Post-introductory tutorial](documentation/postIntroductionTutorial.md) // TODO: finish
+  * [StackMatrix tutorial](documentation/matricesTutorial.md) // TODO: finish
+  * [Lambda tutorial](documentation/lambdaTutorial.md) // TODO: finish
+  * [Pointers tutorial](documentation/pointersTutorial.md) // TODO: finish
 
 ---
 
