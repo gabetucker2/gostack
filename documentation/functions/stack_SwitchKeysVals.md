@@ -4,7 +4,7 @@
 
  ```
  stack.SwitchKeysVals(
-    findType FIND [FIND_Last],
+    findType FIND [FIND_All],
     findData any|[]any|*Stack|func(
       card *Card,
       parentStack *Stack,

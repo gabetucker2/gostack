@@ -12,13 +12,6 @@ v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
  * [How does gostack work?](documentation/overview.md)
  * [Frequently asked questions](documentation/faq.md)
 
- <h2>General</h2>
- 
- * [How fast is gostack compared to native Go?](documentation/benchmark.md)
- * [How many lines does gostack save compared to native Go?](documentation/race.md) // TODO: implement from test.go and fix there
- * [Timeline](documentation/timeline.md)
- * [Credits](documentation/credits.md)
-
  <h2>Documentation</h2>
  
   * [Enum documentation](documentation/enumsAPI.md)
@@ -34,6 +27,13 @@ v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
   * [StackMatrix tutorial](documentation/matricesTutorial.md) // TODO: finish
   * [Lambda tutorial](documentation/lambdaTutorial.md) // TODO: finish
   * [Pointers tutorial](documentation/pointersTutorial.md) // TODO: finish
+
+ <h2>General</h2>
+ 
+ * [Timeline](documentation/timeline.md)
+ * [Credits](documentation/credits.md)
+ * [How fast is gostack compared to native Go?](documentation/benchmark.md)
+ * [How many lines does gostack save compared to native Go?](documentation/race.md) // TODO: implement from test.go and fix there
 
 ---
 

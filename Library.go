@@ -589,7 +589,9 @@ func (stack *Stack) ToMatrix(arguments ...any) []any {
 	stack.Cards = []*Card {}
 
 	for i := 0; i < n.(int); i++ {
-		stack.Cards = append(stack.Cards, cardsSave...)
+		for _, c := range cardsSave {
+			stack.Cards = append(stack.Cards, c.Clone())
+		}
 	}
 
 	stack.setStackProperties()
@@ -715,6 +717,7 @@ func (stack *Stack) Unique(arguments ...any) *Stack {
 	gogenerics.UnpackVariadic(arguments, &uniqueType, &dereferenceType)
 	if uniqueType == nil { uniqueType = TYPE_Val }
 	if dereferenceType == nil { dereferenceType = DEREFERENCE_None }
+	if dereferenceType != DEREFERENCE_None { dereferenceType = DEREFERENCE_This }
 
 	// main
 	return stack.GetMany(FIND_Lambda, func(card *Card, _ *Stack, _ bool, _ *Stack, workingStack *Stack) (bool) {
@@ -1050,7 +1053,7 @@ func (stack *Stack) Flip() *Stack {
  /** Switches the Key and the Val of each found card and returns `stack`
 
   stack.SwitchKeysVals(
-    findType FIND [FIND_Last],
+    findType FIND [FIND_All],
     findData any|[]any|*Stack|func(
       card *Card,
       parentStack *Stack,
@@ -1088,12 +1091,12 @@ func (stack *Stack) Flip() *Stack {
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	if overrideFindData == nil {overrideFindData = OVERRIDE_False}
 	if deepSearchType == nil {deepSearchType = DEEPSEARCH_False}
+	if findType == nil {findType = FIND_All}
  
-	 // main
-	// get card
+	// main
 	stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, workingMem ...any) {
 		
-		if selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) && retCard.Idx == -1 {
+		if selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) {
 			
 			card.SwitchKeyVal()
 

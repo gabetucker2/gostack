@@ -79,7 +79,7 @@ func RaceNative() {
 	taskCVals2 = append(taskCVals2, taskCVals2...)
 	taskDKeys := [][][][]any{{{{nil, nil}, {nil, nil}}, {{nil, nil}, {nil, nil}}}, {{{nil, nil}, {nil, nil}}, {{nil, nil}, {nil, nil}}}}
 	taskDVals := [][][][]any{{{{nil, nil}, {nil, nil}}, {{nil, nil}, {nil, nil}}}, {{{nil, nil}, {nil, nil}}, {{nil, nil}, {nil, nil}}}}
-	for i := 0; i < 16; i++ {
+	for i := 0; i < 16; i++ { // recursion would be unnecessarily complicated for this data structure
 		var a, b, c, d int // convert i into 2x2x2x2 sequence: ([0][0][0][0], [0][0][0][1], [0][0][1][0], ..., [1][1][1][1])
 		if i%2 == 1 {d = 1}
 		if ((i-d)/2)%2 == 1 {c = 1}
@@ -123,17 +123,17 @@ func RaceGostack() {
 	taskB := MakeStack(taskA, start.GetMany(FIND_KeyVal, taskA, RETURN_Idxs))
 
 	// TASK C
-	taskC := taskB.Clone().Update(REPLACE_Card, pairsToInsert, FIND_Lambda, func(stack *Stack, card *Card) bool {
-	return 1 < card.Val.(int) && card.Val.(int) < 3
+	taskC := taskB.Clone().Update(REPLACE_Card, pairsToInsert, FIND_Lambda, func(card *Card) bool {
+		return 1 < card.Val.(int) && card.Val.(int) < 3
 	})
 
 	// TASK D
-	// taskD := MakeStackMatrix(taskC.Clone().Duplicate(4), nil, []int{2, 2, 2, 2})
+	taskD := MakeStackMatrix(taskC.Clone().Duplicate(4), taskC.Clone().Duplicate(4).SwitchKeysVals(), []int{2, 2, 2, 2})
 
 	// PRINTS
 	taskA.Print("A")
 	taskB.Print("B")
 	taskC.Print("C")
-	// taskD.Print("D")
+	taskD.Print("D")
 
 }
