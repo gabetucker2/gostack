@@ -2,9 +2,13 @@
 
  <h1>Introductory Tutorial</h1>
 
- <h2>Foreword</h2>
+ <h2>Structs</h2>
 
- Hi there.  Welcome to the gostack introductory tutorial!  This tutorial will familiarize you with the primary functions and concepts in gostack.  If you haven't yet, please take a look at our page on [how gostack works](../overview.md) to get a conceptual overview of this library.  Let's begin with some intuitive examples of ***gostack*** code and break them down.
+ Hi there.  Welcome to the ***gostack*** introductory tutorial!  This tutorial will familiarize you with the primary functions and concepts in gostack.  Let's quickly recap what Cards and Stacks are in ***gostack***:
+
+ <img src="../../media/gostack_StackAndCard.png" width="50%" style="margin-bottom: 10px;"/>
+
+ Stacks are data structures that hold a set of cards.  Cards hold data you'd like to retrieve, including possibly other stacks, thereby making stacks a recursive data structure.  With that in mind, let's begin with some intuitive examples of ***gostack*** code and break them down.
 
  <h2>Making a Stack</h2>
  
@@ -85,6 +89,16 @@ myStack Stack {
     },
 }
 ```
+For a more visual example:
+
+```
+ kidsAndAdults := MakeStack([]string {"Tommy", "Chuck", "Joey"},
+                            []string {"Kid",   "Adult", "Adult"})
+```
+
+ <img src="../../media/gostack_StackSample1.png" width="50%" style="margin-bottom: 10px;"/>
+
+
 
  <h2>Function Naming Conventions</h2>
 
@@ -96,8 +110,8 @@ Simple enough!  However, there is an important distinction to make before moving
  stack.Get(FIND_First) // gets the first card in the set "first"
  stack.Get(FIND_All) // gets the first card in the set "all" (same as previous)
  stack.GetMany(FIND_All) // gets all cards in the set "all"
- stack.Replace(FIND_All) // replaces the first card in the set "all"
- stack.ReplaceMany(FIND_All) // replaces all cards in the set "all"
+ stack.Extract(FIND_All) // extracts the first card in the set "all"
+ stack.ExtractMany(FIND_All) // extracts all cards in the set "all"
  ```
 
 <h2>Doing Stuff with our Stacks</h2>
@@ -110,7 +124,7 @@ myStack = MakeStack([]string {"Butterfly", "Praying Mantis", "Beetle", "Ant", "B
 
 Great!  So now, let's say we wanted to access this structure in various ways.  We would do this using the stack.[Get](../functions/stack_Get.md)/[GetMany](../functions/stack_GetMany.md)() functions.  For simplicity's sake, we will show only the keys of the card(s) returned.  Given `var gottenData any`:
 
-> To get the first card in myStack: card {Idx: 0, Key: "Butterfly", Val: 539}:
+> To get the first card in myStack:
 >
 > `gottenData = myStack.Get(FIND_First) // Butterfly`
 >
@@ -147,7 +161,7 @@ Exciting!  So we have now have retrieved data from our myStack stack in various 
 
 `gottenData = myStack.GetMany(FIND_All, nil, RETURN_Keys)`
 
-There we go!  We now have a stack whose cards' keys are nil and whose cards vals are myStack's keys.  You can do the equivalent for [Idxs, Vals, or other data](../enums/RETURN.md).
+There we go!  We now have a stack whose cards' keys are nil and whose cards vals are myStack's keys.  You can do the equivalent of this for [Idxs, Vals, or other data](../enums/RETURN.md).
 	
 But what if we wanted to do something more complex, like removing cards that were found in the stack, or replacing them with another value?
 
@@ -175,9 +189,30 @@ But what if we wanted to do something more complex, like removing cards that wer
 >
 > `gottenData = myStack.Clone().Shuffle().Flip().Unique()`
 
+<h2>Overriding</h2>
+
+In many cases, you will want to add a card whose val is a stack to a stack.  However, ***gostack***, by default, is configured to read such cases as adding several cards in a stack to a stack.  The same holds true of other functions like the get functions, where you will want to get a substack rather than the set of cards in that substack:
+
+```
+mySubstack := MakeSubstack([]int {3, 6})
+validCard := MakeStack([]*Stack {mySubstack, MakeStack([]int {9, 12})}).Get(FIND_Val, mySubstack, nil, nil, nil, nil, OVERRIDE_True) // returns the card whose val is mySubstack
+validCard := MakeStack([]*Stack {mySubstack, MakeStack([]int {9, 12})}).Get(FIND_Val, mySubstack, nil, nil, nil, nil, OVERRIDE_False) // nil, since neither 3 nor 6 are in the stack
+```
+
+In the above examples, we can set `overrideFindData` to `OVERRIDE_True` so that we can search for a specific substack in a stack, or we can keep it `OVERRIDE_False` so that we can test whether any card vals in mySubstack match the vals of the cards through which we are iterating.
+
+```
+myWeirdStack := MakeStack([]any {1, 2}).Add(MakeStack([]int {0}), ORDER_After, FIND_Last, nil, nil, nil, nil, nil, OVERRIDE_True) // []any {1, 2, Stack{0}}
+myWeirdStack := MakeStack([]any {1, 2}).Add(MakeStack([]int {0}), ORDER_After, FIND_Last, nil, nil, nil, nil, nil, OVERRIDE_False) // []any {1, 2, 0}
+```
+
+We can do the same when configuring `overrideInsert`.
+
 <h2>Conclusion</h2>
 
-There are many more functions than the ones displayed here that you are welcome to [read about](../functionsAPI.md), but for now, the these examples should suffice for providing intuitions about how gostack generally works!
+There are many more functions than the ones displayed here that you are welcome to [read about](../functionsAPI.md), but, for now, the these examples should suffice for providing intuitions about how gostack generally works.
 
 ---
+ [> Go to StackMatrix tutorial (Recommended)](matricesTutorial.md)
+
  [> Return to glossary](../README.md)

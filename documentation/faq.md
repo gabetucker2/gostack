@@ -11,9 +11,6 @@
    * Conceptually: 2
    * In practice: 1
  * [Introductory](tutorials/introductionTutorial.md)
-   * Conceptually: 1
-   * In practice: 1
- * [Post-Introductory](tutorials/introductionTutorial.md)
    * Conceptually: 2
    * In practice: 2
  * [StackMatrices](matricesTutorial.md)

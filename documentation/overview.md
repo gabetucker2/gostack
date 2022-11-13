@@ -9,12 +9,13 @@
  Without yet using these structs, let's make a map structure in ***native Go***:
 
  ```
- existingMap := map[string]string {"Tommy":"Kid", "Chuck":"Adult", "Joey":"Adult"}
+ existingMapKeys := []string {"Tommy", "Chuck", "Joey"}
+ existingMapVals := []string {"Kid",   "Adult", "Adult"}
  ``` 
- Now that we have our map structure, let's make it into a **Stack** so that we can use it with ***gostack*** functions:
+ Why do we create two arrays rather than one map for our map structure?  Because we would like our map to be initialized in the order of our arrays.  So, now that we have our map structure, let's make it into a **Stack** so that we can use it with ***gostack*** functions:
 
  ```
- kidsAndAdults := MakeStack(existingMap)
+ kidsAndAdults := MakeStack(existingMapKeys, existingMapVals)
  ```
 
  <img src="../media/gostack_StackSample1.png" width="50%" style="margin-bottom: 10px;"/>
@@ -42,7 +43,7 @@
  For instance, to set the key of every final card in a substack of `myMatrix` to "Number", we would simply do:
 
  ```
- myMatrix.UpdateMany(REPLACE_Key, "Number", FIND_Last)
+ myMatrix.UpdateMany(REPLACE_Key, "Number", FIND_Last, nil, DEEPSEARCH_True, nil, PASS_Cards)
  ```
 
  <img src="../media/gostack_StackSample4.png" width="70%" style="margin-bottom: 10px;"/>
