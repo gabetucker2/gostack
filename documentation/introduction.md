@@ -2,6 +2,8 @@
 
 <h1>Introduction</h1>
 
+ ![Showcase](../media/showcase.gif)
+
 ***Go***, despite its elegance, can be excruciating.  We often find ourselves writing tedious code to complete conceptually simple tasks, adding a layer of complexity that distracts from the goal.  ***gostack*** introduces a novel system for data management which abstracts this layer of complexity into flexible yet intuitive functions so that you can focus on what matters.
 
  ***gostack*** introduces two new structs—the **Card** and the **Stack**—which intend to evoke the image of a stack of cards.  **Stacks**, which replace arrays, maps, and matrices, contain a set of **Cards**.  **Cards** can store **Stacks**, thereby making **Stacks** a recursive data structure.  This allows ***gostack***'s functions to...

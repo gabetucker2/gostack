@@ -39,7 +39,3 @@ v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
  ---
 
  Join our [official Discord community](https://discord.gg/NmxxcKBVBU)!  It is devoted to helping users resolve ***gostack*** bugs and related issues, announcing exciting updates, making improvements based on user suggestions, and streamlining communication between developers and gostackers.
-
----
-
- ![Showcase](media/showcase.gif)
