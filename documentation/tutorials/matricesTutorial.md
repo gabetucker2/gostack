@@ -2,7 +2,7 @@
 
  <h1>StackMatrix Tutorial</h1>
 
- <h2>Review</h2>
+ <h2>Overview</h2>
 
  Hi there.  Welcome to the StackMatrix tutorial!  Let us quickly review how stackMatrices are structured for this tutorial's purposes.
 
@@ -71,6 +71,19 @@ This returns each last card found.  Finally, if we wanted both cards AND substac
 ```
 myMatrix.GetMany(FIND_Last, nil, nil, DEEPSEARCH_True, nil, PASS_Both) // consider cards and substacks
 ```
+
+<h2>To and From Native Structures</h2>
+
+You can input a `[][]...[]string/int/...` to the `MakeStackMatrix()` function, and the function will automatically convert your array-matrix structure to a stackMatrix.  However, when converting from a stackMatrix to an array structure, the output will always be of type `[]any` such that its elements can be card values OR additional `[]any` elements.  For instance:
+
+```
+// [][]string {{}, {}} => []any {[]any {}, []any {}}
+MakeStackMatrix([][]string {{"Hey", "Hi"}, {"Hello", "Howdy"}}).ToMatrix()
+```
+
+<h2>Conclusion</h2>
+
+This should just about cover what you need to know when it comes to deep searches and stackMatrices!
 
 ---
  [> Go to Lambda tutorial (Recommended)](lambdaTutorial.md)

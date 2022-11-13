@@ -50,13 +50,13 @@
 
  Finally, let's say we wanted to do something a little more complex, like multiplying every multiple of 8 by 3:
 
- ```
- myMatrix.UpdateMany(REPLACE_Lambda, func(card *Card) {
-  card.Val = card.Val.(int) * 3
- }, FIND_Lambda, func(card *Card) (bool) {
-  return card.Val.(int) % 8 == 0
- })
- ```
+```
+myMatrix.UpdateMany(REPLACE_Lambda, func(card *Card) {
+    card.Val = card.Val.(int) * 3
+}, FIND_Lambda, func(card *Card) (bool) {
+    return card.Val.(int) % 8 == 0
+})
+```
 
  <img src="../media/gostack_StackSample5.png" width="70%" style="margin-bottom: 10px;"/>
 

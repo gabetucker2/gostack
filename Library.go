@@ -2582,26 +2582,47 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
 
 /** Updates all matched cards in and returns `stack`
  
- @receiver `stack` type{*Stack}
- @param `replaceType` type{REPLACE}
- @param `replaceWith` type{any, []any, *Stack, func(card *Card, _ *Stack, _ bool, _ ...any)}
-   only set to []any or *Stack through which to iterate if `replaceType` == REPLACE_Cards
- @param optional `findType` type{FIND} default FIND_Last
- @param optional `findData` type{any} default nil
- @param optional `overrideFindData` type{COMPARE} default COMPARE_False
-   By default, if an array or Stack is passed into findData, it will iterate through each of its elements in its search.  If you would like to find an array or Stack itself without iterating through their elements, set this to true
- @param optional `returnType` type{RETURN} default RETURN_Cards
- @param optional `deepSearchType` type{DEEPSEARCH} default DEEPSEARCH_False
- @param optional `depth` type{int, []int, *Stack ints} default -1 (heightest)
- @param optional `dereferenceType` type{DEREFERENCE} default DEREFERENCE_None
- @param optional `passSubstacks` type{PASS} default PASS_True
- @param optional `passCards` type{PASS} default PASS_True
- @param optional `workingMem` type{[]any} default []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
-   to add more than 10 (n) working memory variables, you must initialize workingMem with an []any argument with n variables
- @returns `stack`
- @updates `stack`
+ stack.UpdateMany(
+    replaceType REPLACE,
+    replaceWith any|[]any|*Stack|func(
+        card *Card,
+        parentStack *Stack,
+        isSubstack bool,
+        coords *Stack,
+        workingMem ...any,
+    ),
+    findType FIND [FIND_Last],
+    findData any|[]any|*Stack|func(
+      card *Card,
+      parentStack *Stack,
+      isSubstack bool,
+      coords *Stack,
+      retStack *Stack,
+      retCard *Card,
+      retVarAdr any,
+      otherInfo []any {
+            cardAdr,
+            parentStackAdr,
+            retStackAdr,
+            retCardAdr
+      },
+      workingMem ...any
+    ) [nil],
+    deepSearchType DEEPSEARCH [DEEPSEARCH_False],
+    depth int [-1],
+    passType PASS [PASS_Both],
+    dereferenceType DEREFERENCE [DEREFERENCE_None],
+    overrideFindData OVERRIDE [OVERRIDE_False],
+    workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}]
+ ) (stack)
+
+  Updates all matched cards in and returns `stack`
+
  @ensures
-   * REPLACE_Card with nil as input ensures the card is removed
+ | IF `overrideFindData` == OVERRIDE_True:
+ |   compare whether each element is equal to `findData` itself, rather than each element inside of `findData` (assuming it is a stack or array)
+ | IF a version for func input data is passed that has fewer parameters than the full function:
+ |   the function will abstract away unincluded parameters
  */
  func (stack *Stack) UpdateMany(replaceType REPLACE, replaceWith any, arguments ...any) *Stack {
 

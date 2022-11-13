@@ -17,10 +17,10 @@
    * Conceptually: 2
    * In practice: 3
  * [Lambda](lambdaTutorial.md)
-   * Conceptually: 4
+   * Conceptually: 3
    * In practice: 4
  * [Pointers](pointersTutorial.md)
-   * Conceptually: 4
+   * Conceptually: 5
    * In practice: 5
 
 ---

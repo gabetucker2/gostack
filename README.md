@@ -24,7 +24,7 @@ v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
   * [Installation tutorial](documentation/tutorials/installationTutorial.md)
   * [Introductory tutorial](documentation/tutorials/introductionTutorial.md)
   * [StackMatrix tutorial](documentation/tutorials/matricesTutorial.md)
-  * [Lambda tutorial](documentation/tutorials/lambdaTutorial.md) // TODO: finish
+  * [Lambda tutorial](documentation/tutorials/lambdaTutorial.md)
   * [Pointers tutorial](documentation/tutorials/pointersTutorial.md) // TODO: finish
 
  <h2>General</h2>

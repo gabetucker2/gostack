@@ -1,9 +1,9 @@
 ![Banner](../../media/gostack_SmallerTransparent.png)
 
- <h2>stack.Update()</h2>
+ <h2>stack.UpdateMany()</h2>
 
  ```
- stack.Update(
+ stack.UpdateMany(
     replaceType REPLACE,
     replaceWith any|[]any|*Stack|func(
         card *Card,
@@ -39,7 +39,7 @@
  ```
 
 ```
- Updates a card in and returns `stack`
+ Updates all matched cards in and returns `stack`
 
  @ensures
  | IF `overrideFindData` == OVERRIDE_True:

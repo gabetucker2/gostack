@@ -9,10 +9,11 @@ import (
 func main() {
 
 	// remove import errors when stuff is commented out
-	gogenerics.RemoveUnusedError(cases.Run, testing.RaceNative, testing.RaceGostack)
+	gogenerics.RemoveUnusedError(cases.Run, testing.RaceNative, testing.RaceGostack, testing.Experiment)
 
 	// cases.Run(false)
 	// testing.RaceNative()
 	// testing.RaceGostack()
+	// testing.Experiment()
 
 }
