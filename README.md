@@ -37,4 +37,4 @@ v1.0.4 — Beta Release — 11/13/2022 — Post-release polish
 
  ---
 
- Join our [official Discord community](https://discord.gg/NmxxcKBVBU)!  It is devoted to helping users resolve ***gostack*** bugs and related issues, announcing exciting updates, making improvements based on user suggestions, and streamlining communication between developers and gostackers.
+ Join our [official Discord community](https://discord.gg/NmxxcKBVBU)!  It is devoted to helping users resolve ***gostack*** bugs and related issues, announcing exciting updates, making improvements based on user suggestions, and streamlining communication between developers and gostackers.  Although a fully functional release has been published, this is a growing project with many updates to come.

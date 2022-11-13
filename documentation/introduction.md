@@ -15,7 +15,7 @@
  * effortlessly print all relevant information surrounding a **Card** or a **Stack** to facilitate debugging
  * create additional avenues through which any problem can be approached
 
-This library was built to be as general-purpose as possible so that any coding project with data structures would benefit from ***gostack***.  The idea is that every possible thing you could need to code is broken into some modular functionality covered by ***gostack***.
+This library was built to be as general-purpose as possible so that any coding project with data structures would benefit from ***gostack***.  The idea is that every possible thing you could need to code is broken into some modular function in ***gostack***.
 
 ---
 

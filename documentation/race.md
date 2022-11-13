@@ -52,7 +52,7 @@ pairsToInsert <"I" : "Am new", "To" : "This set">
 
 <h2>Let's see how quickly we can do this using...</h2>
 
-<h3 name = "native">...native Go</h3>
+<h3 name = "native">...Go native (completed as quickly as possible, even if not "the best" way)</h3>
 
 ```
 // INIT
