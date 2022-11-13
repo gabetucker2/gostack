@@ -24,9 +24,7 @@
 * ***gostack***'s initial working release
 * Every initially-planned function is fully implemented and case-tested
 
- <h1>Planned Releases</h1>
-
- <h2><b>v1.0.4</b> — <i>Beta Release</i> — 11/?/2022 — Post-release polish</h2>
+ <h2><b>v1.0.4</b> — <i>Beta Release</i> — 11/13/2022 — Post-release polish</h2>
 
 Completed:
 * Community Discord server, Patreon page, and buymeaoffee is created
@@ -51,6 +49,8 @@ Completed:
 * ***gostack*** receives a documentation overhaul
 * Removed all files that won't be in the full release (e.g., `unaddedcases.txt`)
 * ***gostack*** is finally opened and marketed to the public
+
+ <h1>Planned Releases</h1>
 
  <h2><b>v1.0.6</b> — <i>Beta Release</i> — ?/?/2023 — Patch A</h2>
 

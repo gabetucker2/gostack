@@ -1,4 +1,4 @@
-v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
+v1.0.4 — Beta Release — 11/13/2022 — Post-release polish
 
 ![Banner](media/gostack_SmallerTransparent.png)
 
