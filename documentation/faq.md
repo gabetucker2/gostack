@@ -7,13 +7,13 @@
  **Question:** How difficult is it to learn ***gostack***?
 
  Rating the difficulty of our tutorials' contents from 1 (beginner programmer) to 5 (advanced programmer):
- * [Installation](installationTutorial.md)
+ * [Installation](tutorials/installationTutorial.md)
    * Conceptually: 2
    * In practice: 1
- * [Introductory](introductionTutorial.md)
+ * [Introductory](tutorials/introductionTutorial.md)
    * Conceptually: 1
    * In practice: 1
- * [Post-Introductory](postIntroductionTutorial.md)
+ * [Post-Introductory](tutorials/introductionTutorial.md)
    * Conceptually: 2
    * In practice: 2
  * [StackMatrices](matricesTutorial.md)

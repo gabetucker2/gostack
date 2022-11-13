@@ -27,6 +27,20 @@
  | ... additional examples as needed
 ```
 
+<h2>N vs NMany</h2>
+
+ Functions with name "N" will often have a corresponding function named "NMany".
+ 
+ In such a case, N will only "perform" the function intent on the first found card, whereas NMany will "perform" the function intent on every found card.  For instance:
+
+ ```
+ stack.Get(FIND_First) // gets the first card in the set "first"
+ stack.Get(FIND_All) // gets the first card in the set "all" (same as previous)
+ stack.GetMany(FIND_All) // gets all cards in the set "all"
+ stack.Replace(FIND_All) // replaces the first card in the set "all"
+ stack.ReplaceMany(FIND_All) // replaces all cards in the set "all"
+ ```
+
 <h2>JDoc Documentation</h2>
 
  We roughly adhere to [design-by-contract principles](http://web.cse.ohio-state.edu/software/2221/web-sw1/extras/slides/09.Design-by-Contract.pdf) as established by The Ohio State University's CSE department in writing JDoc-style documentation for our functions.
@@ -44,7 +58,7 @@ Say you wanted to double-check that our case tests of the library are working pr
  1. [Clone](https://github.com/git-guides/git-clone) this repository to your PC
  2. Open a terminal
 
-<h3>Case Tests</h3>
+<h3>Case Tests/Test Code</h3>
 
  1. Enter the `executive` folder of your clone via your terminal
  2. Edit the `main()` function in `executive.go` to call your desired functions

@@ -21,12 +21,12 @@ v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
 
  <h2>Tutorials</h2>
  
-  * [Installation tutorial](documentation/installationTutorial.md)
-  * [Introductory tutorial](documentation/introductionTutorial.md) // TODO: finish
-  * [Post-introductory tutorial](documentation/postIntroductionTutorial.md) // TODO: finish
-  * [StackMatrix tutorial](documentation/matricesTutorial.md) // TODO: finish
-  * [Lambda tutorial](documentation/lambdaTutorial.md) // TODO: finish
-  * [Pointers tutorial](documentation/pointersTutorial.md) // TODO: finish
+  * [Installation tutorial](documentation/tutorials/installationTutorial.md)
+  * [Introductory tutorial](documentation/tutorials/introductionTutorial.md) // TODO: finish
+  * [Post-introductory tutorial](documentation/tutorials/postIntroductionTutorial.md) // TODO: finish
+  * [StackMatrix tutorial](documentation/tutorials/matricesTutorial.md) // TODO: finish
+  * [Lambda tutorial](documentation/tutorials/lambdaTutorial.md) // TODO: finish
+  * [Pointers tutorial](documentation/tutorials/pointersTutorial.md) // TODO: finish
 
  <h2>General</h2>
  
