@@ -9,6 +9,7 @@
  <h2>Contributors</h2>
  
  * Patrick Da Silva [ [LinkedIn](https://www.linkedin.com/in/patrick-da-silva-871833225/) / [The Ohio State University](https://www.osu.edu/) ]
+ * Abigail Longstreth [ [LinkedIn](https://www.linkedin.com/in/abigail-longstreth-4267341b7/) / [The Ohio State University](https://www.osu.edu/) ]
  * Andy Chen [ [University of Southern California](https://www.usc.edu/) ]
  * Dr. Stephen Read [ [University of Southern California](https://www.usc.edu/) / [Faculty Page](https://dornsife.usc.edu/cf/faculty-and-staff/faculty.cfm?pid=1003627) ]
 
