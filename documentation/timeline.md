@@ -45,9 +45,6 @@ Completed:
 * Abstracted ***stack.Lambda()*** input function
 * Added ***stack.Coordinates()*** and ***stack.CoordinatesMany()*** to ***gostack***
 * Add coordinates to Lambda functions in otherInfo using forwardpropagation
-
-In progress:
-* Remove `overrideCards` from anywhere in script
 * Add function samples to each function documentation file
 * ***gostack*** functions parameter naming has been adjusted to be more consistent
 * ***gostack***'s functions' default parameter values have been adjusted to make more intuitive sense
@@ -64,6 +61,7 @@ In progress:
 * Optimize to improve performance
   * Add more benchmarks
   * Remove all dependencies on `gogenerics` since this significantly detriments efficiency
+* Add GetAddress function to simplify Sprintf %p (possibly just to gogenerics)
 * Implement feedback from the ***gostack*** community
     * Bug fixes
     * Function restructuring

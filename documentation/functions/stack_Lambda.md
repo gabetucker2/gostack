@@ -11,34 +11,34 @@
         coords *Stack,
         retStack *Stack,
         retCard *Card,
-        retVarAdr any,
+        retVarPtr any,
         otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
         },
         workingMem ...any)
     retStack *Stack [nil],
     retCard *Card [nil],
-    retVarAdr any [nil],
+    retVarPtr any [nil],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
     deepSearchType DEEPSEARCH [DEEPSEARCH_True],
     depth int [-1],
     passType PASS [PASS_Both],
     otherInfo []any {
-        retStackAdr,
-        retCardAdr
+        retStackPtr,
+        retCardPtr
     } []any [[]any {nil, nil}],
  ) (READ BELOW)
  ```
 
 *There are 5 Lambda functions that can take the place of LambdaX.  These are all identical except for their return values:*
-* stack.Lambda() (stack, retStack, retCard, retVarAdr) 
+* stack.Lambda() (stack, retStack, retCard, retVarPtr) 
 * stack.LambdaThis() (stack)
 * stack.LambdaStack() (retStack)
 * stack.LambdaCard() (retCard)
-* stack.LambdaVarAdr() (retVarAdr)
+* stack.LambdaVarAdr() (retVarPtr)
 
 ```
  Iterates through `stack` calling your lambda function on each card

@@ -61,24 +61,24 @@ MakeStack([]int {1, 2, 3, 4}, nil, []int {2, 2}).Lambda(func (card *Card) {
 })
 ```
 
-`stack.Lambda` returns (stack, retStack, retCard, retVarAdr) such that ret variables are variables which can be updated as the function runs from within the lambda function.  For instance, if you had a lambda function which returns every other card in `stack`, you would add every other card to `retStack` and access the return value for `retStack`.
+`stack.Lambda` returns (stack, retStack, retCard, retVarPtr) such that ret variables are variables which can be updated as the function runs from within the lambda function.  For instance, if you had a lambda function which returns every other card in `stack`, you would add every other card to `retStack` and access the return value for `retStack`.
 
 However, it can be frustrating having so many return types, as this forces you to gather your return data on an individual line.  So if you would like to JUST return retStack, you can call `stack.LambdaStack`, which is identical to `stack.Lambda`.  If you would like to JUST return `stack`, then you can do `stack.LambdaThis`.  That way, you can do `myStack.LambdaThis(...).Get(...).Add(...) ...` without having to break up the line!  [See the rest of the Lambda function variations here.](../functions/stack_Lambda.md)
 
-<h2>retStack, retCard, and retVarAdr</h2>
+<h2>retStack, retCard, and retVarPtr</h2>
 
 Let's look at how we would manage various return types using our Lambda function:
 
 ```
-thisStack, retStack, retCard, retVarAdr := MakeStack([]string {"Save retCard", "Make new substack", "Save retVarAdr"}, []any {1, 2, 3}).Lambda(func (card *Card, _ *Stack, _ bool, _ *Stack, retStack *Stack, retCard *Card, retVarAdr any) {
+thisStack, retStack, retCard, retVarPtr := MakeStack([]string {"Save retCard", "Make new substack", "Save retVarPtr"}, []any {1, 2, 3}).Lambda(func (card *Card, _ *Stack, _ bool, _ *Stack, retStack *Stack, retCard *Card, retVarPtr any) {
 
     switch card.Key {
     case "Make new substack":
         *retStack = *MakeSubstack([]*Card {card.Clone()}).Duplicate(5)
     case "Save retCard":
         *retCard = *card
-    case "Save retVarAdr":
-        *(retVarAdr.(*any)) = card.Val
+    case "Save retVarPtr":
+        *(retVarPtr.(*any)) = card.Val
     }
 
 })
@@ -87,7 +87,7 @@ thisStack, retStack, retCard, retVarAdr := MakeStack([]string {"Save retCard", "
 
 Great!  If we wanted, for instance, just to return retStack, we would replace `.Lambda()` with `.LambdaStack()`.
 
-Note that retVarAdr is an interface pointer (`*any`).  This means that it *must* be converted into type *any and then dereferenced before being used—otherwise it cannot store your data.
+Note that retVarPtr is an interface pointer (`*any`).  This means that it *must* be converted into type *any and then dereferenced before being used—otherwise it cannot store your data.
 
 If we wanted to initialize our ret values to certain starting values, we would do the following:
 
@@ -108,7 +108,7 @@ The `isSubstack` parameter simply tells you whether the card you are currently o
 
 The `coords` parameter tells you the location of this card from the root stack by storing each index in a card respectively.  For instance, in {{A, B}, {C, D}}, C would have the coordinates Stack{0, 1}.
 
-Finally, lambda functions have an `otherInfo` slot.  To explain what this is for, let's consider an instance where you would like to return the found card object rather than a copy of the found card object.  In such a case, doing `*retCard = *card` would merely return a clone of card ([see explanation here](https://stackoverflow.com/a/74090525/19591217)).  As a result, let's look at `otherInfo` data: `[]any {cardAdr, parentStackAdr, retStackAdr, retCardAdr}`.  Given this data, instead of merely dereferencing `retCard`, let's instead convert `retCardAdr` to a Card pointer pointer and dereference that pointer pointer, setting it to cardAdr, thereby allowing us to redirect the pointer to a specific object:
+Finally, lambda functions have an `otherInfo` slot.  To explain what this is for, let's consider an instance where you would like to return the found card object rather than a copy of the found card object.  In such a case, doing `*retCard = *card` would merely return a clone of card ([see explanation here](https://stackoverflow.com/a/74090525/19591217)).  As a result, let's look at `otherInfo` data: `[]any {cardPtr, parentStackPtr, retStackPtr, retCardPtr}`.  Given this data, instead of merely dereferencing `retCard`, let's instead convert `retCardPtr` to a Card pointer pointer and dereference that pointer pointer, setting it to cardPtr, thereby allowing us to redirect the pointer to a specific object:
 
 ```
 *otherInfo[3].(**Card) = *otherInfo[0].(**Card)

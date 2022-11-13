@@ -13,12 +13,12 @@
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -29,12 +29,12 @@
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],

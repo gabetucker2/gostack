@@ -8,7 +8,7 @@
     compareIdxs COMPARE [COMPARE_False],
     compareKeys COMPARE [COMPARE_True],
     compareVals COMPARE [COMPARE_True],
-    compareCardAdrs COMPARE [COMPARE_False],
+    comparecardPtrs COMPARE [COMPARE_False],
     pointerKeys DEREFERENCE [DEREFERENCE_None],
     pointerVals DEREFERENCE [DEREFERENCE_None]
  ) (cardEqualsOtherCard bool)

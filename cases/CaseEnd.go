@@ -1013,7 +1013,7 @@ func case_stack_Lambdas(funcName string) {
 		}
 	})
 
-	// test retVarAdr output, get max
+	// test retVarPtr output, get max
 	maxAdr := MakeStack([]int {50, 2, 45, 140, 42}).LambdaVarAdr(func(card *Card, _ *Stack, _ bool, _ *Stack, _ *Stack, _ *Card, maxAdr any, _ []any, _ ...any) {
 		if gogenerics.GetPointer(maxAdr).(int) < card.Val.(int) {
 			gogenerics.SetPointer(maxAdr, card.Val)

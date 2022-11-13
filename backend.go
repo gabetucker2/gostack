@@ -2,7 +2,6 @@ package gostack
 
 import (
 	"fmt"
-	"unsafe"
 	"reflect"
 
 	"github.com/gabetucker2/gogenerics"
@@ -68,7 +67,7 @@ func match(needle any, haystack any, override bool, dereferenceType DEREFERENCE)
 	return false
 }
 
-func selectCard(findType any, findData any, dereferenceType any, overrideFindData OVERRIDE, card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, workingMem ...any) bool {
+func selectCard(findType any, findData any, dereferenceType any, overrideFindData OVERRIDE, card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarPtr any, workingMem ...any) bool {
 
 	// set defaults
 	setFINDDefaultIfNil(&findType)
@@ -150,14 +149,14 @@ func selectCard(findType any, findData any, dereferenceType any, overrideFindDat
 				thisCardAdr = fmt.Sprintf("%p", card)
 				otherCardAdr = fmt.Sprintf("%p", c.(*Card))
 			case DEREFERENCE_This:
-				thisCardAdr = fmt.Sprintf("%p", (*Card)(unsafe.Pointer(reflect.ValueOf(card.Val).Pointer())))
+				thisCardAdr = card.Val.(string)
 				otherCardAdr = fmt.Sprintf("%p", c.(*Card))
 			case DEREFERENCE_Found:
 				thisCardAdr = fmt.Sprintf("%p", card)
-				otherCardAdr = fmt.Sprintf("%p", (*Card)(unsafe.Pointer(reflect.ValueOf(c.(*Card).Val).Pointer())))
+				otherCardAdr = c.(*Card).Val.(string)
 			case DEREFERENCE_Both:
-				thisCardAdr = fmt.Sprintf("%p", (*Card)(unsafe.Pointer(reflect.ValueOf(card.Val).Pointer())))
-				otherCardAdr = fmt.Sprintf("%p", (*Card)(unsafe.Pointer(reflect.ValueOf(c.(*Card).Val).Pointer())))
+				thisCardAdr = card.Val.(string)
+				otherCardAdr = c.(*Card).Val.(string)
 			}
 			hasMatch = thisCardAdr == otherCardAdr
 			if hasMatch {break}
@@ -518,10 +517,10 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, arguments ...any) *
 
 	// else add based on find
 	} else {
-		stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any,  workingMem ...any) {
+		stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarPtr any, otherInfo []any,  workingMem ...any) {
 		
 			// only do add to the first match if ACTION_First, otherwise do for every match
-			if (allNotFirst && selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...)) || (!allNotFirst && selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) && !foundCard) {
+			if (allNotFirst && selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarPtr, workingMem...)) || (!allNotFirst && selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarPtr, workingMem...) && !foundCard) {
 	
 				// update foundCard
 				foundCard = true
@@ -557,7 +556,7 @@ func (stack *Stack) addHandler(allNotFirst bool, insert any, arguments ...any) *
 
 }
 
-func callLambda(lambda any, card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, workingMem []any) {
+func callLambda(lambda any, card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarPtr any, otherInfo []any, workingMem []any) {
 	
 	conversion1, success := lambda.(func())
 	if success {conversion1()}
@@ -574,11 +573,11 @@ func callLambda(lambda any, card *Card, parentStack *Stack, isSubstack bool, coo
 	conversion7, success := lambda.(func(*Card, *Stack, bool, *Stack, *Stack, *Card))
 	if success {conversion7(card, parentStack, isSubstack, coords, retStack, retCard)}
 	conversion8, success := lambda.(func(*Card, *Stack, bool, *Stack, *Stack, *Card, any))
-	if success {conversion8(card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr)}
+	if success {conversion8(card, parentStack, isSubstack, coords, retStack, retCard, retVarPtr)}
 	conversion9, success := lambda.(func(*Card, *Stack, bool, *Stack, *Stack, *Card, any, []any))
-	if success {conversion9(card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, otherInfo)}
+	if success {conversion9(card, parentStack, isSubstack, coords, retStack, retCard, retVarPtr, otherInfo)}
 	conversion10, success := lambda.(func(*Card, *Stack, bool, *Stack, *Stack, *Card, any, []any, ...any))
-	if success {conversion10(card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, otherInfo, workingMem...)}
+	if success {conversion10(card, parentStack, isSubstack, coords, retStack, retCard, retVarPtr, otherInfo, workingMem...)}
 }
 
 func callLambdaReplaceWith(replaceWith any, card *Card, parentStack *Stack, isSubstack bool, coords *Stack, workingMem []any) {

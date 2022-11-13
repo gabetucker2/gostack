@@ -13,18 +13,18 @@ import (
 
 /** Creates a card with given properties
 
- MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
- 
- @ensures
- | IF `input1` OR `input2` are nil:
- |     MakeCard := func(`val`, `key`, `idx`)
- | ELSE:
- |     MakeCard := func(`key`, `val`, `idx`)
- @examples
- | MakeCard("Hello") => Card{Val: "Hello"}
- | MakeCard(nil, "Hello") => Card{Key: "Hello"}
- | MakeCard(1, 2) => Card{Key: 1, Val: 2}
- */
+MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
+
+@ensures
+| IF `input1` OR `input2` are nil:
+|     MakeCard := func(`val`, `key`, `idx`)
+| ELSE:
+|     MakeCard := func(`key`, `val`, `idx`)
+@examples
+| MakeCard("Hello") => Card{Val: "Hello"}
+| MakeCard(nil, "Hello") => Card{Key: "Hello"}
+| MakeCard(1, 2) => Card{Key: 1, Val: 2}
+*/
  func MakeCard(arguments ...any) *Card {
 
 	// unpack arguments into optional parameters
@@ -745,7 +745,7 @@ func (stack *Stack) Unique(arguments ...any) *Stack {
     compareIdxs COMPARE [COMPARE_False],
     compareKeys COMPARE [COMPARE_True],
     compareVals COMPARE [COMPARE_True],
-	compareCardAdrs COMPARE [COMPARE_False],
+	comparecardPtrs COMPARE [COMPARE_False],
     pointerKeys DEREFERENCE [DEREFERENCE_None],
     pointerVals DEREFERENCE [DEREFERENCE_None]
  ) (cardEqualsOtherCard bool)
@@ -761,15 +761,15 @@ func (stack *Stack) Unique(arguments ...any) *Stack {
 func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 
 	// unpack arguments into optional parameters
-	var compareIdxs, compareKeys, compareVals, compareCardAdrs, pointerKeys, pointerVals any
-	gogenerics.UnpackVariadic(arguments, &compareIdxs, &compareKeys, &compareVals, &compareCardAdrs, &pointerKeys, &pointerVals)
+	var compareIdxs, compareKeys, compareVals, comparecardPtrs, pointerKeys, pointerVals any
+	gogenerics.UnpackVariadic(arguments, &compareIdxs, &compareKeys, &compareVals, &comparecardPtrs, &pointerKeys, &pointerVals)
 	// set default vals
 	setDEREFERENCEDefaultIfNil(&pointerKeys)
 	setDEREFERENCEDefaultIfNil(&pointerVals)
 	if compareIdxs == nil {compareIdxs = COMPARE_False}
 	setCOMPAREDefaultIfNil(&compareKeys)
 	setCOMPAREDefaultIfNil(&compareVals)
-	if compareCardAdrs == nil {compareCardAdrs = COMPARE_False}
+	if comparecardPtrs == nil {comparecardPtrs = COMPARE_False}
 
 	condition := thisCard != nil && otherCard != nil
 	
@@ -783,7 +783,7 @@ func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 
 	condition = condition && (compareIdxs == COMPARE_False || (compareIdxs == COMPARE_True && thisCard.Idx == otherCard.Idx))
 
-	condition = condition && (compareCardAdrs == COMPARE_False || (compareCardAdrs == COMPARE_True && fmt.Sprintf("%p", thisCard) == fmt.Sprintf("%p", otherCard)))
+	condition = condition && (comparecardPtrs == COMPARE_False || (comparecardPtrs == COMPARE_True && fmt.Sprintf("%p", thisCard) == fmt.Sprintf("%p", otherCard)))
 	
 	// return whether conditions yield true
 	return condition
@@ -1061,12 +1061,12 @@ func (stack *Stack) Flip() *Stack {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -1094,9 +1094,9 @@ func (stack *Stack) Flip() *Stack {
 	if findType == nil {findType = FIND_All}
  
 	// main
-	stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, workingMem ...any) {
+	stack.Lambda(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarPtr any, otherInfo []any, workingMem ...any) {
 		
-		if selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) {
+		if selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarPtr, workingMem...) {
 			
 			card.SwitchKeyVal()
 
@@ -1212,7 +1212,7 @@ func (stack *Stack) Print(arguments ...any) *Stack {
 	
 }
 
-/** Iterates through `stack` calling your lambda function on each card, returning `stack`, `retStack`, `retCard`, and `retVarAdr`
+/** Iterates through `stack` calling your lambda function on each card, returning `stack`, `retStack`, `retCard`, and `retVarPtr`
 
  stack.Lambda(
     lambda func(
@@ -1222,26 +1222,26 @@ func (stack *Stack) Print(arguments ...any) *Stack {
         coords *Stack,
         retStack *Stack,
         retCard *Card,
-        retVarAdr any,
+        retVarPtr any,
         otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
 		},
         workingMem ...any),
     retStack *Stack [nil],
     retCard *Card [nil],
-    retVarAdr any [nil],
+    retVarPtr any [nil],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
     deepSearchType DEEPSEARCH [DEEPSEARCH_True],
     depth int [-1],
     passType PASS [PASS_Both],
     otherInfo []any {
-        retStackAdr,
-        retCardAdr
+        retStackPtr,
+        retCardPtr
     } []any [[]any {nil, nil}],
- ) (stack, retStack, retCard, retVarAdr)
+ ) (stack, retStack, retCard, retVarPtr)
 
  @ensures
  | IF a version for `lambda` is passed that has fewer parameters than the full function:
@@ -1310,27 +1310,27 @@ func (stack *Stack) Print(arguments ...any) *Stack {
 	*/
 
 	// unpack arguments into optional parameters
-	var retStack, retCard, retVarAdr, workingMem, deepSearchType, depth, passType, otherInfo, _coords any
-	gogenerics.UnpackVariadic(arguments, &retStack, &retCard, &retVarAdr, &workingMem, &deepSearchType, &depth, &passType, &otherInfo, &_coords)
-	if retVarAdr == nil {var o any; retVarAdr = &o;}
+	var retStack, retCard, retVarPtr, workingMem, deepSearchType, depth, passType, otherInfo, _coords any
+	gogenerics.UnpackVariadic(arguments, &retStack, &retCard, &retVarPtr, &workingMem, &deepSearchType, &depth, &passType, &otherInfo, &_coords)
+	if retVarPtr == nil {var o any; retVarPtr = &o;}
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	setDEEPSEARCHDefaultIfNil(&deepSearchType)
 	setHeightDefaultIfNil(&depth)
 	if passType == nil {passType = PASS_Both}
 	if otherInfo == nil {otherInfo = []any {nil, nil}}
-	retStackAdr := otherInfo.([]any)[0]
-	retCardAdr := otherInfo.([]any)[1]
+	retStackPtr := otherInfo.([]any)[0]
+	retCardPtr := otherInfo.([]any)[1]
 	if retStack == nil {
 		newStack := MakeStack()
 		retStack = newStack
-		retStackAdr = &newStack
-		otherInfo.([]any)[0] = retStackAdr
+		retStackPtr = &newStack
+		otherInfo.([]any)[0] = retStackPtr
 	}
 	if retCard == nil {
 		newCard := MakeCard()
 		retCard = newCard
-		retCardAdr = &newCard
-		otherInfo.([]any)[1] = retCardAdr
+		retCardPtr = &newCard
+		otherInfo.([]any)[1] = retCardPtr
 	}
 	if _coords == nil { _coords = MakeStack() }
 	
@@ -1382,13 +1382,13 @@ func (stack *Stack) Print(arguments ...any) *Stack {
 
 			if (passType == PASS_Both || passType == PASS_Substacks) && passLayer {
 
-				callLambda(lambda, card, stack, true, coords, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, []any {&card, &stack, retStackAdr, retCardAdr}, workingMem.([]any))
+				callLambda(lambda, card, stack, true, coords, toTypeStack(retStack), toTypeCard(retCard), &retVarPtr, []any {&card, &stack, retStackPtr, retCardPtr}, workingMem.([]any))
 
-				if retCardAdr != nil && *retCardAdr.(**Card) != nil {
-					retCard = *retCardAdr.(**Card)
+				if retCardPtr != nil && *retCardPtr.(**Card) != nil {
+					retCard = *retCardPtr.(**Card)
 				}
-				if retStackAdr != nil && *retStackAdr.(**Stack) != nil {
-					retStack = *retStackAdr.(**Stack)
+				if retStackPtr != nil && *retStackPtr.(**Stack) != nil {
+					retStack = *retStackPtr.(**Stack)
 				}
 
 				// update properties
@@ -1410,12 +1410,12 @@ func (stack *Stack) Print(arguments ...any) *Stack {
 					}
 				}
 				
-				substack.Lambda(lambda, retStack, retCard, retVarAdr, workingMem, deepSearchType, transformedHeight, passType, otherInfo, coords)
-				if retCardAdr != nil && *retCardAdr.(**Card) != nil {
-					retCard = *retCardAdr.(**Card)
+				substack.Lambda(lambda, retStack, retCard, retVarPtr, workingMem, deepSearchType, transformedHeight, passType, otherInfo, coords)
+				if retCardPtr != nil && *retCardPtr.(**Card) != nil {
+					retCard = *retCardPtr.(**Card)
 				}
-				if retStackAdr != nil && *retStackAdr.(**Stack) != nil {
-					retStack = *retStackAdr.(**Stack)
+				if retStackPtr != nil && *retStackPtr.(**Stack) != nil {
+					retStack = *retStackPtr.(**Stack)
 				}
 			}
 
@@ -1423,12 +1423,12 @@ func (stack *Stack) Print(arguments ...any) *Stack {
 
 			if (passType == PASS_Both || passType == PASS_Cards) && passLayer {
 
-				callLambda(lambda, card, stack, false, coords, toTypeStack(retStack), toTypeCard(retCard), &retVarAdr, []any {&card, &stack, retStackAdr, retCardAdr}, workingMem.([]any))
-				if retCardAdr != nil && *retCardAdr.(**Card) != nil {
-					retCard = *retCardAdr.(**Card)
+				callLambda(lambda, card, stack, false, coords, toTypeStack(retStack), toTypeCard(retCard), &retVarPtr, []any {&card, &stack, retStackPtr, retCardPtr}, workingMem.([]any))
+				if retCardPtr != nil && *retCardPtr.(**Card) != nil {
+					retCard = *retCardPtr.(**Card)
 				}
-				if retStackAdr != nil && *retStackAdr.(**Stack) != nil {
-					retStack = *retStackAdr.(**Stack)
+				if retStackPtr != nil && *retStackPtr.(**Stack) != nil {
+					retStack = *retStackPtr.(**Stack)
 				}
 
 				// update properties
@@ -1443,11 +1443,11 @@ func (stack *Stack) Print(arguments ...any) *Stack {
 
 	}
 
-	return stack, toTypeStack(retStack), toTypeCard(retCard), retVarAdr
+	return stack, toTypeStack(retStack), toTypeCard(retCard), retVarPtr
 
 }
 
-/** Iterates through `stack` calling your lambda function on each card, returning `stack`, `retStack`, `retCard`, and `retVarAdr`
+/** Iterates through `stack` calling your lambda function on each card, returning `stack`, `retStack`, `retCard`, and `retVarPtr`
 
  stack.LambdaThis(
     lambda func(
@@ -1457,24 +1457,24 @@ func (stack *Stack) Print(arguments ...any) *Stack {
         coords *Stack,
         retStack *Stack,
         retCard *Card,
-        retVarAdr any,
+        retVarPtr any,
         otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
 		},
         workingMem ...any),
     retStack *Stack [nil],
     retCard *Card [nil],
-    retVarAdr any [nil],
+    retVarPtr any [nil],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
     deepSearchType DEEPSEARCH [DEEPSEARCH_True],
     depth int [-1],
     passType PASS [PASS_Both],
     otherInfo []any {
-        retStackAdr,
-        retCardAdr
+        retStackPtr,
+        retCardPtr
     } []any [[]any {nil, nil}],
  ) (stack)
 
@@ -1497,7 +1497,7 @@ func (stack *Stack) LambdaThis(lambda any, arguments ...any) *Stack {
 	return stack
 }
 
-/** Iterates through `stack` calling your lambda function on each card, returning `stack`, `retStack`, `retCard`, and `retVarAdr`
+/** Iterates through `stack` calling your lambda function on each card, returning `stack`, `retStack`, `retCard`, and `retVarPtr`
 
  stack.LambdaStack(
     lambda func(
@@ -1507,24 +1507,24 @@ func (stack *Stack) LambdaThis(lambda any, arguments ...any) *Stack {
         coords *Stack,
         retStack *Stack,
         retCard *Card,
-        retVarAdr any,
+        retVarPtr any,
         otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
 		},
         workingMem ...any),
     retStack *Stack [nil],
     retCard *Card [nil],
-    retVarAdr any [nil],
+    retVarPtr any [nil],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
     deepSearchType DEEPSEARCH [DEEPSEARCH_True],
     depth int [-1],
     passType PASS [PASS_Both],
     otherInfo []any {
-        retStackAdr,
-        retCardAdr
+        retStackPtr,
+        retCardPtr
     } []any [[]any {nil, nil}],
  ) (retStack)
 
@@ -1547,7 +1547,7 @@ func (stack *Stack) LambdaStack(lambda any, arguments ...any) *Stack {
 	return thisStack
 }
 
-/** Iterates through `stack` calling your lambda function on each card, returning `stack`, `retStack`, `retCard`, and `retVarAdr`
+/** Iterates through `stack` calling your lambda function on each card, returning `stack`, `retStack`, `retCard`, and `retVarPtr`
 
  stack.LambdaCard(
     lambda func(
@@ -1557,24 +1557,24 @@ func (stack *Stack) LambdaStack(lambda any, arguments ...any) *Stack {
         coords *Stack,
         retStack *Stack,
         retCard *Card,
-        retVarAdr any,
+        retVarPtr any,
         otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
 		},
         workingMem ...any),
     retStack *Stack [nil],
     retCard *Card [nil],
-    retVarAdr any [nil],
+    retVarPtr any [nil],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
     deepSearchType DEEPSEARCH [DEEPSEARCH_True],
     depth int [-1],
     passType PASS [PASS_Both],
     otherInfo []any {
-        retStackAdr,
-        retCardAdr
+        retStackPtr,
+        retCardPtr
     } []any [[]any {nil, nil}],
  ) (retCard)
 
@@ -1597,7 +1597,7 @@ func (stack *Stack) LambdaCard(lambda any, arguments ...any) *Card {
 	return thisCard
 }
 
-/** Iterates through `stack` calling your lambda function on each card, returning `stack`, `retStack`, `retCard`, and `retVarAdr`
+/** Iterates through `stack` calling your lambda function on each card, returning `stack`, `retStack`, `retCard`, and `retVarPtr`
 
  stack.LambdaVarAdr(
     lambda func(
@@ -1607,26 +1607,26 @@ func (stack *Stack) LambdaCard(lambda any, arguments ...any) *Card {
         coords *Stack,
         retStack *Stack,
         retCard *Card,
-        retVarAdr any,
+        retVarPtr any,
         otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
 		},
         workingMem ...any),
     retStack *Stack [nil],
     retCard *Card [nil],
-    retVarAdr any [nil],
+    retVarPtr any [nil],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
     deepSearchType DEEPSEARCH [DEEPSEARCH_True],
     depth int [-1],
     passType PASS [PASS_Both],
     otherInfo []any {
-        retStackAdr,
-        retCardAdr
+        retStackPtr,
+        retCardPtr
     } []any [[]any {nil, nil}],
- ) (retVarAdr)
+ ) (retVarPtr)
 
  @ensures
  | IF a version for `lambda` is passed that has fewer parameters than the full function:
@@ -1643,8 +1643,8 @@ func (stack *Stack) LambdaCard(lambda any, arguments ...any) *Card {
  | }) // Stack{nil:1, nil:3, "Marker":2, nil:4}
  */
 func (stack *Stack) LambdaVarAdr(lambda any, arguments ...any) any {
-	_, _, _, retVarAdr := stack.Lambda(lambda, arguments...)
-	return retVarAdr
+	_, _, _, retVarPtr := stack.Lambda(lambda, arguments...)
+	return retVarPtr
 }
 
 /** Sets `stack` to a set of cards from specified parameters in `stack`, returning `stack`
@@ -1658,12 +1658,12 @@ func (stack *Stack) LambdaVarAdr(lambda any, arguments ...any) any {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -1700,12 +1700,12 @@ func (stack *Stack) LambdaVarAdr(lambda any, arguments ...any) any {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -1745,12 +1745,12 @@ func (stack *Stack) Add(insert any, arguments ...any) *Stack {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -1790,12 +1790,12 @@ func (stack *Stack) AddMany(insert any, arguments ...any) *Stack {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -1806,12 +1806,12 @@ func (stack *Stack) AddMany(insert any, arguments ...any) *Stack {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -1865,12 +1865,12 @@ func (stack *Stack) Move(arguments ...any) *Stack {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -1881,12 +1881,12 @@ func (stack *Stack) Move(arguments ...any) *Stack {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -1948,12 +1948,12 @@ func (stack *Stack) Swap(arguments ...any) *Stack {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -1989,12 +1989,12 @@ func (stack *Stack) Has(arguments ...any) bool {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -2023,9 +2023,9 @@ func (stack *Stack) Has(arguments ...any) bool {
 	if passType == nil {passType = PASS_Both}
 
 	// get card
-	out := stack.LambdaCard(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, workingMem ...any) {
+	out := stack.LambdaCard(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarPtr any, otherInfo []any, workingMem ...any) {
 		
-		if selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) && retCard.Idx == -1 {
+		if selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarPtr, workingMem...) && retCard.Idx == -1 {
 
 			*otherInfo[3].(**Card) = *otherInfo[0].(**Card)
 
@@ -2053,12 +2053,12 @@ func (stack *Stack) Has(arguments ...any) bool {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -2090,9 +2090,9 @@ func (stack *Stack) GetMany(arguments ...any) *Stack {
 	if passType == nil {passType = PASS_Both}
 
 	// make new stack and return
-	return stack.LambdaStack(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, workingMem ...any) {
+	return stack.LambdaStack(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarPtr any, otherInfo []any, workingMem ...any) {
 		
-		if selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) {
+		if selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarPtr, workingMem...) {
 
 			switch returnType {
 			case RETURN_Keys:
@@ -2133,12 +2133,12 @@ func (stack *Stack) GetMany(arguments ...any) *Stack {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -2168,9 +2168,9 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
 	if findType == nil {findType = FIND_Last}
 
 	// main
-	return stack.LambdaCard(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, workingMem ...any) {
+	return stack.LambdaCard(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarPtr any, otherInfo []any, workingMem ...any) {
 		
-		if selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) && retCard.Idx == -1 {
+		if selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarPtr, workingMem...) && retCard.Idx == -1 {
 
 			*retCard = *card.Clone() // return the original card
 
@@ -2251,12 +2251,12 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -2288,9 +2288,9 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
 	if findType == nil {findType = FIND_Last}
 
 	// main
-	return stack.LambdaStack(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, workingMem ...any) {
+	return stack.LambdaStack(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarPtr any, otherInfo []any, workingMem ...any) {
 		
-		if selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) {
+		if selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarPtr, workingMem...) {
 
 			retStack.Cards = append(retStack.Cards, card.Clone())
 
@@ -2364,12 +2364,12 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -2405,12 +2405,12 @@ func (stack *Stack) Extract(arguments ...any) *Card {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -2447,12 +2447,12 @@ func (stack *Stack) ExtractMany(arguments ...any) *Stack {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -2491,12 +2491,12 @@ func (stack *Stack) Remove(arguments ...any) *Stack {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -2547,12 +2547,12 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -2599,12 +2599,12 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -2649,12 +2649,12 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -2685,9 +2685,9 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
 
 	// return
 	found := false
-	return stack.LambdaStack(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, workingMem ...any) {
+	return stack.LambdaStack(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarPtr any, otherInfo []any, workingMem ...any) {
 		
-		if !found && selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) {
+		if !found && selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarPtr, workingMem...) {
 
 			*retStack = *coords
 			found = true
@@ -2708,12 +2708,12 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
       coords *Stack,
       retStack *Stack,
       retCard *Card,
-      retVarAdr any,
+      retVarPtr any,
       otherInfo []any {
-            cardAdr,
-            parentStackAdr,
-            retStackAdr,
-            retCardAdr
+            cardPtr,
+            parentStackPtr,
+            retStackPtr,
+            retCardPtr
       },
       workingMem ...any
     ) [nil],
@@ -2743,9 +2743,9 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
 	if findType == nil {findType = FIND_All}
 
 	// return
-	return stack.LambdaStack(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarAdr any, otherInfo []any, workingMem ...any) {
+	return stack.LambdaStack(func(card *Card, parentStack *Stack, isSubstack bool, coords *Stack, retStack *Stack, retCard *Card, retVarPtr any, otherInfo []any, workingMem ...any) {
 		
-		if selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarAdr, workingMem...) {
+		if selectCard(findType, findData, dereferenceType, overrideFindData.(OVERRIDE), card, parentStack, isSubstack, coords, retStack, retCard, retVarPtr, workingMem...) {
 
 			retStack.Add(coords, nil, nil, nil, nil, nil, nil, nil, OVERRIDE_True)
 
