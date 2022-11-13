@@ -1,4 +1,4 @@
-![Banner](../images/gostack_SmallerTransparent.png)
+![Banner](../media/gostack_SmallerTransparent.png)
 
  <h1>Function Documentation</h1>
 

@@ -1,4 +1,4 @@
-![Banner](../images/gostack_SmallerTransparent.png)
+![Banner](../media/gostack_SmallerTransparent.png)
 
 <h1>Structs Documentation</h1>
 
@@ -6,14 +6,14 @@
 
  In ***gostack***, there are simply two structs:
 
- <img src="../images/gostack_StackAndCard.png" width="50%" style="margin-bottom: 10px;"/>
+ <img src="../media/gostack_StackAndCard.png" width="50%" style="margin-bottom: 10px;"/>
 
  These are the only structs you have to understand in order to master ***gostack***!
 
 <h2>Stack Matrix</h2>
  In a matrix structure, "substack" will refer to cards whose vals are other stacks, and "card" will refer to cards whose vals are not other stacks.  "Stack matrix" will refer to any *Stack object which holds substacks.  For instance, given some stack matrix named "myMatrix":
 
- <img src="../images/gostack_StackSample3.png" width="70%" style="margin-bottom: 10px;"/>
+ <img src="../media/gostack_StackSample3.png" width="70%" style="margin-bottom: 10px;"/>
  
  The cards whose vals are 1, 3, 2, and 4, respectively (the grandchildren of myMatrix), are called "cards" in this context.  Conversely, the cards whose vals are other stacks (the children of myMatrix) are called "substacks", even though their data type is `*Card`.
 

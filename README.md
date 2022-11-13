@@ -1,6 +1,6 @@
 v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
 
-![Banner](images/gostack_SmallerTransparent.png)
+![Banner](media/gostack_SmallerTransparent.png)
 
  *"The purpose of abstraction is not to be vague, but to create a new semantic level in which one can be absolutely precise." - Edsger W. Dijkstra*
 
@@ -32,13 +32,10 @@ v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
  
  * [Timeline](documentation/timeline.md)
  * [Credits](documentation/credits.md)
+ * [Support Us](documentation/support.md)
  * [How fast is gostack compared to native Go?](documentation/benchmark.md)
- * [How many lines does gostack save compared to native Go?](documentation/race.md) // TODO: implement from test.go and fix there
+ * [How many lines does gostack save compared to native Go?](documentation/race.md)
 
 ---
 
  Join our [official Discord community](https://discord.gg/NmxxcKBVBU)!  It is devoted to helping users resolve ***gostack*** bugs and related issues, announcing exciting updates, making improvements based on user suggestions, and streamlining communication between developers and gostackers.
-
----
-
- Since gostack is a nonprofit, we rely exclusively on funding from donations to encourage future developments.  If you'd like to gain exclusive benefits including a shoutout on our github page, access to a private text channel on our Discord, and the ability to vote on the features you would like to see next, consider [becoming a Patreon](patreon.com/user?u=81677925)!  If you'd just like to [make a one-time donation](https://www.buymeacoffee.com/gabetucker) to encourage further development of ***gostack***, that would also be very much appreciated.

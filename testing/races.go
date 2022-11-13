@@ -59,7 +59,7 @@ func RaceNative() {
 	for i := 0; i < len(taskBKeys); i++ {
 		k := taskBKeys[i]
 		v := taskBVals[i]
-		if 1 < v.(int) && v.(int) < 4 {
+		if 1 < v.(int) && v.(int) < 3 {
 			for j := 0; j < len(keysToInsert); j++ {
 				inK := keysToInsert[j]
 				inV := valsToInsert[j]

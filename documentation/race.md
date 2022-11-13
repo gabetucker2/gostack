@@ -1,4 +1,4 @@
-![Banner](../images/gostack_SmallerTransparent.png)
+![Banner](../media/gostack_SmallerTransparent.png)
 
 <h1>Race</h1>
 
@@ -16,15 +16,43 @@
 
  <h3>Assuming you would like to...</h3>
 
- > A) ...make an array structure `taskA` representing a non-duplicating set of values from a map structure whose keys are found in array `searchKeys`
+ > A) ...make an array structure `taskA` representing a non-duplicating set of values from a map structure whose keys are in `searchKeys`
  >
  > B) ...create a map structure `taskB` whose keys are `taskA`'s values and whose values are the corresponding indices from the original map structure
  >
  > C) ...in `taskB`'s map, replace pairs whose values are between 1 and 3 with a new slice of key-value pairs, making this new map `taskC`
  >
- > D) ...and concatenating a clone of `taskC` to itself 3 times, thereafter fitting its key-value pairs to 2x2x2x2 matrix `taskD`
+ > D) ...and appending a clone of `taskC` to itself 3 times, thereafter fitting its key-value pairs to 2x2x2x2 matrix `taskD`
 
 <h3 name = "pseudocode">...pseudocode outline</h3>
+
+```
+// INIT
+start <"Key A" : 40, "Bad Key" : "Bad Value", "Key A" : "Hello", 2.5 : 40, "Michael Keaton" : 520>
+searchKeys <"Key A", 2.5, "Michael Keaton">
+pairsToInsert <"I" : "Am new", "To" : "This set">
+ 
+// TASK A
+=> taskA <40, "Hello", 520>
+ 
+// TASK B
+=> taskB <40 : 0, "Hello" : 2, 520 : 4>
+
+// TASK C
+=> taskC <40 : 0, "I" : "Am new", "To" : "This set", 520 : 4>
+
+// TASK D
+=> taskD < < << 40 : 0, "I" : "Am new" >, < "To" : "This set", 520 : 4 >>,
+             << 40 : 0, "I" : "Am new" >, < "To" : "This set", 520 : 4 >> >,
+           < << 40 : 0, "I" : "Am new" >, < "To" : "This set", 520 : 4 >>,
+             << 40 : 0, "I" : "Am new" >, < "To" : "This set", 520 : 4 >> > >
+```
+
+---
+
+<h2>Let's see how quickly we can do this using...</h2>
+
+<h3 name = "native">...native Go</h3>
 
 ```
 // INIT
@@ -77,7 +105,7 @@ var taskCKeys, taskCVals []any
 for i := 0; i < len(taskBKeys); i++ {
     k := taskBKeys[i]
     v := taskBVals[i]
-    if 1 < v.(int) && v.(int) < 4 {
+    if 1 < v.(int) && v.(int) < 3 {
         for j := 0; j < len(keysToInsert); j++ {
             inK := keysToInsert[j]
             inV := valsToInsert[j]
@@ -97,7 +125,7 @@ taskCVals2 := append(taskCVals, taskCVals...)
 taskCVals2 = append(taskCVals2, taskCVals2...)
 taskDKeys := [][][][]any{{{{nil, nil}, {nil, nil}}, {{nil, nil}, {nil, nil}}}, {{{nil, nil}, {nil, nil}}, {{nil, nil}, {nil, nil}}}}
 taskDVals := [][][][]any{{{{nil, nil}, {nil, nil}}, {{nil, nil}, {nil, nil}}}, {{{nil, nil}, {nil, nil}}, {{nil, nil}, {nil, nil}}}}
-for i := 0; i < 16; i++ { // recursion would be unnecessarily complicated for this data structure
+for i := 0; i < 16; i++ { // recursion would only work until 3 layers down
     var a, b, c, d int // convert i into 2x2x2x2 sequence: ([0][0][0][0], [0][0][0][1], [0][0][1][0], ..., [1][1][1][1])
     if i%2 == 1 {d = 1}
     if ((i-d)/2)%2 == 1 {c = 1}
@@ -140,6 +168,8 @@ taskD := MakeStackMatrix(taskC.Clone().Duplicate(4), taskC.Clone().Duplicate(4).
 <h2>Conclusion</h2>
 
 ***gostack*** won the race!  Excluding comments and empty lines, it took over 7 times fewer lines than ***native Go*** (9 compared to 69), in turn saving 60 lines of space.  See our [races script here](../testing/races.go), and feel free to test it out yourself!
+
+*Note that I wrote the native Go comparison code to be as clear and concise as possible, but if there are any places which can be made made more concise, then please let me know in our [Discord server](https://discord.gg/NmxxcKBVBU).*
 
 ---
 

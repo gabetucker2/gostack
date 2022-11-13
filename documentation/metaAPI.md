@@ -1,8 +1,8 @@
-![Banner](../images/gostack_SmallerTransparent.png)
+![Banner](../media/gostack_SmallerTransparent.png)
 
 <h1>Meta Documentation</h1>
 
- <img src="../images/gostack_Packages.png" width="100%" style="margin-top: 10px; margin-bottom: 10px;"/>
+ <img src="../media/gostack_Packages.png" width="100%" style="margin-top: 10px; margin-bottom: 10px;"/>
 
  <h2>SampleFunction Documentation</h2>
 
@@ -53,7 +53,7 @@ Say you wanted to double-check that our case tests of the library are working pr
 
  If you'd like to configure this output, enter `executive.go`...
 
- <img src="../images/caseTestsRun.png" width="25%" style="margin-top: -10px;"/>
+ <img src="../media/caseTestsRun.png" width="25%" style="margin-top: -10px;"/>
 
  * Passing `true` into `casetests.Run` gives a detailed terminal output, useful for debugging and finding which case test function is causing errors
  * Passing `false` into `casetests.Run` gives a concise terminal output, useful for quickly ensuring that everything is working properly
@@ -64,7 +64,7 @@ Say you wanted to double-check that our case tests of the library are working pr
  2. Type `go test -bench .`
  3. See the output for each benchmark function test!
 
- <img src="../images/benchmarksRun.png" width="50%" style="margin-bot: 10px;"/>
+ <img src="../media/benchmarksRun.png" width="50%" style="margin-bot: 10px;"/>
 
 Look at the `ns/op` to compare speeds between ***gostack*** and ***native Go***.  This tells you the average time (in nanoseconds) each function call took.
 

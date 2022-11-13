@@ -187,7 +187,7 @@
 
 <h1 name = "packageSchema">Package Schema</h1>
 
-![Packages](images/packages.png)
+![Packages](media/packages.png)
 
 <h1 name = "conventions">CONVENTIONS</h1>
 

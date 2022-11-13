@@ -1,10 +1,10 @@
-![Banner](../images/gostack_SmallerTransparent.png)
+![Banner](../media/gostack_SmallerTransparent.png)
 
  <h1>Overview</h1>
 
  Let's get a sense of what ***gostack*** looks like.  We'll start with the structs it introduces:
  
- <img src="../images/gostack_StackAndCard.png" width="50%" style="margin-bottom: 10px;"/>
+ <img src="../media/gostack_StackAndCard.png" width="50%" style="margin-bottom: 10px;"/>
 
  Without yet using these structs, let's make a map structure in ***native Go***:
 
@@ -17,7 +17,7 @@
  kidsAndAdults := MakeStack(existingMap)
  ```
 
- <img src="../images/gostack_StackSample1.png" width="50%" style="margin-bottom: 10px;"/>
+ <img src="../media/gostack_StackSample1.png" width="50%" style="margin-bottom: 10px;"/>
 
  Great!  Next, we will get all the people in `kidsAndAdults` who are adults:
 
@@ -25,7 +25,7 @@
  adults := kidsAndAdults.GetMany(FIND_Val, "Adult")
  ```
 
- <img src="../images/gostack_StackSample2.png" width="40%" style="margin-bottom: 10px;"/>
+ <img src="../media/gostack_StackSample2.png" width="40%" style="margin-bottom: 10px;"/>
 
  Pretty straight-forward!  But what if we want to make something more complicated, like a matrix?  Let's do that here, fitting an array with four elements to a 2x2 matrix:
 
@@ -33,7 +33,7 @@
  myMatrix := MakeStackMatrix([]int {1, 3, 2, 4}, nil, []int {2, 2})
  ```
  
- <img src="../images/gostack_StackSample3.png" width="70%" style="margin-bottom: 10px;"/>
+ <img src="../media/gostack_StackSample3.png" width="70%" style="margin-bottom: 10px;"/>
 
  In a matrix structure, "substack" will refer to cards whose val is another stack, and "card" will refer to cards whose val is not another stack.
 
@@ -45,7 +45,7 @@
  myMatrix.UpdateMany(REPLACE_Key, "Number", FIND_Last)
  ```
 
- <img src="../images/gostack_StackSample4.png" width="70%" style="margin-bottom: 10px;"/>
+ <img src="../media/gostack_StackSample4.png" width="70%" style="margin-bottom: 10px;"/>
 
  Finally, let's say we wanted to do something a little more complex, like multiplying every multiple of 8 by 3:
 
@@ -57,7 +57,7 @@
  })
  ```
 
- <img src="../images/gostack_StackSample5.png" width="70%" style="margin-bottom: 10px;"/>
+ <img src="../media/gostack_StackSample5.png" width="70%" style="margin-bottom: 10px;"/>
 
 These examples should give you an intuitive feel of how ***gostack*** works!
 
