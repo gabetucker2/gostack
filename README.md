@@ -4,8 +4,6 @@ v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
 
  *"The purpose of abstraction is not to be vague, but to create a new semantic level in which one can be absolutely precise." - Edsger W. Dijkstra*
 
- ![Showcase](media/showcase.gif)
-
  <h1>Glossary</h1>
 
  <h2>Introduction</h2>
@@ -38,6 +36,10 @@ v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
  * [How fast is gostack compared to native Go?](documentation/benchmark.md)
  * [How many lines does gostack save compared to native Go?](documentation/race.md)
 
----
+ ---
 
  Join our [official Discord community](https://discord.gg/NmxxcKBVBU)!  It is devoted to helping users resolve ***gostack*** bugs and related issues, announcing exciting updates, making improvements based on user suggestions, and streamlining communication between developers and gostackers.
+
+---
+
+ ![Showcase](media/showcase.gif)
