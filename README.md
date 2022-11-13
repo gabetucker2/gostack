@@ -4,7 +4,7 @@ v1.0.0 — Alpha Release — 10/16/2022 — First working implementation
 
  *"The purpose of abstraction is not to be vague, but to create a new semantic level in which one can be absolutely precise." - Edsger W. Dijkstra*
 
- [Test](media/GostackShowcase.mp4)
+ ![Showcase](media/showcase.gif)
 
  <h1>Glossary</h1>
 
