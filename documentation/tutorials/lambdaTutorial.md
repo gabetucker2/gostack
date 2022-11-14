@@ -106,7 +106,7 @@ Lambda functions also have a `workingMem` slot, which practically equivalent to 
 
 The `isSubstack` parameter simply tells you whether the card you are currently on is a substack or a card with a non-substack value.
 
-The `coords` parameter tells you the location of this card from the root stack by storing each index in a card respectively.  For instance, in {{A, B}, {C, D}}, C would have the coordinates Stack{0, 1}.
+The `coords` parameter tells you the location of this card from the root stack by storing each index in a card respectively.  For instance, in {{A, B}, {C, D}}, C would have the coordinates Stack{0, 1}.  You can input the `coords` parameter into the `stack.StripStackMatrix` function to seamlessly fetch a card at a given coordinate.
 
 Finally, lambda functions have an `otherInfo` slot.  To explain what this is for, let's consider an instance where you would like to return the found card object rather than a copy of the found card object.  In such a case, doing `*retCard = *card` would merely return a clone of card ([see explanation here](https://stackoverflow.com/a/74090525/19591217)).  As a result, let's look at `otherInfo` data: `[]any {cardPtr, parentStackPtr, retStackPtr, retCardPtr}`.  Given this data, instead of merely dereferencing `retCard`, let's instead convert `retCardPtr` to a Card pointer pointer and dereference that pointer pointer, setting it to cardPtr, thereby allowing us to redirect the pointer to a specific object:
 
