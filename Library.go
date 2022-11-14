@@ -2779,7 +2779,7 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
 	file, _ := os.Create(outPath)
 	csvWriter := csv.NewWriter(file)
 	var csv [][]string
-	for i, substack := range stack.ToArray() {
+	for i, substack := range stack.ToMatrix() {
 		csv = append(csv, []string {})
 		for _, val := range substack.([]any) {
 			csv[i] = append(csv[i], val.(string))
