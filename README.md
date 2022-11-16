@@ -31,7 +31,7 @@ v1.0.4 — Beta Release — 11/13/2022 — Post-release polish
  
  * [Timeline](documentation/timeline.md)
  * [Credits](documentation/credits.md)
- * [Support Us](documentation/support.md)
+ * [Support us](documentation/support.md)
  * [How fast is gostack compared to native Go?](documentation/benchmark.md)
  * [How many lines does gostack save compared to native Go?](documentation/race.md)
 
