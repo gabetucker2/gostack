@@ -19,7 +19,7 @@ str2Ptr := &str2
 str3 = "Girl"
 str3Ptr := &str3
 myStackDeref := MakeStack([]any {str1Ptr, str2Ptr, str3Ptr}).Unique(nil, DEREFERENCE_This) // Stack{str1Ptr, str3Ptr}
-myStackNoDeref := MakeStack([]any {str1Ptr, str2Ptr, str3Ptr}).Unique(nil, DEREFERENCE_None) // Stack{str1Ptr, str2Ptr, str3Ptr{}
+myStackNoDeref := MakeStack([]any {str1Ptr, str2Ptr, str3Ptr}).Unique(nil, DEREFERENCE_None) // Stack{str1Ptr, str2Ptr, str3Ptr}
 ```
 
 Using `DEREFERENCE_This` dereferences each pointer in the receiver stack before comparing whether they are equal to another pointer, thereby determining that even though `str1Ptr != str2Ptr`, the objects to which they point are equal; thus, only one is added to the final stack (viz. Unique's functionality).  However, for the instance with `DEREFERENCE_None`, it sees that `str1Ptr != str2Ptr` shallowly; thus, both are kept in the original stack.
