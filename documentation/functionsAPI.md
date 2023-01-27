@@ -25,8 +25,6 @@
  >
  >> [stack.Shape()](functions/stack_Shape.md)
  >
- >> [stack.Strip()](functions/stack_Strip.md)
- >>
  >> [stack.DimensionalityReduce()](functions/stack_DimensionalityReduce.md)
  >
  >> [stack.Flip()](functions/stack_Flip.md)
