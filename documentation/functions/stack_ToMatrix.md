@@ -2,7 +2,7 @@
 
  <h2>stack.ToMatrix()</h2>
 
- `stack.ToMatrix(returnType RETURN [RETURN_Vals], depth int [-1]) (newMatrix []any {elem/[]any{}})`
+ `stack.ToMatrix(returnType RETURN [RETURN_Vals], depth int|[]int|*Stack [-1]) (newMatrix []any {elem/[]any{}})`
 
 ```
  Creates a new matrix structure from `stack`

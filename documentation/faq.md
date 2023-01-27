@@ -13,15 +13,18 @@
  * [Introductory](tutorials/introductionTutorial.md)
    * Conceptually: 2
    * In practice: 2
- * [StackMatrices](matricesTutorial.md)
+ * [StackMatrices](tutorials/matricesTutorial.md)
    * Conceptually: 2
    * In practice: 3
- * [Lambda](lambdaTutorial.md)
+ * [Lambda](tutorials/lambdaTutorial.md)
    * Conceptually: 3
    * In practice: 4
- * [Pointers](pointersTutorial.md)
+ * [Pointers](tutorials/pointersTutorial.md)
    * Conceptually: 5
    * In practice: 5
+ * [Testing](tutorials/testingTutorial.md)
+   * Conceptually: 2
+   * In practice: 2
 
 ---
 

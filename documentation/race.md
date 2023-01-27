@@ -22,7 +22,7 @@
  >
  > C) ...in `taskB`'s map, replace pairs whose values are between 1 and 3 with a new slice of key-value pairs, making this new map `taskC`
  >
- > D) ...and appending a clone of `taskC` to itself 3 times, thereafter fitting its key-value pairs to 2x2x2x2 matrix `taskD`
+ > D) ...and append a clone of `taskC` to itself 3 times, thereafter fitting its key-value pairs to 2x2x2x2 matrix `taskD`
 
 <h3 name = "pseudocode">...pseudocode outline</h3>
 
@@ -169,7 +169,7 @@ taskD := MakeStackMatrix(taskC.Clone().Duplicate(4), taskC.Clone().Duplicate(4).
 
 ***gostack*** won the race!  Excluding comments and empty lines, it took over 7 times fewer lines than ***native Go*** (9 compared to 69), in turn saving 60 lines of space.  See our [races script here](../testing/races.go), and feel free to test it out yourself!
 
-*Note that I wrote the native Go comparison code to be as clear and concise as possible, but if there are any places which can be made made more concise, then please let me know in our [Discord server](https://discord.gg/NmxxcKBVBU).*
+*Note that I wrote the native Go comparison code to be as clear and concise as possible, but if there are any places which can be made more concise, then please let me know in our [Discord server](https://discord.gg/NmxxcKBVBU).*
 
 ---
 

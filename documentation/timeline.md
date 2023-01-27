@@ -4,17 +4,17 @@
 
  <h1>Current Releases</h1>
 
- <h2><b>v0.8.0</b> — <i>Alpha Release</i> — 7/24/2022 — Prerelease A</h2>
+ <h2><b>v0.8.0</b> — <i>Alpha Release</i> — 07/24/2022 — Prerelease A</h2>
 
 * ***gostack***'s initial non-working release
 * Initialized most function, meaning you are able to call them from other scripts
 
- <h2><b>v0.8.5</b> — <i>Alpha Release</i> — 8/24/2022 — Prerelease B</h2>
+ <h2><b>v0.8.5</b> — <i>Alpha Release</i> — 08/24/2022 — Prerelease B</h2>
 
 * Significantly improved **gostack** documentation
 * Reworked many ***gostack*** functions' functionality
 
- <h2><b>v0.9.0</b> — <i>Alpha Release</i> — 8/28/2022 — Prerelease C</h2>
+ <h2><b>v0.9.0</b> — <i>Alpha Release</i> — 08/28/2022 — Prerelease C</h2>
 
 * Implemented the **stack.Equals()** and **card.Equals()** functions
 * Redesigned significant portions of ***gostack*** memory management
@@ -54,14 +54,17 @@ Completed:
 
  <h2><b>v1.0.5</b> — <i>Beta Release</i> — ?/?/2023 — Patch A</h2>
 
-* Debuged Discussion-posted bug
-* stack.Transpose()
+* stack.Transpose() added
 * stack.Shape() => returns type Stack
 * stack.StripStackMatrix => stack.DimensionalityReduce
-* stack.GetCoords() gets a card at given coordinates
+* FIND_Coords added
+* Added testing tutorial
+* Updated MakeStackMatrix's `matrixShape` parameter to accept Stack arguments
 
  <h2><b>v1.0.6</b> — <i>Beta Release</i> — ?/?/2023 — Patch B</h2>
 
+* Add FIND_Depth enum
+* Implement a height alternative to the depth parameter
 * More strictly implement design-by-contract principles in function documentation to facilitate error-catching for invalid arguments
 * Further simplify function parameterizations
 * Make all lambda function calls have the same structure (i.e., no more simplified version for `replaceWith` func)
@@ -76,7 +79,7 @@ Completed:
     * Documentational improvements
     * Conceptual improvements
 
- <h2><b>v1.0.8</b> — <i>Beta Release</i> — ?/?/2023 — Patch C</h2>
+ <h2><b>v1.0.8</b> — <i>Beta Release</i> — ?/?/???? — Patch C</h2>
 
 * Implement feedback from the ***gostack*** community
     * Bug fixes
@@ -84,7 +87,7 @@ Completed:
     * Documentational improvements
     * Conceptual improvements
 
- <h2><b>v1.1.0</b> — <i>Full release</i> — ?/?/2023 — Patch D</h2>
+ <h2><b>v1.1.0</b> — <i>Full release</i> — ?/?/???? — Patch D</h2>
 
 * Implement feedback from the ***gostack*** community
     * Bug fixes

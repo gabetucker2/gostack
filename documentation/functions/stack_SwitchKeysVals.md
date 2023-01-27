@@ -22,7 +22,7 @@
       workingMem ...any
     ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}]

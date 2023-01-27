@@ -156,7 +156,7 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
 
 /** Creates a stack matrix initialized with starting cards
 
- MakeStackMatrix(input1 []any (deep/shallow)|map[any]any (deep/shallow)|*Stack [nil], input2 []any (deep/shallow)|*Stack [nil], matrixShape []int [[]int {1}]) (newStackMatrix *Stack)
+ MakeStackMatrix(input1 []any (deep/shallow)|map[any]any (deep/shallow)|*Stack [nil], input2 []any (deep/shallow)|*Stack [nil], matrixShape []int|*Stack [[]int {1}]) (newStackMatrix *Stack)
  
  Where all mentions of array are interchangeable with Stack:
  @requires
@@ -214,6 +214,14 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
 	// unpack arguments into optional parameters
 	var input1, input2, matrixShape any
 	gogenerics.UnpackVariadic(arguments, &input1, &input2, &matrixShape)
+
+	matrixShapeStack, msIsStack := matrixShape.(*Stack)
+	if msIsStack {
+		matrixShape = []int {}
+		for _, c := range matrixShapeStack.Cards {
+			matrixShape = append(matrixShape.([]int), c.Val.(int))
+		}
+	}
 
 	stack := new(Stack)
 
@@ -353,6 +361,10 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
  
  stack.DimensionalityReduce(idx ...int|[]int|*Stack [[]int {0, 1, ..., stack.Size - 1}]) (stack)
 
+ @notes
+ | This can be used to reduce an ND array structure to a 1D vector structure
+ | This can be used to select a subset of a matrix
+ | This can be used to select a card at given coordinates
  @requires
  | `idx` refers to valid index positions from the stack
  @examples
@@ -440,7 +452,7 @@ func (stack *Stack) ToMatrix(arguments ...any) []any {
 	gogenerics.UnpackVariadic(arguments, &returnType, &depth)
 	// set defaults
 	setRETURNDefaultIfNil(&returnType)
-	setHeightDefaultIfNil(&depth)
+	setDepthDefaultIfNil(&depth)
 	if depth == -1 || depth.(int) > stack.Height { depth = stack.Height }
 	newMatrix := []any {}
 
@@ -480,7 +492,7 @@ func (stack *Stack) ToMatrix(arguments ...any) []any {
 
 /** Returns an array representing the shape of `stack`
 
- stack.Shape() (stackShape []int)
+ stack.Shape() (newStack stack)
 
  @ensures
  | returns nil if it's not regular and thus doesn't have a shape
@@ -489,20 +501,20 @@ func (stack *Stack) ToMatrix(arguments ...any) []any {
  | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4}), MakeSubstack([]int {5, 6})}).Shape() => []int {3, 2}
  | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4, 5}), MakeSubstack([]int {6, 7})}) => nil
  */
- func (stack *Stack) Shape() []int {
+ func (stack *Stack) Shape() *Stack {
 
 	// init
-	stackShape := []int {}
+	stackShape := MakeStack()
 
 	// body
 	if stack.IsRegular() {
 
-		stackShape = append(stackShape, stack.Size)
+		stackShape.Add(stack.Size)
 
 		if stack.Size > 0 {
 			_, hasSubstack := stack.Cards[0].Val.(*Stack)
 			if hasSubstack {
-				stackShape = append(stackShape, stack.Cards[0].Val.(*Stack).Shape()...)
+				stackShape.Add(stack.Cards[0].Val.(*Stack).Shape())
 			}
 		}
 
@@ -517,7 +529,7 @@ func (stack *Stack) ToMatrix(arguments ...any) []any {
 
 /** Returns whether the matrix is of a regular shape
 
- stack.IsRegular() (stackIsRegular bool)
+ stack.IsRegular() (newStack stack)
 
  @examples
  | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4}), MakeSubstack([]int {5, 6})}) => true
@@ -617,6 +629,8 @@ func (stack *Stack) ToMatrix(arguments ...any) []any {
 }
 
 /** Returns a clone of `card`
+
+ card.Clone() (newCard card)
 */
 func (card *Card) Clone() *Card {
 
@@ -631,9 +645,9 @@ func (card *Card) Clone() *Card {
 
 }
 
-/**  Returns a clone of `card`
+/** Returns a clone of `stack`
 
- stack.Clone(deepSearchType DEEPSEARCH [DEEPSEARCH_True], depth int [-1], cloneCardKeys CLONE [CLONE_True], cloneCardVals CLONE [CLONE_True], cloneSubstackKeys CLONE [CLONE_True], cloneSubstackVals CLONE [CLONE_True]) (stack)
+ stack.Clone(deepSearchType DEEPSEARCH [DEEPSEARCH_True], depth int [-1], cloneCardKeys CLONE [CLONE_True], cloneCardVals CLONE [CLONE_True], cloneSubstackKeys CLONE [CLONE_True], cloneSubstackVals CLONE [CLONE_True]) (newStack stack)
 
  @ensures
  | If `cloneSubstackVals` == CLONE_False, then each card holding a substack as its Val will have its Val updated to nil
@@ -645,7 +659,7 @@ func (stack *Stack) Clone(arguments ...any) *Stack {
 	gogenerics.UnpackVariadic(arguments, &deepSearchType, &depth, &cloneCardKeys, &cloneCardVals, &cloneSubstackKeys, &cloneSubstackVals)
 	// set defaults
 	setDEEPSEARCHDefaultIfNil(&deepSearchType)
-	setHeightDefaultIfNil(&depth)
+	setDepthDefaultIfNil(&depth)
 	setCLONEDefaultIfNil(&cloneCardKeys)
 	setCLONEDefaultIfNil(&cloneCardVals)
 	setCLONEDefaultIfNil(&cloneSubstackKeys)
@@ -745,7 +759,7 @@ func (stack *Stack) Unique(arguments ...any) *Stack {
     compareIdxs COMPARE [COMPARE_False],
     compareKeys COMPARE [COMPARE_True],
     compareVals COMPARE [COMPARE_True],
-	comparecardPtrs COMPARE [COMPARE_False],
+	compareCardPtrs COMPARE [COMPARE_False],
     pointerKeys DEREFERENCE [DEREFERENCE_None],
     pointerVals DEREFERENCE [DEREFERENCE_None]
  ) (cardEqualsOtherCard bool)
@@ -761,15 +775,15 @@ func (stack *Stack) Unique(arguments ...any) *Stack {
 func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 
 	// unpack arguments into optional parameters
-	var compareIdxs, compareKeys, compareVals, comparecardPtrs, pointerKeys, pointerVals any
-	gogenerics.UnpackVariadic(arguments, &compareIdxs, &compareKeys, &compareVals, &comparecardPtrs, &pointerKeys, &pointerVals)
+	var compareIdxs, compareKeys, compareVals, compareCardPtrs, pointerKeys, pointerVals any
+	gogenerics.UnpackVariadic(arguments, &compareIdxs, &compareKeys, &compareVals, &compareCardPtrs, &pointerKeys, &pointerVals)
 	// set default vals
 	setDEREFERENCEDefaultIfNil(&pointerKeys)
 	setDEREFERENCEDefaultIfNil(&pointerVals)
 	if compareIdxs == nil {compareIdxs = COMPARE_False}
 	setCOMPAREDefaultIfNil(&compareKeys)
 	setCOMPAREDefaultIfNil(&compareVals)
-	if comparecardPtrs == nil {comparecardPtrs = COMPARE_False}
+	if compareCardPtrs == nil {compareCardPtrs = COMPARE_False}
 
 	condition := thisCard != nil && otherCard != nil
 	
@@ -783,7 +797,7 @@ func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
 
 	condition = condition && (compareIdxs == COMPARE_False || (compareIdxs == COMPARE_True && thisCard.Idx == otherCard.Idx))
 
-	condition = condition && (comparecardPtrs == COMPARE_False || (comparecardPtrs == COMPARE_True && fmt.Sprintf("%p", thisCard) == fmt.Sprintf("%p", otherCard)))
+	condition = condition && (compareCardPtrs == COMPARE_False || (compareCardPtrs == COMPARE_True && fmt.Sprintf("%p", thisCard) == fmt.Sprintf("%p", otherCard)))
 	
 	// return whether conditions yield true
 	return condition
@@ -795,7 +809,7 @@ func (thisCard *Card) Equals(otherCard *Card, arguments ...any) bool {
  stack.Equals(
     otherStack *Stack,
     deepSearchType *DEEPSEARCH [DEEPSEARCH_True],
-    depth int|[]int|*Stack,
+    depth int|[]int|*Stack [-1],
     compareCardKeys COMPARE [COMPARE_True],
     compareCardVals COMPARE [COMPARE_True],
     compareSubstackKeys COMPARE [COMPARE_True],
@@ -875,7 +889,7 @@ func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 	gogenerics.UnpackVariadic(arguments, &deepSearchType, &depth, &compareCardKeys, &compareCardVals, &compareSubstackKeys, &pointerCardKeys, &pointerCardVals, &pointerSubstackKeys, &compareSubstackAdrs)
 	// set default vals
 	setDEEPSEARCHDefaultIfNil(&deepSearchType)
-	setHeightDefaultIfNil(&depth)
+	setDepthDefaultIfNil(&depth)
 
 	setCOMPAREDefaultIfNil(&compareCardKeys)
 	setCOMPAREDefaultIfNil(&compareCardVals)
@@ -887,6 +901,8 @@ func (stack *Stack) Equals(otherStack *Stack, arguments ...any) (test bool) {
 
 	if compareSubstackAdrs == nil { compareSubstackAdrs = COMPARE_False }
 
+	// TODO: At some point, the variable names got messed up.  That said, the code runs perfectly.
+	// TODO: Clarify here later.
 	heightStack, heightIsStack := depth.(*Stack)
 	if heightIsStack {
 		depth = []int {}
@@ -1071,7 +1087,7 @@ func (stack *Stack) Flip() *Stack {
       workingMem ...any
     ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}]
@@ -1235,7 +1251,7 @@ func (stack *Stack) Print(arguments ...any) *Stack {
     retVarPtr any [nil],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
     deepSearchType DEEPSEARCH [DEEPSEARCH_True],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     otherInfo []any {
         retStackPtr,
@@ -1315,7 +1331,7 @@ func (stack *Stack) Print(arguments ...any) *Stack {
 	if retVarPtr == nil {var o any; retVarPtr = &o;}
 	if workingMem == nil {workingMem = []any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}}
 	setDEEPSEARCHDefaultIfNil(&deepSearchType)
-	setHeightDefaultIfNil(&depth)
+	setDepthDefaultIfNil(&depth)
 	if passType == nil {passType = PASS_Both}
 	if otherInfo == nil {otherInfo = []any {nil, nil}}
 	retStackPtr := otherInfo.([]any)[0]
@@ -1470,7 +1486,7 @@ func (stack *Stack) Print(arguments ...any) *Stack {
     retVarPtr any [nil],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
     deepSearchType DEEPSEARCH [DEEPSEARCH_True],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     otherInfo []any {
         retStackPtr,
@@ -1520,7 +1536,7 @@ func (stack *Stack) LambdaThis(lambda any, arguments ...any) *Stack {
     retVarPtr any [nil],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
     deepSearchType DEEPSEARCH [DEEPSEARCH_True],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     otherInfo []any {
         retStackPtr,
@@ -1570,7 +1586,7 @@ func (stack *Stack) LambdaStack(lambda any, arguments ...any) *Stack {
     retVarPtr any [nil],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
     deepSearchType DEEPSEARCH [DEEPSEARCH_True],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     otherInfo []any {
         retStackPtr,
@@ -1620,7 +1636,7 @@ func (stack *Stack) LambdaCard(lambda any, arguments ...any) *Card {
     retVarPtr any [nil],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
     deepSearchType DEEPSEARCH [DEEPSEARCH_True],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     otherInfo []any {
         retStackPtr,
@@ -1669,7 +1685,7 @@ func (stack *Stack) LambdaVarAdr(lambda any, arguments ...any) any {
     ) [nil],
     returnType RETURN [RETURN_Cards],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
@@ -1710,7 +1726,7 @@ func (stack *Stack) LambdaVarAdr(lambda any, arguments ...any) any {
       workingMem ...any
     ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideInsert OVERRIDE [OVERRIDE_False],
@@ -1755,7 +1771,7 @@ func (stack *Stack) Add(insert any, arguments ...any) *Stack {
       workingMem ...any
     ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideInsert OVERRIDE [OVERRIDE_False],
@@ -1958,7 +1974,7 @@ func (stack *Stack) Swap(arguments ...any) *Stack {
       workingMem ...any
     ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
@@ -1999,7 +2015,7 @@ func (stack *Stack) Has(arguments ...any) bool {
       workingMem ...any
     ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
@@ -2064,7 +2080,7 @@ func (stack *Stack) Has(arguments ...any) bool {
     ) [nil],
     returnType RETURN [RETURN_Cards],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
@@ -2143,7 +2159,7 @@ func (stack *Stack) GetMany(arguments ...any) *Stack {
       workingMem ...any
     ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
@@ -2262,7 +2278,7 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
     ) [nil],
     returnType RETURN [RETURN_Cards],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
@@ -2374,7 +2390,7 @@ func (stack *Stack) Replace(replaceType REPLACE, replaceWith any, arguments ...a
       workingMem ...any
     ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
@@ -2416,7 +2432,7 @@ func (stack *Stack) Extract(arguments ...any) *Card {
     ) [nil],
     returnType RETURN [RETURN_Cards],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
@@ -2457,7 +2473,7 @@ func (stack *Stack) ExtractMany(arguments ...any) *Stack {
       workingMem ...any
     ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
@@ -2501,7 +2517,7 @@ func (stack *Stack) Remove(arguments ...any) *Stack {
       workingMem ...any
     ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
@@ -2557,7 +2573,7 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
       workingMem ...any
     ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
@@ -2609,7 +2625,7 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
       workingMem ...any
     ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
@@ -2659,7 +2675,7 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
       workingMem ...any
     ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_True],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Cards],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
@@ -2718,7 +2734,7 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
       workingMem ...any
     ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_True],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Cards],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],
@@ -2789,11 +2805,31 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
 	return file
 }
 
-/** TODO: add */
+/** Updates `stack` to its transpose, or returns nil if `stack` is of irregular shape
+ 
+ stack.Transpose() (stack)
+
+ @examples
+ | MakeStackMatrix([]int {1, 2, 3, 4, 5, 6}, nil, []int {2, 3}).Transpose() => Stack {Stack{1, 4}, Stack{2, 5}, Stack{3, 6}}
+ */
  func (stack *Stack) Transpose() *Stack {
-	clone := stack.Clone()
-	clone.Lambda(func(c *Card) {
-		stack.DimensionalityReduce
-	})
-	return stack
+
+	shape := stack.Shape()
+
+	// return nil if matrix shape is irregular
+	if shape == nil { return nil } else {
+		
+		rs := MakeStackMatrix(nil, nil, shape.Flip()) // initialize empty stackMatrix of same shape as original stack (pass it into LambdaStack for the initial retStack value)
+
+		stack = stack.LambdaStack(func(c *Card, parentStack *Stack, _ bool, coords *Stack, retStack *Stack) {
+			
+			// move this c to transposed position in new stack
+			parentStack.Remove(FIND_Card, c)
+			retStack.Update(REPLACE_Card, c, FIND_Coords, coords.Flip(), DEEPSEARCH_True, nil, PASS_Cards)
+	
+		}, rs, nil, nil, nil, DEEPSEARCH_True, []int {stack.Height}, PASS_Cards)
+		
+		return stack
+
+	}
  }

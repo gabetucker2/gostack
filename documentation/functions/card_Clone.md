@@ -2,7 +2,7 @@
 
  <h2>card.Clone()</h2>
 
- `card.Clone() (card)`
+ `card.Clone() (newCard card)`
 
 ```
  Returns a clone of `card`

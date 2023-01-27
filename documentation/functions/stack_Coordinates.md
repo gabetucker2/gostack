@@ -22,7 +22,7 @@
       workingMem ...any
     ) [nil],
     deepSearchType DEEPSEARCH [DEEPSEARCH_True],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Cards],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],

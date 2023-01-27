@@ -392,11 +392,13 @@ func case_stack_Shape(funcName string) {
 	stack1 := MakeStackMatrix([]int {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, nil, []int {2, 2, 5})
 	stack2 := MakeStack()
 	stack3 := MakeStack([]string {"Hi", "Hey"})
+	stack4 := MakeStack([]*Stack{MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4}), MakeSubstack([]int {5, 6})})
 
 	conditions := []bool {
-		gogenerics.SlicesEqual(stack1.Shape(), []int {2, 2, 5}), // 1
-		gogenerics.SlicesEqual(stack2.Shape(), []int {0}), // 2
-		gogenerics.SlicesEqual(stack3.Shape(), []int {2}), // 3
+		gogenerics.SlicesEqual(stack1.Shape().ToArray(), []int {2, 2, 5}), // 1
+		gogenerics.SlicesEqual(stack2.Shape().ToArray(), []int {0}), // 2
+		gogenerics.SlicesEqual(stack3.Shape().ToArray(), []int {2}), // 3
+		gogenerics.SlicesEqual(stack4.Shape().ToArray(), []int {3, 2}), // 4
 	}
 
 	test_End(funcName, conditions)
@@ -1180,6 +1182,11 @@ func case_stack_Get(funcName string) {
 	card31 := MakeStack([]any {intValA, intValB, intValC}).Get(FIND_Val, intValD, nil, nil, nil, DEREFERENCE_This)
 	card32 := MakeStack([]int {2, 3, 6}, []string {"Bob", "Joe", "Bill"}).Get(FIND_KeyVal, MakeStack([]*Card {MakeCard(3, "Joe"), MakeCard(2, "Joe"), MakeCard(6, "Joe")}))
 
+	// findCoords test
+	card33 := MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}).Get(FIND_Coords, []int {0, 1}, DEEPSEARCH_True, nil, PASS_Cards)
+	card34 := MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}).Get(FIND_Coords, MakeStack([]int {1}), DEEPSEARCH_True, nil, PASS_Substacks)
+	card35 := MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}).Get(FIND_Coords, MakeStack([]int {1}), DEEPSEARCH_True, nil, PASS_Cards)
+
 	conditions := []bool {
 
 		// expansively test functionality
@@ -1219,6 +1226,11 @@ func case_stack_Get(funcName string) {
 		card30 == nil, // 30
 		card31 == nil, // 31
 		card32.Equals(MakeCard(3, "Joe")), // 32
+
+		// findCoords test
+		card33.Equals(MakeCard(2)), // 33
+		card34.Val.(*Stack).Equals(MakeStack([]int {3, 4})), // 34
+		card35 == nil, // 35
 
 	}
 
@@ -1695,62 +1707,26 @@ func case_stack_CoordinatesMany(funcName string) {
 	
 }
 
-/** Executes all case tests */
-func Run(_showTestText bool) {
+func case_stack_Transpose(funcName string) {
 
-	showTestText = _showTestText
-	gogenerics.RemoveUnusedError(case_MakeCard, case_MakeStack, case_MakeStackMatrix, case_stack_DimensionalityReduce, case_stack_Filter, case_stack_ToArray, case_stack_ToMap, case_stack_ToMatrix, case_stack_IsRegular, case_stack_Shape, case_stack_Duplicate, case_stack_Empty, case_card_Clone, case_stack_Clone, case_stack_Unique, case_card_Equals, case_stack_Equals, case_stack_Shuffle, case_stack_Flip, case_card_Print, case_stack_Print, case_stack_Lambdas, case_stack_Get, case_stack_GetMany, case_stack_Add, case_stack_AddMany, case_stack_Has, case_stack_Move, case_stack_Replace, case_stack_ReplaceMany, case_stack_Extract, case_stack_ExtractMany, case_stack_Remove, case_stack_RemoveMany, case_stack_Update, case_stack_UpdateMany, case_stack_Swap, case_CSVToStackMatrix, case_stack_ToCSV, case_stack_Coordinates, case_stack_CoordinatesMany)
+	test_Start(funcName, showTestText)
 
-	fmt.Println("- BEGINNING TESTS")
+	// test base functionality
+	stackA := MakeStackMatrix([]int {1, 2, 3, 4}, nil, []int {2, 2}).Transpose()
+	stackB := MakeStackMatrix([]int {1, 2, 3, 4, 5, 6}, nil, []int {3, 2}).Transpose()
+	stackC := MakeStackMatrix([]int {1, 2, 3, 4, 5, 6}, nil, []int {2, 3}).Transpose()
+	stackD := MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4, 5})}).Transpose()
 
-	// NON-GENERALIZED FUNCTIONS (NOT DEPENDENT ON GENERALIZED FUNCTIONS)
-	case_MakeCard("MakeCard") // GOOD
-	case_card_Equals("card.Equals") // GOOD
-	case_MakeStack("MakeStack") // GOOD
-	case_stack_Equals("stack.Equals") // GOOD
-	case_MakeStackMatrix("MakeStackMatrix") // GOOD
-	case_stack_Lambdas("stack.Lambdas") // GOOD
-	case_stack_ToArray("stack.ToArray") // GOOD
-	case_stack_ToMap("stack.ToMap") // GOOD
-	case_stack_ToMatrix("stack.ToMatrix") // GOOD
-	case_stack_IsRegular("stack.IsRegular") // GOOD
-	case_stack_Shape("stack.Shape") // GOOD
-	case_stack_Duplicate("stack.Duplicate") // GOOD
-	case_stack_Empty("stack.Empty") // GOOD
-	case_card_Clone("card.Clone") // GOOD
-	case_stack_Clone("stack.Clone") // GOOD
-	case_stack_Shuffle("stack.Shuffle") // GOOD
-	case_card_Print("card.Print") // GOOD
-	case_stack_Print("stack.Print") // GOOD
-	case_CSVToStackMatrix("CSVToStackMatrix") // GOOD
-	case_stack_ToCSV("stack.ToCSV") // GOOD
-	case_stack_Coordinates("stack.Coordinates") // GOOD
-	case_stack_CoordinatesMany("stack.CoordinatesMany") // GOOD
-	case_stack_Flip("stack.Flip") // GOOD
-	case_card_SwitchKeyVal("card.SwitchKeyVal") // GOOD
-	case_stack_SwitchKeysVals("stack.SwitchKeysVals") // GOOD
+	conditions := []bool {
+
+		// test base functionality
+		stackA.Equals(MakeStackMatrix([]int {1, 3, 2, 4}, nil, []int {2, 2})), // 1
+		stackB.Equals(MakeStackMatrix([]int {1, 3, 5, 2, 4, 6}, nil, []int {2, 3})), // 2
+		stackC.Equals(MakeStackMatrix([]int {1, 4, 2, 5, 3, 6}, nil, []int {3, 2})), // 3
+		stackD == nil, // 4
+
+	}
+
+	test_End(funcName, conditions)
 	
-	// GENERALIZED FUNCTIONS
-	case_stack_Get("stack.Get") // GOOD
-	case_stack_GetMany("stack.GetMany") // GOOD
-	case_stack_Add("stack.Add") // GOOD
-	case_stack_AddMany("stack.AddMany") // GOOD
-	case_stack_Replace("stack.Replace") // GOOD
-	case_stack_ReplaceMany("stack.ReplaceMany") // GOOD
-	case_stack_Update("stack.Update") // GOOD
-	case_stack_UpdateMany("stack.UpdateMany") // GOOD
-	case_stack_Extract("stack.Extract") // GOOD
-	case_stack_ExtractMany("stack.ExtractMany") // GOOD
-	case_stack_Remove("stack.Remove") // GOOD
-	case_stack_RemoveMany("stack.RemoveMany") // GOOD
-	case_stack_Has("stack.Has") // GOOD
-	case_stack_Move("stack.Move") // GOOD
-	case_stack_Swap("stack.Swap") // GOOD
-	case_stack_Filter("stack.Filter") // GOOD
-	
-	// NON-GENERALIZED FUNCTIONS (DEPENDENT ON GENERALIZED FUNCTIONS)
-	case_stack_DimensionalityReduce("stack.DimensionalityReduce") // GOOD
-	case_stack_Unique("stack.Unique") // GOOD
-	case_stack_Transpose("stack.Transpose") // BAD
-
 }

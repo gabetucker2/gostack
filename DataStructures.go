@@ -33,6 +33,7 @@ const (
 	FIND_Val
 	FIND_KeyVal
 	FIND_Card
+	FIND_Coords
 	FIND_Size
 	FIND_Height
 	FIND_Slice
@@ -140,7 +141,7 @@ func setDEEPSEARCHDefaultIfNil(deepSearchType *any) {
 	}
 }
 
-func setHeightDefaultIfNil(depth *any) {
+func setDepthDefaultIfNil(depth *any) {
 	if *depth == nil {
 		*depth = -1
 	}

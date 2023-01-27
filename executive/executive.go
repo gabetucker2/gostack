@@ -11,7 +11,7 @@ func main() {
 	// remove import errors when stuff is commented out
 	gogenerics.RemoveUnusedError(cases.Run, testing.RaceNative, testing.RaceGostack, testing.Experiment)
 
-	// cases.Run(false)
+	cases.Run(true)
 	// testing.RaceNative()
 	// testing.RaceGostack()
 	// testing.Experiment()

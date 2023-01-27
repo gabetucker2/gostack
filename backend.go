@@ -162,6 +162,13 @@ func selectCard(findType any, findData any, dereferenceType any, overrideFindDat
 			if hasMatch {break}
 		}
 		return hasMatch
+	case FIND_Coords:
+		findDataStack, isStack := findData.(*Stack)
+		comp := findDataStack
+		if !isStack {
+			comp = MakeStack(findData.([]int))
+		}
+		return coords.Equals(comp, DEEPSEARCH_False, nil, COMPARE_False, nil, COMPARE_False)
 	case FIND_Size:
 		return needleInHaystack(card.Val.(*Stack).Size, getHaystack(findData), DEREFERENCE_None)
 	case FIND_Height:

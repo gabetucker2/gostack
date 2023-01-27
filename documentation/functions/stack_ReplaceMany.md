@@ -31,7 +31,7 @@
     ) [nil],
     returnType RETURN [RETURN_Cards],
     deepSearchType DEEPSEARCH [DEEPSEARCH_False],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     dereferenceType DEREFERENCE [DEREFERENCE_None],
     overrideFindData OVERRIDE [OVERRIDE_False],

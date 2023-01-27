@@ -24,7 +24,7 @@
     retVarPtr any [nil],
     workingMem []any [[]any {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}],
     deepSearchType DEEPSEARCH [DEEPSEARCH_True],
-    depth int [-1],
+    depth int|[]int|*Stack [-1],
     passType PASS [PASS_Both],
     otherInfo []any {
         retStackPtr,
