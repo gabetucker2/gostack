@@ -32,7 +32,7 @@ v1.0.5 — Beta Release — 01/26/2022 — Patch A
  
  * [Timeline](documentation/timeline.md)
  * [Credits](documentation/credits.md)
- * [Support Us](documentation/support.md)
+ * [Support us](documentation/support.md)
  * [How fast is gostack compared to native Go?](documentation/benchmark.md)
  * [How many lines does gostack save compared to native Go?](documentation/race.md)
 

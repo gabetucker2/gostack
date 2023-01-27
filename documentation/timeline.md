@@ -26,7 +26,6 @@
 
  <h2><b>v1.0.4</b> — <i>Beta Release</i> — 11/13/2022 — Post-release polish</h2>
 
-Completed:
 * Community Discord server, Patreon page, and buymeaoffee is created
 * The **Height** property of **Stacks** is renamed to **Height** to improve conceptual clarity
 * **MakeSubstack()** function added
