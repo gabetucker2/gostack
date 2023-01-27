@@ -52,7 +52,15 @@ Completed:
 
  <h1>Planned Releases</h1>
 
- <h2><b>v1.0.6</b> — <i>Beta Release</i> — ?/?/2023 — Patch A</h2>
+ <h2><b>v1.0.5</b> — <i>Beta Release</i> — ?/?/2023 — Patch A</h2>
+
+* Debuged Discussion-posted bug
+* stack.Transpose()
+* stack.Shape() => returns type Stack
+* stack.StripStackMatrix => stack.DimensionalityReduce
+* stack.GetCoords() gets a card at given coordinates
+
+ <h2><b>v1.0.6</b> — <i>Beta Release</i> — ?/?/2023 — Patch B</h2>
 
 * More strictly implement design-by-contract principles in function documentation to facilitate error-catching for invalid arguments
 * Further simplify function parameterizations
@@ -68,7 +76,7 @@ Completed:
     * Documentational improvements
     * Conceptual improvements
 
- <h2><b>v1.0.8</b> — <i>Beta Release</i> — ?/?/2023 — Patch B</h2>
+ <h2><b>v1.0.8</b> — <i>Beta Release</i> — ?/?/2023 — Patch C</h2>
 
 * Implement feedback from the ***gostack*** community
     * Bug fixes
@@ -76,7 +84,7 @@ Completed:
     * Documentational improvements
     * Conceptual improvements
 
- <h2><b>v1.1.0</b> — <i>Full release</i> — ?/?/2023 — Patch C</h2>
+ <h2><b>v1.1.0</b> — <i>Full release</i> — ?/?/2023 — Patch D</h2>
 
 * Implement feedback from the ***gostack*** community
     * Bug fixes
@@ -84,7 +92,7 @@ Completed:
     * Documentational improvements
     * Conceptual improvements
 
- <h2><b>v1.2.0</b> — <i>Full release</i> — ?/?/? — Patch D</h2>
+ <h2><b>v1.2.0</b> — <i>Full release</i> — ?/?/? — Patch E</h2>
 
 * Implement feedback from the ***gostack*** community
     * Bug fixes

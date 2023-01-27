@@ -41,4 +41,4 @@ Ensure that you reference the address of each card using `fmt.Sprintf("%p", card
 Congratulations!  That's the gist of what you need to know to manage pointers in ***gostack***.
 
 ---
- [> Return to glossary](../README.md)
+ [> Return to glossary](../../README.md)

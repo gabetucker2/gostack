@@ -215,4 +215,4 @@ There are many more functions than the ones displayed here that you are welcome 
 ---
  [> Go to StackMatrix tutorial (Recommended)](matricesTutorial.md)
 
- [> Return to glossary](../README.md)
+ [> Return to glossary](../../README.md)

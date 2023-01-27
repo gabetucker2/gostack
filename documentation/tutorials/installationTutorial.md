@@ -21,4 +21,4 @@
  *If you have any trouble, please reach out to us on our [official Discord community](https://discord.gg/NmxxcKBVBU).*
 
 ---
- [> Return to glossary](../README.md)
+ [> Return to glossary](../../README.md)

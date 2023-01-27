@@ -351,17 +351,17 @@ MakeCard(input1 any [nil], input2 any [nil], idx int [-1]) (*Card)
 
 /** Updates a stack to represent a selection within that stack matrix
  
- stack.StripStackMatrix(idx ...int|[]int|*Stack [[]int {0, 1, ..., stack.Size - 1}]) (stack)
+ stack.DimensionalityReduce(idx ...int|[]int|*Stack [[]int {0, 1, ..., stack.Size - 1}]) (stack)
 
  @requires
  | `idx` refers to valid index positions from the stack
  @examples
- | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}).StripStackMatrix() => Stack {1, 2, 3, 4}
- | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}).StripStackMatrix([]int {0, 1}) => Stack {1, 2, 3, 4}
- | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}).StripStackMatrix(0) => Stack {1, 2}
- | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}).StripStackMatrix(1) => Stack {3, 4}
+ | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}).DimensionalityReduce() => Stack {1, 2, 3, 4}
+ | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}).DimensionalityReduce([]int {0, 1}) => Stack {1, 2, 3, 4}
+ | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}).DimensionalityReduce(0) => Stack {1, 2}
+ | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}).DimensionalityReduce(1) => Stack {3, 4}
  */
-func (stack *Stack) StripStackMatrix(arguments ...any) *Stack {
+func (stack *Stack) DimensionalityReduce(arguments ...any) *Stack {
 
 	// unpack arguments into optional parameters
 	var idx any
@@ -485,9 +485,9 @@ func (stack *Stack) ToMatrix(arguments ...any) []any {
  @ensures
  | returns nil if it's not regular and thus doesn't have a shape
  @examples
- | MakeStack([]*Stack{MakeSubstack([]int {1, 2, 3}), MakeSubstack([]int {4, 5, 6})}).Shape() => []int {2, 3}
- | MakeStack([]*Stack{MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4}), MakeSubstack([]int {5, 6})}).Shape() => []int {3, 2}
- | MakeStack([]*Stack{MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4, 5}), MakeSubstack([]int {6, 7})}) => nil
+ | MakeStack([]*Stack {MakeSubstack([]int {1, 2, 3}), MakeSubstack([]int {4, 5, 6})}).Shape() => []int {2, 3}
+ | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4}), MakeSubstack([]int {5, 6})}).Shape() => []int {3, 2}
+ | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4, 5}), MakeSubstack([]int {6, 7})}) => nil
  */
  func (stack *Stack) Shape() []int {
 
@@ -520,8 +520,8 @@ func (stack *Stack) ToMatrix(arguments ...any) []any {
  stack.IsRegular() (stackIsRegular bool)
 
  @examples
- | MakeStack([]*Stack{MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4}), MakeSubstack([]int {5, 6})}) => true
- | MakeStack([]*Stack{MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4, 5}), MakeSubstack([]int {6, 7})}) => false
+ | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4}), MakeSubstack([]int {5, 6})}) => true
+ | MakeStack([]*Stack {MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4, 5}), MakeSubstack([]int {6, 7})}) => false
  */
  func (stack *Stack) IsRegular() bool {
 
@@ -1195,7 +1195,7 @@ func (stack *Stack) Print(arguments ...any) *Stack {
 			}
 		}
 		fmt.Printf("%v- stack.Size:    %v\n", depthPrinter(indent.(int)), stack.Size)
-		fmt.Printf("%v- stack.Height:   %v\n", depthPrinter(indent.(int)), stack.Height)
+		fmt.Printf("%v- stack.Height:  %v\n", depthPrinter(indent.(int)), stack.Height)
 		for i := range stack.Cards {
 			c := stack.Cards[i]
 	
@@ -2788,3 +2788,12 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
 	csvWriter.WriteAll(csv)
 	return file
 }
+
+/** TODO: add */
+ func (stack *Stack) Transpose() *Stack {
+	clone := stack.Clone()
+	clone.Lambda(func(c *Card) {
+		stack.DimensionalityReduce
+	})
+	return stack
+ }

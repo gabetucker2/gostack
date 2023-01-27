@@ -88,4 +88,4 @@ This should just about cover what you need to know when it comes to deep searche
 ---
  [> Go to Lambda tutorial (Recommended)](lambdaTutorial.md)
 
- [> Return to glossary](../README.md)
+ [> Return to glossary](../../README.md)
