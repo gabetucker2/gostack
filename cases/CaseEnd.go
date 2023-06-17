@@ -264,34 +264,47 @@ func case_stack_ToArray(funcName string) {
 	arrayVals2 := sampleStack().ToArray(RETURN_Vals)
 	arrayKeys := sampleStack().ToArray(RETURN_Keys)
 	arrayIdxs := sampleStack().ToArray(RETURN_Idxs)
-	arrayCards := MakeStack([]*Card {testCardA, testCardB, testCardC}).ToArray(RETURN_Cards)
+	arrayCards1 := MakeStack([]*Card {testCardA, testCardB, testCardC}).ToArray(RETURN_Cards)
+	substackA := MakeStack([]int {1, 2})
+	substackB := MakeStack([]int {3, 4})
+	arrayCards2 := MakeStack([]*Stack {substackA, substackB}).ToArray(RETURN_Cards)
+	arrayStacks := MakeStack([]*Stack {substackA, substackB}).ToArray(RETURN_Stacks)
+
+	fmt.Println("Ended calls")
 	
 	conditions := []bool {
 		len(arrayVals1) == 3, // 1
 		len(arrayVals2) == 3, // 2
 		len(arrayKeys) == 3, // 3
 		len(arrayIdxs) == 3, // 4
-		len(arrayCards) == 3, // 5
+		len(arrayCards1) == 3, // 5
+		len(arrayCards2) == 2, // 6
+		len(arrayStacks) == 2, // 7
 
-		arrayVals1[0] == testCardA.Val, // 6
-		arrayVals1[1] == testCardB.Val, // 7
-		arrayVals1[2] == testCardC.Val, // 8
+		arrayVals1[0] == testCardA.Val, // 8
+		arrayVals1[1] == testCardB.Val, // 9
+		arrayVals1[2] == testCardC.Val, // 10
 
-		arrayVals2[0] == testCardA.Val, // 9
-		arrayVals2[1] == testCardB.Val, // 10
-		arrayVals2[2] == testCardC.Val, // 11
+		arrayVals2[0] == testCardA.Val, // 11
+		arrayVals2[1] == testCardB.Val, // 12
+		arrayVals2[2] == testCardC.Val, // 13
 
-		arrayKeys[0] == testCardA.Key, // 12
-		arrayKeys[1] == testCardB.Key, // 13
-		arrayKeys[2] == testCardC.Key, // 14
+		arrayKeys[0] == testCardA.Key, // 14
+		arrayKeys[1] == testCardB.Key, // 15
+		arrayKeys[2] == testCardC.Key, // 16
 
-		arrayIdxs[0] == testCardA.Idx, // 15
-		arrayIdxs[1] == testCardB.Idx, // 16
-		arrayIdxs[2] == testCardC.Idx, // 17
+		arrayIdxs[0] == testCardA.Idx, // 17
+		arrayIdxs[1] == testCardB.Idx, // 18
+		arrayIdxs[2] == testCardC.Idx, // 19
 
-		arrayCards[0].(*Card) == testCardA, // 18
-		arrayCards[1].(*Card) == testCardB, // 19
-		arrayCards[2].(*Card) == testCardC, // 20
+		arrayCards1[1].(*Card) == testCardB, // 21
+		arrayCards1[2].(*Card) == testCardC, // 22
+
+		arrayCards2[0].(*Card).Val.(*Stack).Equals(substackA), // 23
+		arrayCards2[1].(*Card).Val.(*Stack).Equals(substackB), // 24
+
+		arrayStacks[0].(*Stack).Equals(substackA), // 25
+		arrayStacks[1].(*Stack).Equals(substackB), // 26
 	}
 
 	test_End(funcName, conditions)
