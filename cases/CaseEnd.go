@@ -264,6 +264,7 @@ func case_stack_ToArray(funcName string) {
 	arrayVals2 := sampleStack().ToArray(RETURN_Vals)
 	arrayKeys := sampleStack().ToArray(RETURN_Keys)
 	arrayIdxs := sampleStack().ToArray(RETURN_Idxs)
+	fmt.Println("Starting calls")
 	arrayCards1 := MakeStack([]*Card {testCardA, testCardB, testCardC}).ToArray(RETURN_Cards)
 	substackA := MakeStack([]int {1, 2})
 	substackB := MakeStack([]int {3, 4})
