@@ -398,8 +398,8 @@ func (stack *Stack) DimensionalityReduce(arguments ...any) *Stack {
  stack.ToArray(returnType RETURN [RETURN_Vals]) (newArray []any)
 
  @examples
- | MakeStack([]int {1, 2, 3}, []string {"a", "b", "c"}).ToArray() => []any {"a", "b", "c"}
- | MakeStack([]int {1, 2, 3}, []string {"a", "b", "c"}).ToArray(RETURN_Keys) => []any {1, 2, 3}
+ | MakeStack([]int {1, 2, 3}, []string {"a", "b", "c"}).ToArray() => []any {1, 2, 3}
+ | MakeStack([]int {1, 2, 3}, []string {"a", "b", "c"}).ToArray(RETURN_Keys) => []any {"a", "b", "c"}
  | MakeStack([]int {1, 2, 3}, []string {"a", "b", "c"}).ToArray(RETURN_Idxs) => []any {0, 1, 2}
  | MakeStack([]*Card {cardA, cardB, cardC}).ToArray(RETURN_Cards) => []any {cardA, cardB, cardC}
  | MakeStack([]*Stack {substackA, substackB}).ToArray(RETURN_Cards) => []any {Card{Val:substackA}, Card{Val:substackA}}
@@ -410,7 +410,7 @@ func (stack *Stack) ToArray(arguments ...any) []any {
 	// unpack arguments into optional parameters
 	var returnType any
 	gogenerics.UnpackVariadic(arguments, &returnType)
-
+	fmt.Println("Call")
 	// return
 	return stack.ToMatrix(returnType, 1)
 
@@ -445,7 +445,7 @@ func (stack *Stack) ToMap() map[any]any {
  | MakeStack([]int {1, 2, 3, 4}).ToMatrix() => []any {1, 2, 3, 4}
  | MakeStack(*Stack{MakeSubstack([]int {1, 2}), MakeSubstack([]int {3, 4})}).ToMatrix() => []any {[]any {1, 2}, []any {3, 4}}
  */
-func (stack *Stack) ToMatrix(arguments ...any) []any {
+ func (stack *Stack) ToMatrix(arguments ...any) []any {
 
 	// unpack arguments into optional parameters
 	var returnType, depth any
@@ -456,19 +456,30 @@ func (stack *Stack) ToMatrix(arguments ...any) []any {
 	if depth == -1 || depth.(int) > stack.Height { depth = stack.Height }
 	newMatrix := []any {}
 
+	fmt.Println("-1")
+
 	// break recursion at depth == 0
 	if depth.(int) != 0 {
+
+		fmt.Println("0")
 		// add to return
 		for i := range stack.Cards {
 			c := stack.Cards[i]
 			// if this Card's val is a Stack
 			subStack, isStack := c.Val.(*Stack)
+
+			fmt.Println(isStack)
 			
-			if isStack {
+			if isStack { // should cover cases of RETURN_Card with Stacks and RETURN_Stacks with Stacks
 				if depth.(int) > 1 {
 					newMatrix = append(newMatrix, subStack.ToMatrix(returnType, depth.(int) - 1))
 				} else {
-					newMatrix = append(newMatrix, []any {})
+					switch returnType {
+					case RETURN_Cards:
+						newMatrix = append(newMatrix, c)
+					case RETURN_Stacks:
+						newMatrix = append(newMatrix, subStack)
+					}
 				}
 			} else {
 				switch returnType {
