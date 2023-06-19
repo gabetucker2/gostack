@@ -474,6 +474,8 @@ func (stack *Stack) ToMap() map[any]any {
 						newMatrix = append(newMatrix, c)
 					case RETURN_Stacks:
 						newMatrix = append(newMatrix, subStack)
+					default:
+						newMatrix = append(newMatrix, []any {})
 					}
 				}
 			} else {
