@@ -264,15 +264,12 @@ func case_stack_ToArray(funcName string) {
 	arrayVals2 := sampleStack().ToArray(RETURN_Vals)
 	arrayKeys := sampleStack().ToArray(RETURN_Keys)
 	arrayIdxs := sampleStack().ToArray(RETURN_Idxs)
-	fmt.Println("Starting calls")
 	arrayCards1 := MakeStack([]*Card {testCardA, testCardB, testCardC}).ToArray(RETURN_Cards)
 	substackA := MakeStack([]int {1, 2})
 	substackB := MakeStack([]int {3, 4})
 	arrayCards2 := MakeStack([]*Stack {substackA, substackB}).ToArray(RETURN_Cards)
 	arrayStacks := MakeStack([]*Stack {substackA, substackB}).ToArray(RETURN_Stacks)
 
-	fmt.Println("Ended calls")
-	
 	conditions := []bool {
 		len(arrayVals1) == 3, // 1
 		len(arrayVals2) == 3, // 2

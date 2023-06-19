@@ -410,7 +410,7 @@ func (stack *Stack) ToArray(arguments ...any) []any {
 	// unpack arguments into optional parameters
 	var returnType any
 	gogenerics.UnpackVariadic(arguments, &returnType)
-	fmt.Println("Call")
+
 	// return
 	return stack.ToMatrix(returnType, 1)
 
@@ -456,19 +456,14 @@ func (stack *Stack) ToMap() map[any]any {
 	if depth == -1 || depth.(int) > stack.Height { depth = stack.Height }
 	newMatrix := []any {}
 
-	fmt.Println("-1")
-
 	// break recursion at depth == 0
 	if depth.(int) != 0 {
 
-		fmt.Println("0")
 		// add to return
 		for i := range stack.Cards {
 			c := stack.Cards[i]
 			// if this Card's val is a Stack
 			subStack, isStack := c.Val.(*Stack)
-
-			fmt.Println(isStack)
 			
 			if isStack { // should cover cases of RETURN_Card with Stacks and RETURN_Stacks with Stacks
 				if depth.(int) > 1 {
