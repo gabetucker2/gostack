@@ -1,6 +1,7 @@
 ![Banner](../media/gostack_SmallerTransparent.png)
 
- 6/18/2022 — Development begins
+ MM/DD/YYYY
+ 06/18/2022 — Development begins
 
  <h1>Current Releases</h1>
 
@@ -51,7 +52,7 @@
 
  <h1>Planned Releases</h1>
 
- <h2><b>v1.0.5</b> — <i>Beta Release</i> — ?/?/2023 — Patch A</h2>
+ <h2><b>v1.0.5</b> — <i>Beta Release</i> — 01/26/2023 — Patch A</h2>
 
 * stack.Transpose() added
 * stack.Shape() => returns type Stack
