@@ -61,6 +61,7 @@
 * Added testing tutorial
 * Updated MakeStackMatrix's `matrixShape` parameter to accept Stack arguments
 * Fixed a bug with the ToMatrix and ToArray functions not properly handling RETURN_Card and RETURN_Stack arguments
+* Made `CSVToStackMatrix` less prone to producing errors
 
  <h2><b>v1.0.6</b> — <i>Beta Release</i> — ?/?/2023 — Patch B</h2>
 
@@ -79,7 +80,6 @@
     * Function restructuring
     * Documentational improvements
     * Conceptual improvements
-* Made `CSVToStackMatrix` less prone to producing errors
 
  <h2><b>v1.0.8</b> — <i>Beta Release</i> — ?/?/???? — Patch C</h2>
 
