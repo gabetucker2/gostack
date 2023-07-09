@@ -60,10 +60,13 @@
 * FIND_Coords added
 * Added testing tutorial
 * Updated MakeStackMatrix's `matrixShape` parameter to accept Stack arguments
+
+ <h2><b>v1.0.51</b> — <i>Beta Release</i> — 07/09/2023 — Patch B</h2>
+
 * Fixed a bug with the ToMatrix and ToArray functions not properly handling RETURN_Card and RETURN_Stack arguments
 * Made `CSVToStackMatrix` less prone to producing errors
 
- <h2><b>v1.0.6</b> — <i>Beta Release</i> — ?/?/2023 — Patch B</h2>
+ <h2><b>v1.0.6</b> — <i>Beta Release</i> — ??/??/2023 — Patch C</h2>
 
 * Add FIND_Depth enum
 * Implement a height alternative to the depth parameter
@@ -81,7 +84,7 @@
     * Documentational improvements
     * Conceptual improvements
 
- <h2><b>v1.0.8</b> — <i>Beta Release</i> — ?/?/???? — Patch C</h2>
+ <h2><b>v1.0.8</b> — <i>Beta Release</i> — ??/??/???? — Patch D</h2>
 
 * Implement feedback from the ***gostack*** community
     * Bug fixes
@@ -89,15 +92,7 @@
     * Documentational improvements
     * Conceptual improvements
 
- <h2><b>v1.1.0</b> — <i>Full release</i> — ?/?/???? — Patch D</h2>
-
-* Implement feedback from the ***gostack*** community
-    * Bug fixes
-    * Function restructuring
-    * Documentational improvements
-    * Conceptual improvements
-
- <h2><b>v1.2.0</b> — <i>Full release</i> — ?/?/? — Patch E</h2>
+ <h2><b>v1.1.0</b> — <i>Full release</i> — ??/??/???? — Patch E</h2>
 
 * Implement feedback from the ***gostack*** community
     * Bug fixes
