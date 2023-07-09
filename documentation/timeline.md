@@ -79,6 +79,7 @@
     * Function restructuring
     * Documentational improvements
     * Conceptual improvements
+* Made `CSVToStackMatrix` less prone to producing errors
 
  <h2><b>v1.0.8</b> — <i>Beta Release</i> — ?/?/???? — Patch C</h2>
 
