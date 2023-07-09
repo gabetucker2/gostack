@@ -2782,14 +2782,22 @@ func (stack *Stack) RemoveMany(arguments ...any) *Stack {
  
  CSVToStackMatrix(inPath string) (newStackMatrix *Stack)
 
+ @notes
+| IF fails to convert the CSV:
+|   returns an empty Stack
  @requires
  | `inPath` points to valid CSV file
  */
- func CSVToStackMatrix(inPath string) *Stack {
+ func CSVToStackMatrix(inPath string) (out *Stack) {
 	file, _ := os.Open(inPath)
 	csvReader := csv.NewReader(file)
 	records, _ := csvReader.ReadAll()
-	return MakeStackMatrix(records)
+	if len(records) > 0 {
+		out = MakeStackMatrix(records)
+	} else {
+		out = MakeStack()
+	}
+	return out
 }
 
 /** Creates a CSV at a given file path given a StackMatrix
