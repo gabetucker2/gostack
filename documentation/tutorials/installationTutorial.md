@@ -18,7 +18,5 @@
 
  <img src="../../media/imports.png" width="30%" style="margin-left:10%; margin-bottom:15px"/>
 
- *If you have any trouble, please reach out to us on our [official Discord community](https://discord.gg/NmxxcKBVBU).*
-
 ---
  [> Return to glossary](../../README.md)
