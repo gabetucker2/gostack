@@ -1,4 +1,4 @@
-v1.0.5 — Beta Release — 01/26/2022 — Patch A
+v1.0.5 — Beta Release — 01/26/2023 — Patch A
 
 ![Banner](media/gostack_SmallerTransparent.png)
 
