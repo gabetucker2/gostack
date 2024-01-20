@@ -38,4 +38,4 @@ v1.0.5 — Beta Release — 01/26/2022 — Patch A
 
  ---
 
- Join our [official Discord community](https://discord.gg/NmxxcKBVBU)!  It is devoted to helping users resolve ***gostack*** bugs and related issues, announcing exciting updates, making improvements based on user suggestions, and streamlining communication between developers and gostackers.  Although a fully functional release of ***gostack*** has been published, this is a growing project with many updates to come.
+ Please email [tucker.854@osu.edu](mailto:tucker.854@osu.edu) with any inquiries.
