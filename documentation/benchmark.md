@@ -4,7 +4,7 @@
 
 There is a performance tradeoff in using ***gostack*** over ***native Go***.  Thus, optimization will be the main focus of updates in future releases.
 
-This tradeoff is especially apparent when performing basic tasks, and the tradeoff exponentially alleviates as tasks become more complicated.
+This tradeoff is especially apparent when performing basic tasks, and the tradeoff seemingly alleviates as tasks become more complicated, although we will perform more benchmark tests in the future.
 
 > My sample task: 123 *(gostack is this many times slower than native Go at doing this)*
 
