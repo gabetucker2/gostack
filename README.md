@@ -38,4 +38,4 @@ v1.0.5 — Beta Release — 01/26/2023 — Patch A
 
  ---
 
- Please email [tucker.854@osu.edu](mailto:tucker.854@osu.edu) with any inquiries.
+ Please email [gabeqtucker@gmail.com](mailto:gabeqtucker@gmail.com) with any inquiries.
