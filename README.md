@@ -38,6 +38,6 @@ v1.0.5 — Beta Release — 01/26/2023 — Patch A
 
  ---
 
-Future made will have the primary goal of optimizing runtime efficiency to make **gostack** more suitable for general use.
+Future updates will have the primary goal of optimizing runtime efficiency to make **gostack** more suitable for general use.
 
 Please email [gabeqtucker@gmail.com](mailto:gabeqtucker@gmail.com) with any inquiries.
